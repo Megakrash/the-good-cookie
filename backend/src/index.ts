@@ -18,6 +18,8 @@ export const db = new sqlite3.Database("tgc.sqlite", (err) => {
   }
 });
 
+db.get("PRAGMA foreign_keys = ON;");
+
 //-----------------------------------------
 //-----------------SERVER-----------------
 //-----------------------------------------
@@ -28,19 +30,15 @@ app.use(express.json());
 
 const port = 5000;
 
-app.listen(port, () => {
-  console.warn(`Server is listening on port ${port} 👍`);
-});
-
 //-----------------------------------------
-//-----------------AD----------------------
+//-----------------ADS---------------------
 //-----------------------------------------
 
 //-----------------GET---------------------
 
 // Get all ads
 app.get("/api/ads/", (req: Request, res: Response) => {
-  db.all("SELECT * FROM Ad", (err: Error, rows) => {
+  db.all("SELECT * FROM Ad", (err, rows) => {
     if (err) {
       res.status(500).send({ error: err.message });
       return;
@@ -62,33 +60,83 @@ app.get("/api/ads/:id", (req: Request, res: Response) => {
 });
 
 // Get all ads by location
-app.get("/api/ads/location", (req: Request, res: Response) => {
-  if (req.query.location) {
-    let selectedLocation = req.query.location;
-
-    db.all(
-      "SELECT * FROM Ad WHERE location = $location",
-      {
-        $location: selectedLocation,
-      },
-      (err, rows) => {
-        if (err) {
-          res.status(500).send({ error: err.message });
-          return;
-        }
-        res.status(200).json(rows);
-      }
-    );
+app.get("/api/locations/ads/", (req: Request, res: Response) => {
+  if (
+    typeof req.query.location !== "string" ||
+    req.query.location.trim() === ""
+  ) {
+    res.status(400).send({ error: "Invalid or missing location parameter." });
+    return;
   }
+
+  const selectedLocation = req.query.location;
+
+  db.all(
+    "SELECT * FROM Ad WHERE location= $location",
+    {
+      $location: selectedLocation,
+    },
+    (err, rows) => {
+      if (err) {
+        res.status(500).send({ error: err.message });
+        return;
+      }
+      res.status(200).json(rows);
+    }
+  );
 });
 
-// Get Ads by categoryId
-app.get("/api/ads/category/:id", (req: Request, res: Response) => {
-  const categoryId: number = Number(req.params.id);
+// Get Ads by one or more categoryId
+app.get("/api/categoryIds/ads", (req: Request, res: Response) => {
+  const categoryIdsString = req.query.categoryIds as string;
 
-  const sql = `SELECT Ad.*, Category.name AS categoryName FROM Ad INNER JOIN Category ON Ad.category_id = Category.id WHERE Ad.category_id = $categoryId`;
+  if (!categoryIdsString) {
+    res.status(400).send({ error: "categoryIds are required" });
+    return;
+  }
 
-  db.all(sql, { $categoryId: categoryId }, (err, rows) => {
+  const categoryIds: number[] = categoryIdsString.split(",").map(Number);
+
+  const placeholders = categoryIds.map((id) => "?").join(",");
+  const sql = `SELECT Ad.*, Category.name AS categoryName FROM Ad INNER JOIN Category ON Ad.category_id = Category.id WHERE Ad.category_id IN (${placeholders})`;
+
+  db.all(sql, categoryIds, (err, rows) => {
+    if (err) {
+      res.status(500).send({ error: err.message });
+      return;
+    }
+    res.status(200).json(rows);
+  });
+});
+
+// Get Ads by one or more categoryId and one or more location with category name
+app.get("/api/categoryIds/locations/ads", (req: Request, res: Response) => {
+  const categoryIdsString = req.query.categoryIds as string;
+  const locationsString = req.query.locations as string;
+
+  if (!categoryIdsString || !locationsString) {
+    res
+      .status(400)
+      .send({ error: "Both categoryIds and locations are required" });
+    return;
+  }
+
+  const categoryIds: number[] = categoryIdsString.split(",").map(Number);
+  const locations: string[] = locationsString.split(",");
+
+  const categoryPlaceholders = categoryIds.map((id) => "?").join(",");
+  const locationPlaceholders = locations.map(() => "?").join(",");
+
+  const sql = `
+    SELECT Ad.*, Category.name AS categoryName 
+    FROM Ad 
+    INNER JOIN Category ON Ad.category_id = Category.id 
+    WHERE Ad.category_id IN (${categoryPlaceholders}) 
+    AND Ad.location IN (${locationPlaceholders})`;
+
+  const parameters = [...categoryIds, ...locations];
+
+  db.all(sql, parameters, (err, rows) => {
     if (err) {
       res.status(500).send({ error: err.message });
       return;
@@ -178,14 +226,14 @@ app.patch("/api/ads/:id", (req: Request, res: Response) => {
 //-----------------POST--------------------
 
 app.post("/api/ads", (req: Request, res: Response) => {
-  const { title, description, owner, price, picture, location, category } =
+  const { title, description, owner, price, picture, location, category_id } =
     req.body;
   const date: Date = new Date();
   const createdDate: string = `${date.getFullYear()}-${
     date.getMonth() + 1
   }-${date.getDate()}`;
   db.run(
-    "INSERT INTO Ad(title, description, owner, price, createdDate, picture, location, category) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO Ad(title, description, owner, price, created_Date, picture, location, category_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
     [
       title,
       description,
@@ -194,7 +242,7 @@ app.post("/api/ads", (req: Request, res: Response) => {
       createdDate,
       picture,
       location,
-      category,
+      category_id,
     ],
     (err) => {
       if (err) {
@@ -309,4 +357,8 @@ app.patch("api/category/:id", (req: Request, res: Response) => {
       res.status(204).send("Category were successfully updated");
     }
   });
+});
+
+app.listen(port, () => {
+  console.warn(`Server is listening on port ${port} 👍`);
 });
