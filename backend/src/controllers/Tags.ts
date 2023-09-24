@@ -1,15 +1,30 @@
 import { Controller } from "./Interface";
+import { Like } from "typeorm";
 import { Request, Response } from "express";
-import { Category } from "../entities/Category";
 import { Tag } from "../entities/Tag";
 import { validate } from "class-validator";
 
 export class TagsController implements Controller {
-  // Get all tags
+  // Get all tags with or not query name
   async getAll(req: Request, res: Response) {
     try {
-      const tags = await Tag.find();
-      res.status(200).json(tags);
+      const queryName = req.query.name;
+      const where: any = {};
+
+      // If query name
+      if (queryName) {
+        where.name = Like(`%${queryName}%`);
+      }
+
+      // Find Ad with query & relations
+      const tags = await Tag.find({
+        where: where,
+      });
+      if (tags.length >= 1) {
+        res.status(200).json(tags);
+      } else {
+        res.status(404).send("No Tag found with this query");
+      }
     } catch (err) {
       res.status(500).send({ error: err });
     }
@@ -38,15 +53,15 @@ export class TagsController implements Controller {
     if (existingTag) {
       res.status(409).send("Tag name already in use");
     } else {
-      const category = new Category();
-      category.name = req.body.name;
+      const tag = new Tag();
+      tag.name = req.body.name;
 
       try {
-        const errors = await validate(category);
+        const errors = await validate(tag);
         if (errors.length > 0) {
           res.status(400).json({ errors: errors });
         } else {
-          await category.save();
+          await tag.save();
           res.status(200).send("New Tag successfully created");
         }
       } catch (err) {
@@ -55,7 +70,7 @@ export class TagsController implements Controller {
     }
   }
 
-  // Not working we have to delete or remove Ad from the category first
+  // Delete tag
   async deleteOne(req: Request, res: Response) {
     try {
       const tag = await Tag.findOne({
@@ -63,12 +78,11 @@ export class TagsController implements Controller {
       });
       if (tag) {
         await tag.remove();
-        res.status(204).send();
+        res.status(200).send("Tag successfully removed");
       } else {
-        res.status(404).send();
+        res.status(404).send("Not Found");
       }
     } catch (err: any) {
-      // typeguards
       console.error(err);
       res.status(500).send();
     }
@@ -77,18 +91,22 @@ export class TagsController implements Controller {
   // Update Tag by Id
   async patchOne(req: Request, res: Response) {
     try {
-      const tag = await Tag.findOne({
-        where: { id: Number(req.params.id) },
-      });
+      const tag = await Tag.findOne({ where: { id: Number(req.params.id) } });
+
       if (tag) {
         Object.assign(tag, req.body, { id: tag.id });
-        await tag.save();
+        const errors = await validate(tag);
+        if (errors.length === 0) {
+          await tag.save();
+          res.status(200).send("Ad were successfully updated");
+        } else {
+          res.status(400).json({ errors: errors });
+        }
       } else {
         res.status(404).send("Not found");
       }
-      res.status(200).send("Tag were successfully updated");
-    } catch (err) {
-      res.status(500).send({ error: err });
+    } catch (err: any) {
+      res.status(500).send(err);
     }
   }
 }

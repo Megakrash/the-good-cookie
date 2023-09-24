@@ -15,7 +15,7 @@ export class Tag extends BaseEntity {
   id!: number;
 
   @Column({ length: 100 })
-  @Length(3, 50, { message: "Entre 10 et 50 caractères" })
+  @Length(3, 50, { message: "Entre 3 et 50 caractères" })
   @Index()
   name!: string;
 

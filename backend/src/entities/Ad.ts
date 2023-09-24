@@ -37,6 +37,10 @@ export class Ad extends BaseEntity {
   @Length(8, 10, { message: "Entre 8 et 10 caractères" })
   createdDate!: string;
 
+  @Length(8, 10, { message: "Entre 8 et 10 caractères" })
+  @Column({ nullable: true })
+  updateDate!: string;
+
   @Column({ length: 500 })
   picture!: string;
 
