@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export type NavCategoriesProps = {
   id: number;
-  title: string;
+  name: string;
   link: string;
 };
 
@@ -11,9 +11,8 @@ const NavCategories = (props: NavCategoriesProps): React.ReactNode => {
     <>
       {" "}
       <Link href={props.link} className="category-navigation-link">
-        {props.title}
-      </Link>{" "}
-      •
+        {props.name}
+      </Link>
     </>
   );
 };

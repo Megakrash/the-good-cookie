@@ -1,73 +1,27 @@
+import { useEffect, useState } from "react";
 import NavCategories, { NavCategoriesProps } from "./NavCategories";
+import { API_URL } from "@/configApi";
+import axios from "axios";
 
 export default function Header(): React.ReactNode {
-  const cat: NavCategoriesProps[] = [
-    {
-      id: 1,
-      title: "Ameublement",
-      link: "/categories/ameublement",
-    },
-    {
-      id: 2,
-      title: "Electroménager",
-      link: "/categories/electromenager",
-    },
-    {
-      id: 3,
-      title: "Photographie",
-      link: "/categories/photographie",
-    },
-    {
-      id: 4,
-      title: "Informatique",
-      link: "/categories/informatique",
-    },
-    {
-      id: 5,
-      title: "Téléphonie",
-      link: "/categories/telephonie",
-    },
-    {
-      id: 6,
-      title: "Vélos",
-      link: "/categories/velos",
-    },
-    {
-      id: 7,
-      title: "Véhicules",
-      link: "/categories/vehicules",
-    },
-    {
-      id: 8,
-      title: "Sport",
-      link: "/categories/sport",
-    },
-    {
-      id: 9,
-      title: "Habillement",
-      link: "/categories/habillement",
-    },
-    {
-      id: 10,
-      title: "Bébé",
-      link: "/categories/bebe",
-    },
-    {
-      id: 11,
-      title: "Outillage",
-      link: "/categories/outillage",
-    },
-    {
-      id: 12,
-      title: "Services",
-      link: "/categories/services",
-    },
-    {
-      id: 13,
-      title: "Vacances",
-      link: "/categories/vacances",
-    },
-  ];
+  const [allCategories, setAllCategories] = useState(
+    [] as NavCategoriesProps[]
+  );
+
+  const getAllCats = () => {
+    axios
+      .get(`${API_URL}/category`)
+      .then((res) => {
+        setAllCategories(res.data);
+      })
+      .catch(() => {
+        console.error("error");
+      });
+  };
+
+  useEffect(() => {
+    getAllCats();
+  }, []);
 
   return (
     <header className="header">
@@ -100,13 +54,15 @@ export default function Header(): React.ReactNode {
         </a>
       </div>
       <nav className="categories-navigation">
-        {cat.map((infos) => (
-          <NavCategories
-            key={infos.id}
-            id={infos.id}
-            link={infos.link}
-            title={infos.title}
-          />
+        {allCategories.map((infos, index) => (
+          <div key={infos.id}>
+            <NavCategories
+              id={infos.id}
+              name={infos.name}
+              link={`/categorie/${infos.id}`}
+            />
+            {index < allCategories.length - 1 && `${" "}  •`}
+          </div>
         ))}
       </nav>
     </header>

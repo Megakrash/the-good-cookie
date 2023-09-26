@@ -18,11 +18,12 @@ import { TagsController } from "./controllers/Tags";
 //-----------------------------------------
 
 import express from "express";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
 const port = 5000;
-
+app.use(cors());
 //-----------------------------------------
 //-----------TRY CATCH ERRORS--------------
 //-----------------------------------------
@@ -47,11 +48,11 @@ function asyncController(controller: Function) {
 //-----------------------------------------
 
 const adsController = new AdsController();
-app.get("/api/ads", asyncController(adsController.getAll));
-app.get("/api/ads/:id", asyncController(adsController.getOne));
-app.post("/api/ads", asyncController(adsController.createOne));
-app.delete("/api/ads/:id", asyncController(adsController.deleteOne));
-app.patch("/api/ads/:id", asyncController(adsController.patchOne));
+app.get("/api/annonces", asyncController(adsController.getAll));
+app.get("/api/annonces/:id", asyncController(adsController.getOne));
+app.post("/api/annonces", asyncController(adsController.createOne));
+app.delete("/api/annonces/:id", asyncController(adsController.deleteOne));
+app.patch("/api/annonces/:id", asyncController(adsController.patchOne));
 
 //-----------------------------------------
 //-----------------CATEGORY----------------
@@ -81,6 +82,10 @@ app.patch("/api/tag/:id", asyncController(tagsController.patchOne));
 //-----------------------------------------
 //-------------SERVER LISTENING------------
 //-----------------------------------------
+
+app.all("*", (req, res) => {
+  res.status(404).json({ message: "Not found" });
+});
 
 app.listen(port, async () => {
   await dataSource.initialize();
