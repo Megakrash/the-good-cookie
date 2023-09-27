@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Header from "./Header";
+import Header from "./header/Header";
 import { ReactNode } from "react";
 
 type LayoutProps = {

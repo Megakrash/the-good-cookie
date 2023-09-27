@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import AdCard, { AdCardProps } from "./AdCard";
+import AdCard from "./AdCard";
 import { API_URL } from "@/configApi";
 import axios from "axios";
+import { AdsTypes } from "@/types";
 
 export default function RecentAds(): React.ReactNode {
-  const [allAds, setAllAds] = useState([] as AdCardProps[]);
+  const [allAds, setAllAds] = useState<AdsTypes[]>([]);
 
   const getAllAds = () => {
     axios
@@ -37,7 +38,7 @@ export default function RecentAds(): React.ReactNode {
             picture={infos.picture}
             location={infos.location}
             category={infos.category}
-            link={`annonce/${infos.id}`}
+            tags={infos.tags}
           />
         ))}
       </section>

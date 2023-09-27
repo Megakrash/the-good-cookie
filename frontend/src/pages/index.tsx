@@ -1,5 +1,5 @@
 import Layout from "@/components/Layout";
-import RecentAds from "@/components/RecentAds";
+import RecentAds from "@/components/ads/RecentAds";
 
 export default function Home() {
   return (

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import NavCategories, { NavCategoriesProps } from "./NavCategories";
+import NavCategories from "../categories/NavCategories";
 import { API_URL } from "@/configApi";
 import axios from "axios";
+import Link from "next/link";
+import { CategoriesTypes } from "@/types";
 
 export default function Header(): React.ReactNode {
-  const [allCategories, setAllCategories] = useState(
-    [] as NavCategoriesProps[]
-  );
+  const [allCategories, setAllCategories] = useState<CategoriesTypes[]>([]);
 
   const getAllCats = () => {
     axios
@@ -27,10 +27,10 @@ export default function Header(): React.ReactNode {
     <header className="header">
       <div className="main-menu">
         <h1>
-          <a href="/" className="button logo link-button">
+          <Link href="/" className="button logo link-button">
             <span className="mobile-short-label">TGC</span>
             <span className="desktop-long-label">THE GOOD CORNER</span>
-          </a>
+          </Link>
         </h1>
         <form className="text-field-with-button">
           <input className="text-field main-search-field" type="search" />
@@ -48,19 +48,15 @@ export default function Header(): React.ReactNode {
             </svg>
           </button>
         </form>
-        <a href="/post-ad" className="button link-button">
+        <Link href="/annonces/new" className="button link-button">
           <span className="mobile-short-label">Publier</span>
           <span className="desktop-long-label">Publier une annonce</span>
-        </a>
+        </Link>
       </div>
       <nav className="categories-navigation">
         {allCategories.map((infos, index) => (
           <div key={infos.id}>
-            <NavCategories
-              id={infos.id}
-              name={infos.name}
-              link={`/categorie/${infos.id}`}
-            />
+            <NavCategories id={infos.id} name={infos.name} />
             {index < allCategories.length - 1 && `${" "}  •`}
           </div>
         ))}
