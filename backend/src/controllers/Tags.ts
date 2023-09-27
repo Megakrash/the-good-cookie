@@ -4,47 +4,40 @@ import { Request, Response } from "express";
 import { Tag } from "../entities/Tag";
 import { validate } from "class-validator";
 
-export class TagsController implements Controller {
+export class TagsController extends Controller {
   // Get all tags with or not query name
-  async getAll(req: Request, res: Response) {
-    try {
-      const queryName = req.query.name;
-      const where: any = {};
+  getAll = async (req: Request, res: Response) => {
+    const queryName = req.query.name;
+    const where: any = {};
 
-      // If query name
-      if (queryName) {
-        where.name = Like(`%${queryName}%`);
-      }
-
-      // Find Ad with query & relations
-      const tags = await Tag.find({
-        where: where,
-      });
-      if (tags.length >= 1) {
-        res.status(200).json(tags);
-      } else {
-        res.status(404).send("No Tag found with this query");
-      }
-    } catch (err) {
-      res.status(500).send({ error: err });
+    // If query name
+    if (queryName) {
+      where.name = Like(`%${queryName}%`);
     }
-  }
+
+    // Find Ad with query & relations
+    const tags = await Tag.find({
+      where: where,
+    });
+    if (tags.length >= 1) {
+      res.status(200).json(tags);
+    } else {
+      res.status(404).send("No Tag found with this query");
+    }
+  };
 
   // Get tag by Id
-  async getOne(req: Request, res: Response) {
+  getOne = async (req: Request, res: Response) => {
     const id: number = Number(req.params.id);
-    try {
-      const tags = await Tag.findOne({
-        where: { id: id },
-      });
-      res.status(200).json(tags);
-    } catch (err) {
-      res.status(500).send({ error: err });
-    }
-  }
+
+    const tags = await Tag.findOne({
+      where: { id: id },
+    });
+    res.status(200).json(tags);
+  };
 
   // Post new Tag with class-validator
-  async createOne(req: Request, res: Response) {
+  createOne = async (req: Request, res: Response) => {
     const tagName: string = req.body.name;
     const existingTag = await Tag.findOne({
       where: { name: tagName },
@@ -68,45 +61,36 @@ export class TagsController implements Controller {
         res.status(500).send(err);
       }
     }
-  }
+  };
 
   // Delete tag
-  async deleteOne(req: Request, res: Response) {
-    try {
-      const tag = await Tag.findOne({
-        where: { id: Number(req.params.id) },
-      });
-      if (tag) {
-        await tag.remove();
-        res.status(200).send("Tag successfully removed");
-      } else {
-        res.status(404).send("Not Found");
-      }
-    } catch (err: any) {
-      console.error(err);
-      res.status(500).send();
+  deleteOne = async (req: Request, res: Response) => {
+    const tag = await Tag.findOne({
+      where: { id: Number(req.params.id) },
+    });
+    if (tag) {
+      await tag.remove();
+      res.status(200).send("Tag successfully removed");
+    } else {
+      res.status(404).send("Not Found");
     }
-  }
+  };
 
   // Update Tag by Id
-  async patchOne(req: Request, res: Response) {
-    try {
-      const tag = await Tag.findOne({ where: { id: Number(req.params.id) } });
+  patchOne = async (req: Request, res: Response) => {
+    const tag = await Tag.findOne({ where: { id: Number(req.params.id) } });
 
-      if (tag) {
-        Object.assign(tag, req.body, { id: tag.id });
-        const errors = await validate(tag);
-        if (errors.length === 0) {
-          await tag.save();
-          res.status(200).send("Ad were successfully updated");
-        } else {
-          res.status(400).json({ errors: errors });
-        }
+    if (tag) {
+      Object.assign(tag, req.body, { id: tag.id });
+      const errors = await validate(tag);
+      if (errors.length === 0) {
+        await tag.save();
+        res.status(200).send("Ad were successfully updated");
       } else {
-        res.status(404).send("Not found");
+        res.status(400).json({ errors: errors });
       }
-    } catch (err: any) {
-      res.status(500).send(err);
+    } else {
+      res.status(404).send("Not found");
     }
-  }
+  };
 }

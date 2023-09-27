@@ -49,11 +49,10 @@ export class Ad extends BaseEntity {
 
   @ManyToOne(() => Category, (category) => category.ads)
   @JoinColumn({ name: "category" })
-  @Column({ type: "int" })
+  // @Column({ type: "int" })
   category!: Category;
 
   @ManyToMany(() => Tag, (tag) => tag.ads)
   @JoinTable()
-  // @Column({ nullable: true })
-  tags!: Tag;
+  tags!: Tag[];
 }

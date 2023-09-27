@@ -3,32 +3,25 @@ import { Request, Response } from "express";
 import { Category } from "../entities/Category";
 import { validate } from "class-validator";
 
-export class CategoriesController implements Controller {
+export class CategoriesController extends Controller {
   // Get all categories
-  async getAll(req: Request, res: Response) {
-    try {
-      const categorys = await Category.find();
-      res.status(200).json(categorys);
-    } catch (err) {
-      res.status(500).send({ error: err });
-    }
-  }
+  getAll = async (req: Request, res: Response) => {
+    const categorys = await Category.find();
+    res.status(200).json(categorys);
+  };
 
   // Get category by Id
-  async getOne(req: Request, res: Response) {
+  getOne = async (req: Request, res: Response) => {
     const id: number = Number(req.params.id);
-    try {
-      const categorys = await Category.findOne({
-        where: { id: id },
-      });
-      res.status(200).json(categorys);
-    } catch (err) {
-      res.status(500).send({ error: err });
-    }
-  }
+
+    const categorys = await Category.findOne({
+      where: { id: id },
+    });
+    res.status(200).json(categorys);
+  };
 
   // Post new Category with class-validator
-  async createOne(req: Request, res: Response) {
+  createOne = async (req: Request, res: Response) => {
     const categoryName: string = req.body.name;
     const existingCategory = await Category.findOne({
       where: { name: categoryName },
@@ -52,42 +45,32 @@ export class CategoriesController implements Controller {
         res.status(500).send(err);
       }
     }
-  }
+  };
 
   // Not working we have to delete or remove Ad from the category first
-  async deleteOne(req: Request, res: Response) {
-    try {
-      const category = await Category.findOne({
-        where: { id: Number(req.params.id) },
-      });
-      if (category) {
-        await category.remove();
-        res.status(204).send();
-      } else {
-        res.status(404).send();
-      }
-    } catch (err: any) {
-      // typeguards
-      console.error(err);
-      res.status(500).send();
+  deleteOne = async (req: Request, res: Response) => {
+    const category = await Category.findOne({
+      where: { id: Number(req.params.id) },
+    });
+    if (category) {
+      await category.remove();
+      res.status(204).send();
+    } else {
+      res.status(404).send();
     }
-  }
+  };
 
   // Update Category by Id
-  async patchOne(req: Request, res: Response) {
-    try {
-      const cat = await Category.findOne({
-        where: { id: Number(req.params.id) },
-      });
-      if (cat) {
-        Object.assign(cat, req.body, { id: cat.id });
-        await cat.save();
-      } else {
-        res.status(404).send("Not found");
-      }
-      res.status(200).send("Category were successfully updated");
-    } catch (err) {
-      res.status(500).send({ error: err });
+  patchOne = async (req: Request, res: Response) => {
+    const cat = await Category.findOne({
+      where: { id: Number(req.params.id) },
+    });
+    if (cat) {
+      Object.assign(cat, req.body, { id: cat.id });
+      await cat.save();
+    } else {
+      res.status(404).send("Not found");
     }
-  }
+    res.status(200).send("Category were successfully updated");
+  };
 }
