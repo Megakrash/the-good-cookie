@@ -1,0 +1,55 @@
+//-----------------------------------------
+//-----------------GET---------------------
+//-----------------------------------------
+
+// Get all ads with infos category name & id 
+GET http://localhost:5000/api/annonce
+
+###
+// Get Ad by id with infos category name & id 
+GET http://localhost:5000/api/annonce/5
+
+###
+// Get all ads with filter 
+GET http://localhost:5000/api/annonce?location=antes&title=vga&category=2&maxPrice=9000&minPrice=200
+
+//-----------------------------------------
+//-----------------POST--------------------
+//-----------------------------------------
+
+###
+// Add new ad 
+POST http://localhost:5000/api/annonce
+Content-Type: application/json
+
+{
+    "title": "Hydro Copper III",
+    "description": "Superbe carte graphique III",
+    "owner": "carte.graphique@thegoodcorner.com",
+    "price": 850,
+    "picture": "https://images.lecho.be/view?iid=dc:113129565&context=ONLINE&ratio=16/9&width=640&u=1508242455000",
+    "location": "Nantes",
+    "subCategory": {"id": 1},
+    "tags": [{"id": 1},{"id": 2}]
+}
+
+//-----------------------------------------
+//-----------------DELETE------------------
+//-----------------------------------------
+
+###
+// Delete ad by id
+DELETE http://localhost:5000/api/annonce/1
+
+//-----------------------------------------
+//-----------------PATCH-------------------
+//-----------------------------------------
+
+###
+// Patch Ad
+PATCH http://localhost:5000/api/annonce/28
+Content-Type: application/json
+
+{
+    "picture": "https://cdn.pixabay.com/photo/2023/09/17/19/10/building-8259184_1280.jpg"
+}

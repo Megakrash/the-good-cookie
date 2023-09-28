@@ -1,0 +1,53 @@
+//-----------------------------------------
+//-----------------GET---------------------
+//-----------------------------------------
+
+// Get all users OK
+GET http://localhost:5000/api/user
+
+###
+// Get user by id OK
+GET http://localhost:5000/api/user/1
+
+//-----------------------------------------
+//-----------------POST--------------------
+//-----------------------------------------
+
+###
+// Add new user OK
+POST http://localhost:5000/api/user
+Content-Type: application/json
+
+{
+    "firstName": "jonathan",
+    "lastName": "scattolini",
+    "nickName": "Megakrash",
+    "email": "jscattolini@gmail.com",
+    "password": "u5Q41$R1Ph6LF?DlKiB",
+    "adress": "55 rue qui tue",
+    "zipCode": "44444",
+    "city": "WestSide",
+    "phoneNumber": "0706060606",
+    "isAdmin": false
+}
+
+//-----------------------------------------
+//-----------------DELETE------------------
+//-----------------------------------------
+
+###
+// Delete user by id OK
+DELETE http://localhost:5000/api/user/1
+
+//-----------------------------------------
+//-----------------PATCH-------------------
+//-----------------------------------------
+
+###
+// Patch user by id OK
+PATCH http://localhost:5000/api/user/1
+Content-Type: application/json
+
+{
+    "nickName": "MegaBoulet"
+}
