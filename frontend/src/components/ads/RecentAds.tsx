@@ -39,6 +39,7 @@ export default function RecentAds(): React.ReactNode {
             location={infos.location}
             category={infos.category}
             tags={infos.tags}
+            onReRender={getAllAds}
           />
         ))}
       </section>
