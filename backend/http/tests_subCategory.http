@@ -1,0 +1,48 @@
+
+//-----------------------------------------
+//-----------------GET---------------------
+//-----------------------------------------
+
+###
+// Get all subCategory OK
+GET http://localhost:5000/api/subCategory
+
+###
+// Get subCategory by id OK
+GET http://localhost:5000/api/subCategory/15
+
+//-----------------------------------------
+//-----------------POST--------------------
+//-----------------------------------------
+
+###
+// Add new SubCategory / not possible when the name already exist OK
+POST http://localhost:5000/api/subCategory/
+Content-Type: application/json
+
+{
+    "name": "Ecran pc",
+    "picture": "subCategory_ecran.png",
+    "category": {"id": 1}
+}
+
+//-----------------------------------------
+//-----------------DELETE------------------
+//-----------------------------------------
+
+###
+// Delete subCategory by id and delete picture file in backend OK
+DELETE http://localhost:5000/api/subCategory/15
+
+//-----------------------------------------
+//-----------------PATCH-------------------
+//-----------------------------------------
+
+###
+// Patch category OK
+PATCH http://localhost:5000/api/subCategory/14
+Content-Type: application/json
+
+{
+    "name": "Ecran PC"
+}

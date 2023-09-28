@@ -1,0 +1,50 @@
+//-----------------------------------------
+//-----------------GET---------------------
+//-----------------------------------------
+###
+// Get all tag OK
+GET http://localhost:5000/api/tag
+
+###
+// Get tag  by id OK
+GET http://localhost:5000/api/tag/1
+
+###
+// Get tag with query name OK
+GET http://localhost:5000/api/tag?name=cute
+
+//-----------------------------------------
+//-----------------POST--------------------
+//-----------------------------------------
+
+###
+// Add new Tag / not possible when the name already exist OK
+POST http://localhost:5000/api/tag/
+Content-Type: application/json
+
+{
+    "name": "super"
+}
+
+
+//-----------------------------------------
+//-----------------DELETE------------------
+//-----------------------------------------
+
+###
+// Remove Tag OK
+DELETE http://localhost:5000/api/tag/7
+
+//-----------------------------------------
+//-----------------PATCH-------------------
+//-----------------------------------------
+
+
+###
+// Patch tag OK
+PATCH http://localhost:5000/api/tag/6
+Content-Type: application/json
+
+{
+    "name": "zoubi"
+}

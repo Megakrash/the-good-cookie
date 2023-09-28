@@ -9,9 +9,10 @@ import {
   ManyToMany,
   JoinTable,
 } from "typeorm";
-import { Length, IsEmail } from "class-validator";
-import { Category } from "./Category";
+import { Length, IsInt, Matches } from "class-validator";
+import { SubCategory } from "./SubCategory";
 import { Tag } from "./Tag";
+import { User } from "./User";
 
 @Entity()
 export class Ad extends BaseEntity {
@@ -26,31 +27,34 @@ export class Ad extends BaseEntity {
   @Column()
   description!: string;
 
-  @Column({ length: 100 })
-  @IsEmail()
-  owner!: string;
-
   @Column()
+  @IsInt()
   price!: number;
 
   @Column()
   @Length(8, 10, { message: "Entre 8 et 10 caractères" })
   createdDate!: string;
 
+  @Column()
   @Length(8, 10, { message: "Entre 8 et 10 caractères" })
-  @Column({ nullable: true })
   updateDate!: string;
 
   @Column({ length: 500 })
   picture!: string;
 
   @Column({ length: 100 })
+  @Matches(/^[a-zA-Z]+$/, {
+    message: "La ville ne doit contenir que des lettres",
+  })
   location!: string;
 
-  @ManyToOne(() => Category, (category) => category.ads)
-  @JoinColumn({ name: "category" })
-  // @Column({ type: "int" })
-  category!: Category;
+  @ManyToOne(() => SubCategory, (subCategory) => subCategory.ads)
+  @JoinColumn({ name: "subCategory" })
+  subCategory!: SubCategory;
+
+  @ManyToOne(() => User, (user) => user.ads)
+  @JoinColumn({ name: "user" })
+  user!: User;
 
   @ManyToMany(() => Tag, (tag) => tag.ads)
   @JoinTable()

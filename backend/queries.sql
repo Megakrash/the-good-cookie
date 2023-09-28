@@ -1,23 +1,40 @@
 PRAGMA foreign_keys = ON;
-INSERT INTO Category (name) VALUES
-    ('Electronics'),
-    ('Clothing'),
-    ('Books'),
-    ('Furniture'),
-    ('Property'),
-    ('Cars');
+INSERT INTO category (name) VALUES
+    ('Electronique'),
+    ('Vêtements'),
+    ('Livres'),
+    ('Meubles'),
+    ('Immobilier'),
+    ('Véhicules');
 
+PRAGMA foreign_keys = ON;
+INSERT INTO sub_category (name, picture, category) VALUES
+    ('Carte graphique', 'subCategory_carteGraphique.png', 1),
+    ('Souris', 'subCategory_souris.png', 1),
+    ('Polo', 'subCategory_polo.png', 2),
+    ('Chemise', 'subCategory_chemise.jpg', 2),
+    ('Science Fiction', 'subCategory_sf.png', 3),
+    ('Heroic Fantaisy', 'subCategory_heroic.png', 3),
+    ('Table basse', 'subCategory_table.png', 4),
+    ('Lit', 'subCategory_lit.png', 4),
+    ('Maison', 'subCategory_maison.png', 5),
+    ('Appartement', 'subCategory_appartement.png', 5),
+    ('Voiture', 'subCategory_voiture.png', 6),
+    ('Vélo', 'subCategory_velo.png', 6);
+
+PRAGMA foreign_keys = ON;
 INSERT INTO Tag (name) VALUES
     ('class'),
     ('cute'),
     ('tip top'),
     ('pratique'),
     ('super'),
-    ('eco');
+    ('économique'),
+    ('écologique');
 
-
-INSERT INTO Ad (title, description, owner, price, createdDate, updateDate, picture, location, category ) VALUES
-    ('CG Evga GTX980Ti Hydro Copper', 'Superbe carte graphique', 'carte.graphique@thegoodcorner.com', 249, '2023-9-1','2023-9-1', 'https://media.topachat.com/media/s1000/630de00d033120593446ae0a.webp', 'Nantes', 1 ),
+PRAGMA foreign_keys = ON;
+INSERT INTO Ad (title, description, owner, price, createdDate, updateDate, picture, location, subCategory ) VALUES
+    ('Carte Graphique Evga GTX980Ti Hydro Copper', 'Superbe carte graphique', 'carte.graphique@thegoodcorner.com', 249, '2023-9-1','2023-9-1', 'https://media.topachat.com/media/s1000/630de00d033120593446ae0a.webp', 'Nantes', 1 ),
     ('T-shirt mauve', 'Superbe T-shirt mauve', 'tshirt.mauve@thegoodcorner.com', 15, '2023-9-1', '2023-9-1', 'https://www.monproduitdecom.com/images/produits/tshirt-10409.jpg', 'Bordeaux', 2 ),
     ('Le Silmarillon', 'Superbe livre', 'livre@thegoodcorner.com', 19, '2023-9-1', '2023-9-1', 'https://m.media-amazon.com/images/I/91vOYLA7beL._SL1500_.jpg', 'Lyon', 3 ),
     ('Table basse IKEA', 'Superbe table basse', 'table.basse@thegoodcorner.com', 8, '2023-9-1', '2023-9-1', 'https://m.media-amazon.com/images/I/41vM9+epqJL._AC_SL1500_.jpg', 'Nantes',  4),

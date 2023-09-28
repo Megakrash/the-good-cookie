@@ -5,7 +5,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Ad } from "./Ad";
+import { SubCategory } from "./SubCategory";
 
 @Entity()
 export class Category extends BaseEntity {
@@ -15,6 +15,6 @@ export class Category extends BaseEntity {
   @Column({ length: 100 })
   name!: string;
 
-  @OneToMany(() => Ad, (ad) => ad.category)
-  ads!: Ad[];
+  @OneToMany(() => SubCategory, (subCategory) => subCategory.category)
+  subCategory!: SubCategory[];
 }

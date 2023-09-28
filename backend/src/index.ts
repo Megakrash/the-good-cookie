@@ -12,6 +12,8 @@ import { dataSource } from "./datasource";
 import { AdsController } from "./controllers/Ads";
 import { CategoriesController } from "./controllers/Categories";
 import { TagsController } from "./controllers/Tags";
+import { SubCategoriesController } from "./controllers/SubCategories";
+import { UsersController } from "./controllers/Users";
 
 //-----------------------------------------
 //-----------------EXPRESS-----------------
@@ -19,11 +21,13 @@ import { TagsController } from "./controllers/Tags";
 
 import express from "express";
 import cors from "cors";
+const path = require("path");
 
 const app = express();
 app.use(express.json());
 const port = 5000;
 app.use(cors());
+app.use(express.static(path.join(__dirname, "../public")));
 //-----------------------------------------
 //-----------TRY CATCH ERRORS--------------
 //-----------------------------------------
@@ -48,11 +52,31 @@ function asyncController(controller: Function) {
 //-----------------------------------------
 
 const adsController = new AdsController();
-app.get("/api/annonces", asyncController(adsController.getAll));
-app.get("/api/annonces/:id", asyncController(adsController.getOne));
-app.post("/api/annonces", asyncController(adsController.createOne));
-app.delete("/api/annonces/:id", asyncController(adsController.deleteOne));
-app.patch("/api/annonces/:id", asyncController(adsController.patchOne));
+app.get("/api/annonce", asyncController(adsController.getAll));
+app.get("/api/annonce/:id", asyncController(adsController.getOne));
+app.post("/api/annonce", asyncController(adsController.createOne));
+app.delete("/api/annonce/:id", asyncController(adsController.deleteOne));
+app.patch("/api/annonce/:id", asyncController(adsController.patchOne));
+
+//-----------------------------------------
+//-----------------SUBCATEGORY-------------
+//-----------------------------------------
+
+const subCategoriesController = new SubCategoriesController();
+app.get("/api/subCategory", asyncController(subCategoriesController.getAll));
+app.get(
+  "/api/subCategory/:id",
+  asyncController(subCategoriesController.getOne)
+);
+app.post("/api/subCategory", subCategoriesController.createOne);
+app.delete(
+  "/api/subCategory/:id",
+  asyncController(subCategoriesController.deleteOne)
+);
+app.patch(
+  "/api/subCategory/:id",
+  asyncController(subCategoriesController.patchOne)
+);
 
 //-----------------------------------------
 //-----------------CATEGORY----------------
@@ -78,6 +102,17 @@ app.get("/api/tag/:id", asyncController(tagsController.getOne));
 app.post("/api/tag", tagsController.createOne);
 app.delete("/api/tag/:id", asyncController(tagsController.deleteOne));
 app.patch("/api/tag/:id", asyncController(tagsController.patchOne));
+
+//-----------------------------------------
+//-----------------USER--------------------
+//-----------------------------------------
+
+const usersController = new UsersController();
+app.get("/api/user", asyncController(usersController.getAll));
+app.get("/api/user/:id", asyncController(usersController.getOne));
+app.post("/api/user", usersController.createOne);
+app.delete("/api/user/:id", asyncController(usersController.deleteOne));
+app.patch("/api/user/:id", asyncController(usersController.patchOne));
 
 //-----------------------------------------
 //-------------SERVER LISTENING------------

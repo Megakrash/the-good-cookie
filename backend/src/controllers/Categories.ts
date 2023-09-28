@@ -47,7 +47,7 @@ export class CategoriesController extends Controller {
     }
   };
 
-  // Not working we have to delete or remove Ad from the category first
+  // Delete category === a retester avec des sous catégories attachées
   deleteOne = async (req: Request, res: Response) => {
     const category = await Category.findOne({
       where: { id: Number(req.params.id) },

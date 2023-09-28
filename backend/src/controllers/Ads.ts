@@ -27,9 +27,9 @@ export class AdsController extends Controller {
       where.price = MoreThan(query.minPrice);
     }
     // If query category
-    if (typeof query.category === "string") {
-      const categories = query.category.split(",");
-      where.category = In(categories);
+    if (typeof query.subCategory === "string") {
+      const subCategories = query.subCategory.split(",");
+      where.subCategory = In(subCategories);
     }
 
     // If query tag
@@ -42,7 +42,7 @@ export class AdsController extends Controller {
     const ads = await Ad.find({
       where: where,
       relations: {
-        category: true,
+        subCategory: true,
         tags: true,
       },
       order: {
@@ -64,7 +64,7 @@ export class AdsController extends Controller {
     const ads = await Ad.findOne({
       where: { id: id },
       relations: {
-        category: true,
+        subCategory: true,
         tags: true,
       },
     });
@@ -84,13 +84,13 @@ export class AdsController extends Controller {
     const ad = new Ad();
     ad.title = req.body.title;
     ad.description = req.body.description;
-    ad.owner = req.body.owner;
+    ad.user = req.body.user;
     ad.price = req.body.price;
     ad.createdDate = createdDate;
     ad.updateDate = createdDate;
     ad.picture = req.body.picture;
     ad.location = req.body.location;
-    ad.category = req.body.category;
+    ad.subCategory = req.body.subCategory;
     ad.tags = req.body.tags;
 
     const errors = await validate(ad);
