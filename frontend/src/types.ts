@@ -3,16 +3,26 @@ export type CategoriesTypes = {
   name: string;
 };
 
+export type SubCategoriesTypes = {
+  id: number;
+  name: string;
+  picture: string;
+  category: {
+    id: number;
+    name: string;
+  };
+};
+
 export type AdsTypes = {
   id: number;
   title: string;
   description: string;
-  owner: string;
   price: number;
   createdDate: string;
+  updateDate: string;
   picture: string;
   location: string;
-  category: {
+  subCategory: {
     id: number;
     name: string;
   };
@@ -22,6 +32,10 @@ export type AdsTypes = {
       name: string;
     }
   ];
+  user: {
+    id: number;
+    nickName: string;
+  };
 };
 
 export type AdFormData = {

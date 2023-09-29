@@ -14,7 +14,7 @@ const AdDetailComponent = (): React.ReactNode => {
 
   const getAd = () => {
     axios
-      .get<AdsTypes>(`${API_URL}/annonces/${adId}`)
+      .get<AdsTypes>(`${API_URL}/annonce/${adId}`)
       .then((res) => {
         setAd(res.data);
       })
@@ -33,7 +33,7 @@ const AdDetailComponent = (): React.ReactNode => {
         <Layout title={`TGG : ${Ad.title}`}>
           <p>{`Le détail de l'offre ${Ad.title}`}</p>
           <p>{Ad.price} €</p>
-          <Image src={Ad.picture} alt={Ad.title} />
+          <Image src={Ad.picture} alt={Ad.title} width="200" height="200" />
         </Layout>
       )}
     </>
