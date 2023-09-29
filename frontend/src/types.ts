@@ -1,6 +1,12 @@
 export type CategoriesTypes = {
   id: number;
   name: string;
+  subCategory: [
+    {
+      id: number;
+      name: string;
+    }
+  ];
 };
 
 export type SubCategoriesTypes = {
@@ -46,3 +52,5 @@ export type AdFormData = {
   location: string;
   category: { id: number };
 };
+
+export type SearchAds = AdsTypes[];

@@ -56,7 +56,11 @@ export default function Header(): React.ReactNode {
       <nav className="categories-navigation">
         {allCategories.map((infos, index) => (
           <div key={infos.id}>
-            <NavCategories id={infos.id} name={infos.name} />
+            <NavCategories
+              id={infos.id}
+              name={infos.name}
+              subCategory={infos.subCategory}
+            />
             {index < allCategories.length - 1 && `${" "}  •`}
           </div>
         ))}

@@ -3,13 +3,15 @@ import Layout from "@/components/Layout";
 import { AdFormData, CategoriesTypes } from "@/types";
 import axios from "axios";
 import { API_URL } from "@/configApi";
+import toast, { Toaster } from "react-hot-toast";
 
 const NewAd = (): React.ReactNode => {
   // Get Categories
   const [categories, setCategories] = useState<CategoriesTypes[]>([]);
+
   const getCategories = () => {
     axios
-      .get(`${API_URL}/category`)
+      .get<CategoriesTypes[]>(`${API_URL}/category`)
       .then((res) => {
         setCategories(res.data);
       })
@@ -23,7 +25,7 @@ const NewAd = (): React.ReactNode => {
     getCategories();
   }, []);
 
-  const [confirmMessage, setConfirmMessage] = useState<boolean>(false);
+  // const [confirmMessage, setConfirmMessage] = useState<boolean>(false);
 
   // Post new Ad
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -42,7 +44,7 @@ const NewAd = (): React.ReactNode => {
     axios
       .post(`${API_URL}/annonces`, data)
       .then(() => {
-        setConfirmMessage(true);
+        // setConfirmMessage(true);
         form.reset();
       })
 
@@ -50,13 +52,26 @@ const NewAd = (): React.ReactNode => {
         console.error("error");
       });
   };
+
+  const notify = () => toast("Here is your toast.");
   return (
     <>
       <Layout title="TGD : Créer mon annonce">
         <h2>Création de votre annonce</h2>
-        {confirmMessage && (
+        {/* {confirmMessage && (
           <div className="">Votre formulaire a été soumis avec succès.</div>
-        )}
+        )} */}
+        <div>
+          <button onClick={notify}>Make me a toast</button>
+          <Toaster
+            toastOptions={{
+              style: {
+                background: "#ff8a00",
+                color: "#fff",
+              },
+            }}
+          />
+        </div>
         <form onSubmit={onSubmit}>
           <input
             className=""
