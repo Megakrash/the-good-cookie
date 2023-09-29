@@ -1,22 +1,22 @@
-
 //-----------------------------------------
 //-----------------GET---------------------
 //-----------------------------------------
 
-###
-// Get all subCategory OK
+### Get all subCategory OK
 GET http://localhost:5000/api/subCategory
 
-###
-// Get subCategory by id OK
+### Get subCategory by id OK
 GET http://localhost:5000/api/subCategory/15
+
+### Get all subCategory with category query OK
+GET http://localhost:5000/api/subCategory?category=1
+
 
 //-----------------------------------------
 //-----------------POST--------------------
 //-----------------------------------------
 
-###
-// Add new SubCategory / not possible when the name already exist OK
+### Add new SubCategory / not possible when the name already exist OK
 POST http://localhost:5000/api/subCategory/
 Content-Type: application/json
 
@@ -30,16 +30,14 @@ Content-Type: application/json
 //-----------------DELETE------------------
 //-----------------------------------------
 
-###
-// Delete subCategory by id and delete picture file in backend OK
+### Delete subCategory by id and delete picture file in backend OK
 DELETE http://localhost:5000/api/subCategory/15
 
 //-----------------------------------------
 //-----------------PATCH-------------------
 //-----------------------------------------
 
-###
-// Patch category OK
+### Patch category OK
 PATCH http://localhost:5000/api/subCategory/14
 Content-Type: application/json
 

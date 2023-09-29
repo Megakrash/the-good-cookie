@@ -26,7 +26,7 @@ export class AdsController extends Controller {
     if (query.minPrice) {
       where.price = MoreThan(query.minPrice);
     }
-    // If query category
+    // If query subCategory
     if (typeof query.subCategory === "string") {
       const subCategories = query.subCategory.split(",");
       where.subCategory = In(subCategories);
@@ -44,6 +44,17 @@ export class AdsController extends Controller {
       relations: {
         subCategory: true,
         tags: true,
+        user: true,
+      },
+      select: {
+        user: {
+          id: true,
+          nickName: true,
+        },
+        subCategory: {
+          id: true,
+          name: true,
+        },
       },
       order: {
         // price: "ASC",
@@ -66,6 +77,17 @@ export class AdsController extends Controller {
       relations: {
         subCategory: true,
         tags: true,
+        user: true,
+      },
+      select: {
+        user: {
+          id: true,
+          nickName: true,
+        },
+        subCategory: {
+          id: true,
+          name: true,
+        },
       },
     });
     if (ads) {
