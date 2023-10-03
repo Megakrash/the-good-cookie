@@ -34,26 +34,26 @@ INSERT INTO Tag (name) VALUES
 
 PRAGMA foreign_keys = ON;
 INSERT INTO Ad (title, description, user, price, createdDate, updateDate, picture, location, subCategory ) VALUES
-    ('Carte Graphique Evga GTX980Ti Hydro Copper', 'Superbe carte graphique', 2, 250, '2023-9-1','2023-9-1', 'https://media.topachat.com/media/s1000/630de00d033120593446ae0a.webp', 'Nantes', 1 ),
-    ('T-shirt mauve', 'Superbe T-shirt mauve', 2, 15, '2023-9-1', '2023-9-1', 'https://www.monproduitdecom.com/images/produits/tshirt-10409.jpg', 'Bordeaux', 2 ),
-    ('Le Silmarillon', 'Superbe livre', 2, 19, '2023-9-1', '2023-9-1', 'https://m.media-amazon.com/images/I/91vOYLA7beL._SL1500_.jpg', 'Lyon', 3 ),
-    ('Table basse IKEA', 'Superbe table basse', 2, 8, '2023-9-1', '2023-9-1', 'https://m.media-amazon.com/images/I/41vM9+epqJL._AC_SL1500_.jpg', 'Nantes',  4),
-    ('Maison de campagne', 'Superbe maison', 2, 1259000, '2023-9-1', '2023-9-1', 'https://i.f1g.fr/media/eidos/805x604_crop/2020/04/27/XVM6fdd6896-8650-11ea-bef4-6835ce68601a-805x604.jpg', 'Bordeaux', 5 ),
-    ('Mercedes ClasseB 2013', 'Superbe voiture', 2, 2500, '2023-9-1', '2023-9-1', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYqSpgKAUecjumNfdUNFlCGk7gJ6tJXy4-Cw&usqp=CAU', 'Lyon', 6 ),
-    ('CG Evga GTX2080Ti', 'Superbe carte graphique', 2, 549, '2023-9-1', '2023-9-1', 'https://media.topachat.com/media/s1000/630de00d033120593446ae0a.webp', 'Nantes', 1 ),
-    ('T-shirt vert', 'Superbe T-shirt vert', 2, 12, '2023-9-1', '2023-9-1', 'https://www.monproduitdecom.com/images/produits/tshirt-10409.jpg', 'Bordeaux', 2 ),
-    ('Terre et mer Tome1', 'Superbe livre', 2, 8, '2023-9-1', '2023-9-1', 'https://m.media-amazon.com/images/I/91vOYLA7beL._SL1500_.jpg', 'Lyon', 3 ),
-    ('Table basse BUT', 'Superbe table basse', 2, 49, '2023-9-1', '2023-9-1', 'https://m.media-amazon.com/images/I/41vM9+epqJL._AC_SL1500_.jpg', 'Nantes',  4),
-    ('Maison de ville', 'Superbe maison', 2, 775000, '2023-9-1', '2023-9-1', 'https://i.f1g.fr/media/eidos/805x604_crop/2020/04/27/XVM6fdd6896-8650-11ea-bef4-6835ce68601a-805x604.jpg', 'Bordeaux', 5 ),
-    ('Twingo 2009', 'Superbe voiture', 2, 1300, '2023-9-1', '2023-9-1', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYqSpgKAUecjumNfdUNFlCGk7gJ6tJXy4-Cw&usqp=CAU', 'Lyon', 6 ),
+    ('Carte Graphique Evga GTX980Ti Hydro Copper', 'Superbe carte graphique', 1, 250, '2023-9-1','2023-9-1', 'https://media.topachat.com/media/s1000/630de00d033120593446ae0a.webp', 'Nantes', 1 ),
+    ('T-shirt mauve', 'Superbe T-shirt mauve', 1, 15, '2023-9-1', '2023-9-1', 'https://www.monproduitdecom.com/images/produits/tshirt-10409.jpg', 'Bordeaux', 2 ),
+    ('Le Silmarillon', 'Superbe livre', 1, 19, '2023-9-1', '2023-9-1', 'https://m.media-amazon.com/images/I/91vOYLA7beL._SL1500_.jpg', 'Lyon', 3 ),
+    ('Table basse IKEA', 'Superbe table basse', 1, 8, '2023-9-1', '2023-9-1', 'https://m.media-amazon.com/images/I/41vM9+epqJL._AC_SL1500_.jpg', 'Nantes',  4),
+    ('Maison de campagne', 'Superbe maison', 1, 1259000, '2023-9-1', '2023-9-1', 'https://i.f1g.fr/media/eidos/805x604_crop/2020/04/27/XVM6fdd6896-8650-11ea-bef4-6835ce68601a-805x604.jpg', 'Bordeaux', 5 ),
+    ('Mercedes ClasseB 2013', 'Superbe voiture', 1, 2500, '2023-9-1', '2023-9-1', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYqSpgKAUecjumNfdUNFlCGk7gJ6tJXy4-Cw&usqp=CAU', 'Lyon', 6 ),
+    ('CG Evga GTX2080Ti', 'Superbe carte graphique', 1, 549, '2023-9-1', '2023-9-1', 'https://media.topachat.com/media/s1000/630de00d033120593446ae0a.webp', 'Nantes', 1 ),
+    ('T-shirt vert', 'Superbe T-shirt vert', 1, 12, '2023-9-1', '2023-9-1', 'https://www.monproduitdecom.com/images/produits/tshirt-10409.jpg', 'Bordeaux', 2 ),
+    ('Terre et mer Tome1', 'Superbe livre', 1, 8, '2023-9-1', '2023-9-1', 'https://m.media-amazon.com/images/I/91vOYLA7beL._SL1500_.jpg', 'Lyon', 3 ),
+    ('Table basse BUT', 'Superbe table basse', 1, 49, '2023-9-1', '2023-9-1', 'https://m.media-amazon.com/images/I/41vM9+epqJL._AC_SL1500_.jpg', 'Nantes',  4),
+    ('Maison de ville', 'Superbe maison', 1, 775000, '2023-9-1', '2023-9-1', 'https://i.f1g.fr/media/eidos/805x604_crop/2020/04/27/XVM6fdd6896-8650-11ea-bef4-6835ce68601a-805x604.jpg', 'Bordeaux', 5 ),
+    ('Twingo 2009', 'Superbe voiture', 1, 1300, '2023-9-1', '2023-9-1', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYqSpgKAUecjumNfdUNFlCGk7gJ6tJXy4-Cw&usqp=CAU', 'Lyon', 6 ),
     ('CG Evga GTX4080Ti', 'Superbe carte graphique', 1, 1049, '2023-9-1', '2023-9-1', 'https://media.topachat.com/media/s1000/630de00d033120593446ae0a.webp', 'Nantes', 1 ),
-    ('T-shirt noir', 'Superbe T-shirt noir', 2, 18, '2023-9-1', '2023-9-1', 'https://www.monproduitdecom.com/images/produits/tshirt-10409.jpg', 'Bordeaux', 2 ),
-    ('Terre et mer Tome2', 'Superbe livre', 2, 8, '2023-9-1', '2023-9-1', 'https://m.media-amazon.com/images/I/91vOYLA7beL._SL1500_.jpg', 'Lyon', 3 ),
-    ('Table basse INCONNUE', 'Superbe table basse', 2, 254, '2023-9-1', '2023-9-1', 'https://m.media-amazon.com/images/I/41vM9+epqJL._AC_SL1500_.jpg', 'Nantes',  4),
-    ('Maison de mer', 'Superbe maison', 2, 985000, '2023-9-1', '2023-9-1', 'https://i.f1g.fr/media/eidos/805x604_crop/2020/04/27/XVM6fdd6896-8650-11ea-bef4-6835ce68601a-805x604.jpg', 'Bordeaux', 5 ),
-    ('Peugeot 307 2015', 'Superbe voiture', 2, 8500, '2023-9-1', '2023-9-1', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYqSpgKAUecjumNfdUNFlCGk7gJ6tJXy4-Cw&usqp=CAU', 'Lyon', 6 ),
-    ('CG Evga GTX9080Ti', 'Superbe carte graphique', 2, 1680, '2023-9-1', '2023-9-1', 'https://media.topachat.com/media/s1000/630de00d033120593446ae0a.webp', 'Nantes', 1 ),
-    ('T-shirt treillis', 'Superbe T-shirt treillis', 2, 22, '2023-9-1', '2023-9-1', 'https://www.monproduitdecom.com/images/produits/tshirt-10409.jpg', 'Bordeaux', 2 );
+    ('T-shirt noir', 'Superbe T-shirt noir', 1, 18, '2023-9-1', '2023-9-1', 'https://www.monproduitdecom.com/images/produits/tshirt-10409.jpg', 'Bordeaux', 2 ),
+    ('Terre et mer Tome2', 'Superbe livre', 1, 8, '2023-9-1', '2023-9-1', 'https://m.media-amazon.com/images/I/91vOYLA7beL._SL1500_.jpg', 'Lyon', 3 ),
+    ('Table basse INCONNUE', 'Superbe table basse', 1, 254, '2023-9-1', '2023-9-1', 'https://m.media-amazon.com/images/I/41vM9+epqJL._AC_SL1500_.jpg', 'Nantes',  4),
+    ('Maison de mer', 'Superbe maison', 1, 985000, '2023-9-1', '2023-9-1', 'https://i.f1g.fr/media/eidos/805x604_crop/2020/04/27/XVM6fdd6896-8650-11ea-bef4-6835ce68601a-805x604.jpg', 'Bordeaux', 5 ),
+    ('Peugeot 307 2015', 'Superbe voiture', 1, 8500, '2023-9-1', '2023-9-1', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYqSpgKAUecjumNfdUNFlCGk7gJ6tJXy4-Cw&usqp=CAU', 'Lyon', 6 ),
+    ('CG Evga GTX9080Ti', 'Superbe carte graphique', 1, 1680, '2023-9-1', '2023-9-1', 'https://media.topachat.com/media/s1000/630de00d033120593446ae0a.webp', 'Nantes', 1 ),
+    ('T-shirt treillis', 'Superbe T-shirt treillis', 1, 22, '2023-9-1', '2023-9-1', 'https://www.monproduitdecom.com/images/produits/tshirt-10409.jpg', 'Bordeaux', 2 );
 
 DELETE FROM Ad;
 

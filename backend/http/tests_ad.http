@@ -11,7 +11,7 @@ GET http://localhost:5000/api/annonce/21
 
 ###
 // Get all ads with filter OK
-GET http://localhost:5000/api/annonce?location=antes&title=vga&subCategory=1&maxPrice=9000&minPrice=200
+GET http://localhost:5000/api/annonce?location=nantes&subCategory=1&minPrice=1000&maxPrice=1500
 
 //-----------------------------------------
 //-----------------POST--------------------
@@ -47,9 +47,9 @@ DELETE http://localhost:5000/api/annonce/1
 
 ###
 // Patch Ad
-PATCH http://localhost:5000/api/annonce/28
+PATCH http://localhost:5000/api/annonce/33
 Content-Type: application/json
 
 {
-    "picture": "https://cdn.pixabay.com/photo/2023/09/17/19/10/building-8259184_1280.jpg"
+    "user": {"id": 1, "nickName": "Megakrash"}
 }
