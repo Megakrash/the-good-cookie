@@ -3,18 +3,18 @@ import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
 import { API_URL } from "@/configApi";
 import axios from "axios";
-import AdCard from "@/components/ads/AdCard";
-import { AdsTypes, CategoriesTypes } from "@/types";
+import SubCategoriesCard from "@/components/subCategories/SubCategoriesCard";
+import { SubCategoriesTypes, CategoryTypes } from "@/types";
 
 const CategoryComponent = (): React.ReactNode => {
   const router = useRouter();
 
-  const [category, setCategory] = useState<CategoriesTypes>();
-  const [adsCategory, setAdsCategory] = useState<AdsTypes[]>([]);
+  const [category, setCategory] = useState<CategoryTypes>();
+  const [subCategories, setSubCategories] = useState<SubCategoriesTypes>([]);
 
   const getCategory = () => {
     axios
-      .get(`${API_URL}/category/${router.query.id}`)
+      .get<CategoryTypes>(`${API_URL}/category/${router.query.id}`)
       .then((res) => {
         setCategory(res.data);
       })
@@ -24,44 +24,37 @@ const CategoryComponent = (): React.ReactNode => {
       });
   };
 
-  const getAdsFromCategory = () => {
+  const getSubCategoriesFromCategory = () => {
     axios
-      .get(`${API_URL}/annonces?category=${router.query.id}`)
+      .get<SubCategoriesTypes>(
+        `${API_URL}/subCategory?category=${router.query.id}`
+      )
       .then((res) => {
-        setAdsCategory(res.data);
+        setSubCategories(res.data);
       })
-
       .catch(() => {
-        setAdsCategory([]);
         console.error("error");
       });
   };
 
   useEffect(() => {
     getCategory();
-    getAdsFromCategory();
+    getSubCategoriesFromCategory();
   }, [router]);
 
   return (
     <>
       {category && (
         <Layout title={`TGG : ${category.name}`}>
-          <p>{`Toutes les offres de la catégorie ${category.name}`}</p>
-          {adsCategory.length >= 1 ? (
+          {subCategories.length >= 1 ? (
             <div>
-              {adsCategory.map((infos) => (
-                <AdCard
+              {subCategories.map((infos) => (
+                <SubCategoriesCard
                   key={infos.id}
                   id={infos.id}
-                  title={infos.title}
-                  description={infos.description}
-                  owner={infos.owner}
-                  price={infos.price}
-                  createdDate={infos.createdDate}
+                  name={infos.name}
                   picture={infos.picture}
-                  location={infos.location}
                   category={infos.category}
-                  tags={infos.tags}
                 />
               ))}
             </div>

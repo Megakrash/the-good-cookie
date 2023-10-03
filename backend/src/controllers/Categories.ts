@@ -6,7 +6,11 @@ import { validate } from "class-validator";
 export class CategoriesController extends Controller {
   // Get all categories
   getAll = async (req: Request, res: Response) => {
-    const categorys = await Category.find();
+    const categorys = await Category.find({
+      relations: {
+        subCategory: true,
+      },
+    });
     res.status(200).json(categorys);
   };
 

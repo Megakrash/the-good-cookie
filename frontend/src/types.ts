@@ -1,18 +1,41 @@
-export type CategoriesTypes = {
+// Categories
+export type CategoryTypes = {
   id: number;
   name: string;
+  subCategory: [
+    {
+      id: number;
+      name: string;
+    }
+  ];
 };
 
-export type AdsTypes = {
+export type CategoriesTypes = CategoryTypes[];
+
+// SubCategories
+export type SubCategoryTypes = {
+  id: number;
+  name: string;
+  picture: string;
+  category: {
+    id: number;
+    name: string;
+  };
+};
+
+export type SubCategoriesTypes = SubCategoryTypes[];
+
+// Ads
+export type AdTypes = {
   id: number;
   title: string;
   description: string;
-  owner: string;
   price: number;
   createdDate: string;
+  updateDate: string;
   picture: string;
   location: string;
-  category: {
+  subCategory: {
     id: number;
     name: string;
   };
@@ -22,7 +45,13 @@ export type AdsTypes = {
       name: string;
     }
   ];
+  user: {
+    id: number;
+    nickName: string;
+  };
 };
+
+export type AdsTypes = AdTypes[];
 
 export type AdFormData = {
   title: string;
@@ -32,3 +61,5 @@ export type AdFormData = {
   location: string;
   category: { id: number };
 };
+
+export type SearchAds = AdsTypes[];

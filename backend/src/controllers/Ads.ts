@@ -1,6 +1,6 @@
 import { Controller } from "./Interface";
 import { Request, Response } from "express";
-import { Like, LessThanOrEqual, MoreThan, In } from "typeorm";
+import { Like, LessThanOrEqual, MoreThan, In, Between } from "typeorm";
 import { Ad } from "../entities/Ad";
 import { validate } from "class-validator";
 
@@ -18,15 +18,19 @@ export class AdsController extends Controller {
     if (query.title) {
       where.title = Like(`%${query.title}%`);
     }
-    // If query max price
-    if (query.maxPrice) {
-      where.price = LessThanOrEqual(query.maxPrice);
-    }
     // If query min price
     if (query.minPrice) {
       where.price = MoreThan(query.minPrice);
     }
-    // If query category
+    // If query max price
+    if (query.maxPrice) {
+      if (where.price) {
+        where.price = Between(query.minPrice, query.maxPrice);
+      } else {
+        where.price = LessThanOrEqual(query.maxPrice);
+      }
+    }
+    // If query subCategory
     if (typeof query.subCategory === "string") {
       const subCategories = query.subCategory.split(",");
       where.subCategory = In(subCategories);
@@ -44,6 +48,17 @@ export class AdsController extends Controller {
       relations: {
         subCategory: true,
         tags: true,
+        user: true,
+      },
+      select: {
+        user: {
+          id: true,
+          nickName: true,
+        },
+        subCategory: {
+          id: true,
+          name: true,
+        },
       },
       order: {
         // price: "ASC",
@@ -66,6 +81,17 @@ export class AdsController extends Controller {
       relations: {
         subCategory: true,
         tags: true,
+        user: true,
+      },
+      select: {
+        user: {
+          id: true,
+          nickName: true,
+        },
+        subCategory: {
+          id: true,
+          name: true,
+        },
       },
     });
     if (ads) {

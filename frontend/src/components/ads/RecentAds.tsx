@@ -5,11 +5,11 @@ import axios from "axios";
 import { AdsTypes } from "@/types";
 
 export default function RecentAds(): React.ReactNode {
-  const [allAds, setAllAds] = useState<AdsTypes[]>([]);
+  const [allAds, setAllAds] = useState<AdsTypes>([]);
 
   const getAllAds = () => {
     axios
-      .get(`${API_URL}/annonces`)
+      .get(`${API_URL}/annonce`)
       .then((res) => {
         setAllAds(res.data);
       })
@@ -32,13 +32,15 @@ export default function RecentAds(): React.ReactNode {
             id={infos.id}
             title={infos.title}
             description={infos.description}
-            owner={infos.owner}
             price={infos.price}
             createdDate={infos.createdDate}
+            updateDate={infos.updateDate}
             picture={infos.picture}
             location={infos.location}
-            category={infos.category}
+            subCategory={infos.subCategory}
+            user={infos.user}
             tags={infos.tags}
+            onReRender={getAllAds}
           />
         ))}
       </section>

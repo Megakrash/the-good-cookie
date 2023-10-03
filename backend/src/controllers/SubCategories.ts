@@ -1,5 +1,6 @@
 import { Controller } from "./Interface";
 import { Request, Response } from "express";
+import { In } from "typeorm";
 import { SubCategory } from "../entities/SubCategory";
 import { validate } from "class-validator";
 import fs from "fs";
@@ -8,7 +9,17 @@ import path from "path";
 export class SubCategoriesController extends Controller {
   // Get all subCategories
   getAll = async (req: Request, res: Response) => {
+    const query = req.query;
+    const where: any = {};
+
+    // If query category
+    if (typeof query.category === "string") {
+      const categories = query.category.split(",");
+      where.category = In(categories);
+    }
+
     const subCategories = await SubCategory.find({
+      where: where,
       relations: {
         category: true,
       },

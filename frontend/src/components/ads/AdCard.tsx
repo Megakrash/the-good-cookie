@@ -1,8 +1,13 @@
-import { AdsTypes } from "@/types";
+import { AdTypes } from "@/types";
 import Link from "next/link";
 import Image from "next/image";
+import DeleteAd from "./DeleteAd";
 
-const AdCard = (props: AdsTypes): React.ReactNode => {
+type AdCardProps = AdTypes & {
+  onReRender: () => void;
+};
+
+const AdCard = (props: AdCardProps): React.ReactNode => {
   return (
     <div className="ad-card-container">
       <Link className="ad-card-link" href={`/annonces/${props.id}`}>
@@ -19,6 +24,7 @@ const AdCard = (props: AdsTypes): React.ReactNode => {
           <p className="ad-card-price">{props.location}</p>
         </div>
       </Link>
+      <DeleteAd type={"ad"} id={props.id} onReRender={props.onReRender} />
     </div>
   );
 };
