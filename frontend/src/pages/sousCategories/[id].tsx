@@ -4,18 +4,18 @@ import { useRouter } from "next/router";
 import { API_URL } from "@/configApi";
 import axios from "axios";
 import AdCard from "@/components/ads/AdCard";
-import { SubCategoriesTypes, AdsTypes } from "@/types";
+import { SubCategoryTypes, AdsTypes } from "@/types";
 import Link from "next/link";
 
 const SubCategoryComponent = (): React.ReactNode => {
   const router = useRouter();
 
-  const [subCategory, setSubCategory] = useState<SubCategoriesTypes>();
-  const [adsSubCategory, setAdsSubCategory] = useState<AdsTypes[]>([]);
+  const [subCategory, setSubCategory] = useState<SubCategoryTypes>();
+  const [adsSubCategory, setAdsSubCategory] = useState<AdsTypes>([]);
 
   const getSubCategory = () => {
     axios
-      .get<SubCategoriesTypes>(`${API_URL}/subCategory/${router.query.id}`)
+      .get<SubCategoryTypes>(`${API_URL}/subCategory/${router.query.id}`)
       .then((res) => {
         setSubCategory(res.data);
       })
@@ -26,7 +26,7 @@ const SubCategoryComponent = (): React.ReactNode => {
 
   const getAdsFromSubCategory = () => {
     axios
-      .get<AdsTypes[]>(`${API_URL}/annonce?subCategory=${router.query.id}`)
+      .get<AdsTypes>(`${API_URL}/annonce?subCategory=${router.query.id}`)
       .then((res) => {
         setAdsSubCategory(res.data);
       })

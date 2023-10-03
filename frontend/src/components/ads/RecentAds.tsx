@@ -5,7 +5,7 @@ import axios from "axios";
 import { AdsTypes } from "@/types";
 
 export default function RecentAds(): React.ReactNode {
-  const [allAds, setAllAds] = useState<AdsTypes[]>([]);
+  const [allAds, setAllAds] = useState<AdsTypes>([]);
 
   const getAllAds = () => {
     axios

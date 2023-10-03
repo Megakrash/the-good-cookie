@@ -1,9 +1,9 @@
-import { AdsTypes } from "@/types";
+import { AdTypes } from "@/types";
 import Link from "next/link";
 import Image from "next/image";
 import DeleteAd from "./DeleteAd";
 
-type AdCardProps = AdsTypes & {
+type AdCardProps = AdTypes & {
   onReRender: () => void;
 };
 

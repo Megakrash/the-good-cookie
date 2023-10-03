@@ -4,17 +4,17 @@ import { useRouter } from "next/router";
 import { API_URL } from "@/configApi";
 import axios from "axios";
 import SubCategoriesCard from "@/components/subCategories/SubCategoriesCard";
-import { SubCategoriesTypes, CategoriesTypes } from "@/types";
+import { SubCategoriesTypes, CategoryTypes } from "@/types";
 
 const CategoryComponent = (): React.ReactNode => {
   const router = useRouter();
 
-  const [category, setCategory] = useState<CategoriesTypes>();
-  const [subCategories, setSubCategories] = useState<SubCategoriesTypes[]>([]);
+  const [category, setCategory] = useState<CategoryTypes>();
+  const [subCategories, setSubCategories] = useState<SubCategoriesTypes>([]);
 
   const getCategory = () => {
     axios
-      .get<CategoriesTypes>(`${API_URL}/category/${router.query.id}`)
+      .get<CategoryTypes>(`${API_URL}/category/${router.query.id}`)
       .then((res) => {
         setCategory(res.data);
       })
@@ -26,7 +26,7 @@ const CategoryComponent = (): React.ReactNode => {
 
   const getSubCategoriesFromCategory = () => {
     axios
-      .get<SubCategoriesTypes[]>(
+      .get<SubCategoriesTypes>(
         `${API_URL}/subCategory?category=${router.query.id}`
       )
       .then((res) => {

@@ -1,7 +1,7 @@
-import { CategoriesTypes } from "@/types";
+import { CategoryTypes } from "@/types";
 import Link from "next/link";
 
-const NavCategories = (props: CategoriesTypes): React.ReactNode => {
+const NavCategories = (props: CategoryTypes): React.ReactNode => {
   return (
     <>
       {" "}

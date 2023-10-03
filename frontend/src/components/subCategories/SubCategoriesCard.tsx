@@ -1,9 +1,9 @@
-import { SubCategoriesTypes } from "@/types";
+import { SubCategoryTypes } from "@/types";
 import Link from "next/link";
 import Image from "next/image";
 import { PATH_IMAGE } from "@/configApi";
 
-const SubCategoriesCard = (props: SubCategoriesTypes): React.ReactNode => {
+const SubCategoriesCard = (props: SubCategoryTypes): React.ReactNode => {
   const picturePath: string = `${PATH_IMAGE}subCategory/`;
   return (
     <div className="ad-card-container">

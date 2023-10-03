@@ -3,18 +3,18 @@ import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
 import { API_URL } from "@/configApi";
 import axios from "axios";
-import { AdsTypes } from "@/types";
+import { AdTypes } from "@/types";
 import Image from "next/image";
 
 const AdDetailComponent = (): React.ReactNode => {
   const router = useRouter();
   const adId = router.query.id as string;
 
-  const [Ad, setAd] = useState<AdsTypes>();
+  const [Ad, setAd] = useState<AdTypes>();
 
   const getAd = () => {
     axios
-      .get<AdsTypes>(`${API_URL}/annonce/${adId}`)
+      .get<AdTypes>(`${API_URL}/annonce/${adId}`)
       .then((res) => {
         setAd(res.data);
       })

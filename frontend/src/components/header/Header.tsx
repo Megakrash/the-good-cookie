@@ -1,26 +1,15 @@
 import { useEffect, useState } from "react";
+import { getAllCategories } from "../apiRest/ApiCategories";
 import NavCategories from "../categories/NavCategories";
-import { API_URL } from "@/configApi";
-import axios from "axios";
 import Link from "next/link";
 import { CategoriesTypes } from "@/types";
 
 export default function Header(): React.ReactNode {
-  const [allCategories, setAllCategories] = useState<CategoriesTypes[]>([]);
-
-  const getAllCats = () => {
-    axios
-      .get(`${API_URL}/category`)
-      .then((res) => {
-        setAllCategories(res.data);
-      })
-      .catch(() => {
-        console.error("error");
-      });
-  };
+  //Get all categories
+  const [categories, setCategories] = useState<CategoriesTypes>([]);
 
   useEffect(() => {
-    getAllCats();
+    getAllCategories(setCategories);
   }, []);
 
   return (
@@ -54,14 +43,14 @@ export default function Header(): React.ReactNode {
         </Link>
       </div>
       <nav className="categories-navigation">
-        {allCategories.map((infos, index) => (
+        {categories.map((infos, index) => (
           <div key={infos.id}>
             <NavCategories
               id={infos.id}
               name={infos.name}
               subCategory={infos.subCategory}
             />
-            {index < allCategories.length - 1 && `${" "}  •`}
+            {index < categories.length - 1 && `${" "}  •`}
           </div>
         ))}
       </nav>
