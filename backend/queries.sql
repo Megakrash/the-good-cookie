@@ -33,6 +33,12 @@ INSERT INTO Tag (name) VALUES
     ('écologique');
 
 PRAGMA foreign_keys = ON;
+INSERT INTO User (firstName, lastName, nickName, email, password, registrationDate, adress, zipCode, city, phoneNumber, isAdmin) VALUES
+    -- ('jonathan', 'scattolini', 'Megakrash', 'jscattolini@gmail.com', 'u5Q41$R1Ph6LF?DlKiB', '2023-10-01', '55 rue qui tue', '44444', 'WestSide', '0706060606', false),
+    ('michel', 'robert', 'SuperRobert666', 'mrobert@gmail.com', 'u5Q41$R1Ph6LF?DlKiB', '2023-10-08', '89 rue de la moule', '85942', 'Choux City', '0707070707', false);
+
+
+PRAGMA foreign_keys = ON;
 INSERT INTO Ad (title, description, user, price, createdDate, updateDate, picture, location, subCategory ) VALUES
     ('Carte Graphique Evga GTX980Ti Hydro Copper', 'Superbe carte graphique', 1, 250, '2023-9-1','2023-9-1', 'https://media.topachat.com/media/s1000/630de00d033120593446ae0a.webp', 'Nantes', 1 ),
     ('T-shirt mauve', 'Superbe T-shirt mauve', 1, 15, '2023-9-1', '2023-9-1', 'https://www.monproduitdecom.com/images/produits/tshirt-10409.jpg', 'Bordeaux', 2 ),
