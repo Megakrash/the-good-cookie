@@ -39,12 +39,10 @@ export type AdTypes = {
     id: number;
     name: string;
   };
-  tags: [
-    {
-      id: number;
-      name: string;
-    }
-  ];
+  tags: {
+    id: number;
+    name: string;
+  }[];
   user: {
     id: number;
     nickName: string;

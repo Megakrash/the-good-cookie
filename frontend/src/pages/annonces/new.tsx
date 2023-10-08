@@ -1,31 +1,18 @@
 import { FormEvent, useEffect, useState } from "react";
 import Layout from "@/components/Layout";
+import { getAllCategories } from "@/components/apiRest/ApiCategories";
 import { AdFormData, CategoriesTypes } from "@/types";
 import axios from "axios";
 import { API_URL } from "@/configApi";
 import toast, { Toaster } from "react-hot-toast";
 
 const NewAd = (): React.ReactNode => {
-  // Get Categories
-  const [categories, setCategories] = useState<CategoriesTypes[]>([]);
-
-  const getCategories = () => {
-    axios
-      .get<CategoriesTypes[]>(`${API_URL}/category`)
-      .then((res) => {
-        setCategories(res.data);
-      })
-
-      .catch(() => {
-        console.error("error");
-      });
-  };
+  //Get all categories
+  const [categories, setCategories] = useState<CategoriesTypes>([]);
 
   useEffect(() => {
-    getCategories();
+    getAllCategories(setCategories);
   }, []);
-
-  // const [confirmMessage, setConfirmMessage] = useState<boolean>(false);
 
   // Post new Ad
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -44,7 +31,7 @@ const NewAd = (): React.ReactNode => {
     axios
       .post(`${API_URL}/annonces`, data)
       .then(() => {
-        // setConfirmMessage(true);
+        toast("Votre annonce a étée crée avec succès.");
         form.reset();
       })
 
@@ -52,17 +39,11 @@ const NewAd = (): React.ReactNode => {
         console.error("error");
       });
   };
-
-  const notify = () => toast("Here is your toast.");
   return (
     <>
       <Layout title="TGD : Créer mon annonce">
         <h2>Création de votre annonce</h2>
-        {/* {confirmMessage && (
-          <div className="">Votre formulaire a été soumis avec succès.</div>
-        )} */}
         <div>
-          <button onClick={notify}>Make me a toast</button>
           <Toaster
             toastOptions={{
               style: {
@@ -123,10 +104,14 @@ const NewAd = (): React.ReactNode => {
 
           <select name="categoryId">
             <option>Sélectonnez une catégorie</option>
-            {categories.map((el) => (
-              <option key={el.id} value={el.id}>
-                {el.name.toUpperCase()}
-              </option>
+            {categories.map((category) => (
+              <optgroup key={category.id} label={category.name}>
+                {category.subCategory.map((sub) => (
+                  <option key={sub.id} value={sub.id}>
+                    {sub.name}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </select>
           <br />

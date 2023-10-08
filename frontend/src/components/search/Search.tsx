@@ -100,7 +100,7 @@ const Search = (): React.ReactNode => {
       )}
       <button type="button" onClick={() => setShowQueries(!showQueries)}>
         <FaSliders />
-        <p>Filtres</p>
+        <p>{!showQueries ? "Plus de filtres" : "Moins de filtres"}</p>
       </button>
       {showQueries && (
         <>

@@ -1,16 +1,38 @@
 import { useEffect, useState } from "react";
 import { getAllCategories } from "../apiRest/ApiCategories";
 import NavCategories from "../categories/NavCategories";
+import NavSubCategories from "../subCategories/NavSubCategories";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { CategoriesTypes } from "@/types";
 
 export default function Header(): React.ReactNode {
+  const router = useRouter();
+
   //Get all categories
   const [categories, setCategories] = useState<CategoriesTypes>([]);
 
   useEffect(() => {
     getAllCategories(setCategories);
   }, []);
+
+  // Check path
+
+  const findParentCategoryOfSubCategory = (subId: number) => {
+    for (let category of categories) {
+      for (let sub of category.subCategory) {
+        if (sub.id === subId) {
+          return category.id;
+        }
+      }
+    }
+    return null;
+  };
+
+  const currentSubCategoryId = router.asPath.match(/\/sousCategories\/(\d+)/);
+  const parentIdOfCurrentSubCategory = currentSubCategoryId
+    ? findParentCategoryOfSubCategory(parseInt(currentSubCategoryId[1], 10))
+    : null;
 
   return (
     <header className="header">
@@ -43,14 +65,28 @@ export default function Header(): React.ReactNode {
         </Link>
       </div>
       <nav className="categories-navigation">
-        {categories.map((infos, index) => (
-          <div key={infos.id}>
-            <NavCategories
-              id={infos.id}
-              name={infos.name}
-              subCategory={infos.subCategory}
-            />
-            {index < categories.length - 1 && `${" "}  •`}
+        {categories.map((category) => (
+          <div key={category.id}>
+            <div>
+              <NavCategories
+                id={category.id}
+                name={category.name}
+                subCategory={category.subCategory}
+              />
+            </div>
+          </div>
+        ))}
+      </nav>
+      <nav className="categories-navigation">
+        {categories.map((category) => (
+          <div key={category.id}>
+            {(router.asPath === `/categories/${String(category.id)}` ||
+              parentIdOfCurrentSubCategory === category.id) &&
+              [...category.subCategory]
+                .sort((a, b) => a.id - b.id)
+                .map((sub) => (
+                  <NavSubCategories key={sub.id} id={sub.id} name={sub.name} />
+                ))}
           </div>
         ))}
       </nav>

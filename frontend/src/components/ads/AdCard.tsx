@@ -22,6 +22,11 @@ const AdCard = (props: AdCardProps): React.ReactNode => {
           <p className="ad-card-title">{props.title}</p>
           <p className="ad-card-price">{props.price} €</p>
           <p className="ad-card-price">{props.location}</p>
+          {props.tags.map((tag) => (
+            <p key={tag.id} className="ad-card-price">
+              {tag.name}
+            </p>
+          ))}
         </div>
       </Link>
       <DeleteAd type={"ad"} id={props.id} onReRender={props.onReRender} />
