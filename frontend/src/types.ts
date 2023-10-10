@@ -60,4 +60,11 @@ export type AdFormData = {
   category: { id: number };
 };
 
-export type SearchAds = AdsTypes[];
+// Tags
+
+export type TagTypes = {
+  id: number;
+  name: string;
+};
+
+export type TagsTypes = TagTypes[];
