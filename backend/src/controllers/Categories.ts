@@ -10,6 +10,9 @@ export class CategoriesController extends Controller {
       relations: {
         subCategory: true,
       },
+      order: {
+        name: "ASC",
+      },
     });
     res.status(200).json(categorys);
   };
