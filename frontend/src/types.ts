@@ -39,12 +39,10 @@ export type AdTypes = {
     id: number;
     name: string;
   };
-  tags: [
-    {
-      id: number;
-      name: string;
-    }
-  ];
+  tags: {
+    id: number;
+    name: string;
+  }[];
   user: {
     id: number;
     nickName: string;
@@ -62,4 +60,11 @@ export type AdFormData = {
   category: { id: number };
 };
 
-export type SearchAds = AdsTypes[];
+// Tags
+
+export type TagTypes = {
+  id: number;
+  name: string;
+};
+
+export type TagsTypes = TagTypes[];

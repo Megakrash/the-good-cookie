@@ -6,6 +6,72 @@ import { validate } from "class-validator";
 
 export class AdsController extends Controller {
   // Get all ads with or not query
+  // getAll = async (req: Request, res: Response) => {
+  //   const query = req.query;
+  //   const where: any = {};
+
+  //   // If query location
+  //   if (query.location) {
+  //     where.location = Like(`%${query.location}%`);
+  //   }
+  //   // If query title
+  //   if (query.title) {
+  //     where.title = Like(`%${query.title}%`);
+  //   }
+  //   // If query min price
+  //   if (query.minPrice) {
+  //     where.price = MoreThan(query.minPrice);
+  //   }
+  //   // If query max price
+  //   if (query.maxPrice) {
+  //     if (where.price) {
+  //       where.price = Between(query.minPrice, query.maxPrice);
+  //     } else {
+  //       where.price = LessThanOrEqual(query.maxPrice);
+  //     }
+  //   }
+  //   // If query subCategory
+  //   if (typeof query.subCategory === "string") {
+  //     const subCategories = query.subCategory.split(",");
+  //     where.subCategory = In(subCategories);
+  //   }
+
+  //   // If query tag
+  //   // if (typeof query.tags === "string") {
+  //   //   const tags = query.tags.split(",");
+  //   //   where.tags = In(tags);
+  //   // }
+
+  //   // Find Ad with query & relations
+  //   const ads = await Ad.find({
+  //     where: where,
+  //     relations: {
+  //       subCategory: true,
+  //       tags: true,
+  //       user: true,
+  //     },
+  //     select: {
+  //       user: {
+  //         id: true,
+  //         nickName: true,
+  //       },
+  //       subCategory: {
+  //         id: true,
+  //         name: true,
+  //       },
+  //     },
+  //     order: {
+  //       // price: "ASC",
+  //       createdDate: "DESC",
+  //     },
+  //   });
+  //   if (ads.length >= 1) {
+  //     res.status(200).json(ads);
+  //   } else {
+  //     res.status(404).send("No ad found with this query");
+  //   }
+  // };
+
   getAll = async (req: Request, res: Response) => {
     const query = req.query;
     const where: any = {};
@@ -36,35 +102,32 @@ export class AdsController extends Controller {
       where.subCategory = In(subCategories);
     }
 
-    // If query tag
-    // if (typeof query.tags === "string") {
-    //   const tags = query.tags.split(",");
-    //   where.tags = In(tags);
-    // }
+    // Begin the TypeORM query
+    const adQuery = Ad.createQueryBuilder("ad")
+      .leftJoinAndSelect("ad.subCategory", "subCategory")
+      .leftJoinAndSelect("ad.tags", "tag")
+      .leftJoinAndSelect("ad.user", "user")
+      .select([
+        "ad",
+        "user.id",
+        "user.nickName",
+        "subCategory.id",
+        "subCategory.name",
+        "tag",
+      ])
+      .where(where)
+      .orderBy({
+        "ad.createdDate": "DESC",
+      });
 
-    // Find Ad with query & relations
-    const ads = await Ad.find({
-      where: where,
-      relations: {
-        subCategory: true,
-        tags: true,
-        user: true,
-      },
-      select: {
-        user: {
-          id: true,
-          nickName: true,
-        },
-        subCategory: {
-          id: true,
-          name: true,
-        },
-      },
-      order: {
-        // price: "ASC",
-        createdDate: "DESC",
-      },
-    });
+    // If query tags
+    if (typeof query.tags === "string") {
+      const tags = query.tags.split(",");
+      adQuery.andWhere("tag.name IN (:...tags)", { tags: tags });
+    }
+    // Execute the query
+    const ads = await adQuery.getMany();
+
     if (ads.length >= 1) {
       res.status(200).json(ads);
     } else {

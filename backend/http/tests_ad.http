@@ -2,23 +2,20 @@
 //-----------------GET---------------------
 //-----------------------------------------
 
-// Get all ads with infos subCategory & user & tags OK 
+### Get all ads with infos subCategory & user & tags OK 
 GET http://localhost:5000/api/annonce
 
-###
-// Get Ad by id with infos subCategory & user & tags OK
-GET http://localhost:5000/api/annonce/21
+### Get Ad by id with infos subCategory & user & tags OK
+GET http://localhost:5000/api/annonce/1
 
-###
-// Get all ads with filter OK
-GET http://localhost:5000/api/annonce?location=nantes&subCategory=1&minPrice=1000&maxPrice=1500
+### Get all ads with filter OK
+GET http://localhost:5000/api/annonce?location=nantes&subCategory=1&tags=cute
 
 //-----------------------------------------
 //-----------------POST--------------------
 //-----------------------------------------
 
-###
-// Add new ad OK
+### Add new ad OK
 POST http://localhost:5000/api/annonce
 Content-Type: application/json
 
@@ -47,9 +44,9 @@ DELETE http://localhost:5000/api/annonce/1
 
 ###
 // Patch Ad
-PATCH http://localhost:5000/api/annonce/33
+PATCH http://localhost:5000/api/annonce/
 Content-Type: application/json
 
 {
-    "user": {"id": 1, "nickName": "Megakrash"}
+    "tags": [{"id": 1},{"id": 2}]
 }
