@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import AdCard from "../ads/AdCard";
 import axios from "axios";
 import { getAllCategories } from "../apiRest/ApiCategories";
 import { getAllTags } from "../apiRest/ApiTags";
@@ -8,6 +9,7 @@ import { FaSliders } from "react-icons/fa6";
 
 const Search = (): React.ReactNode => {
   const [showQueries, setShowQueries] = useState<boolean>(false);
+  const [showResult, setShowResult] = useState<boolean>(false);
 
   //Get categories & Tags
   const [categories, setCategories] = useState<CategoriesTypes>([]);
@@ -20,12 +22,12 @@ const Search = (): React.ReactNode => {
   //-----------------
   // Selected queries
   //-----------------
-  // Categories
-  const [selectedCategory, setSelectedCategory] = useState<string>();
+  // subCategories
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string>();
   const handleChangeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     if (value === "") return;
-    setSelectedCategory(value);
+    setSelectedSubCategory(value);
   };
   // Tags
   const [selectedTag, setSelectedTag] = useState<string>();
@@ -48,8 +50,10 @@ const Search = (): React.ReactNode => {
   //-----------------
 
   const buildSearchURL = (): string => {
-    let url = `${API_URL}/annonce?subCategory=${selectedCategory}&location=${selectedLocation}`;
-
+    let url = `${API_URL}/annonce?subCategory=${selectedSubCategory}`;
+    if (selectedLocation) {
+      url += `&location=${selectedLocation}`;
+    }
     if (minPrice) {
       url += `&minPrice=${minPrice}`;
     }
@@ -74,7 +78,7 @@ const Search = (): React.ReactNode => {
       .get<AdsTypes>(url)
       .then((res) => {
         setSeachResult(res.data);
-        console.log(res.data);
+        setShowResult(true);
       })
       .catch((err) => {
         if (err.response && err.response.status === 404) {
@@ -87,7 +91,7 @@ const Search = (): React.ReactNode => {
     <div>
       {categories && tags && (
         <>
-          <select value={selectedCategory} onChange={handleChangeCategory}>
+          <select value={selectedSubCategory} onChange={handleChangeCategory}>
             <option value="" hidden>
               Sélectionnez une catégorie*
             </option>
@@ -104,7 +108,7 @@ const Search = (): React.ReactNode => {
           <input
             type="text"
             name="location"
-            placeholder="Où ?*"
+            placeholder="Où ?"
             value={selectedLocation}
             onChange={(e) => setSelectedLocation(e.target.value)}
           />
@@ -157,6 +161,32 @@ const Search = (): React.ReactNode => {
               Rechercher
             </button>
           )}
+        </>
+      )}
+      {showResult && seachResult.length >= 1 && (
+        <>
+          <h2>
+            {seachResult.length} annonces correspondent à votre recherche :
+          </h2>
+          <section className="recent-ads">
+            {seachResult.map((infos) => (
+              <AdCard
+                key={infos.id}
+                id={infos.id}
+                title={infos.title}
+                description={infos.description}
+                price={infos.price}
+                createdDate={infos.createdDate}
+                updateDate={infos.updateDate}
+                picture={infos.picture}
+                location={infos.location}
+                subCategory={infos.subCategory}
+                user={infos.user}
+                tags={infos.tags}
+                onReRender={searchAds}
+              />
+            ))}
+          </section>
         </>
       )}
     </div>

@@ -57,7 +57,8 @@ export type AdFormData = {
   price: number;
   picture: string;
   location: string;
-  category: { id: number };
+  subCategory: number;
+  user: number;
 };
 
 // Tags

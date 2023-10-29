@@ -19,23 +19,25 @@ const NewAd = (): React.ReactNode => {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
-    const data = Object.fromEntries(
-      formData.entries()
-    ) as unknown as AdFormData;
-
-    if ("categoryId" in data) {
-      data.category = { id: Number(data.categoryId) };
-      delete data.categoryId;
+    formData.append("user", "1");
+    const price = formData.get("price");
+    if (typeof price === "string") {
+      formData.set("price", String(Number(price)));
+    }
+    const subCategory = formData.get("subCategory");
+    if (typeof subCategory === "string") {
+      formData.set("subCategory", String(Number(subCategory)));
     }
 
     axios
-      .post(`${API_URL}/annonces`, data)
+      .post(`${API_URL}/annonce`, formData)
       .then(() => {
         toast("Votre annonce a étée crée avec succès.");
         form.reset();
       })
 
       .catch(() => {
+        toast.error(`Quelque chose s'est mal passé`);
         console.error("error");
       });
   };
@@ -69,14 +71,14 @@ const NewAd = (): React.ReactNode => {
             required
           />
           <br />
-          <input
+          {/* <input
             className=""
             type="email"
             name="owner"
             placeholder="Email*"
             required
           />
-          <br />
+          <br /> */}
           <input
             className=""
             type="number"
@@ -85,14 +87,14 @@ const NewAd = (): React.ReactNode => {
             required
           />
           <br />
-          <input
+          {/* <input
             className=""
             type="text"
             name="picture"
             placeholder="Lien de votre image*"
             required
           />
-          <br />
+          <br /> */}
           <input
             className=""
             type="text"
@@ -101,8 +103,19 @@ const NewAd = (): React.ReactNode => {
             required
           />
           <br />
-
-          <select name="categoryId">
+          <input
+            className=""
+            type="file"
+            name="picture"
+            placeholder="Choisir une image"
+            accept=".jpg, .png"
+            // onChange={(e) => {
+            //   setNewPic(e.target.files[0]);
+            // }}
+            required
+          />
+          <br />
+          <select name="subCategory">
             <option>Sélectonnez une catégorie</option>
             {categories.map((category) => (
               <optgroup key={category.id} label={category.name}>
