@@ -174,10 +174,10 @@ export class AdsController extends Controller {
     ad.title = req.body.title;
     ad.description = req.body.description;
     ad.user = req.body.user;
-    ad.price = req.body.price;
+    ad.price = parseInt(req.body.price, 10);
     ad.createdDate = createdDate;
     ad.updateDate = createdDate;
-    ad.picture = req.body.picture;
+    ad.picture = req.body.filename;
     ad.location = req.body.location;
     ad.subCategory = req.body.subCategory;
     ad.tags = req.body.tags;

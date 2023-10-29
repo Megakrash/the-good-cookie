@@ -6,6 +6,12 @@ import "reflect-metadata";
 import { dataSource } from "./datasource";
 
 //-----------------------------------------
+//-----------------MULTER------------------
+//-----------------------------------------
+
+import { uploadAdPicture } from "./multer/multer";
+
+//-----------------------------------------
 //-----------------CONTROLERS--------------
 //-----------------------------------------
 
@@ -54,7 +60,11 @@ function asyncController(controller: Function) {
 const adsController = new AdsController();
 app.get("/api/annonce", asyncController(adsController.getAll));
 app.get("/api/annonce/:id", asyncController(adsController.getOne));
-app.post("/api/annonce", asyncController(adsController.createOne));
+app.post(
+  "/api/annonce",
+  uploadAdPicture.single("picture"),
+  asyncController(adsController.createOne)
+);
 app.delete("/api/annonce/:id", asyncController(adsController.deleteOne));
 app.patch("/api/annonce/:id", asyncController(adsController.patchOne));
 

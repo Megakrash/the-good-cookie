@@ -35,7 +35,7 @@ INSERT INTO sub_category (name, picture, category) VALUES
     ('Roller', 'subCategory_roller.jpg', 6);
 
 PRAGMA foreign_keys = ON;
-INSERT INTO Tag (name) VALUES
+INSERT INTO tag (name) VALUES
     ('class'),
     ('cute'),
     ('tip top'),
@@ -45,10 +45,10 @@ INSERT INTO Tag (name) VALUES
     ('écologique');
 
 PRAGMA foreign_keys = ON;
-INSERT INTO User (firstName, lastName, nickName, email, password, registrationDate, adress, zipCode, city, phoneNumber, isAdmin) VALUES
-    -- ('jonathan', 'scattolini', 'Megakrash', 'jscattolini@gmail.com', 'u5Q41$R1Ph6LF?DlKiB', '2023-10-01', '55 rue qui tue', '44444', 'WestSide', '0706060606', false),
+INSERT INTO `tgc`.`user` (firstName, lastName, nickName, email, password, registrationDate, adress, zipCode, city, phoneNumber, isAdmin) VALUES
     ('michel', 'robert', 'SuperRobert666', 'mrobert@gmail.com', 'u5Q41$R1Ph6LF?DlKiB', '2023-10-08', '89 rue de la moule', '85942', 'Choux City', '0707070707', false);
 
+    -- ('jonathan', 'scattolini', 'Megakrash', 'jscattolini@gmail.com', 'u5Q41$R1Ph6LF?DlKiB', '2023-10-01', '55 rue qui tue', '44444', 'WestSide', '0706060606', false),
 
 PRAGMA foreign_keys = ON;
 INSERT INTO Ad (title, description, user, price, createdDate, updateDate, picture, location, subCategory ) VALUES
