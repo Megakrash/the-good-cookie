@@ -13,6 +13,7 @@ import { Field, ID, InputType, ObjectType } from "type-graphql";
 import { Ad } from "./Ad";
 import { Category } from "./Category";
 import { ObjectId } from "./ObjectId";
+import { IsExisting } from "../utils";
 
 @Entity()
 @ObjectType()
@@ -36,9 +37,12 @@ export class SubCategory extends BaseEntity {
   @Field(() => [Ad])
   ads!: Ad[];
 
-  @ManyToOne(() => Category, (Category) => Category.subCategory)
+  @ManyToOne(() => Category, (Category) => Category.subCategory, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "category" })
   @Field(() => Category)
+  @IsExisting(() => Category)
   category!: Category;
 }
 

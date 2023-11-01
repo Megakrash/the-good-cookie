@@ -15,6 +15,7 @@ import {
 } from "class-validator";
 import { Field, ID, InputType, ObjectType } from "type-graphql";
 import { Ad } from "./Ad";
+import { ObjectId } from "./ObjectId";
 
 @Entity()
 @ObjectType()
@@ -41,7 +42,7 @@ export class User extends BaseEntity {
 
   @Column({ length: 50, nullable: true })
   @Length(2, 50, { message: "Entre 2 et 50 caractères" })
-  @Field()
+  @Field({ nullable: true })
   nickName!: string;
 
   @Column({ length: 100 })
@@ -100,7 +101,7 @@ export class User extends BaseEntity {
 }
 
 @InputType()
-export class UserInput extends BaseEntity {
+export class UserCreateInput {
   @Field()
   firstName!: string;
 
@@ -130,4 +131,40 @@ export class UserInput extends BaseEntity {
 
   @Field()
   isAdmin!: boolean;
+}
+
+@InputType()
+export class UserUpdateInput {
+  @Field({ nullable: true })
+  firstName!: string;
+
+  @Field({ nullable: true })
+  lastName!: string;
+
+  @Field({ nullable: true })
+  nickName!: string;
+
+  @Field({ nullable: true })
+  email!: string;
+
+  @Field({ nullable: true })
+  password!: string;
+
+  @Field({ nullable: true })
+  adress!: string;
+
+  @Field({ nullable: true })
+  zipCode!: string;
+
+  @Field({ nullable: true })
+  city!: string;
+
+  @Field({ nullable: true })
+  phoneNumber!: string;
+
+  @Field({ nullable: true })
+  isAdmin!: boolean;
+
+  @Field(() => [ObjectId], { nullable: true })
+  ads!: ObjectId[];
 }

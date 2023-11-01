@@ -1,5 +1,5 @@
-import { Arg, Query, Resolver, Mutation } from "type-graphql";
-import { User, UserInput } from "../entities/User";
+import { Arg, Query, Resolver, Mutation, ID } from "type-graphql";
+import { User, UserCreateInput, UserUpdateInput } from "../entities/User";
 import { validate } from "class-validator";
 
 @Resolver(User)
@@ -24,7 +24,7 @@ export class UsersResolver {
   }
   @Mutation(() => User)
   async userCreate(
-    @Arg("data", () => UserInput) data: UserInput
+    @Arg("data", () => UserCreateInput) data: UserCreateInput
   ): Promise<User> {
     const date: Date = new Date();
     const registrationDate = `${date.getFullYear()}-${(date.getMonth() + 1)
@@ -41,5 +41,55 @@ export class UsersResolver {
     } else {
       throw new Error(`Error occured: ${JSON.stringify(errors)}`);
     }
+  }
+
+  @Mutation(() => User, { nullable: true })
+  async userUpdate(
+    @Arg("id", () => ID) id: number,
+    @Arg("data") data: UserUpdateInput
+  ): Promise<User | null> {
+    const user = await User.findOne({
+      where: { id: id },
+      relations: { ads: true },
+    });
+
+    if (user) {
+      if (data.ads) {
+        data.ads = data.ads.map((entry) => {
+          const existingRelation = user.ads.find(
+            (ad) => ad.id === Number(entry.id)
+          );
+          return existingRelation || entry;
+        });
+      }
+      Object.assign(user, data);
+
+      const errors = await validate(user);
+      if (errors.length === 0) {
+        await User.save(user);
+        return await User.findOne({
+          where: { id: id },
+          relations: {
+            ads: true,
+          },
+        });
+      } else {
+        throw new Error(`Error occured: ${JSON.stringify(errors)}`);
+      }
+    }
+    return user;
+  }
+
+  @Mutation(() => User, { nullable: true })
+  async userDelete(@Arg("id", () => ID) id: number): Promise<User | null> {
+    const user = await User.findOne({
+      where: { id: id },
+      relations: { ads: true },
+    });
+    if (user) {
+      await user.remove();
+      user.id = id;
+    }
+    return user;
   }
 }

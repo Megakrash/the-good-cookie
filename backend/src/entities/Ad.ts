@@ -10,11 +10,12 @@ import {
   JoinTable,
 } from "typeorm";
 import { Length, IsInt, Matches } from "class-validator";
-import { Field, ID, InputType, ObjectType } from "type-graphql";
+import { Field, ID, InputType, ObjectType, Int } from "type-graphql";
 import { SubCategory } from "./SubCategory";
 import { Tag } from "./Tag";
 import { User } from "./User";
 import { ObjectId } from "./ObjectId";
+import { IsExisting } from "../utils";
 
 @Entity()
 @ObjectType()
@@ -39,12 +40,12 @@ export class Ad extends BaseEntity {
   price!: number;
 
   @Column()
-  @Length(8, 10, { message: "Entre 8 et 10 caractères" })
+  @Length(8, 12, { message: "Entre 8 et 12 caractères" })
   @Field()
   createdDate!: string;
 
   @Column()
-  @Length(8, 10, { message: "Entre 8 et 10 caractères" })
+  @Length(8, 12, { message: "Entre 8 et 12 caractères" })
   @Field()
   updateDate!: string;
 
@@ -59,12 +60,17 @@ export class Ad extends BaseEntity {
   @Field()
   location!: string;
 
-  @ManyToOne(() => SubCategory, (subCategory) => subCategory.ads)
+  @ManyToOne(() => SubCategory, (subCategory) => subCategory.ads, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "subCategory" })
+  @IsExisting(() => SubCategory)
   @Field(() => SubCategory)
   subCategory!: SubCategory;
 
-  @ManyToOne(() => User, (user) => user.ads)
+  @ManyToOne(() => User, (user) => user.ads, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "user" })
   @Field(() => User)
   user!: User;
@@ -76,7 +82,7 @@ export class Ad extends BaseEntity {
 }
 
 @InputType()
-export class AdInput {
+export class AdCreateInput {
   @Field()
   title!: string;
 
@@ -95,9 +101,54 @@ export class AdInput {
   @Field()
   subCategory!: ObjectId;
 
-  @Field()
+  @Field(() => ObjectId)
   user!: ObjectId;
 
   @Field(() => [ObjectId])
   tags!: ObjectId[];
+}
+
+@InputType()
+export class AdUpdateInput {
+  @Field({ nullable: true })
+  title!: string;
+
+  @Field({ nullable: true })
+  description!: string;
+
+  @Field({ nullable: true })
+  price!: number;
+
+  @Field({ nullable: true })
+  picture!: string;
+
+  @Field({ nullable: true })
+  location!: string;
+
+  @Field({ nullable: true })
+  subCategory!: ObjectId;
+
+  @Field(() => ObjectId, { nullable: true })
+  user!: ObjectId;
+
+  @Field(() => [ObjectId], { nullable: true })
+  tags!: ObjectId[];
+}
+
+@InputType()
+export class AdsWhere {
+  @Field(() => [ID], { nullable: true })
+  subCategory?: number[];
+
+  @Field(() => String, { nullable: true })
+  title?: string;
+
+  @Field(() => Int, { nullable: true })
+  minPrice?: number;
+
+  @Field(() => Int, { nullable: true })
+  maxPrice?: number;
+
+  @Field(() => String, { nullable: true })
+  location?: string;
 }
