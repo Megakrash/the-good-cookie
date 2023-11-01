@@ -7,7 +7,6 @@ const generateFileName = (
   picture: Express.Multer.File,
   cb: (error: Error | null, filename: string) => void
 ) => {
-  console.log(picture.originalname);
   const ext = path.extname(picture.originalname);
   const now = new Date();
   const timestamp = `${now.getFullYear()}-${(now.getMonth() + 1)
