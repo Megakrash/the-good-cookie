@@ -11,7 +11,7 @@ export class CategoriesResolver {
   @Query(() => [Category])
   async categoriesGetAll(): Promise<Category[]> {
     const categories = await Category.find({
-      relations: { subCategory: true },
+      relations: { subCategory: { ads: true } },
       order: { name: "ASC" },
     });
     return categories;

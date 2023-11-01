@@ -1,6 +1,7 @@
 import { Arg, Query, Resolver, Mutation, ID } from "type-graphql";
 import { User, UserCreateInput, UserUpdateInput } from "../entities/User";
 import { validate } from "class-validator";
+import { currentDate } from "../utils/date";
 
 @Resolver(User)
 export class UsersResolver {
@@ -27,9 +28,7 @@ export class UsersResolver {
     @Arg("data", () => UserCreateInput) data: UserCreateInput
   ): Promise<User> {
     const date: Date = new Date();
-    const registrationDate = `${date.getFullYear()}-${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const registrationDate = currentDate();
 
     const newUser = new User();
     Object.assign(newUser, data, { registrationDate });
@@ -89,6 +88,8 @@ export class UsersResolver {
     if (user) {
       await user.remove();
       user.id = id;
+    } else {
+      throw new Error(`Error delete user`);
     }
     return user;
   }

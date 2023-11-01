@@ -15,7 +15,7 @@ import { SubCategory } from "./SubCategory";
 import { Tag } from "./Tag";
 import { User } from "./User";
 import { ObjectId } from "./ObjectId";
-import { IsExisting } from "../utils";
+import { IsExisting } from "../utils/utils";
 
 @Entity()
 @ObjectType()

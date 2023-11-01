@@ -3,7 +3,7 @@ import {
   ValidationOptions,
   ValidationArguments,
 } from "class-validator";
-import { ObjectId } from "./entities/ObjectId";
+import { ObjectId } from "../entities/ObjectId";
 import { BaseEntity } from "typeorm";
 
 class EntityWithId extends BaseEntity {

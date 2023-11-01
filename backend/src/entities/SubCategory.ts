@@ -13,7 +13,7 @@ import { Field, ID, InputType, ObjectType } from "type-graphql";
 import { Ad } from "./Ad";
 import { Category } from "./Category";
 import { ObjectId } from "./ObjectId";
-import { IsExisting } from "../utils";
+import { IsExisting } from "../utils/utils";
 
 @Entity()
 @ObjectType()

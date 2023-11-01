@@ -2,6 +2,7 @@ import { Arg, Query, Resolver, Mutation, ID } from "type-graphql";
 import { In, Like, MoreThanOrEqual, LessThanOrEqual } from "typeorm";
 import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from "../entities/Ad";
 import { validate } from "class-validator";
+import { currentDate } from "../utils/date";
 
 @Resolver(Ad)
 export class AdsResolver {
@@ -33,7 +34,13 @@ export class AdsResolver {
 
     const ads = await Ad.find({
       where: queryWhere,
-      relations: { subCategory: true, tags: true, user: true },
+      relations: {
+        subCategory: {
+          category: true,
+        },
+        tags: true,
+        user: true,
+      },
     });
     return ads;
   }
@@ -55,10 +62,8 @@ export class AdsResolver {
     @Arg("data", () => AdCreateInput) data: AdCreateInput
   ): Promise<Ad> {
     const date: Date = new Date();
-    const createdDate = `${date.getFullYear()}-${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-    const updateDate = createdDate;
+    const createdDate = currentDate();
+    const updateDate = currentDate();
     const newAd = new Ad();
     Object.assign(newAd, data, { createdDate }, { updateDate });
 
@@ -90,10 +95,7 @@ export class AdsResolver {
           return existingRelation || entry;
         });
       }
-      const date: Date = new Date();
-      const updateDate = `${date.getFullYear()}-${(date.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+      const updateDate = currentDate();
       Object.assign(ad, data, { updateDate });
 
       const errors = await validate(ad);
