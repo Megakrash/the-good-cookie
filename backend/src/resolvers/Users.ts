@@ -27,9 +27,7 @@ export class UsersResolver {
   async userCreate(
     @Arg("data", () => UserCreateInput) data: UserCreateInput
   ): Promise<User> {
-    const date: Date = new Date();
     const registrationDate = currentDate();
-
     const newUser = new User();
     Object.assign(newUser, data, { registrationDate });
 

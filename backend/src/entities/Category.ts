@@ -20,9 +20,9 @@ export class Category extends BaseEntity {
   @Field()
   name!: string;
 
-  @OneToMany(() => SubCategory, (subCategory) => subCategory.category)
+  @OneToMany(() => SubCategory, (subCategories) => subCategories.category)
   @Field(() => [SubCategory])
-  subCategory!: SubCategory[];
+  subCategories!: SubCategory[];
 }
 
 @InputType()

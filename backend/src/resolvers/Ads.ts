@@ -3,50 +3,62 @@ import { In, Like, MoreThanOrEqual, LessThanOrEqual } from "typeorm";
 import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from "../entities/Ad";
 import { validate } from "class-validator";
 import { currentDate } from "../utils/date";
+import { merge } from "../utils/utils";
 
 @Resolver(Ad)
 export class AdsResolver {
-  @Query(() => [Ad])
+  @Query(() => [Ad], { nullable: true })
   async adsGetAll(
     @Arg("where", { nullable: true }) where?: AdsWhere
-  ): Promise<Ad[]> {
-    const queryWhere: any = {};
+  ): Promise<Ad[] | null> {
+    try {
+      const queryWhere: any = {};
 
-    if (where?.subCategory) {
-      queryWhere.subCategory = { id: In(where.subCategory) };
-    }
+      if (where?.subCategory) {
+        queryWhere.subCategory = { id: In(where.subCategory) };
+      }
 
-    if (where?.title) {
-      queryWhere.title = Like(`%${where.title}%`);
-    }
+      if (where?.title) {
+        queryWhere.title = Like(`%${where.title}%`);
+      }
 
-    if (where?.minPrice) {
-      queryWhere.price = MoreThanOrEqual(Number(where.minPrice));
-    }
+      if (where?.minPrice) {
+        queryWhere.price = MoreThanOrEqual(Number(where.minPrice));
+      }
 
-    if (where?.maxPrice) {
-      queryWhere.price = LessThanOrEqual(Number(where.maxPrice));
-    }
+      if (where?.maxPrice) {
+        queryWhere.price = LessThanOrEqual(Number(where.maxPrice));
+      }
 
-    if (where?.location) {
-      queryWhere.location = Like(`%${where.location}%`);
-    }
+      if (where?.location) {
+        queryWhere.location = Like(`%${where.location}%`);
+      }
 
-    const ads = await Ad.find({
-      where: queryWhere,
-      relations: {
-        subCategory: {
-          category: true,
+      if (where?.tags) {
+        queryWhere.tags = { id: In(where.tags) };
+      }
+      if (where?.createdDate) {
+        queryWhere.date = MoreThanOrEqual(where.createdDate);
+      }
+
+      const ads = await Ad.find({
+        where: queryWhere,
+        relations: {
+          subCategory: {
+            category: true,
+          },
+          tags: true,
+          user: true,
         },
-        tags: true,
-        user: true,
-      },
-    });
-    return ads;
+      });
+      return ads;
+    } catch (errors) {
+      throw new Error(`Error occured: ${JSON.stringify(errors)}`);
+    }
   }
 
   @Query(() => Ad)
-  async adById(@Arg("id") id: number): Promise<Ad> {
+  async adById(@Arg("id", () => ID) id: number): Promise<Ad> {
     const ad = await Ad.findOne({
       where: { id },
       relations: { subCategory: true, tags: true, user: true },
@@ -61,7 +73,6 @@ export class AdsResolver {
   async adCreate(
     @Arg("data", () => AdCreateInput) data: AdCreateInput
   ): Promise<Ad> {
-    const date: Date = new Date();
     const createdDate = currentDate();
     const updateDate = currentDate();
     const newAd = new Ad();
@@ -87,16 +98,9 @@ export class AdsResolver {
     });
 
     if (ad) {
-      if (data.tags) {
-        data.tags = data.tags.map((entry) => {
-          const existingRelation = ad.tags.find(
-            (tag) => tag.id === Number(entry.id)
-          );
-          return existingRelation || entry;
-        });
-      }
       const updateDate = currentDate();
-      Object.assign(ad, data, { updateDate });
+      const dataWithUpdateDate = { ...data, updateDate };
+      merge(ad, dataWithUpdateDate);
 
       const errors = await validate(ad);
       if (errors.length === 0) {

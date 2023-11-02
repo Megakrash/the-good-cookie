@@ -11,17 +11,17 @@ export class CategoriesResolver {
   @Query(() => [Category])
   async categoriesGetAll(): Promise<Category[]> {
     const categories = await Category.find({
-      relations: { subCategory: { ads: true } },
+      relations: { subCategories: { ads: true } },
       order: { name: "ASC" },
     });
     return categories;
   }
 
   @Query(() => Category)
-  async categoryById(@Arg("id") id: number): Promise<Category> {
+  async categoryById(@Arg("id", () => ID) id: number): Promise<Category> {
     const category = await Category.findOne({
       where: { id },
-      relations: { subCategory: true },
+      relations: { subCategories: { ads: true } },
     });
     if (!category) {
       throw new Error("Category not found");
@@ -80,7 +80,7 @@ export class CategoriesResolver {
   ): Promise<Category | null> {
     const category = await Category.findOne({
       where: { id: id },
-      relations: { subCategory: true },
+      relations: { subCategories: true },
     });
     if (category) {
       await category.remove();

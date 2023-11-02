@@ -18,10 +18,10 @@ export class SubCategoriesResolver {
   }
 
   @Query(() => SubCategory)
-  async subCategoryById(@Arg("id") id: number): Promise<SubCategory> {
+  async subCategoryById(@Arg("id", () => ID) id: number): Promise<SubCategory> {
     const subCategory = await SubCategory.findOne({
       where: { id },
-      relations: { ads: true, category: true },
+      relations: { ads: { tags: true, user: true }, category: true },
     });
     if (!subCategory) {
       throw new Error("SubCategory not found");

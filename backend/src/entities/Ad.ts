@@ -15,7 +15,6 @@ import { SubCategory } from "./SubCategory";
 import { Tag } from "./Tag";
 import { User } from "./User";
 import { ObjectId } from "./ObjectId";
-import { IsExisting } from "../utils/utils";
 
 @Entity()
 @ObjectType()
@@ -64,7 +63,6 @@ export class Ad extends BaseEntity {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "subCategory" })
-  @IsExisting(() => SubCategory)
   @Field(() => SubCategory)
   subCategory!: SubCategory;
 
@@ -151,4 +149,10 @@ export class AdsWhere {
 
   @Field(() => String, { nullable: true })
   location?: string;
+
+  @Field(() => String, { nullable: true })
+  createdDate?: string;
+
+  @Field(() => [String], { nullable: true })
+  tags?: string[];
 }
