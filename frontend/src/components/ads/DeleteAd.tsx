@@ -1,34 +1,27 @@
-import { API_URL } from "@/configApi";
-import axios from "axios";
 import { ReactNode } from "react";
 import { FaTrashAlt } from "react-icons/fa";
+import { useMutation } from "@apollo/client";
+import { mutationDeleteAd, queryAllAds } from "../graphql/Ads";
 
 type DeleteAdProps = {
-  type: "ad" | "category";
   id: number;
-  onReRender: () => void;
 };
 
 const DeleteAd = (props: DeleteAdProps): ReactNode => {
-  const deleteAd = () => {
-    axios
-      .delete(`${API_URL}/annonces/${props.id}`)
-      .then(() => {
-        props.onReRender();
-      })
-      .catch(() => {
-        console.error("error");
-      });
-  };
+  const [doDelete] = useMutation(mutationDeleteAd, {
+    refetchQueries: [queryAllAds],
+  });
+
+  async function deleteAd() {
+    await doDelete({
+      variables: {
+        adDeleteId: props.id,
+      },
+    });
+  }
 
   return (
-    <button
-      className=""
-      type="button"
-      onClick={() => {
-        deleteAd();
-      }}
-    >
+    <button className="" type="button" onClick={deleteAd}>
       <FaTrashAlt />
     </button>
   );

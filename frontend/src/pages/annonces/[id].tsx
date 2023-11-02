@@ -1,39 +1,35 @@
-import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
-import { API_URL } from "@/configApi";
-import axios from "axios";
+import { PATH_IMAGE } from "@/configApi";
 import { AdTypes } from "@/types";
 import Image from "next/image";
+import { queryAdById } from "@/components/graphql/Ads";
+import { useQuery } from "@apollo/client";
 
 const AdDetailComponent = (): React.ReactNode => {
   const router = useRouter();
-  const adId = router.query.id as string;
+  const { id } = router.query;
+  const { data, error, loading } = useQuery<{ item: AdTypes }>(queryAdById, {
+    variables: { adByIdId: id },
+    skip: id === undefined,
+  });
 
-  const [Ad, setAd] = useState<AdTypes>();
+  const ad = data ? data.item : null;
 
-  const getAd = () => {
-    axios
-      .get<AdTypes>(`${API_URL}/annonce/${adId}`)
-      .then((res) => {
-        setAd(res.data);
-      })
-      .catch((err) => {
-        console.error("error", err);
-      });
-  };
-
-  useEffect(() => {
-    getAd();
-  }, [adId]);
+  const picturePath: string = `${PATH_IMAGE}ads/`;
 
   return (
     <>
-      {Ad && (
-        <Layout title={`TGG : ${Ad.title}`}>
-          <p>{`Le détail de l'offre ${Ad.title}`}</p>
-          <p>{Ad.price} €</p>
-          <Image src={Ad.picture} alt={Ad.title} width="200" height="200" />
+      {ad && (
+        <Layout title={`TGG : ${ad.title}`}>
+          <p>{`Le détail de l'offre ${ad.title}`}</p>
+          <p>{ad.price} €</p>
+          <Image
+            src={picturePath + ad.picture}
+            alt={ad.title}
+            width="200"
+            height="200"
+          />
         </Layout>
       )}
     </>

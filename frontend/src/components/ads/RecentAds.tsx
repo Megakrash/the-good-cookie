@@ -1,46 +1,30 @@
-import { useEffect, useState } from "react";
 import AdCard from "./AdCard";
-import { API_URL } from "@/configApi";
-import axios from "axios";
 import { AdsTypes } from "@/types";
+import { queryAllAds } from "../graphql/Ads";
+import { useQuery } from "@apollo/client";
 
 export default function RecentAds(): React.ReactNode {
-  const [allAds, setAllAds] = useState<AdsTypes>([]);
-
-  const getAllAds = () => {
-    axios
-      .get(`${API_URL}/annonce`)
-      .then((res) => {
-        setAllAds(res.data);
-      })
-      .catch(() => {
-        console.error("error");
-      });
-  };
-
-  useEffect(() => {
-    getAllAds();
-  }, []);
+  const { data } = useQuery<{ items: AdsTypes }>(queryAllAds);
+  const ads = data ? data.items : [];
 
   return (
     <div>
       <h2>Annonces récentes</h2>
       <section className="recent-ads">
-        {allAds.map((infos) => (
+        {ads.map((ad) => (
           <AdCard
-            key={infos.id}
-            id={infos.id}
-            title={infos.title}
-            description={infos.description}
-            price={infos.price}
-            createdDate={infos.createdDate}
-            updateDate={infos.updateDate}
-            picture={infos.picture}
-            location={infos.location}
-            subCategory={infos.subCategory}
-            user={infos.user}
-            tags={infos.tags}
-            onReRender={getAllAds}
+            key={ad.id}
+            id={ad.id}
+            title={ad.title}
+            description={ad.description}
+            price={ad.price}
+            createdDate={ad.createdDate}
+            updateDate={ad.updateDate}
+            picture={ad.picture}
+            location={ad.location}
+            subCategory={ad.subCategory}
+            user={ad.user}
+            tags={ad.tags}
           />
         ))}
       </section>

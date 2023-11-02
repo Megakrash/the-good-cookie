@@ -4,11 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import DeleteAd from "./DeleteAd";
 
-type AdCardProps = AdTypes & {
-  onReRender: () => void;
-};
-
-const AdCard = (props: AdCardProps): React.ReactNode => {
+const AdCard = (props: AdTypes): React.ReactNode => {
   const picPath = `${PATH_IMAGE}ads/`;
   return (
     <div className="ad-card-container">
@@ -31,7 +27,7 @@ const AdCard = (props: AdCardProps): React.ReactNode => {
           ))}
         </div>
       </Link>
-      <DeleteAd type={"ad"} id={props.id} onReRender={props.onReRender} />
+      <DeleteAd id={props.id} />
     </div>
   );
 };

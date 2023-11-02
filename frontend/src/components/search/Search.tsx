@@ -1,24 +1,40 @@
 import { useEffect, useState } from "react";
 import AdCard from "../ads/AdCard";
-import axios from "axios";
-import { getAllCategories } from "../apiRest/ApiCategories";
-import { getAllTags } from "../apiRest/ApiTags";
 import { API_URL } from "@/configApi";
 import { CategoriesTypes, AdsTypes, TagsTypes } from "@/types";
 import { FaSliders } from "react-icons/fa6";
+import { queryAllCatAndSub } from "../graphql/Categories";
+import { queryAllAds } from "../graphql/Ads";
+import { queryAllTags } from "../graphql/Tags";
+import { useQuery } from "@apollo/client";
 
 const Search = (): React.ReactNode => {
+  // Get Categories&SubCategories & Tags
+  const {
+    data: dataCategories,
+    error: errorCategories,
+    loading: loadindCategories,
+  } = useQuery<{ items: CategoriesTypes }>(queryAllCatAndSub);
+  const categories = dataCategories ? dataCategories.items : [];
+
+  const {
+    data: dataTags,
+    error: errorTags,
+    loading: loadingTags,
+  } = useQuery<{ items: TagsTypes }>(queryAllTags);
+  const tags = dataTags ? dataTags.items : [];
+
   const [showQueries, setShowQueries] = useState<boolean>(false);
   const [showResult, setShowResult] = useState<boolean>(false);
 
   //Get categories & Tags
-  const [categories, setCategories] = useState<CategoriesTypes>([]);
-  const [tags, setTags] = useState<TagsTypes>([]);
+  // const [categories, setCategories] = useState<CategoriesTypes>([]);
+  // const [tags, setTags] = useState<TagsTypes>([]);
 
-  useEffect(() => {
-    getAllCategories(setCategories);
-    getAllTags(setTags);
-  }, []);
+  // useEffect(() => {
+  //   getAllCategories(setCategories);
+  //   getAllTags(setTags);
+  // }, []);
   //-----------------
   // Selected queries
   //-----------------
@@ -49,44 +65,44 @@ const Search = (): React.ReactNode => {
   // Search URL
   //-----------------
 
-  const buildSearchURL = (): string => {
-    let url = `${API_URL}/annonce?subCategory=${selectedSubCategory}`;
-    if (selectedLocation) {
-      url += `&location=${selectedLocation}`;
-    }
-    if (minPrice) {
-      url += `&minPrice=${minPrice}`;
-    }
-    if (maxPrice) {
-      url += `&maxPrice=${maxPrice}`;
-    }
-    if (title) {
-      url += `&title=${encodeURIComponent(title)}`;
-    }
-    if (selectedTag) {
-      url += `&tags=${selectedTag}`;
-    }
-    return url;
-  };
+  // const buildSearchURL = (): string => {
+  //   let url = `${API_URL}/annonce?subCategory=${selectedSubCategory}`;
+  //   if (selectedLocation) {
+  //     url += `&location=${selectedLocation}`;
+  //   }
+  //   if (minPrice) {
+  //     url += `&minPrice=${minPrice}`;
+  //   }
+  //   if (maxPrice) {
+  //     url += `&maxPrice=${maxPrice}`;
+  //   }
+  //   if (title) {
+  //     url += `&title=${encodeURIComponent(title)}`;
+  //   }
+  //   if (selectedTag) {
+  //     url += `&tags=${selectedTag}`;
+  //   }
+  //   return url;
+  // };
 
   // Search result
-  const [seachResult, setSeachResult] = useState<AdsTypes>([]);
+  // const [seachResult, setSeachResult] = useState<AdsTypes>([]);
   // Search request
-  const searchAds = () => {
-    const url = buildSearchURL();
-    axios
-      .get<AdsTypes>(url)
-      .then((res) => {
-        setSeachResult(res.data);
-        setShowResult(true);
-      })
-      .catch((err) => {
-        if (err.response && err.response.status === 404) {
-        } else {
-          console.error(err);
-        }
-      });
-  };
+  // const searchAds = () => {
+  //   const url = buildSearchURL();
+  //   axios
+  //     .get<AdsTypes>(url)
+  //     .then((res) => {
+  //       setSeachResult(res.data);
+  //       setShowResult(true);
+  //     })
+  //     .catch((err) => {
+  //       if (err.response && err.response.status === 404) {
+  //       } else {
+  //         console.error(err);
+  //       }
+  //     });
+  // };
   return (
     <div>
       {categories && tags && (
@@ -97,7 +113,7 @@ const Search = (): React.ReactNode => {
             </option>
             {categories.map((category) => (
               <optgroup key={category.id} label={category.name}>
-                {category.subCategory.map((sub) => (
+                {category.subCategories.map((sub) => (
                   <option key={sub.id} value={sub.id}>
                     {sub.name}
                   </option>

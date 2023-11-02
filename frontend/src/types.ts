@@ -2,10 +2,11 @@
 export type CategoryTypes = {
   id: number;
   name: string;
-  subCategory: [
+  subCategories: [
     {
       id: number;
       name: string;
+      picture: string;
     }
   ];
 };
@@ -17,7 +18,25 @@ export type SubCategoryTypes = {
   id: number;
   name: string;
   picture: string;
-  category: {
+  ads?: {
+    id: number;
+    title: string;
+    description: string;
+    price: number;
+    createdDate: string;
+    updateDate: string;
+    picture: string;
+    location: string;
+    tags?: {
+      id: number;
+      name: string;
+    }[];
+    user?: {
+      id: number;
+      nickName: string;
+    };
+  };
+  category?: {
     id: number;
     name: string;
   };
