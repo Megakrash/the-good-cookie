@@ -89,23 +89,38 @@ const AdCreate = (props: AdFormProps): React.ReactNode => {
         });
         if ("id" in result.data?.item) {
           router.replace(`/annonces/${result.data.item.id}`);
+        } else {
+          toast("Erreur pendant la création de votre annonce");
         }
       } else {
         const result = await doUpdate({
           variables: {
-            id: props.ad?.id,
             data: data,
+            adUpdateId: props.ad?.id,
           },
         });
         if (!result.errors?.length) {
-          router.replace(`/annonces/${props.ad.id}`);
+          toast("Annonce mise à jour");
         }
       }
     }
   }
+
+  useEffect(() => {
+    if (props.ad) {
+      setTitle(props.ad.title);
+      setDescription(props.ad.description);
+      setLocation(props.ad.location);
+      setPrice(props.ad.price);
+      setPicture(props.ad.picture);
+      setSubCategoryId(props.ad.subCategory ? props.ad.subCategory.id : null);
+    }
+  }, [props.ad]);
   return (
     <>
-      <h2>Création de votre annonce</h2>
+      <h2>
+        {!props.ad ? "Création de votre annonce" : "Modifier votre annonce"}
+      </h2>
       <div>
         <Toaster
           toastOptions={{
@@ -205,7 +220,7 @@ const AdCreate = (props: AdFormProps): React.ReactNode => {
         </select>
         <br />
         <button type="submit" disabled={loading}>
-          Créer mon annonce
+          {!props.ad ? "Créer mon annonce" : "Mettre à jour"}
         </button>
       </form>
     </>

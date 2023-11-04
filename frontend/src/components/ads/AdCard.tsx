@@ -28,6 +28,7 @@ const AdCard = (props: AdTypes): React.ReactNode => {
         </div>
       </Link>
       <DeleteAd id={props.id} />
+      <Link href={`/annonces/${props.id}/edit`}>Modifier mon annonce</Link>
     </div>
   );
 };
