@@ -56,21 +56,21 @@ export const queryAdById = gql`
     }
   }
 `;
+
 export const mutationCreateAd = gql`
   mutation adCreate($data: AdCreateInput!) {
-    adCreate(data: $data) {
+    item: adCreate(data: $data) {
+      id
+    }
+  }
+`;
+
+export const mutationUpdateAd = gql`
+  mutation adUpdate($data: AdUpdateInput!, $adUpdateId: ID!) {
+    item: AdUpdate(data: $data, id: $adUpdateId) {
       id
       title
-      subCategory {
-        id
-      }
-      user {
-        id
-        nickName
-      }
-      tags {
-        id
-      }
+      updateDate
     }
   }
 `;

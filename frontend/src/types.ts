@@ -70,14 +70,19 @@ export type AdTypes = {
 
 export type AdsTypes = AdTypes[];
 
+export type Tag = {
+  id: string;
+};
+
 export type AdFormData = {
   title: string;
   description: string;
-  price: number;
-  picture: string;
   location: string;
-  subCategory: number;
-  user: number;
+  picture: string;
+  price: number;
+  subCategory: { id: number } | null;
+  tags?: Tag[] | null;
+  user?: { id: number };
 };
 
 // Tags

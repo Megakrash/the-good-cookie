@@ -2,7 +2,7 @@ import { AdTypes } from "@/types";
 import { PATH_IMAGE } from "@/configApi";
 import Link from "next/link";
 import Image from "next/image";
-import DeleteAd from "./DeleteAd";
+import DeleteAd from "./AdDelete";
 
 const AdCard = (props: AdTypes): React.ReactNode => {
   const picPath = `${PATH_IMAGE}ads/`;
