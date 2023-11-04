@@ -1,5 +1,12 @@
 import { Arg, Query, Resolver, Mutation, ID } from "type-graphql";
-import { In, Like, MoreThanOrEqual, LessThanOrEqual } from "typeorm";
+import {
+  In,
+  Like,
+  MoreThanOrEqual,
+  LessThanOrEqual,
+  Between,
+  ILike,
+} from "typeorm";
 import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from "../entities/Ad";
 import { validate } from "class-validator";
 import { currentDate } from "../utils/date";
@@ -19,19 +26,26 @@ export class AdsResolver {
       }
 
       if (where?.title) {
-        queryWhere.title = Like(`%${where.title}%`);
+        queryWhere.title = ILike(`%${where.title}%`);
       }
 
-      if (where?.minPrice) {
-        queryWhere.price = MoreThanOrEqual(Number(where.minPrice));
-      }
+      if (where?.minPrice && where?.maxPrice) {
+        queryWhere.price = Between(
+          Number(where.minPrice),
+          Number(where.maxPrice)
+        );
+      } else {
+        if (where?.minPrice) {
+          queryWhere.price = MoreThanOrEqual(Number(where.minPrice));
+        }
 
-      if (where?.maxPrice) {
-        queryWhere.price = LessThanOrEqual(Number(where.maxPrice));
+        if (where?.maxPrice) {
+          queryWhere.price = LessThanOrEqual(Number(where.maxPrice));
+        }
       }
 
       if (where?.location) {
-        queryWhere.location = Like(`%${where.location}%`);
+        queryWhere.location = ILike(`%${where.location}%`);
       }
 
       if (where?.tags) {
@@ -49,6 +63,9 @@ export class AdsResolver {
           },
           tags: true,
           user: true,
+        },
+        order: {
+          updateDate: "DESC",
         },
       });
       return ads;

@@ -8,6 +8,9 @@ export class TagsResolver {
   async tagsGetAll(): Promise<Tag[]> {
     const tags = await Tag.find({
       relations: { ads: true },
+      order: {
+        id: "ASC",
+      },
     });
     return tags;
   }
