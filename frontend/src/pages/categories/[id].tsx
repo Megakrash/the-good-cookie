@@ -1,66 +1,43 @@
-import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
-import { API_URL } from "@/configApi";
-import axios from "axios";
 import SubCategoriesCard from "@/components/subCategories/SubCategoriesCard";
-import { SubCategoriesTypes, CategoryTypes } from "@/types";
+import { CategoryTypes } from "@/types";
+import { useQuery } from "@apollo/client";
+import { queryCatByIdAndSub } from "@/components/graphql/Categories";
 
 const CategoryComponent = (): React.ReactNode => {
   const router = useRouter();
+  const { id } = router.query;
+  const { data, error, loading } = useQuery<{ item: CategoryTypes }>(
+    queryCatByIdAndSub,
+    {
+      variables: { categoryByIdId: id },
+      skip: id === undefined,
+    }
+  );
 
-  const [category, setCategory] = useState<CategoryTypes>();
-  const [subCategories, setSubCategories] = useState<SubCategoriesTypes>([]);
-
-  const getCategory = () => {
-    axios
-      .get<CategoryTypes>(`${API_URL}/category/${router.query.id}`)
-      .then((res) => {
-        setCategory(res.data);
-      })
-
-      .catch(() => {
-        console.error("error");
-      });
-  };
-
-  const getSubCategoriesFromCategory = () => {
-    axios
-      .get<SubCategoriesTypes>(
-        `${API_URL}/subCategory?category=${router.query.id}`
-      )
-      .then((res) => {
-        setSubCategories(res.data);
-      })
-      .catch(() => {
-        console.error("error");
-      });
-  };
-
-  useEffect(() => {
-    getCategory();
-    getSubCategoriesFromCategory();
-  }, [router]);
+  const category = data ? data.item : null;
 
   return (
     <>
       {category && (
         <Layout title={`TGG : ${category.name}`}>
-          {subCategories.length >= 1 ? (
-            <div>
-              {subCategories.map((infos) => (
-                <SubCategoriesCard
-                  key={infos.id}
-                  id={infos.id}
-                  name={infos.name}
-                  picture={infos.picture}
-                  category={infos.category}
-                />
-              ))}
-            </div>
-          ) : (
-            <p>{`Aucune offre dans la catégorie ${category.name} pour le moment !`}</p>
-          )}
+          <div>
+            {category.subCategories.length >= 1 ? (
+              <>
+                {category.subCategories.map((subCat) => (
+                  <SubCategoriesCard
+                    key={subCat.id}
+                    id={subCat.id}
+                    name={subCat.name}
+                    picture={subCat.picture}
+                  />
+                ))}
+              </>
+            ) : (
+              <p>{`Aucune offre dans la catégorie ${category.name} pour le moment !`}</p>
+            )}
+          </div>
         </Layout>
       )}
     </>

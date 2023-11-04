@@ -1,48 +1,27 @@
-import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
-import { API_URL } from "@/configApi";
-import axios from "axios";
 import AdCard from "@/components/ads/AdCard";
-import { SubCategoryTypes, AdsTypes } from "@/types";
+import { SubCategoryTypes } from "@/types";
 import Link from "next/link";
+import { useQuery } from "@apollo/client";
+import { querySubCatAndAds } from "@/components/graphql/SubCategories";
 
 const SubCategoryComponent = (): React.ReactNode => {
   const router = useRouter();
+  const { id } = router.query;
+  const { data, error, loading } = useQuery<{ item: SubCategoryTypes }>(
+    querySubCatAndAds,
+    {
+      variables: { subCategoryByIdId: id },
+      skip: id === undefined,
+    }
+  );
 
-  const [subCategory, setSubCategory] = useState<SubCategoryTypes>();
-  const [adsSubCategory, setAdsSubCategory] = useState<AdsTypes>([]);
-
-  const getSubCategory = () => {
-    axios
-      .get<SubCategoryTypes>(`${API_URL}/subCategory/${router.query.id}`)
-      .then((res) => {
-        setSubCategory(res.data);
-      })
-      .catch(() => {
-        console.error("error");
-      });
-  };
-
-  const getAdsFromSubCategory = () => {
-    axios
-      .get<AdsTypes>(`${API_URL}/annonce?subCategory=${router.query.id}`)
-      .then((res) => {
-        setAdsSubCategory(res.data);
-      })
-      .catch(() => {
-        console.error("error");
-      });
-  };
-
-  useEffect(() => {
-    getSubCategory();
-    getAdsFromSubCategory();
-  }, [router]);
+  const subCategory = data ? data.item : null;
 
   return (
     <>
-      {subCategory && (
+      {subCategory && subCategory.category && (
         <Layout title={`TGG : ${subCategory.name}`}>
           <div>
             <Link href={`/categories/${subCategory.category.id}`}>
@@ -54,9 +33,9 @@ const SubCategoryComponent = (): React.ReactNode => {
           </div>
 
           <p>{`Toutes les offres de la catégorie ${subCategory.name}`}</p>
-          {adsSubCategory.length >= 1 ? (
+          {Array.isArray(subCategory.ads) && subCategory.ads.length > 0 ? (
             <div>
-              {adsSubCategory.map((infos) => (
+              {subCategory.ads.map((infos) => (
                 <AdCard
                   key={infos.id}
                   id={infos.id}
@@ -70,7 +49,6 @@ const SubCategoryComponent = (): React.ReactNode => {
                   subCategory={infos.subCategory}
                   user={infos.user}
                   tags={infos.tags}
-                  onReRender={getAdsFromSubCategory}
                 />
               ))}
             </div>

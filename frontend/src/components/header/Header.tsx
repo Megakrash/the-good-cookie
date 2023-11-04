@@ -1,38 +1,16 @@
-import { useEffect, useState } from "react";
-import { getAllCategories } from "../apiRest/ApiCategories";
 import NavCategories from "../categories/NavCategories";
 import NavSubCategories from "../subCategories/NavSubCategories";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { CategoriesTypes } from "@/types";
+import { useQuery } from "@apollo/client";
+import { queryAllCatAndSub } from "../graphql/Categories";
 
 export default function Header(): React.ReactNode {
-  const router = useRouter();
+  const { data, error, loading } = useQuery<{ items: CategoriesTypes }>(
+    queryAllCatAndSub
+  );
 
-  //Get all categories
-  const [categories, setCategories] = useState<CategoriesTypes>([]);
-
-  useEffect(() => {
-    getAllCategories(setCategories);
-  }, []);
-
-  // Check path
-
-  const findParentCategoryOfSubCategory = (subId: number) => {
-    for (let category of categories) {
-      for (let sub of category.subCategory) {
-        if (sub.id === subId) {
-          return category.id;
-        }
-      }
-    }
-    return null;
-  };
-
-  const currentSubCategoryId = router.asPath.match(/\/sousCategories\/(\d+)/);
-  const parentIdOfCurrentSubCategory = currentSubCategoryId
-    ? findParentCategoryOfSubCategory(parseInt(currentSubCategoryId[1], 10))
-    : null;
+  const categories = data ? data.items : [];
 
   return (
     <header className="header">
@@ -64,32 +42,31 @@ export default function Header(): React.ReactNode {
           <span className="desktop-long-label">Publier une annonce</span>
         </Link>
       </div>
-      <nav className="categories-navigation">
-        {categories.map((category) => (
-          <div key={category.id}>
-            <div>
-              <NavCategories
-                id={category.id}
-                name={category.name}
-                subCategory={category.subCategory}
+      {categories && (
+        <nav className="categories-navigation">
+          {categories.map((category) => (
+            <NavCategories
+              key={category.id}
+              id={category.id}
+              name={category.name}
+              subCategories={category.subCategories}
+            />
+          ))}
+        </nav>
+      )}
+      {categories && (
+        <nav className="categories-navigation">
+          {categories.map((category) =>
+            category.subCategories.map((subCat) => (
+              <NavSubCategories
+                key={subCat.id}
+                id={subCat.id}
+                name={subCat.name}
               />
-            </div>
-          </div>
-        ))}
-      </nav>
-      <nav className="categories-navigation">
-        {categories.map((category) => (
-          <div key={category.id}>
-            {(router.asPath === `/categories/${String(category.id)}` ||
-              parentIdOfCurrentSubCategory === category.id) &&
-              [...category.subCategory]
-                .sort((a, b) => a.id - b.id)
-                .map((sub) => (
-                  <NavSubCategories key={sub.id} id={sub.id} name={sub.name} />
-                ))}
-          </div>
-        ))}
-      </nav>
+            ))
+          )}
+        </nav>
+      )}
     </header>
   );
 }

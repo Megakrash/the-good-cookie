@@ -2,10 +2,11 @@
 export type CategoryTypes = {
   id: number;
   name: string;
-  subCategory: [
+  subCategories: [
     {
       id: number;
       name: string;
+      picture: string;
     }
   ];
 };
@@ -17,7 +18,25 @@ export type SubCategoryTypes = {
   id: number;
   name: string;
   picture: string;
-  category: {
+  ads?: {
+    id: number;
+    title: string;
+    description: string;
+    price: number;
+    createdDate: string;
+    updateDate: string;
+    picture: string;
+    location: string;
+    tags?: {
+      id: number;
+      name: string;
+    }[];
+    user?: {
+      id: number;
+      nickName: string;
+    };
+  };
+  category?: {
     id: number;
     name: string;
   };
@@ -51,13 +70,19 @@ export type AdTypes = {
 
 export type AdsTypes = AdTypes[];
 
+export type Tag = {
+  id: string;
+};
+
 export type AdFormData = {
   title: string;
   description: string;
-  price: number;
-  picture: string;
   location: string;
-  category: { id: number };
+  picture: string;
+  price: number;
+  subCategory: { id: number } | null;
+  tags?: Tag[] | null;
+  user?: { id: number };
 };
 
 // Tags

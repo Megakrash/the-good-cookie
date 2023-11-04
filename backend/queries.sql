@@ -11,19 +11,31 @@ PRAGMA foreign_keys = ON;
 INSERT INTO sub_category (name, picture, category) VALUES
     ('Carte graphique', 'subCategory_carteGraphique.png', 1),
     ('Souris', 'subCategory_souris.png', 1),
+    ('Smartphones', 'subCategory_smartphone.png', 1),
+    ('PC portable', 'subCategory_pcportable.png', 1),
     ('Polo', 'subCategory_polo.png', 2),
     ('Chemise', 'subCategory_chemise.jpg', 2),
+    ('Caleçon', 'subCategory_calecon.jpg', 2),
+    ('Chaussette', 'subCategory_chausette.jpg', 2),
     ('Science Fiction', 'subCategory_sf.png', 3),
     ('Heroic Fantaisy', 'subCategory_heroic.png', 3),
+    ('Géopolitique', 'subCategory_geopolitique.jpg', 3),
+    ('Historique', 'subCategory_historique.jpg', 3),
     ('Table basse', 'subCategory_table.png', 4),
     ('Lit', 'subCategory_lit.png', 4),
+    ('Armoire', 'subCategory_armoire.jpg', 4),
+    ('Canapé', 'subCategory_canape.jpg', 4),
     ('Maison', 'subCategory_maison.png', 5),
     ('Appartement', 'subCategory_appartement.png', 5),
+    ('Immeuble', 'subCategory_immeuble.jpg', 5),
+    ('Garage', 'subCategory_garage.jpg', 5),
     ('Voiture', 'subCategory_voiture.png', 6),
-    ('Vélo', 'subCategory_velo.png', 6);
+    ('Vélo', 'subCategory_velo.png', 6),
+    ('Trotinette', 'subCategory_trotinette.jpg', 6),
+    ('Roller', 'subCategory_roller.jpg', 6);
 
 PRAGMA foreign_keys = ON;
-INSERT INTO Tag (name) VALUES
+INSERT INTO tag (name) VALUES
     ('class'),
     ('cute'),
     ('tip top'),
@@ -33,10 +45,10 @@ INSERT INTO Tag (name) VALUES
     ('écologique');
 
 PRAGMA foreign_keys = ON;
-INSERT INTO User (firstName, lastName, nickName, email, password, registrationDate, adress, zipCode, city, phoneNumber, isAdmin) VALUES
-    -- ('jonathan', 'scattolini', 'Megakrash', 'jscattolini@gmail.com', 'u5Q41$R1Ph6LF?DlKiB', '2023-10-01', '55 rue qui tue', '44444', 'WestSide', '0706060606', false),
+INSERT INTO `tgc`.`user` (firstName, lastName, nickName, email, password, registrationDate, adress, zipCode, city, phoneNumber, isAdmin) VALUES
     ('michel', 'robert', 'SuperRobert666', 'mrobert@gmail.com', 'u5Q41$R1Ph6LF?DlKiB', '2023-10-08', '89 rue de la moule', '85942', 'Choux City', '0707070707', false);
 
+    -- ('jonathan', 'scattolini', 'Megakrash', 'jscattolini@gmail.com', 'u5Q41$R1Ph6LF?DlKiB', '2023-10-01', '55 rue qui tue', '44444', 'WestSide', '0706060606', false),
 
 PRAGMA foreign_keys = ON;
 INSERT INTO Ad (title, description, user, price, createdDate, updateDate, picture, location, subCategory ) VALUES
