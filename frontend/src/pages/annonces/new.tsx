@@ -1,49 +1,51 @@
 import { FormEvent, useEffect, useState } from "react";
 import Layout from "@/components/Layout";
-import { getAllCategories } from "@/components/apiRest/ApiCategories";
 import { AdFormData, CategoriesTypes } from "@/types";
-import axios from "axios";
-import { API_URL } from "@/configApi";
 import toast, { Toaster } from "react-hot-toast";
+import { mutationCreateAd } from "@/components/graphql/Ads";
+import { queryAllCatAndSub } from "@/components/graphql/Categories";
+import { useQuery } from "@apollo/client";
 
 const NewAd = (): React.ReactNode => {
-  //Get all categories
-  const [categories, setCategories] = useState<CategoriesTypes>([]);
 
-  useEffect(() => {
-    getAllCategories(setCategories);
-  }, []);
+  const {
+    data: dataCategories,
+    error: errorCategories,
+    loading: loadindCategories,
+  } = useQuery<{ items: CategoriesTypes }>(queryAllCatAndSub);
+  const categories = dataCategories ? dataCategories.items : [];
+
 
   // Post new Ad
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = event.target as HTMLFormElement;
-    const formData = new FormData(form);
-    formData.append("user", "1");
-    const price = formData.get("price");
-    if (typeof price === "string") {
-      formData.set("price", String(Number(price)));
-    }
-    const subCategory = formData.get("subCategory");
-    if (typeof subCategory === "string") {
-      formData.set("subCategory", String(Number(subCategory)));
-    }
+  // const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   const form = event.target as HTMLFormElement;
+  //   const formData = new FormData(form);
+  //   formData.append("user", "1");
+  //   const price = formData.get("price");
+  //   if (typeof price === "string") {
+  //     formData.set("price", String(Number(price)));
+  //   }
+  //   const subCategory = formData.get("subCategory");
+  //   if (typeof subCategory === "string") {
+  //     formData.set("subCategory", String(Number(subCategory)));
+  //   }
 
-    axios
-      .post(`${API_URL}/annonce`, formData)
-      .then(() => {
-        toast("Votre annonce a étée crée avec succès.");
-        form.reset();
-      })
+  //   axios
+  //     .post(`${API_URL}/annonce`, formData)
+  //     .then(() => {
+  //       toast("Votre annonce a étée crée avec succès.");
+  //       form.reset();
+  //     })
 
-      .catch(() => {
-        toast.error(`Quelque chose s'est mal passé`);
-        console.error("error");
-      });
-  };
+  //     .catch(() => {
+  //       toast.error(`Quelque chose s'est mal passé`);
+  //       console.error("error");
+  //     });
+  // };
   return (
     <>
-      <Layout title="TGD : Créer mon annonce">
+      {/* <Layout title="TGD : Créer mon annonce">
         <h2>Création de votre annonce</h2>
         <div>
           <Toaster
@@ -130,7 +132,7 @@ const NewAd = (): React.ReactNode => {
           <br />
           <button type="submit">Créer mon annonce</button>
         </form>
-      </Layout>
+      </Layout> */}
     </>
   );
 };
