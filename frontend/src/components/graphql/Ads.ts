@@ -26,6 +26,7 @@ export const queryAllAds = gql`
       user {
         id
         nickName
+        picture
       }
     }
   }
@@ -52,6 +53,7 @@ export const queryAdById = gql`
       user {
         id
         nickName
+        picture
       }
     }
   }

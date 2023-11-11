@@ -1,5 +1,5 @@
 import { AdTypes } from "@/types";
-import AdCreate from "@/components/ads/AdCreate";
+import AdForm from "@/components/ads/AdForm";
 import AdCard from "@/components/ads/AdCard";
 import Layout from "@/components/Layout";
 import { queryAdById } from "@/components/graphql/Ads";
@@ -22,7 +22,7 @@ export default function EditAd() {
     <Layout title="Modifier mon annonce">
       {ad && (
         <>
-          <AdCreate ad={ad} />
+          <AdForm ad={ad} />
           <AdCard
             key={ad.id}
             id={ad.id}

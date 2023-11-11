@@ -6,7 +6,7 @@ import { useQuery } from "@apollo/client";
 export default function RecentAds(): React.ReactNode {
   const { data } = useQuery<{ items: AdsTypes }>(queryAllAds);
   const ads = data ? data.items : [];
-
+  console.log(ads);
   return (
     <div>
       <h2>Annonces récentes</h2>

@@ -12,6 +12,9 @@
 /.next/
 /out/
 
+# img
+users
+
 # production
 /build
 

@@ -5,9 +5,9 @@ import { queryAllCatAndSub } from "../graphql/Categories";
 import { queryAllAds } from "../graphql/Ads";
 import { queryAllTags } from "../graphql/Tags";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
+// import Box from "@mui/material/Box";
+// import Button from "@mui/material/Button";
+// import TextField from "@mui/material/TextField";
 import {
   FormControl,
   InputLabel,
@@ -15,6 +15,9 @@ import {
   OutlinedInput,
   Select,
   SelectChangeEvent,
+  TextField,
+  Box,
+  Button,
 } from "@mui/material";
 import { FilterAlt, FilterAltOff } from "@mui/icons-material";
 
@@ -220,7 +223,6 @@ const Search = (): React.ReactNode => {
               type="button"
               onClick={() => setShowQueries(!showQueries)}
             >
-              {/* {!showQueries ? "Plus de filtres" : "Moins de filtres"} */}
               Filtres
             </Button>
             <Button

@@ -65,6 +65,7 @@ export type AdTypes = {
   user: {
     id: number;
     nickName: string;
+    picture: string;
   };
 };
 
@@ -73,6 +74,8 @@ export type AdsTypes = AdTypes[];
 export type Tag = {
   id: string;
 };
+export type AdTag = { id: number };
+export type AdTags = AdTag[];
 
 export type AdFormData = {
   title: string;
@@ -81,7 +84,7 @@ export type AdFormData = {
   picture: string;
   price: number;
   subCategory: { id: number } | null;
-  tags?: Tag[] | null;
+  tags?: AdTags | null;
   user?: { id: number };
 };
 
