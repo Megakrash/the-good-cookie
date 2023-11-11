@@ -13,17 +13,13 @@ import { CardActionArea } from "@mui/material";
 
 const AdCard = (props: AdTypes): React.ReactNode => {
   const adImageUrl = `${PATH_IMAGE}/ads/${props.picture}`;
-  const widthAds = 256;
-  const qualityAds = 75;
-  const optimizedAdImageUrl = `http://localhost:3000/_next/image?url=${encodeURIComponent(
-    adImageUrl
-  )}&w=${widthAds}&q=${qualityAds}`;
+  const userImageUrl = `${PATH_IMAGE}/users/${props.user.picture}`;
   return (
     <Card sx={{ width: 250 }}>
       <CardActionArea href={`/annonces/${props.id}`}>
         <CardMedia
           sx={{ maxHeight: 250, minHeight: 200, width: 250 }}
-          image={optimizedAdImageUrl}
+          image={adImageUrl}
           title={props.title}
         />
         <CardContent>
@@ -33,14 +29,11 @@ const AdCard = (props: AdTypes): React.ReactNode => {
           <Typography variant="body1" color="text.secondary">
             {props.description}
           </Typography>
+          <Avatar alt={props.user.nickName} src={userImageUrl} />
+          <Typography variant="body2" color="text.secondary">
+            {props.user.nickName}
+          </Typography>
         </CardContent>
-        <Avatar
-          alt={props.user.nickName}
-          src={`/images/users/${props.user.picture}`}
-        />
-        <Typography variant="body2" color="text.secondary">
-          {props.user.nickName}
-        </Typography>
       </CardActionArea>
       <CardActions>
         <Link href={`/annonces/${props.id}/edit`}>

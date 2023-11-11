@@ -59,7 +59,9 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   const [error, setError] = useState(false);
   const [helperText, setHelperText] = useState("");
   const [description, setDescription] = useState<string>("");
-  const [picture, setPicture] = useState<string>("chourette.jpg");
+  const [picture, setPicture] = useState<string>(
+    "IPHONE12PROMAX_2023-1029-221619.png"
+  );
   const [price, setPrice] = useState<number>(0);
   const [location, setLocation] = useState<string>("");
   const [subCategoryId, setSubCategoryId] = useState<null | number>();
@@ -91,7 +93,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
       location,
       subCategory: subCategoryId ? { id: Number(subCategoryId) } : null,
       tags: selectedTags.length > 0 ? selectedTags : undefined,
-      user: { id: 2 },
+      user: { id: 6 },
     };
 
     if (data.title.trim().length < 3) {
@@ -174,7 +176,8 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
             id="description"
             multiline
             fullWidth
-            rows={8}
+            minRows={8}
+            maxRows={24}
             label="Détail de votre annonce"
             variant="outlined"
             value={description || ""}
