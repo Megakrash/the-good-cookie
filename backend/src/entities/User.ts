@@ -45,6 +45,10 @@ export class User extends BaseEntity {
   @Field({ nullable: true })
   nickName!: string;
 
+  @Column({ length: 500 })
+  @Field({ nullable: true })
+  picture?: string;
+
   @Column({ length: 100 })
   @IsEmail()
   @Field()
@@ -112,6 +116,9 @@ export class UserCreateInput {
   nickName!: string;
 
   @Field()
+  picture!: string;
+
+  @Field()
   email!: string;
 
   @Field()
@@ -143,6 +150,9 @@ export class UserUpdateInput {
 
   @Field({ nullable: true })
   nickName!: string;
+
+  @Field({ nullable: true })
+  picture!: string;
 
   @Field({ nullable: true })
   email!: string;

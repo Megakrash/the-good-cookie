@@ -5,7 +5,6 @@ import {
   SubCategoryUpdateInput,
 } from "../entities/SubCategory";
 import { validate } from "class-validator";
-import { getRepository } from "typeorm";
 
 @Resolver(SubCategory)
 export class SubCategoriesResolver {

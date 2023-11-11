@@ -68,9 +68,6 @@ export class AdsResolver {
           updateDate: "DESC",
         },
       });
-      if (ads.length === 0) {
-        throw new Error("404");
-      }
       return ads;
     } catch (errors) {
       throw new Error(`Error occured: ${JSON.stringify(errors)}`);
