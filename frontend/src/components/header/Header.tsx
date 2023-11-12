@@ -1,4 +1,3 @@
-import NavCategories from "../categories/NavCategories";
 import NavSubCategories from "../subCategories/NavSubCategories";
 import Link from "next/link";
 import { CategoriesTypes } from "@/types";
@@ -42,31 +41,6 @@ export default function Header(): React.ReactNode {
           <span className="desktop-long-label">Publier une annonce</span>
         </Link>
       </div>
-      {categories && (
-        <nav className="categories-navigation">
-          {categories.map((category) => (
-            <NavCategories
-              key={category.id}
-              id={category.id}
-              name={category.name}
-              subCategories={category.subCategories}
-            />
-          ))}
-        </nav>
-      )}
-      {categories && (
-        <nav className="categories-navigation">
-          {categories.map((category) =>
-            category.subCategories.map((subCat) => (
-              <NavSubCategories
-                key={subCat.id}
-                id={subCat.id}
-                name={subCat.name}
-              />
-            ))
-          )}
-        </nav>
-      )}
     </header>
   );
 }

@@ -1,25 +1,29 @@
 import { SubCategoryTypes } from "@/types";
-import Link from "next/link";
-import Image from "next/image";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
 import { PATH_IMAGE } from "@/configApi";
+import { CardActionArea } from "@mui/material";
+import Typography from "@mui/material/Typography";
 
 const SubCategoriesCard = (props: SubCategoryTypes): React.ReactNode => {
-  const picturePath: string = `${PATH_IMAGE}subCategory/`;
+  const picturePath: string = `${PATH_IMAGE}/subCategory/${props.picture}`;
   return (
-    <div className="ad-card-container">
-      <Link className="ad-card-link" href={`/sousCategories/${props.id}`}>
-        <Image
-          className="ad-card-image"
-          src={picturePath + props.picture}
-          width="100"
-          height="100"
-          alt={props.name}
-        />
-        <div className="ad-card-text">
-          <p className="ad-card-title">{props.name}</p>
-        </div>
-      </Link>
-    </div>
+    <Card sx={{ minHeight: 200, marginBottom: "25px" }}>
+      <CardActionArea href={`/sousCategories/${props.id}`}>
+        <CardContent>
+          <Typography gutterBottom variant="h4" component="div">
+            {props.name}
+          </Typography>
+          <CardMedia
+            sx={{ minHeight: 200, width: "auto" }}
+            image={picturePath}
+            title={props.name}
+          />
+        </CardContent>
+      </CardActionArea>
+    </Card>
   );
 };
 

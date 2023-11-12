@@ -1,19 +1,21 @@
-// import "@/styles/index.scss";
-import "@/styles/globals.css";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+// import "@/styles/index.scss";
 
 const theme = createTheme({
   palette: {
     mode: "light",
     primary: {
       main: "#ffa41b",
+      light: "#FFB648",
       dark: "#e89116",
     },
     secondary: {
-      main: "#f50057",
+      main: "#343a40",
+      light: "#5C6166",
+      dark: "#24282C",
     },
   },
 });
