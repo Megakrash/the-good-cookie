@@ -147,6 +147,7 @@ const Search = (): React.ReactNode => {
             variant="outlined"
             value={selectedLocation || ""}
             onChange={(e) => setSelectedLocation(e.target.value)}
+            required
           />
 
           {showQueries && (
@@ -251,21 +252,8 @@ const Search = (): React.ReactNode => {
             {searchResult.length} annonces correspondent à votre recherche :
           </h2>
           <section className="recent-ads">
-            {searchResult.map((infos) => (
-              <AdCard
-                key={infos.id}
-                id={infos.id}
-                title={infos.title}
-                description={infos.description}
-                price={infos.price}
-                createdDate={infos.createdDate}
-                updateDate={infos.updateDate}
-                picture={infos.picture}
-                location={infos.location}
-                subCategory={infos.subCategory}
-                user={infos.user}
-                tags={infos.tags}
-              />
+            {searchResult.map((ads) => (
+              <AdCard key={ads.id} ad={ads} />
             ))}
           </section>
         </>

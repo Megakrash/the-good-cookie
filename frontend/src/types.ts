@@ -57,6 +57,10 @@ export type AdTypes = {
   subCategory: {
     id: number;
     name: string;
+    category: {
+      id: number;
+      name: string;
+    };
   };
   tags: {
     id: number;

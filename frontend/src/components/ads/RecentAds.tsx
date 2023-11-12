@@ -1,32 +1,65 @@
+import React from "react";
 import AdCard from "./AdCard";
 import { AdsTypes } from "@/types";
 import { queryAllAds } from "../graphql/Ads";
 import { useQuery } from "@apollo/client";
+import { Box, Typography } from "@mui/material";
 
-export default function RecentAds(): React.ReactNode {
+const RecentAds = (): React.ReactNode => {
   const { data } = useQuery<{ items: AdsTypes }>(queryAllAds);
   const ads = data ? data.items : [];
+
+  function groupAdsByCategory(
+    ads: AdsTypes
+  ): Record<number, { category: { id: number; name: string }; ads: AdsTypes }> {
+    return ads.reduce((acc, ad) => {
+      const { id, name } = ad.subCategory.category;
+      if (!acc[id]) {
+        acc[id] = { category: { id, name }, ads: [] };
+      }
+      acc[id].ads.push(ad);
+      return acc;
+    }, {} as Record<number, { category: { id: number; name: string }; ads: AdsTypes }>);
+  }
+
+  const groupedAds = groupAdsByCategory(ads);
+
   return (
-    <div>
-      <h2>Annonces récentes</h2>
-      <section className="recent-ads">
-        {ads.map((ad) => (
-          <AdCard
-            key={ad.id}
-            id={ad.id}
-            title={ad.title}
-            description={ad.description}
-            price={ad.price}
-            createdDate={ad.createdDate}
-            updateDate={ad.updateDate}
-            picture={ad.picture}
-            location={ad.location}
-            subCategory={ad.subCategory}
-            user={ad.user}
-            tags={ad.tags}
-          />
-        ))}
-      </section>
-    </div>
+    <Box
+      sx={{
+        width: "90%",
+        margin: "auto",
+      }}
+    >
+      <Typography
+        sx={{
+          marginBottom: "15px",
+        }}
+        variant="h4"
+      >
+        Annonces récentes
+      </Typography>
+      {Object.entries(groupedAds).map(([categoryId, group]) => (
+        <Box sx={{ marginBottom: "20px" }} key={categoryId}>
+          <Typography variant="h5" sx={{ marginBottom: "15px" }}>
+            Catégorie : {group.category.name}
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "16px",
+              margin: "auto",
+            }}
+          >
+            {group.ads.map((ad) => (
+              <AdCard key={ad.id} ad={ad} />
+            ))}
+          </Box>
+        </Box>
+      ))}
+    </Box>
   );
-}
+};
+
+export default RecentAds;
