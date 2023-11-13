@@ -1,4 +1,6 @@
 import React, { FormEvent, useEffect, useState } from "react";
+import { API_URL } from "@/configApi";
+import axios from "axios";
 import {
   AdFormData,
   CategoriesTypes,
@@ -59,9 +61,14 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   const [error, setError] = useState(false);
   const [helperText, setHelperText] = useState("");
   const [description, setDescription] = useState<string>("");
-  const [picture, setPicture] = useState<string>(
-    "IPHONE12PROMAX_2023-1029-221619.png"
-  );
+  const [curentPicture, setCurentPicture] = useState<string>("");
+  const [newPicture, setNewPicture] = useState<File | null>(null);
+  console.log(newPicture);
+  function handleFileSelection(event: React.ChangeEvent<HTMLInputElement>) {
+    if (event.target.files && event.target.files[0]) {
+      setNewPicture(event.target.files[0]);
+    }
+  }
   const [price, setPrice] = useState<number>(0);
   const [location, setLocation] = useState<string>("");
   const [subCategoryId, setSubCategoryId] = useState<null | number>();
@@ -85,46 +92,60 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const data: AdFormData = {
-      title,
-      description,
-      picture,
-      price,
-      location,
-      subCategory: subCategoryId ? { id: Number(subCategoryId) } : null,
-      tags: selectedTags.length > 0 ? selectedTags : undefined,
-      user: { id: 6 },
-    };
+    const dataFile = new FormData();
+    dataFile.append("title", title);
+    dataFile.append("file", newPicture);
 
-    if (data.title.trim().length < 3) {
-      setError(true);
-      setHelperText("Le titre doit être d'au moins 3 caractères.");
-      return;
-    } else if (data.price < 0) {
-      // setError("price");
-    } else {
-      if (!props.ad) {
-        const result = await doCreate({
-          variables: {
-            data: data,
-          },
-        });
-        if ("id" in result.data?.item) {
-          router.replace(`/annonces/${result.data.item.id}`);
-        } else {
-          toast("Erreur pendant la création de votre annonce");
-        }
+    try {
+      const uploadResponse = await axios.post(`${API_URL}upload`, dataFile, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const filename = uploadResponse.data.filename;
+      console.log(filename);
+      const data: AdFormData = {
+        title,
+        description,
+        picture: filename,
+        price,
+        location,
+        subCategory: subCategoryId ? { id: Number(subCategoryId) } : null,
+        tags: selectedTags.length > 0 ? selectedTags : undefined,
+        user: { id: 6 },
+      };
+
+      if (data.title.trim().length < 3) {
+        setError(true);
+        setHelperText("Le titre doit être d'au moins 3 caractères.");
+        return;
       } else {
-        const result = await doUpdate({
-          variables: {
-            data: data,
-            adUpdateId: props.ad?.id,
-          },
-        });
-        if (!result.errors?.length) {
-          toast("Annonce mise à jour");
+        if (!props.ad) {
+          const result = await doCreate({
+            variables: {
+              data: data,
+            },
+          });
+          if ("id" in result.data?.item) {
+            router.replace(`/annonces/${result.data.item.id}`);
+          } else {
+            toast("Erreur pendant la création de votre annonce");
+          }
+        } else {
+          const result = await doUpdate({
+            variables: {
+              data: data,
+              adUpdateId: props.ad?.id,
+            },
+          });
+          if (!result.errors?.length) {
+            toast("Annonce mise à jour");
+          }
         }
       }
+    } catch (error) {
+      console.error("error", error);
     }
   }
 
@@ -134,10 +155,11 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
       setDescription(props.ad.description);
       setLocation(props.ad.location);
       setPrice(props.ad.price);
-      setPicture(props.ad.picture);
+      setCurentPicture(props.ad.picture);
       setSubCategoryId(props.ad.subCategory ? props.ad.subCategory.id : null);
     }
   }, [props.ad]);
+
   return (
     <React.Fragment>
       <Toaster
@@ -154,7 +176,6 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
           sx={{
             "& > :not(style)": { m: 2, width: "50ch" },
           }}
-          // noValidate
           autoComplete="off"
           onSubmit={onSubmit}
         >
@@ -265,24 +286,19 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
             variant="contained"
             startIcon={<CloudUploadIcon />}
           >
-            Upload file
-            <VisuallyHiddenInput type="file" />
+            Upload
+            <VisuallyHiddenInput
+              type="file"
+              accept=".jpg, .png, .webp"
+              onChange={handleFileSelection}
+              required
+            />
           </Button>
           <Button variant="contained" type="submit" disabled={loading}>
             {props.ad ? "Modifer mon annonce" : "Créer mon annonce"}
           </Button>
         </Box>
       )}
-
-      <input
-        className=""
-        type="text"
-        name="picture"
-        placeholder="Lien de votre image*"
-        value={picture}
-        onChange={(e) => setPicture(e.target.value)}
-        required
-      />
     </React.Fragment>
   );
 };

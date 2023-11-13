@@ -23,20 +23,7 @@ export default function EditAd() {
       {ad && (
         <>
           <AdForm ad={ad} />
-          <AdCard
-            key={ad.id}
-            id={ad.id}
-            title={ad.title}
-            description={ad.description}
-            price={ad.price}
-            createdDate={ad.createdDate}
-            updateDate={ad.updateDate}
-            picture={ad.picture}
-            location={ad.location}
-            subCategory={ad.subCategory}
-            user={ad.user}
-            tags={ad.tags}
-          />
+          <AdCard key={ad.id} ad={ad} />
         </>
       )}
     </Layout>

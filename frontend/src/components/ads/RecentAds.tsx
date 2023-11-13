@@ -8,7 +8,7 @@ import { Box, Typography } from "@mui/material";
 const RecentAds = (): React.ReactNode => {
   const { data } = useQuery<{ items: AdsTypes }>(queryAllAds);
   const ads = data ? data.items : [];
-
+  console.log(ads);
   function groupAdsByCategory(
     ads: AdsTypes
   ): Record<number, { category: { id: number; name: string }; ads: AdsTypes }> {
