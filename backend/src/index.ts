@@ -9,7 +9,7 @@ import { dataSource } from "./datasource";
 //-----------------MULTER------------------
 //-----------------------------------------
 
-// import { uploadAdPicture } from "./multer/multer";
+import { uploadAdPicture } from "./multer/multer";
 
 //-----------------------------------------
 //----------GRAPHQL / APOLLO SERVER--------
@@ -47,7 +47,10 @@ interface MyContext {
 }
 
 const app = express();
-
+const corsOptions = {
+  origin: "http://localhost:3000", // ou utilisez un tableau d'origines si nécessaire
+  optionsSuccessStatus: 200, // certains navigateurs legacy (IE11, divers SmartTVs) s'arrêtent à 204
+};
 async function start() {
   const port = 5000;
   const schema = await buildSchema({
@@ -86,7 +89,16 @@ async function start() {
 start();
 
 app.use(express.json());
+app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, "../public")));
 app.get("/test", (req, res) => {
   res.send("Le serveur Express fonctionne !");
+});
+
+app.post("/upload", uploadAdPicture.single("file"), (req, res) => {
+  if (req.file) {
+    res.json({ filename: req.file.filename });
+  } else {
+    res.status(400).send("No file was uploaded.");
+  }
 });
