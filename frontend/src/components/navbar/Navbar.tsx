@@ -32,9 +32,7 @@ const Navbar = (): React.ReactNode => {
     currentCategory && (isCategoryPage || isSubCategoryPage);
 
   return (
-    <Box
-      sx={{ position: "sticky", top: 0, zIndex: 1100, marginBottom: "15px" }}
-    >
+    <Box sx={{ position: "sticky", top: 0, zIndex: 1100 }}>
       <AppBar
         sx={{
           height: "40px",

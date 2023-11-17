@@ -32,9 +32,11 @@ import {
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
+
 type AdFormProps = {
   ad?: AdTypes;
 };
+
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -46,6 +48,7 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
+
 const AdForm = (props: AdFormProps): React.ReactNode => {
   // Get Categories&SubCategories & Tags
   const { data: dataCategories } = useQuery<{ items: CategoriesTypes }>(
@@ -61,9 +64,8 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   const [error, setError] = useState(false);
   const [helperText, setHelperText] = useState("");
   const [description, setDescription] = useState<string>("");
-  const [curentPicture, setCurentPicture] = useState<string>("");
+  // const [curentPicture, setCurentPicture] = useState<string>("");
   const [newPicture, setNewPicture] = useState<File | null>(null);
-  console.log(newPicture);
   function handleFileSelection(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files[0]) {
       setNewPicture(event.target.files[0]);
@@ -104,7 +106,6 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
       });
 
       const filename = uploadResponse.data.filename;
-      console.log(filename);
       const data: AdFormData = {
         title,
         description,
@@ -155,7 +156,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
       setDescription(props.ad.description);
       setLocation(props.ad.location);
       setPrice(props.ad.price);
-      setCurentPicture(props.ad.picture);
+      // setCurentPicture(props.ad.picture);
       setSubCategoryId(props.ad.subCategory ? props.ad.subCategory.id : null);
     }
   }, [props.ad]);
@@ -183,6 +184,9 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
             {!props.ad ? "Création de votre annonce" : "Modifier votre annonce"}
           </h2>
           <TextField
+            sx={{
+              backgroundColor: "white",
+            }}
             id="title"
             size="small"
             label="Titre de votre annonce"
@@ -194,6 +198,9 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
             required
           />
           <TextField
+            sx={{
+              backgroundColor: "white",
+            }}
             id="description"
             multiline
             fullWidth
@@ -206,6 +213,9 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
             required
           />
           <TextField
+            sx={{
+              backgroundColor: "white",
+            }}
             id="price"
             size="small"
             label="Prix de votre annonce"
@@ -217,6 +227,9 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
             required
           />
           <TextField
+            sx={{
+              backgroundColor: "white",
+            }}
             id="location"
             size="small"
             label="Ville"
@@ -228,6 +241,9 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
           <FormControl fullWidth>
             <InputLabel id="subcategory-select-label">Catégorie*</InputLabel>
             <Select
+              sx={{
+                backgroundColor: "white",
+              }}
               labelId="subcategory-select-label"
               id="subcategory-select"
               value={subCategoryId || ""}
@@ -261,6 +277,9 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
           <FormControl fullWidth>
             <InputLabel id="tags">Tag(s)</InputLabel>
             <Select
+              sx={{
+                backgroundColor: "white",
+              }}
               labelId="tags-label"
               id="select-tags"
               multiple
@@ -286,7 +305,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
             variant="contained"
             startIcon={<CloudUploadIcon />}
           >
-            Upload
+            Image pour votre annonce
             <VisuallyHiddenInput
               type="file"
               accept=".jpg, .png, .webp"
