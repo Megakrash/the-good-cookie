@@ -26,6 +26,7 @@ export const queryAllAds = gql`
       user {
         id
         nickName
+        picture
       }
     }
   }
@@ -52,6 +53,7 @@ export const queryAdById = gql`
       user {
         id
         nickName
+        picture
       }
     }
   }
@@ -69,8 +71,6 @@ export const mutationUpdateAd = gql`
   mutation adUpdate($data: AdUpdateInput!, $adUpdateId: ID!) {
     item: AdUpdate(data: $data, id: $adUpdateId) {
       id
-      title
-      updateDate
     }
   }
 `;

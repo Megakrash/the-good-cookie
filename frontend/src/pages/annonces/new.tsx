@@ -1,11 +1,11 @@
 import Layout from "@/components/Layout";
-import AdCreate from "@/components/ads/AdCreate";
+import AdForm from "@/components/ads/AdForm";
 
 const NewAd = (): React.ReactNode => {
   return (
     <>
       <Layout title="TGD : Créer mon annonce">
-        <AdCreate />
+        <AdForm />
       </Layout>
     </>
   );

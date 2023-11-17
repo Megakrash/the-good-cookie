@@ -4,7 +4,7 @@ import Search from "@/components/search/Search";
 
 const Home = (): React.ReactNode => {
   return (
-    <Layout title="Home">
+    <Layout title="Accueil TGC">
       <Search />
       <RecentAds />
     </Layout>

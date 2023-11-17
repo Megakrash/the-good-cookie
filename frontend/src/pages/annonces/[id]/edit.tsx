@@ -1,5 +1,6 @@
 import { AdTypes } from "@/types";
-import AdCreate from "@/components/ads/AdCreate";
+import AdForm from "@/components/ads/AdForm";
+import AdCard from "@/components/ads/AdCard";
 import Layout from "@/components/Layout";
 import { queryAdById } from "@/components/graphql/Ads";
 import { useQuery } from "@apollo/client";
@@ -11,15 +12,20 @@ export default function EditAd() {
 
   const { data } = useQuery<{ item: AdTypes }>(queryAdById, {
     variables: {
-      id: adId,
+      adByIdId: adId,
     },
     skip: adId === undefined,
   });
   const ad = data ? data.item : null;
 
   return (
-    <Layout title="Nouvelle offre">
-      <main className="main-content">{ad && <AdCreate ad={ad} />}</main>
+    <Layout title="Modifier mon annonce">
+      {ad && (
+        <>
+          <AdForm ad={ad} />
+          <AdCard key={ad.id} ad={ad} />
+        </>
+      )}
     </Layout>
   );
 }

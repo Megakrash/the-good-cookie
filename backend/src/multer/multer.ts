@@ -18,10 +18,9 @@ const generateFileName = (
     .getSeconds()
     .toString()
     .padStart(2, "0")}`;
-  req.body.filename = `${req.body.title.toUpperCase()}_${timestamp}${
-    ext === ".jpg" ? ".jpg" : ".png"
-  }`.replace(/\s+/g, "");
-  cb(null, req.body.filename);
+  const filename = `${req.body.title.toUpperCase()}_${timestamp}${ext}`;
+  const safeFilename = filename.replace(/\s+/g, "_");
+  cb(null, safeFilename);
 };
 
 const createMulterStorage = (destinationPath: string) =>

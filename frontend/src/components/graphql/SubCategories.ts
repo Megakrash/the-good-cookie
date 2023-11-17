@@ -21,6 +21,7 @@ export const querySubCatAndAds = gql`
         user {
           id
           nickName
+          picture
         }
       }
       category {

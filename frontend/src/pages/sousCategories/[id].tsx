@@ -36,20 +36,7 @@ const SubCategoryComponent = (): React.ReactNode => {
           {Array.isArray(subCategory.ads) && subCategory.ads.length > 0 ? (
             <div>
               {subCategory.ads.map((infos) => (
-                <AdCard
-                  key={infos.id}
-                  id={infos.id}
-                  title={infos.title}
-                  description={infos.description}
-                  price={infos.price}
-                  createdDate={infos.createdDate}
-                  updateDate={infos.updateDate}
-                  picture={infos.picture}
-                  location={infos.location}
-                  subCategory={infos.subCategory}
-                  user={infos.user}
-                  tags={infos.tags}
-                />
+                <AdCard key={infos.id} ad={infos} />
               ))}
             </div>
           ) : (

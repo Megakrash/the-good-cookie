@@ -22,10 +22,16 @@ export class SubCategoriesResolver {
     const subCategory = await SubCategory.findOne({
       where: { id },
       relations: { ads: { tags: true, user: true }, category: true },
+      order: {
+        ads: {
+          updateDate: "DESC",
+        },
+      },
     });
     if (!subCategory) {
       throw new Error("SubCategory not found");
     }
+
     return subCategory;
   }
 

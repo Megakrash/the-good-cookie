@@ -1,6 +1,7 @@
+import { ReactNode } from "react";
 import Head from "next/head";
 import Header from "./header/Header";
-import { ReactNode } from "react";
+import Navbar from "./navbar/Navbar";
 
 type LayoutProps = {
   title: string;
@@ -17,6 +18,7 @@ const Layout = (props: LayoutProps): ReactNode => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
+      <Navbar />
       <main className="main-content">{props.children}</main>
     </>
   );
