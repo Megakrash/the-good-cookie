@@ -9,6 +9,7 @@ import {
   AdTags,
 } from "@/types";
 import toast, { Toaster } from "react-hot-toast";
+import AdCard from "./AdCard";
 import { queryAllCatAndSub } from "@/components/graphql/Categories";
 import { queryAllTags } from "../graphql/Tags";
 import {
@@ -64,8 +65,8 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   const [error, setError] = useState(false);
   const [helperText, setHelperText] = useState("");
   const [description, setDescription] = useState<string>("");
-  // const [curentPicture, setCurentPicture] = useState<string>("");
   const [newPicture, setNewPicture] = useState<File | null>(null);
+  // const [filename, setFilename] = useState<string>("");
   function handleFileSelection(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files[0]) {
       setNewPicture(event.target.files[0]);
@@ -92,6 +93,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   });
   const loading = createLoading || updateLoading;
 
+  // SUBMIT
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const dataFile = new FormData();
@@ -99,22 +101,25 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
     dataFile.append("file", newPicture);
 
     try {
-      const uploadResponse = await axios.post(`${API_URL}upload`, dataFile, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      let filename: string;
+      if (newPicture) {
+        const uploadResponse = await axios.post(`${API_URL}upload`, dataFile, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        filename = uploadResponse.data.filename;
+      }
 
-      const filename = uploadResponse.data.filename;
       const data: AdFormData = {
         title,
         description,
-        picture: filename,
+        picture: filename || props.ad.picture,
         price,
         location,
         subCategory: subCategoryId ? { id: Number(subCategoryId) } : null,
-        tags: selectedTags.length > 0 ? selectedTags : undefined,
-        user: { id: 6 },
+        tags: selectedTags,
+        user: { id: 2 },
       };
 
       if (data.title.trim().length < 3) {
@@ -149,20 +154,25 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
       console.error("error", error);
     }
   }
-
+  // If update Ad
   useEffect(() => {
     if (props.ad) {
       setTitle(props.ad.title);
       setDescription(props.ad.description);
       setLocation(props.ad.location);
       setPrice(props.ad.price);
-      // setCurentPicture(props.ad.picture);
       setSubCategoryId(props.ad.subCategory ? props.ad.subCategory.id : null);
+      setSelectedTags(props.ad.tags);
     }
   }, [props.ad]);
 
   return (
-    <React.Fragment>
+    <Box
+      sx={{
+        width: props.ad ? "50%" : "98%",
+        margin: "auto",
+      }}
+    >
       <Toaster
         toastOptions={{
           style: {
@@ -176,6 +186,8 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
           component="form"
           sx={{
             "& > :not(style)": { m: 2, width: "50ch" },
+            display: "flex",
+            flexDirection: "column",
           }}
           autoComplete="off"
           onSubmit={onSubmit}
@@ -291,7 +303,6 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
                   .map((id) => tags.find((tag) => tag.id === id)?.name || "")
                   .join(", ")
               }
-              required
             >
               {tags.map((tag) => (
                 <MenuItem key={tag.id} value={tag.id}>
@@ -310,7 +321,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
               type="file"
               accept=".jpg, .png, .webp"
               onChange={handleFileSelection}
-              required
+              required={!props.ad}
             />
           </Button>
           <Button variant="contained" type="submit" disabled={loading}>
@@ -318,7 +329,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
           </Button>
         </Box>
       )}
-    </React.Fragment>
+    </Box>
   );
 };
 

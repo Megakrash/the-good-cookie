@@ -3,11 +3,9 @@ import AdForm from "@/components/ads/AdForm";
 
 const NewAd = (): React.ReactNode => {
   return (
-    <>
-      <Layout title="TGD : Créer mon annonce">
-        <AdForm />
-      </Layout>
-    </>
+    <Layout title="TGD : Créer mon annonce">
+      <AdForm />
+    </Layout>
   );
 };
 

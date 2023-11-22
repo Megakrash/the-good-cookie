@@ -104,7 +104,7 @@ const Navbar = (): React.ReactNode => {
                         ? "secondary.dark"
                         : null,
                     "&:hover": {
-                      backgroundColor: (theme) => theme.palette.secondary.main,
+                      backgroundColor: (theme) => theme.palette.secondary.light,
                     },
                   }}
                 >
