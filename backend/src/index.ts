@@ -91,9 +91,9 @@ start();
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, "../public")));
-app.get("/test", (req, res) => {
-  res.send("Le serveur Express fonctionne !");
-});
+// app.get("/test", (req, res) => {
+//   res.send("Le serveur Express fonctionne !");
+// });
 
 app.post("/upload", uploadAdPicture.single("file"), (req, res) => {
   if (req.file) {

@@ -11,6 +11,7 @@ import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from "../entities/Ad";
 import { validate } from "class-validator";
 import { currentDate } from "../utils/date";
 import { merge } from "../utils/utils";
+const fs = require("fs");
 
 @Resolver(Ad)
 export class AdsResolver {
@@ -113,8 +114,22 @@ export class AdsResolver {
       where: { id: id },
       relations: { tags: true },
     });
-
     if (ad) {
+      if ("picture" in data && data.picture === "" && ad.picture) {
+        const filePath = `./public/assets/images/ads/${ad.picture}`;
+        console.warn(`Attempting to delete image at: ${filePath}`);
+        try {
+          fs.unlink(filePath, (err: NodeJS.ErrnoException | null) => {
+            if (err) {
+              console.error(`Error deleting image: ${err}`);
+            }
+          });
+        } catch (err) {
+          console.error(`Error deleting image: ${err}`);
+        }
+        ad.picture = "";
+      }
+
       const updateDate = currentDate();
       const dataWithUpdateDate = { ...data, updateDate };
       merge(ad, dataWithUpdateDate);

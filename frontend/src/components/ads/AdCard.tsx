@@ -17,7 +17,10 @@ type AdCardProps = {
 };
 
 const AdCard = (props: AdCardProps): React.ReactNode => {
-  const adImageUrl = `${PATH_IMAGE}/ads/${props.ad.picture}`;
+  const adImageUrl =
+    props.ad.picture !== ""
+      ? `${PATH_IMAGE}/ads/${props.ad.picture}`
+      : `${PATH_IMAGE}/default/default.png`;
   const userImageUrl = `${PATH_IMAGE}/users/${props.ad.user.picture}`;
 
   function capitalizeFirstLetter(text: string): string {

@@ -9,9 +9,8 @@ import {
   AdTags,
 } from "@/types";
 import toast, { Toaster } from "react-hot-toast";
-import AdCard from "./AdCard";
 import { queryAllCatAndSub } from "@/components/graphql/Categories";
-import { queryAllTags } from "../graphql/Tags";
+import { queryAllTags } from "../../graphql/Tags";
 import {
   queryAllAds,
   queryAdById,
@@ -30,9 +29,11 @@ import {
   TextField,
   Box,
   Button,
+  CardMedia,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
+import DeleteAdPicture from "./DeleteAdPicture";
 
 type AdFormProps = {
   ad?: AdTypes;
@@ -65,8 +66,8 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   const [error, setError] = useState(false);
   const [helperText, setHelperText] = useState("");
   const [description, setDescription] = useState<string>("");
+  const [curentPicture, setCurentPicture] = useState<string>("");
   const [newPicture, setNewPicture] = useState<File | null>(null);
-  // const [filename, setFilename] = useState<string>("");
   function handleFileSelection(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files[0]) {
       setNewPicture(event.target.files[0]);
@@ -161,11 +162,12 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
       setDescription(props.ad.description);
       setLocation(props.ad.location);
       setPrice(props.ad.price);
+      setCurentPicture(props.ad.picture);
       setSubCategoryId(props.ad.subCategory ? props.ad.subCategory.id : null);
-      setSelectedTags(props.ad.tags);
+      const transformedTags = props.ad.tags.map((tag) => ({ id: tag.id }));
+      setSelectedTags(transformedTags);
     }
   }, [props.ad]);
-
   return (
     <Box
       sx={{
@@ -311,20 +313,31 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
               ))}
             </Select>
           </FormControl>
+
+          {curentPicture === "" ? (
+            <Button
+              component="label"
+              variant="contained"
+              startIcon={<CloudUploadIcon />}
+            >
+              Image pour votre annonce
+              <VisuallyHiddenInput
+                type="file"
+                accept=".jpg, .png, .webp"
+                onChange={handleFileSelection}
+                required={!props.ad}
+              />
+            </Button>
+          ) : (
+            <DeleteAdPicture adId={props.ad.id} adPicture={curentPicture} />
+          )}
+
           <Button
-            component="label"
             variant="contained"
-            startIcon={<CloudUploadIcon />}
+            size="large"
+            type="submit"
+            disabled={loading}
           >
-            Image pour votre annonce
-            <VisuallyHiddenInput
-              type="file"
-              accept=".jpg, .png, .webp"
-              onChange={handleFileSelection}
-              required={!props.ad}
-            />
-          </Button>
-          <Button variant="contained" type="submit" disabled={loading}>
             {props.ad ? "Modifer mon annonce" : "Créer mon annonce"}
           </Button>
         </Box>
