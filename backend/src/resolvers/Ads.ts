@@ -1,17 +1,10 @@
 import { Arg, Query, Resolver, Mutation, ID } from "type-graphql";
-import {
-  In,
-  Like,
-  MoreThanOrEqual,
-  LessThanOrEqual,
-  Between,
-  ILike,
-} from "typeorm";
+import { In, MoreThanOrEqual, LessThanOrEqual, Between, ILike } from "typeorm";
 import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from "../entities/Ad";
 import { validate } from "class-validator";
 import { currentDate } from "../utils/date";
 import { merge } from "../utils/utils";
-const fs = require("fs");
+import fs from "fs";
 
 @Resolver(Ad)
 export class AdsResolver {
@@ -117,7 +110,6 @@ export class AdsResolver {
     if (ad) {
       if ("picture" in data && data.picture === "" && ad.picture) {
         const filePath = `./public/assets/images/ads/${ad.picture}`;
-        console.warn(`Attempting to delete image at: ${filePath}`);
         try {
           fs.unlink(filePath, (err: NodeJS.ErrnoException | null) => {
             if (err) {

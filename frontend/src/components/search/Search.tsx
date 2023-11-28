@@ -20,7 +20,6 @@ import { FilterAlt, FilterAltOff } from "@mui/icons-material";
 import { PATH_IMAGE } from "@/configApi";
 
 const Search = (): React.ReactNode => {
-  const searchBackground = `${PATH_IMAGE}/component/searchBackground.jpg`;
   // Get Categories&SubCategories & Tags
   const {
     data: dataCategories,
@@ -65,10 +64,8 @@ const Search = (): React.ReactNode => {
   //----- Search-----
   //-----------------
 
-  const [
-    doSearch,
-    { data: dataSearch, error: errorSearch, loading: loadingSearch },
-  ] = useLazyQuery<{ items: AdsTypes }>(queryAllAds);
+  const [doSearch, { data: dataSearch, loading: loadingSearch }] =
+    useLazyQuery<{ items: AdsTypes }>(queryAllAds);
   const searchResult = dataSearch ? dataSearch.items : [];
   const handleSearchClick = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -100,192 +97,199 @@ const Search = (): React.ReactNode => {
   };
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        minHeight: "300px",
-        display: "flex",
-        backgroundColor: "white",
-      }}
-    >
-      {categories && tags && (
-        <Box
-          sx={{
-            width: "95%",
-            marginTop: "10px",
-            marginBottom: "10px",
-            marginLeft: "auto",
-            marginRight: "auto",
-            display: "flex",
-            flexDirection: "row",
-            gap: "25px",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          component="form"
-          // noValidate
-          autoComplete="off"
-          onSubmit={handleSearchClick}
-        >
+    <>
+      <Box
+        sx={{
+          width: "100%",
+          minHeight: "300px",
+          display: "flex",
+          backgroundColor: "white",
+        }}
+      >
+        {categories && tags && (
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              width: "30ch",
-              gap: "15px",
-            }}
-          >
-            <FormControl fullWidth>
-              <InputLabel id="subcategory-select-label">Catégorie</InputLabel>
-              <Select
-                labelId="subcategory-select-label"
-                id="subcategory-select"
-                value={selectedSubCategory || ""}
-                onChange={handleChangeCategory}
-                label="Sélectionnez une sous-catégorie"
-              >
-                <MenuItem value="" disabled>
-                  Sélectionnez une catégorie
-                </MenuItem>
-                {categories.map((category) => [
-                  <MenuItem key={category.id} value="" disabled>
-                    {category.name}
-                  </MenuItem>,
-                  ...category.subCategories.map((subCategory) => (
-                    <MenuItem
-                      key={`subcategory-${category.id}-${subCategory.id}`}
-                      value={subCategory.id}
-                      style={{ marginLeft: "20px" }}
-                    >
-                      {subCategory.name}
-                    </MenuItem>
-                  )),
-                ])}
-              </Select>
-            </FormControl>
-            <TextField
-              id="location"
-              size="small"
-              label="Où ?"
-              variant="outlined"
-              value={selectedLocation || ""}
-              onChange={(e) => setSelectedLocation(e.target.value)}
-              required
-            />
-
-            {showQueries && (
-              <>
-                <TextField
-                  id="title"
-                  size="small"
-                  label="Quoi ?"
-                  variant="outlined"
-                  value={title || ""}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-
-                <TextField
-                  type="number"
-                  id="minPrice"
-                  size="small"
-                  label="Prix minimum €"
-                  variant="outlined"
-                  value={minPrice || ""}
-                  onChange={(e) =>
-                    setMinPrice(
-                      e.target.value === "" ? undefined : Number(e.target.value)
-                    )
-                  }
-                />
-                <TextField
-                  type="number"
-                  id="mexPrice"
-                  size="small"
-                  label="Prix maximum €"
-                  variant="outlined"
-                  value={maxPrice || ""}
-                  onChange={(e) =>
-                    setMaxPrice(
-                      e.target.value === "" ? undefined : Number(e.target.value)
-                    )
-                  }
-                />
-                <FormControl>
-                  <InputLabel id="tags">Tag(s)</InputLabel>
-                  <Select
-                    labelId="tags"
-                    id="select-tags"
-                    multiple
-                    value={selectedTags}
-                    onChange={handleChange}
-                    input={<OutlinedInput label="Tag" />}
-                    renderValue={(selected) =>
-                      selected
-                        .map(
-                          (id) =>
-                            tags.find((tag) => tag.id.toString() === id)
-                              ?.name || ""
-                        )
-                        .join(", ")
-                    }
-                  >
-                    {tags.map((tag) => (
-                      <MenuItem key={tag.id} value={tag.id}>
-                        {tag.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </>
-            )}
-          </Box>
-          <Box
-            sx={{
+              width: "95%",
+              marginTop: "10px",
+              marginBottom: "10px",
+              marginLeft: "auto",
+              marginRight: "auto",
               display: "flex",
               flexDirection: "row",
-              gap: "15px",
+              gap: "25px",
+              justifyContent: "center",
+              alignItems: "center",
             }}
+            component="form"
+            autoComplete="off"
+            onSubmit={handleSearchClick}
           >
-            <Button
-              variant="contained"
-              size="large"
-              type="submit"
-              disabled={loadingSearch}
-            >
-              Rechercher
-            </Button>
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "10px",
+                width: "30ch",
+                gap: "15px",
+              }}
+            >
+              <FormControl fullWidth>
+                <InputLabel id="subcategory-select-label">Catégorie</InputLabel>
+                <Select
+                  labelId="subcategory-select-label"
+                  id="subcategory-select"
+                  value={selectedSubCategory || ""}
+                  onChange={handleChangeCategory}
+                  label="Sélectionnez une sous-catégorie"
+                >
+                  <MenuItem value="" disabled>
+                    Sélectionnez une catégorie
+                  </MenuItem>
+                  {categories.map((category) => [
+                    <MenuItem key={category.id} value="" disabled>
+                      {category.name}
+                    </MenuItem>,
+                    ...category.subCategories.map((subCategory) => (
+                      <MenuItem
+                        key={`subcategory-${category.id}-${subCategory.id}`}
+                        value={subCategory.id}
+                        style={{ marginLeft: "20px" }}
+                      >
+                        {subCategory.name}
+                      </MenuItem>
+                    )),
+                  ])}
+                </Select>
+              </FormControl>
+              <TextField
+                id="location"
+                size="small"
+                label="Où ?"
+                variant="outlined"
+                value={selectedLocation || ""}
+                onChange={(e) => setSelectedLocation(e.target.value)}
+                required
+              />
+
+              {showQueries && (
+                <>
+                  <TextField
+                    id="title"
+                    size="small"
+                    label="Quoi ?"
+                    variant="outlined"
+                    value={title || ""}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+
+                  <TextField
+                    type="number"
+                    id="minPrice"
+                    size="small"
+                    label="Prix minimum €"
+                    variant="outlined"
+                    value={minPrice || ""}
+                    onChange={(e) =>
+                      setMinPrice(
+                        e.target.value === ""
+                          ? undefined
+                          : Number(e.target.value)
+                      )
+                    }
+                  />
+                  <TextField
+                    type="number"
+                    id="mexPrice"
+                    size="small"
+                    label="Prix maximum €"
+                    variant="outlined"
+                    value={maxPrice || ""}
+                    onChange={(e) =>
+                      setMaxPrice(
+                        e.target.value === ""
+                          ? undefined
+                          : Number(e.target.value)
+                      )
+                    }
+                  />
+                  <FormControl>
+                    <InputLabel id="tags">Tag(s)</InputLabel>
+                    <Select
+                      labelId="tags"
+                      id="select-tags"
+                      multiple
+                      value={selectedTags}
+                      onChange={handleChange}
+                      input={<OutlinedInput label="Tag" />}
+                      renderValue={(selected) =>
+                        selected
+                          .map(
+                            (id) =>
+                              tags.find((tag) => tag.id.toString() === id)
+                                ?.name || ""
+                          )
+                          .join(", ")
+                      }
+                    >
+                      {tags.map((tag) => (
+                        <MenuItem key={tag.id} value={tag.id}>
+                          {tag.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </>
+              )}
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                gap: "15px",
               }}
             >
               <Button
                 variant="contained"
-                size="small"
-                startIcon={!showQueries ? <FilterAlt /> : <FilterAltOff />}
-                type="button"
-                onClick={() => setShowQueries(!showQueries)}
+                size="large"
+                type="submit"
+                disabled={loadingSearch}
               >
-                Filtres
+                Rechercher
               </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                type="button"
-                onClick={resetForm}
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
               >
-                Reset
-              </Button>
+                <Button
+                  variant="contained"
+                  size="small"
+                  startIcon={!showQueries ? <FilterAlt /> : <FilterAltOff />}
+                  type="button"
+                  onClick={() => setShowQueries(!showQueries)}
+                >
+                  Filtres
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  type="button"
+                  onClick={resetForm}
+                >
+                  Reset
+                </Button>
+              </Box>
             </Box>
           </Box>
-        </Box>
-      )}
+        )}
+      </Box>
       {searchResult.length >= 1 && (
         <>
           <h2>
-            {searchResult.length} annonces correspondent à votre recherche :
+            {searchResult.length === 1
+              ? `${searchResult.length} annonce correspond à votre recherche :`
+              : `${searchResult.length} annonces correspondent à votre recherche :`}
           </h2>
           <section className="recent-ads">
             {searchResult.map((ads) => (
@@ -294,7 +298,7 @@ const Search = (): React.ReactNode => {
           </section>
         </>
       )}
-    </Box>
+    </>
   );
 };
 
