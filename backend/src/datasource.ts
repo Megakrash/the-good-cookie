@@ -16,5 +16,5 @@ export const dataSource = new DataSource({
   database: process.env.DB_NAME,
   entities: [Category, Ad, Tag, SubCategory, User],
   synchronize: true,
-  logging: true,
+  // logging: true,
 });

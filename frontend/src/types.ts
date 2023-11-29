@@ -100,3 +100,18 @@ export type TagTypes = {
 };
 
 export type TagsTypes = TagTypes[];
+
+// Users
+export type UserFormData = {
+  firstName: string;
+  lastName: string;
+  nickName: string;
+  email: string;
+  password: string;
+  picture: string;
+  adress: string;
+  zipCode: string;
+  city: string;
+  phoneNumber: string;
+  isAdmin: boolean;
+};

@@ -1,6 +1,5 @@
 import { SubCategoryTypes } from "@/types";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { PATH_IMAGE } from "@/configApi";
@@ -10,10 +9,15 @@ import Typography from "@mui/material/Typography";
 const SubCategoriesCard = (props: SubCategoryTypes): React.ReactNode => {
   const picturePath: string = `${PATH_IMAGE}/subCategory/${props.picture}`;
   return (
-    <Card sx={{ minHeight: 200, marginBottom: "25px" }}>
+    <Card sx={{ width: 280, marginBottom: "25px" }}>
       <CardActionArea href={`/sousCategories/${props.id}`}>
         <CardContent>
-          <Typography gutterBottom variant="h4" component="div">
+          <Typography
+            sx={{ textAlign: "center" }}
+            gutterBottom
+            variant="h4"
+            component="div"
+          >
             {props.name}
           </Typography>
           <CardMedia
