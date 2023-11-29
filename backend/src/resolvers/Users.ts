@@ -2,6 +2,7 @@ import { Arg, Query, Resolver, Mutation, ID } from "type-graphql";
 import { User, UserCreateInput, UserUpdateInput } from "../entities/User";
 import { validate } from "class-validator";
 import { currentDate } from "../utils/date";
+import * as argon2 from "argon2";
 
 @Resolver(User)
 export class UsersResolver {
@@ -30,6 +31,12 @@ export class UsersResolver {
     const registrationDate = currentDate();
     const newUser = new User();
     Object.assign(newUser, data, { registrationDate });
+
+    try {
+      newUser.password = await argon2.hash(newUser.password);
+    } catch (error) {
+      throw new Error(`Error hashing password: ${error}`);
+    }
 
     const errors = await validate(newUser);
     if (errors.length === 0) {

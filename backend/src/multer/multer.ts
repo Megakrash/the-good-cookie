@@ -38,3 +38,7 @@ const createMulterStorage = (destinationPath: string) =>
 export const uploadAdPicture = multer({
   storage: createMulterStorage("./public/assets/images/ads"),
 });
+
+export const uploadUserPicture = multer({
+  storage: createMulterStorage("./public/assets/images/users"),
+});

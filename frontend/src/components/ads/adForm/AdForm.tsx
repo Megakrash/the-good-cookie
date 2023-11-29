@@ -29,7 +29,6 @@ import {
   TextField,
   Box,
   Button,
-  CardMedia,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
@@ -120,7 +119,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         location,
         subCategory: subCategoryId ? { id: Number(subCategoryId) } : null,
         tags: selectedTags,
-        user: { id: 1 },
+        user: { id: 4 },
       };
 
       if (data.title.trim().length < 3) {

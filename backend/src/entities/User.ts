@@ -9,7 +9,6 @@ import {
   IsBoolean,
   IsEmail,
   IsNumberString,
-  IsStrongPassword,
   Length,
   Matches,
 } from "class-validator";
@@ -26,7 +25,7 @@ export class User extends BaseEntity {
 
   @Column({ length: 50 })
   @Length(2, 50, { message: "Entre 2 et 50 caractères" })
-  @Matches(/^[a-zA-Z -]+$/, {
+  @Matches(/^[a-zA-ZÀ-ÿ-]+$/, {
     message: "Le prénom ne doit contenir que des lettres",
   })
   @Field()
@@ -34,7 +33,7 @@ export class User extends BaseEntity {
 
   @Column({ length: 50 })
   @Length(2, 50, { message: "Entre 2 et 50 caractères" })
-  @Matches(/^[a-zA-Z -]+$/, {
+  @Matches(/^[a-zA-ZÀ-ÿ-]+$/, {
     message: "Le nom de famille ne doit contenir que des lettres",
   })
   @Field()
@@ -55,7 +54,6 @@ export class User extends BaseEntity {
   email!: string;
 
   @Column({ length: 250 })
-  @IsStrongPassword()
   @Field()
   password!: string;
 
