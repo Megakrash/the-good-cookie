@@ -47,6 +47,7 @@ const AdCard = (props: AdCardProps): React.ReactNode => {
               }}
             >
               <CardMedia
+                component="img"
                 sx={{
                   width: "100%",
                   height: 200,

@@ -120,7 +120,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         location,
         subCategory: subCategoryId ? { id: Number(subCategoryId) } : null,
         tags: selectedTags,
-        user: { id: 2 },
+        user: { id: 1 },
       };
 
       if (data.title.trim().length < 3) {
