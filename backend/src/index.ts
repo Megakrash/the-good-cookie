@@ -38,6 +38,7 @@ import express from "express";
 import http from "http";
 import cors from "cors";
 import path from "path";
+import axios from "axios";
 
 //-----------------------------------------
 //-----------------APOLLO SERVER-----------
@@ -105,5 +106,18 @@ app.post("/avatar", uploadUserPicture.single("file"), (req, res) => {
     res.json({ filename: req.file.filename });
   } else {
     res.status(400).send("No file was uploaded.");
+  }
+});
+
+app.get("/search-address", async (req, res) => {
+  try {
+    const query = req.query.q;
+    const response = await axios.get(
+      `https://api-adresse.data.gouv.fr/search/?q=city=${query}&limit=5`
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error("Erreur lors de la requête à l'API:", error);
+    res.status(500).send("Erreur interne du serveur");
   }
 });

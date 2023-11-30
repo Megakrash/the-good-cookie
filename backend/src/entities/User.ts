@@ -9,6 +9,7 @@ import {
   IsBoolean,
   IsEmail,
   IsNumberString,
+  IsOptional,
   Length,
   Matches,
 } from "class-validator";
@@ -63,6 +64,7 @@ export class User extends BaseEntity {
   registrationDate!: string;
 
   @Column({ length: 100, nullable: true })
+  @IsOptional()
   @Length(5, 100, { message: "Entre 5 et 100 caractères" })
   @Field()
   adress!: string;
@@ -82,6 +84,7 @@ export class User extends BaseEntity {
   city!: string;
 
   @Column({ length: 10, nullable: true })
+  @IsOptional()
   @IsNumberString(
     {},
     { message: "Le numéro de téléphone doit être une chaîne de chiffres" }
@@ -113,8 +116,8 @@ export class UserCreateInput {
   @Field()
   nickName!: string;
 
-  @Field()
-  picture!: string;
+  @Field({ nullable: true })
+  picture?: string;
 
   @Field()
   email!: string;
@@ -122,8 +125,8 @@ export class UserCreateInput {
   @Field()
   password!: string;
 
-  @Field()
-  adress!: string;
+  @Field({ nullable: true })
+  adress?: string;
 
   @Field()
   zipCode!: string;
@@ -131,8 +134,8 @@ export class UserCreateInput {
   @Field()
   city!: string;
 
-  @Field()
-  phoneNumber!: string;
+  @Field({ nullable: true })
+  phoneNumber?: string;
 
   @Field()
   isAdmin!: boolean;
