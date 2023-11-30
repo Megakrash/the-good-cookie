@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import UserPassword from "./UserPassword";
-import { Box, Button, FormControl, TextField, styled } from "@mui/material";
+import { Box, Button, FormControl, TextField } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { mutationCreateUser } from "@/components/graphql/Users";
 import { UserFormData } from "@/types";
@@ -9,18 +9,8 @@ import { API_URL } from "@/configApi";
 import toast, { Toaster } from "react-hot-toast";
 import { useMutation } from "@apollo/client";
 import router from "next/router";
+import { DownloadInput } from "@/styles/MuiStyled";
 
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
 const UserForm = (): React.ReactNode => {
   // Form
   const [firstName, setFirstName] = useState<string>("");
@@ -189,7 +179,7 @@ const UserForm = (): React.ReactNode => {
           startIcon={<CloudUploadIcon />}
         >
           Avatar
-          <VisuallyHiddenInput
+          <DownloadInput
             type="file"
             accept=".jpg, .png, .webp"
             onChange={handleFileSelection}
