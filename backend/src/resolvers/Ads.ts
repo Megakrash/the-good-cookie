@@ -1,4 +1,4 @@
-import { Arg, Query, Resolver, Mutation, ID } from "type-graphql";
+import { Arg, Query, Resolver, Mutation, ID, Int } from "type-graphql";
 import { In, MoreThanOrEqual, LessThanOrEqual, Between, ILike } from "typeorm";
 import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from "../entities/Ad";
 import { validate } from "class-validator";
@@ -10,7 +10,9 @@ import fs from "fs";
 export class AdsResolver {
   @Query(() => [Ad], { nullable: true })
   async adsGetAll(
-    @Arg("where", { nullable: true }) where?: AdsWhere
+    @Arg("where", { nullable: true }) where?: AdsWhere,
+    @Arg("take", () => Int, { nullable: true }) take?: number,
+    @Arg("skip", () => Int, { nullable: true }) skip?: number
   ): Promise<Ad[] | null> {
     try {
       const queryWhere: any = {};
@@ -50,6 +52,8 @@ export class AdsResolver {
       }
 
       const ads = await Ad.find({
+        take: take ?? 50,
+        skip,
         where: queryWhere,
         relations: {
           subCategory: {

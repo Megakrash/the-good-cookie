@@ -31,24 +31,12 @@ import {
   Button,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { styled } from "@mui/material/styles";
 import DeleteAdPicture from "./DeleteAdPicture";
+import { DownloadInput } from "@/styles/MuiStyled";
 
 type AdFormProps = {
   ad?: AdTypes;
 };
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
 
 const AdForm = (props: AdFormProps): React.ReactNode => {
   // Get Categories&SubCategories & Tags
@@ -320,7 +308,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
               startIcon={<CloudUploadIcon />}
             >
               Image pour votre annonce
-              <VisuallyHiddenInput
+              <DownloadInput
                 type="file"
                 accept=".jpg, .png, .webp"
                 onChange={handleFileSelection}

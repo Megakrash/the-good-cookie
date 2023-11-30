@@ -1,0 +1,17 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - 5000:5000
+    env_file: ./backend/.env
+  postgres:
+    image: postgres
+    env_file: .env
+    volumes:
+      - /app/db
+    ports:
+      - "5433:5432"
+  frontend:
+    build: ./frontend
+    ports:
+      - 3000:3000

@@ -37,8 +37,10 @@ export default function Header(): React.ReactNode {
           </button>
         </form>
         <Link href="/annonces/new" className="button link-button">
-          <span className="mobile-short-label">Publier</span>
           <span className="desktop-long-label">Publier une annonce</span>
+        </Link>
+        <Link href="/inscription/creation" className="button link-button">
+          <span className="desktop-long-label">Créer un compte</span>
         </Link>
       </div>
     </header>
