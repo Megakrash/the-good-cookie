@@ -1,7 +1,7 @@
 import LayoutFull from "@/components/LayoutFull";
 import { useRouter } from "next/router";
 import SubCategoriesCard from "@/components/subCategories/SubCategoriesCard";
-import { CategoryTypes } from "@/types";
+import { CategoryTypes } from "@/types/types";
 import { useQuery } from "@apollo/client";
 import { queryCatByIdAndSub } from "@/components/graphql/Categories";
 import Carousel from "react-multi-carousel";

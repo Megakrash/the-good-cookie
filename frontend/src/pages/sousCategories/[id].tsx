@@ -1,7 +1,7 @@
 import LayoutFull from "@/components/LayoutFull";
 import { useRouter } from "next/router";
 import AdCard from "@/components/ads/AdCard";
-import { SubCategoryTypes } from "@/types";
+import { SubCategoryTypes } from "@/types/types";
 import Link from "next/link";
 import { useQuery } from "@apollo/client";
 import { querySubCatAndAds } from "@/components/graphql/SubCategories";

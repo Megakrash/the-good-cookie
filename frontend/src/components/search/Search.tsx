@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import AdCard from "../ads/AdCard";
-import { CategoriesTypes, AdsTypes, TagsTypes } from "@/types";
+import { CategoriesTypes, AdsTypes, TagsTypes } from "@/types/types";
 import { queryAllCatAndSub } from "../graphql/Categories";
 import { queryAllAds } from "../graphql/Ads";
 import { queryAllTags } from "../graphql/Tags";
@@ -17,7 +17,7 @@ import {
   Button,
 } from "@mui/material";
 import { FilterAlt, FilterAltOff } from "@mui/icons-material";
-import { PATH_IMAGE } from "@/configApi";
+import { PATH_IMAGE } from "@/api/configApi";
 
 const Search = (): React.ReactNode => {
   // Get Categories&SubCategories & Tags

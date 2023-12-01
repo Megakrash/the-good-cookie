@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { API_URL } from "@/configApi";
+import { API_URL } from "@/api/configApi";
 import axios from "axios";
 import {
   AdFormData,
@@ -7,7 +7,7 @@ import {
   TagsTypes,
   AdTypes,
   AdTags,
-} from "@/types";
+} from "@/types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { queryAllCatAndSub } from "@/components/graphql/Categories";
 import { queryAllTags } from "../../graphql/Tags";

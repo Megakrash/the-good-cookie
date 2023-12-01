@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import TextField from "@mui/material/TextField";
 import { ListItemButton, List, Box } from "@mui/material";
-import { API_URL } from "@/configApi";
+import { API_URL } from "@/api/configApi";
 
 type UserZipCityProps = {
   setCity: (city: string) => void;

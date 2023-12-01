@@ -1,8 +1,8 @@
-import { SubCategoryTypes } from "@/types";
+import { SubCategoryTypes } from "@/types/types";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import { PATH_IMAGE } from "@/configApi";
+import { PATH_IMAGE } from "@/api/configApi";
 import { CardActionArea } from "@mui/material";
 import Typography from "@mui/material/Typography";
 

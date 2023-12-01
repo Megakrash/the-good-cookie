@@ -1,5 +1,5 @@
-import { AdTypes } from "@/types";
-import { PATH_IMAGE } from "@/configApi";
+import { AdTypes } from "@/types/types";
+import { PATH_IMAGE } from "@/api/configApi";
 // import Link from "next/link";
 // import DeleteAd from "./AdDelete";
 import Card from "@mui/material/Card";

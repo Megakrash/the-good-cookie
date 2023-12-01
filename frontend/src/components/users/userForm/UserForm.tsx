@@ -15,8 +15,8 @@ import {
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { mutationCreateUser } from "@/components/graphql/Users";
-import { UserFormData } from "@/types";
-import { API_URL } from "@/configApi";
+import { UserFormData } from "@/types/types";
+import { API_URL } from "@/api/configApi";
 import { useMutation } from "@apollo/client";
 import router from "next/router";
 import { DownloadInput } from "@/styles/MuiStyled";
@@ -78,7 +78,7 @@ const UserForm = (): React.ReactNode => {
         },
       });
       if ("id" in result.data?.item) {
-        router.replace(`/compte/${result.data.item.id}`);
+        router.replace(`/connexion`);
       } else {
         toast("Erreur pendant la création de votre compte");
       }

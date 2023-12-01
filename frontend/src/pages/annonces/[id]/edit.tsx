@@ -1,5 +1,5 @@
 import LayoutFull from "@/components/LayoutFull";
-import { AdTypes } from "@/types";
+import { AdTypes } from "@/types/types";
 import AdForm from "@/components/ads/adForm/AdForm";
 import AdCard from "@/components/ads/AdCard";
 import { queryAdById } from "@/components/graphql/Ads";

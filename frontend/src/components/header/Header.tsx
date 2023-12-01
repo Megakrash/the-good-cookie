@@ -1,6 +1,6 @@
 import NavSubCategories from "../subCategories/NavSubCategories";
 import Link from "next/link";
-import { CategoriesTypes } from "@/types";
+import { CategoriesTypes } from "@/types/types";
 import { useQuery } from "@apollo/client";
 import { queryAllCatAndSub } from "../graphql/Categories";
 

@@ -1,6 +1,6 @@
 import LayoutLight from "@/components/LayoutLight";
 import { Button, Typography, Link, Box } from "@mui/material";
-import { PATH_IMAGE } from "@/configApi";
+import { PATH_IMAGE } from "@/api/configApi";
 
 const SignPage = (): React.ReactNode => {
   return (

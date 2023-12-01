@@ -1,6 +1,6 @@
 import LayoutFull from "@/components/LayoutFull";
 import { useRouter } from "next/router";
-import { AdTypes } from "@/types";
+import { AdTypes } from "@/types/types";
 import AdCard from "@/components/ads/AdCard";
 import { queryAdById } from "@/components/graphql/Ads";
 import { useQuery } from "@apollo/client";
