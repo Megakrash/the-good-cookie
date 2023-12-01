@@ -8,7 +8,7 @@ type LayoutProps = {
   children: ReactNode;
 };
 
-const Layout = (props: LayoutProps): ReactNode => {
+const LayoutFull = (props: LayoutProps): ReactNode => {
   return (
     <>
       <Head>
@@ -24,4 +24,4 @@ const Layout = (props: LayoutProps): ReactNode => {
   );
 };
 
-export default Layout;
+export default LayoutFull;

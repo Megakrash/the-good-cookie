@@ -1,4 +1,4 @@
-import Layout from "@/components/Layout";
+import LayoutFull from "@/components/LayoutFull";
 import { useRouter } from "next/router";
 import { AdTypes } from "@/types";
 import AdCard from "@/components/ads/AdCard";
@@ -17,9 +17,9 @@ const AdDetailComponent = (): React.ReactNode => {
   return (
     <>
       {ad && (
-        <Layout title={`TGG : ${ad.title}`}>
+        <LayoutFull title={`TGG : ${ad.title}`}>
           <AdCard key={ad.id} ad={ad} />
-        </Layout>
+        </LayoutFull>
       )}
     </>
   );

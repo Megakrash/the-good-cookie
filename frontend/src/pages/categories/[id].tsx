@@ -1,4 +1,4 @@
-import Layout from "@/components/Layout";
+import LayoutFull from "@/components/LayoutFull";
 import { useRouter } from "next/router";
 import SubCategoriesCard from "@/components/subCategories/SubCategoriesCard";
 import { CategoryTypes } from "@/types";
@@ -52,7 +52,7 @@ const CategoryComponent = (): React.ReactNode => {
   return (
     <>
       {category && (
-        <Layout title={`TGG : ${category.name}`}>
+        <LayoutFull title={`TGG : ${category.name}`}>
           <div>
             {category.subCategories.length >= 1 ? (
               <Box
@@ -85,7 +85,7 @@ const CategoryComponent = (): React.ReactNode => {
               <p>{`Aucune offre dans la catégorie ${category.name} pour le moment !`}</p>
             )}
           </div>
-        </Layout>
+        </LayoutFull>
       )}
     </>
   );
