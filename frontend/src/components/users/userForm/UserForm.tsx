@@ -1,5 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import axios from "axios";
+import UserName from "./UserName";
 import UserPassword from "./UserPassword";
 import UserZipCity from "./UserZipCity";
 import toast, { Toaster } from "react-hot-toast";
@@ -87,22 +88,7 @@ const UserForm = (): React.ReactNode => {
     }
   }
   return (
-    <Card
-      sx={{
-        width: "60%",
-        padding: "0.7%",
-        minHeight: "500px",
-        marginTop: "30px",
-        marginLeft: "auto",
-        marginRight: "auto",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "white",
-        gap: "15px",
-      }}
-    >
+    <Card className="userForm">
       <Toaster
         toastOptions={{
           style: {
@@ -115,51 +101,18 @@ const UserForm = (): React.ReactNode => {
         Création de votre compte
       </Typography>
       <FormControl
-        sx={{
-          width: "80%",
-          display: "flex",
-          flexDirection: "column",
-          gap: "20px",
-        }}
+        className="userForm_control"
         component="form"
         autoComplete="off"
         onSubmit={onSubmit}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "3%",
-          }}
-        >
-          <TextField
-            fullWidth
-            id="firstName"
-            size="small"
-            label="Prénom"
-            variant="outlined"
-            value={firstName || ""}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
-          />
-          <TextField
-            fullWidth
-            id="lastName"
-            size="small"
-            label="Nom"
-            variant="outlined"
-            value={lastName || ""}
-            onChange={(e) => setLastName(e.target.value)}
-            required
-          />
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "3%",
-          }}
-        >
+        <UserName
+          lastName={lastName}
+          firstName={firstName}
+          setFirstName={setFirstName}
+          setLastName={setLastName}
+        />
+        <Box className="userForm_control_box">
           <TextField
             fullWidth
             id="pseudo"
@@ -186,13 +139,7 @@ const UserForm = (): React.ReactNode => {
           password={password}
           onPasswordChange={handlePasswordChange}
         />
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "3%",
-          }}
-        >
+        <Box className="userForm_control_box">
           <UserZipCity setCity={setCity} setZipCode={setZipCode} />
           <TextField
             fullWidth
@@ -229,14 +176,7 @@ const UserForm = (): React.ReactNode => {
         <Button variant="contained" size="large" type="submit">
           Créer mon compte
         </Button>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "1%",
-            justifyContent: "center",
-          }}
-        >
+        <Box className="userForm_control_boxConnect">
           <Typography variant="subtitle2" gutterBottom>
             Déjà inscrit ?
           </Typography>

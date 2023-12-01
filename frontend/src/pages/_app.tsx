@@ -3,7 +3,7 @@ import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
-// import "@/styles/index.scss";
+import "@/styles/index.scss";
 
 const theme = createTheme({
   palette: {
