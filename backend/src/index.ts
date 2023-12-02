@@ -39,6 +39,7 @@ import http from "http";
 import cors from "cors";
 import path from "path";
 import axios from "axios";
+import { Request, Response } from "express";
 
 //-----------------------------------------
 //-----------------APOLLO SERVER-----------
@@ -93,23 +94,31 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, "../public")));
 
-app.post("/upload", uploadAdPicture.single("file"), (req, res) => {
-  if (req.file) {
-    res.json({ filename: req.file.filename });
-  } else {
-    res.status(400).send("No file was uploaded.");
+app.post(
+  "/upload",
+  uploadAdPicture.single("file"),
+  (req: Request, res: Response) => {
+    if (req.file) {
+      res.json({ filename: req.file.filename });
+    } else {
+      res.status(400).send("No file was uploaded.");
+    }
   }
-});
+);
 
-app.post("/avatar", uploadUserPicture.single("file"), (req, res) => {
-  if (req.file) {
-    res.json({ filename: req.file.filename });
-  } else {
-    res.status(400).send("No file was uploaded.");
+app.post(
+  "/avatar",
+  uploadUserPicture.single("file"),
+  (req: Request, res: Response) => {
+    if (req.file) {
+      res.json({ filename: req.file.filename });
+    } else {
+      res.status(400).send("No file was uploaded.");
+    }
   }
-});
-
-app.get("/search-address", async (req, res) => {
+);
+// Api search adress.gouv
+app.get("/search-address", async (req: Request, res: Response) => {
   try {
     const query = req.query.q;
     const response = await axios.get(
@@ -121,3 +130,8 @@ app.get("/search-address", async (req, res) => {
     res.status(500).send("Erreur interne du serveur");
   }
 });
+
+// Send contact email
+import { verifyRecaptchaToken } from "./utils/reCaptcha";
+import { sendContactEmail } from "./utils/nodeMailer";
+app.post("/sendcontactemail", verifyRecaptchaToken, sendContactEmail);
