@@ -16,7 +16,7 @@ import UserPhone from "../users/userForm/UserPhone";
 import toast, { Toaster } from "react-hot-toast";
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
-import { API_URL, RECAPTCHA_SITE_KEY } from "@/api/configApi";
+import { API_URL } from "@/api/configApi";
 
 const ContactForm = (): React.ReactNode => {
   const [firstName, setFirstName] = useState<string>("");
@@ -118,7 +118,7 @@ const ContactForm = (): React.ReactNode => {
           required
         />
         <ReCAPTCHA
-          sitekey={RECAPTCHA_SITE_KEY}
+          sitekey={process.env.RECAPTCHA_SITE_KEY}
           ref={captchaRef}
           onChange={handleCaptchaChange}
         />

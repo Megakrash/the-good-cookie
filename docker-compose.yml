@@ -24,3 +24,4 @@ services:
   #     - 3001:3000 # local:container
   #   volumes:
   #     - ./frontend/src:/app/src
+  #   env_file: ./frontend/.env
