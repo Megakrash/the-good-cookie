@@ -3,6 +3,8 @@ import axios from "axios";
 import UserName from "./UserName";
 import UserPassword from "./UserPassword";
 import UserZipCity from "./UserZipCity";
+import UserEmail from "./UserEmail";
+import UserPhone from "./UserPhone";
 import toast, { Toaster } from "react-hot-toast";
 import {
   Box,
@@ -123,17 +125,7 @@ const UserForm = (): React.ReactNode => {
             onChange={(e) => setNickName(e.target.value)}
             required
           />
-          <TextField
-            fullWidth
-            id="email"
-            type="email"
-            size="small"
-            label="Email"
-            variant="outlined"
-            value={email || ""}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <UserEmail email={email} setEmail={setEmail} />
         </Box>
         <UserPassword
           password={password}
@@ -141,24 +133,9 @@ const UserForm = (): React.ReactNode => {
         />
         <Box className="userForm_control_box">
           <UserZipCity setCity={setCity} setZipCode={setZipCode} />
-          <TextField
-            fullWidth
-            id="phoneNumber"
-            type="tel"
-            size="small"
-            label="Téléphone"
-            variant="outlined"
-            value={phoneNumber || ""}
-            onChange={(e) => {
-              const inputNumber = e.target.value;
-              const regex = /^[0-9]*$/;
-              if (regex.test(inputNumber)) {
-                setPhoneNumber(inputNumber);
-              }
-            }}
-            inputProps={{
-              maxLength: 10,
-            }}
+          <UserPhone
+            phoneNumber={phoneNumber}
+            setPhoneNumber={setPhoneNumber}
           />
         </Box>
         <Button

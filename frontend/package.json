@@ -19,17 +19,19 @@
     "next": "13.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-google-recaptcha": "^3.1.0",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^4.11.0",
     "react-multi-carousel": "^2.8.4"
   },
   "devDependencies": {
-    "sass": "^1.68.0",
-    "typescript": "5.2.2",
-    "eslint": "8.49.0",
-    "eslint-config-next": "13.4.19",
     "@types/node": "20.6.2",
     "@types/react": "18.2.22",
-    "@types/react-dom": "18.2.7"
+    "@types/react-dom": "18.2.7",
+    "@types/react-google-recaptcha": "^2.1.8",
+    "eslint": "8.49.0",
+    "eslint-config-next": "13.4.19",
+    "sass": "^1.68.0",
+    "typescript": "5.2.2"
   }
 }

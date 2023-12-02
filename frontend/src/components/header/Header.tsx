@@ -29,6 +29,9 @@ export default function Header(): React.ReactNode {
         <Link href="/inscription/creation" className="button link-button">
           <span className="desktop-long-label">Créer un compte</span>
         </Link>
+        <Link href="/contact" className="button link-button">
+          <span className="desktop-long-label">Contact</span>
+        </Link>
       </div>
     </header>
   );
