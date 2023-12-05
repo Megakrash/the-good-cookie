@@ -16,7 +16,7 @@ import UserPhone from "../users/userForm/UserPhone";
 import toast, { Toaster } from "react-hot-toast";
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
-import { API_URL } from "@/api/configApi";
+import { API_URL, RECAPTCHA_SITE_KEY } from "@/api/configApi";
 
 const ContactForm = (): React.ReactNode => {
   const [firstName, setFirstName] = useState<string>("");
@@ -79,7 +79,6 @@ const ContactForm = (): React.ReactNode => {
         );
       });
   };
-
   return (
     <Card className="userForm">
       <Toaster />
@@ -117,11 +116,13 @@ const ContactForm = (): React.ReactNode => {
           onChange={(e) => setMessage(e.target.value)}
           required
         />
+
         <ReCAPTCHA
-          sitekey={process.env.RECAPTCHA_SITE_KEY}
+          sitekey={RECAPTCHA_SITE_KEY}
           ref={captchaRef}
           onChange={handleCaptchaChange}
         />
+
         {loading ? (
           <Box sx={{ height: 40, margin: "auto" }}>
             <Fade

@@ -1,0 +1,12 @@
+.adForm {
+  margin: auto;
+
+  &_boxForm {
+    display: flex;
+    flex-direction: column;
+
+    &_input {
+      background-color: $color1;
+    }
+  }
+}

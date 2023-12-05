@@ -33,6 +33,7 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteAdPicture from "./DeleteAdPicture";
 import { DownloadInput } from "@/styles/MuiStyled";
+import AdTitle from "./AdTitle";
 
 type AdFormProps = {
   ad?: AdTypes;
@@ -50,8 +51,6 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
 
   // Form
   const [title, setTitle] = useState<string>("");
-  const [error, setError] = useState(false);
-  const [helperText, setHelperText] = useState("");
   const [description, setDescription] = useState<string>("");
   const [curentPicture, setCurentPicture] = useState<string>("");
   const [newPicture, setNewPicture] = useState<File | null>(null);
@@ -110,32 +109,26 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         user: { id: 4 },
       };
 
-      if (data.title.trim().length < 3) {
-        setError(true);
-        setHelperText("Le titre doit être d'au moins 3 caractères.");
-        return;
-      } else {
-        if (!props.ad) {
-          const result = await doCreate({
-            variables: {
-              data: data,
-            },
-          });
-          if ("id" in result.data?.item) {
-            router.replace(`/annonces/${result.data.item.id}`);
-          } else {
-            toast("Erreur pendant la création de votre annonce");
-          }
+      if (!props.ad) {
+        const result = await doCreate({
+          variables: {
+            data: data,
+          },
+        });
+        if ("id" in result.data?.item) {
+          router.replace(`/annonces/${result.data.item.id}`);
         } else {
-          const result = await doUpdate({
-            variables: {
-              data: data,
-              adUpdateId: props.ad?.id,
-            },
-          });
-          if (!result.errors?.length) {
-            toast("Annonce mise à jour");
-          }
+          toast("Erreur pendant la création de votre annonce");
+        }
+      } else {
+        const result = await doUpdate({
+          variables: {
+            data: data,
+            adUpdateId: props.ad?.id,
+          },
+        });
+        if (!result.errors?.length) {
+          toast("Annonce mise à jour");
         }
       }
     } catch (error) {
@@ -157,6 +150,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   }, [props.ad]);
   return (
     <Box
+      className="adForm"
       sx={{
         width: props.ad ? "50%" : "98%",
         margin: "auto",
@@ -172,11 +166,10 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
       />
       {categories && tags && (
         <Box
+          className="adForm_boxForm"
           component="form"
           sx={{
             "& > :not(style)": { m: 2, width: "50ch" },
-            display: "flex",
-            flexDirection: "column",
           }}
           autoComplete="off"
           onSubmit={onSubmit}
@@ -184,24 +177,9 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
           <h2>
             {!props.ad ? "Création de votre annonce" : "Modifier votre annonce"}
           </h2>
+          <AdTitle title={title} setTitle={setTitle} />
           <TextField
-            sx={{
-              backgroundColor: "white",
-            }}
-            id="title"
-            size="small"
-            label="Titre de votre annonce"
-            variant="outlined"
-            value={title || ""}
-            onChange={(e) => setTitle(e.target.value)}
-            error={error}
-            helperText={helperText}
-            required
-          />
-          <TextField
-            sx={{
-              backgroundColor: "white",
-            }}
+            className="adForm_boxForm_input"
             id="description"
             multiline
             fullWidth
@@ -214,9 +192,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
             required
           />
           <TextField
-            sx={{
-              backgroundColor: "white",
-            }}
+            className="adForm_boxForm_input"
             id="price"
             size="small"
             label="Prix de votre annonce"
@@ -228,9 +204,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
             required
           />
           <TextField
-            sx={{
-              backgroundColor: "white",
-            }}
+            className="adForm_boxForm_input"
             id="location"
             size="small"
             label="Ville"
@@ -242,9 +216,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
           <FormControl fullWidth>
             <InputLabel id="subcategory-select-label">Catégorie*</InputLabel>
             <Select
-              sx={{
-                backgroundColor: "white",
-              }}
+              className="adForm_boxForm_input"
               labelId="subcategory-select-label"
               id="subcategory-select"
               value={subCategoryId || ""}
@@ -278,9 +250,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
           <FormControl fullWidth>
             <InputLabel id="tags">Tag(s)</InputLabel>
             <Select
-              sx={{
-                backgroundColor: "white",
-              }}
+              className="adForm_boxForm_input"
               labelId="tags-label"
               id="select-tags"
               multiple

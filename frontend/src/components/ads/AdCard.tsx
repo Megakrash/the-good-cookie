@@ -2,11 +2,11 @@ import { AdTypes } from "@/types/types";
 import { PATH_IMAGE } from "@/api/configApi";
 // import Link from "next/link";
 // import DeleteAd from "./AdDelete";
-import Card from "@mui/material/Card";
 // import CardActions from "@mui/material/CardActions";
+// import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-// import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import { Box, CardActionArea } from "@mui/material";
@@ -17,11 +17,15 @@ type AdCardProps = {
 };
 
 const AdCard = (props: AdCardProps): React.ReactNode => {
+  // Path images
   const adImageUrl =
     props.ad.picture !== ""
       ? `${PATH_IMAGE}/ads/${props.ad.picture}`
       : `${PATH_IMAGE}/default/default.png`;
-  const userImageUrl = `${PATH_IMAGE}/users/${props.ad.user.picture}`;
+  const userImageUrl =
+    props.ad.user.picture !== ""
+      ? `${PATH_IMAGE}/users/${props.ad.user.picture}`
+      : `${PATH_IMAGE}/default/avatar.webp`;
 
   function capitalizeFirstLetter(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1);
