@@ -103,6 +103,7 @@ const UserPassword = (props: UserPasswordProps): React.ReactNode => {
                 width: "40%",
                 flexDirection: "row",
                 alignItems: "center",
+                gap: "5px",
               }}
             >
               {check ? (

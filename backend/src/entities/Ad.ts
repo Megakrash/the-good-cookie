@@ -53,7 +53,7 @@ export class Ad extends BaseEntity {
   picture!: string;
 
   @Column({ length: 100 })
-  @Matches(/^[a-zA-Z]+$/, {
+  @Matches(/^[a-zA-Z\s-]+$/, {
     message: "La ville ne doit contenir que des lettres",
   })
   @Field()

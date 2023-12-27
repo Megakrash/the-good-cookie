@@ -35,7 +35,7 @@ const SignPage = (): React.ReactNode => {
           <Typography variant="subtitle2" gutterBottom>
             Déjà inscrit ?
           </Typography>
-          <Link variant="body2" href="/inscription/connexion">
+          <Link variant="body2" href="/connexion">
             {"Connectez-vous"}
           </Link>
         </Box>

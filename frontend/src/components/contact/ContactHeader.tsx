@@ -1,4 +1,4 @@
-import { Button, Typography, Link, Box } from "@mui/material";
+import { Button, Typography, Box } from "@mui/material";
 import { PATH_IMAGE } from "@/api/configApi";
 
 const ContactHeader = (): React.ReactNode => {

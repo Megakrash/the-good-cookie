@@ -29,7 +29,7 @@ const ContactForm = (): React.ReactNode => {
   // ReCaptcha
   const [recaptcha, setRecaptcha] = useState(false);
   const captchaRef = useRef(null);
-  const handleCaptchaChange = (value) => {
+  const handleCaptchaChange = (value: string | null) => {
     setRecaptcha(!!value);
   };
 

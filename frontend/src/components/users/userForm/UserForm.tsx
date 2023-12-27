@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useRef, useState } from "react";
 import axios from "axios";
 import UserName from "./UserName";
 import UserPassword from "./UserPassword";
@@ -15,15 +15,23 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import ReCAPTCHA from "react-google-recaptcha";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { mutationCreateUser } from "@/components/graphql/Users";
 import { UserFormData } from "@/types/types";
-import { API_URL } from "@/api/configApi";
+import { API_URL, RECAPTCHA_SITE_KEY } from "@/api/configApi";
 import { useMutation } from "@apollo/client";
 import router from "next/router";
 import { DownloadInput } from "@/styles/MuiStyled";
+import SendIcon from "@mui/icons-material/Send";
 
 const UserForm = (): React.ReactNode => {
+  // ReCaptcha
+  const [recaptcha, setRecaptcha] = useState(false);
+  const captchaRef = useRef(null);
+  const handleCaptchaChange = (value: string | null) => {
+    setRecaptcha(!!value);
+  };
   // Form
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
@@ -150,9 +158,22 @@ const UserForm = (): React.ReactNode => {
             onChange={handleFileSelection}
           />
         </Button>
-        <Button variant="contained" size="large" type="submit">
+        <ReCAPTCHA
+          sitekey={RECAPTCHA_SITE_KEY}
+          ref={captchaRef}
+          onChange={handleCaptchaChange}
+        />
+
+        <Button
+          variant="contained"
+          size="large"
+          type="submit"
+          disabled={!recaptcha && true}
+          endIcon={<SendIcon />}
+        >
           Créer mon compte
         </Button>
+
         <Box className="userForm_control_boxConnect">
           <Typography variant="subtitle2" gutterBottom>
             Déjà inscrit ?

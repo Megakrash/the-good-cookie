@@ -106,7 +106,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         location,
         subCategory: subCategoryId ? { id: Number(subCategoryId) } : null,
         tags: selectedTags,
-        user: { id: 4 },
+        user: { id: 7 },
       };
 
       if (!props.ad) {
