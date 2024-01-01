@@ -53,7 +53,9 @@ export type AdTypes = {
   createdDate: string;
   updateDate: string;
   picture: string;
-  location: string;
+  zipCode: string;
+  city: string;
+  coordinates: [number, number];
   subCategory: {
     id: number;
     name: string;
@@ -84,7 +86,9 @@ export type AdTags = AdTag[];
 export type AdFormData = {
   title: string;
   description: string;
-  location: string;
+  zipCode: string;
+  city: string;
+  coordinates: [number, number];
   picture: string;
   price: number;
   subCategory: { id: number } | null;
@@ -112,6 +116,7 @@ export type UserFormData = {
   adress?: string;
   zipCode: string;
   city: string;
+  coordinates: [number, number];
   phoneNumber?: string;
   isAdmin: boolean;
 };

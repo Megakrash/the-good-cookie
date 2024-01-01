@@ -7,17 +7,22 @@ import { API_URL } from "@/api/configApi";
 type UserZipCityProps = {
   setCity: (city: string) => void;
   setZipCode: (zipCode: string) => void;
+  setCoordinates: (coordinates: [number, number]) => void;
 };
 type SuggestionType = {
   label: string;
   postcode: string;
   city: string;
+  coordinates: [number, number];
 };
 
 type FeatureType = {
   properties: {
     postcode: string;
     city: string;
+  };
+  geometry: {
+    coordinates: [number, number];
   };
 };
 
@@ -38,6 +43,7 @@ const UserZipCity = (props: UserZipCityProps): React.ReactNode => {
                 label: `${feature.properties.postcode} - ${feature.properties.city}`,
                 postcode: feature.properties.postcode,
                 city: feature.properties.city,
+                coordinates: feature.geometry.coordinates,
               }))
             );
           }
@@ -54,6 +60,7 @@ const UserZipCity = (props: UserZipCityProps): React.ReactNode => {
     setInputValue(suggestion.label);
     props.setZipCode(suggestion.postcode);
     props.setCity(suggestion.city);
+    props.setCoordinates(suggestion.coordinates);
     setSuggestions([]);
   };
 
@@ -65,6 +72,9 @@ const UserZipCity = (props: UserZipCityProps): React.ReactNode => {
     >
       <TextField
         fullWidth
+        sx={{
+          backgroundColor: "white",
+        }}
         label="Code postal"
         variant="outlined"
         size="small"

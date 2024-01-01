@@ -9,7 +9,8 @@ import {
   ManyToMany,
   JoinTable,
 } from "typeorm";
-import { Length, IsInt, Matches } from "class-validator";
+import { Length, IsInt, Matches, IsNumberString } from "class-validator";
+import { IsCoordinates } from "./Coordinates";
 import { Field, ID, InputType, ObjectType, Int } from "type-graphql";
 import { SubCategory } from "./SubCategory";
 import { Tag } from "./Tag";
@@ -52,12 +53,27 @@ export class Ad extends BaseEntity {
   @Field()
   picture!: string;
 
-  @Column({ length: 100 })
-  @Matches(/^[a-zA-Z\s-]+$/, {
-    message: "La ville ne doit contenir que des lettres",
-  })
+  @Column({ length: 5, nullable: true })
+  @IsNumberString(
+    {},
+    { message: "Le code postal doit être une chaîne de chiffres" }
+  )
+  @Length(5, 5, { message: "Le code postal doit avoir exactement 5 chiffres" })
   @Field()
-  location!: string;
+  zipCode!: string;
+
+  @Column({ length: 50, nullable: true })
+  @Length(3, 50, { message: "Entre 3 et 50 caractères" })
+  @Field()
+  city!: string;
+
+  @Column("simple-array")
+  @IsCoordinates({
+    message:
+      "Les coordonnées doivent être un tableau de deux éléments : latitude et longitude",
+  })
+  @Field(() => [Number])
+  coordinates!: number[];
 
   @ManyToOne(() => SubCategory, (subCategory) => subCategory.ads, {
     onDelete: "CASCADE",
@@ -94,7 +110,13 @@ export class AdCreateInput {
   picture!: string;
 
   @Field()
-  location!: string;
+  zipCode!: string;
+
+  @Field()
+  city!: string;
+
+  @Field(() => [Number])
+  coordinates!: number[];
 
   @Field()
   subCategory!: ObjectId;
@@ -121,7 +143,13 @@ export class AdUpdateInput {
   picture!: string;
 
   @Field({ nullable: true })
-  location!: string;
+  zipCode!: string;
+
+  @Field({ nullable: true })
+  city!: string;
+
+  @Field(() => [Number], { nullable: true })
+  coordinates!: number[];
 
   @Field({ nullable: true })
   subCategory!: ObjectId;
@@ -148,7 +176,7 @@ export class AdsWhere {
   maxPrice?: number;
 
   @Field(() => String, { nullable: true })
-  location?: string;
+  city?: string;
 
   @Field(() => String, { nullable: true })
   createdDate?: string;

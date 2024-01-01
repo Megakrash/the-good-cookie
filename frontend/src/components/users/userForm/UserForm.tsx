@@ -42,6 +42,7 @@ const UserForm = (): React.ReactNode => {
   };
   const [zipCode, setZipCode] = useState<string>("");
   const [city, setCity] = useState<string>("");
+  const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
   const [email, setEmail] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [picture, setPicture] = useState<File | null>(null);
@@ -78,6 +79,7 @@ const UserForm = (): React.ReactNode => {
         picture: filename ? filename : "",
         zipCode,
         city,
+        coordinates,
         isAdmin: false,
         ...(phoneNumber !== "" && { phoneNumber }),
       };
@@ -140,7 +142,11 @@ const UserForm = (): React.ReactNode => {
           onPasswordChange={handlePasswordChange}
         />
         <Box className="userForm_control_box">
-          <UserZipCity setCity={setCity} setZipCode={setZipCode} />
+          <UserZipCity
+            setCity={setCity}
+            setZipCode={setZipCode}
+            setCoordinates={setCoordinates}
+          />
           <UserPhone
             phoneNumber={phoneNumber}
             setPhoneNumber={setPhoneNumber}

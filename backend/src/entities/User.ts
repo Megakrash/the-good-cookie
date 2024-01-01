@@ -16,6 +16,7 @@ import {
 import { Field, ID, InputType, ObjectType } from "type-graphql";
 import { Ad } from "./Ad";
 import { ObjectId } from "./ObjectId";
+import { IsCoordinates } from "./Coordinates";
 
 @Entity()
 @ObjectType()
@@ -83,6 +84,14 @@ export class User extends BaseEntity {
   @Field()
   city!: string;
 
+  @Column("simple-array")
+  @IsCoordinates({
+    message:
+      "Les coordonnées doivent être un tableau de deux éléments : latitude et longitude",
+  })
+  @Field(() => [Number])
+  coordinates!: number[];
+
   @Column({ length: 10, nullable: true })
   @IsOptional()
   @IsNumberString(
@@ -134,6 +143,9 @@ export class UserCreateInput {
   @Field()
   city!: string;
 
+  @Field(() => [Number])
+  coordinates!: number[];
+
   @Field({ nullable: true })
   phoneNumber?: string;
 
@@ -169,6 +181,9 @@ export class UserUpdateInput {
 
   @Field({ nullable: true })
   city!: string;
+
+  @Field(() => [Number], { nullable: true })
+  coordinates!: number[];
 
   @Field({ nullable: true })
   phoneNumber!: string;

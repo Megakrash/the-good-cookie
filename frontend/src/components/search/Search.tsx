@@ -17,7 +17,6 @@ import {
   Button,
 } from "@mui/material";
 import { FilterAlt, FilterAltOff } from "@mui/icons-material";
-import { PATH_IMAGE } from "@/api/configApi";
 
 const Search = (): React.ReactNode => {
   // Get Categories&SubCategories & Tags
@@ -73,7 +72,7 @@ const Search = (): React.ReactNode => {
       variables: {
         where: {
           subCategory: selectedSubCategory,
-          location: selectedLocation,
+          city: selectedLocation,
           minPrice: minPrice,
           maxPrice: maxPrice,
           title: title,
