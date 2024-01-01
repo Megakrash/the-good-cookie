@@ -36,6 +36,7 @@ import { DownloadInput } from "@/styles/MuiStyled";
 import AdTitle from "./components/AdTitle";
 import AdDescription from "./components/AdDescription";
 import AdPrice from "./components/AdPrice";
+import UserZipCity from "@/components/users/userForm/components/UserZipCity";
 
 type AdFormProps = {
   ad?: AdTypes;
@@ -63,7 +64,10 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
     }
   }
   const [price, setPrice] = useState<number>(0);
-  const [location, setLocation] = useState<string>("");
+  const [zipCode, setZipCode] = useState<string>("");
+  console.log(zipCode);
+  const [city, setCity] = useState<string>("");
+  const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
   const [subCategoryId, setSubCategoryId] = useState<null | number>();
   const [selectedTags, setSelectedTags] = useState<AdTags>([]);
   const handleChangeTag = (event: SelectChangeEvent<number[]>) => {
@@ -105,10 +109,12 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         description,
         picture: filename || props.ad.picture,
         price,
-        location,
+        city,
+        zipCode,
+        coordinates,
         subCategory: subCategoryId ? { id: Number(subCategoryId) } : null,
         tags: selectedTags,
-        user: { id: 7 },
+        user: { id: 9 },
       };
 
       if (!props.ad) {
@@ -144,7 +150,9 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
     if (props.ad) {
       setTitle(props.ad.title);
       setDescription(props.ad.description);
-      setLocation(props.ad.location);
+      setZipCode(props.ad.zipCode);
+      setCoordinates(props.ad.coordinates);
+      setCity(props.ad.city);
       setPrice(props.ad.price);
       setCurentPicture(props.ad.picture);
       setSubCategoryId(props.ad.subCategory ? props.ad.subCategory.id : null);
@@ -187,15 +195,10 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
             setDescription={setDescription}
           />
           <AdPrice price={price} setPrice={setPrice} />
-          <TextField
-            className="adForm_boxForm_input"
-            id="location"
-            size="small"
-            label="Ville"
-            variant="outlined"
-            value={location || ""}
-            onChange={(e) => setLocation(e.target.value)}
-            required
+          <UserZipCity
+            setCity={setCity}
+            setZipCode={setZipCode}
+            setCoordinates={setCoordinates}
           />
           <FormControl fullWidth>
             <InputLabel id="subcategory-select-label">Catégorie*</InputLabel>

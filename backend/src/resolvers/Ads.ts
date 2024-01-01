@@ -40,8 +40,8 @@ export class AdsResolver {
         }
       }
 
-      if (where?.location) {
-        queryWhere.location = ILike(`%${where.location}%`);
+      if (where?.city) {
+        queryWhere.city = ILike(`%${where.city}%`);
       }
 
       if (where?.tags) {

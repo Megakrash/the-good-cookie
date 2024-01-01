@@ -75,7 +75,7 @@ const AdCard = (props: AdCardProps): React.ReactNode => {
                     }}
                   >
                     <PlaceIcon sx={{ marginRight: "4px" }} />{" "}
-                    {capitalizeFirstLetter(props.ad.location)}
+                    {capitalizeFirstLetter(props.ad.city)}
                   </Box>
                 </Typography>
                 <Typography
