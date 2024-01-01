@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { API_URL } from "@/configApi";
+import { API_URL } from "@/api/configApi";
 import axios from "axios";
 import {
   AdFormData,
@@ -7,7 +7,7 @@ import {
   TagsTypes,
   AdTypes,
   AdTags,
-} from "@/types";
+} from "@/types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { queryAllCatAndSub } from "@/components/graphql/Categories";
 import { queryAllTags } from "../../graphql/Tags";
@@ -31,14 +31,18 @@ import {
   Button,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import DeleteAdPicture from "./DeleteAdPicture";
+import DeleteAdPicture from "./components/DeleteAdPicture";
 import { DownloadInput } from "@/styles/MuiStyled";
+import AdTitle from "./components/AdTitle";
+import AdDescription from "./components/AdDescription";
+import AdPrice from "./components/AdPrice";
 
 type AdFormProps = {
   ad?: AdTypes;
 };
 
 const AdForm = (props: AdFormProps): React.ReactNode => {
+  const router = useRouter();
   // Get Categories&SubCategories & Tags
   const { data: dataCategories } = useQuery<{ items: CategoriesTypes }>(
     queryAllCatAndSub
@@ -50,8 +54,6 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
 
   // Form
   const [title, setTitle] = useState<string>("");
-  const [error, setError] = useState(false);
-  const [helperText, setHelperText] = useState("");
   const [description, setDescription] = useState<string>("");
   const [curentPicture, setCurentPicture] = useState<string>("");
   const [newPicture, setNewPicture] = useState<File | null>(null);
@@ -70,8 +72,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
     setSelectedTags(selectedOptions);
   };
 
-  // Submit & Update
-  const router = useRouter();
+  // Submit & Update queries
 
   const [doCreate, { loading: createLoading }] = useMutation(mutationCreateAd, {
     refetchQueries: [queryAllAds],
@@ -107,35 +108,31 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         location,
         subCategory: subCategoryId ? { id: Number(subCategoryId) } : null,
         tags: selectedTags,
-        user: { id: 4 },
+        user: { id: 7 },
       };
 
-      if (data.title.trim().length < 3) {
-        setError(true);
-        setHelperText("Le titre doit être d'au moins 3 caractères.");
-        return;
-      } else {
-        if (!props.ad) {
-          const result = await doCreate({
-            variables: {
-              data: data,
-            },
-          });
-          if ("id" in result.data?.item) {
-            router.replace(`/annonces/${result.data.item.id}`);
-          } else {
-            toast("Erreur pendant la création de votre annonce");
-          }
+      if (!props.ad) {
+        const result = await doCreate({
+          variables: {
+            data: data,
+          },
+        });
+        if ("id" in result.data?.item) {
+          router.replace(`/annonces/${result.data.item.id}`);
         } else {
-          const result = await doUpdate({
-            variables: {
-              data: data,
-              adUpdateId: props.ad?.id,
-            },
-          });
-          if (!result.errors?.length) {
-            toast("Annonce mise à jour");
-          }
+          toast("Erreur pendant la création de votre annonce");
+        }
+      } else {
+        const result = await doUpdate({
+          variables: {
+            data: data,
+            adUpdateId: props.ad?.id,
+          },
+        });
+        if (!result.errors?.length) {
+          toast("Annonce mise à jour");
+        } else {
+          toast("Erreur pendant la mise à jour de votre annonce");
         }
       }
     } catch (error) {
@@ -157,6 +154,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   }, [props.ad]);
   return (
     <Box
+      className="adForm"
       sx={{
         width: props.ad ? "50%" : "98%",
         margin: "auto",
@@ -172,11 +170,10 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
       />
       {categories && tags && (
         <Box
+          className="adForm_boxForm"
           component="form"
           sx={{
             "& > :not(style)": { m: 2, width: "50ch" },
-            display: "flex",
-            flexDirection: "column",
           }}
           autoComplete="off"
           onSubmit={onSubmit}
@@ -184,53 +181,14 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
           <h2>
             {!props.ad ? "Création de votre annonce" : "Modifier votre annonce"}
           </h2>
-          <TextField
-            sx={{
-              backgroundColor: "white",
-            }}
-            id="title"
-            size="small"
-            label="Titre de votre annonce"
-            variant="outlined"
-            value={title || ""}
-            onChange={(e) => setTitle(e.target.value)}
-            error={error}
-            helperText={helperText}
-            required
+          <AdTitle title={title} setTitle={setTitle} />
+          <AdDescription
+            description={description}
+            setDescription={setDescription}
           />
+          <AdPrice price={price} setPrice={setPrice} />
           <TextField
-            sx={{
-              backgroundColor: "white",
-            }}
-            id="description"
-            multiline
-            fullWidth
-            minRows={8}
-            maxRows={24}
-            label="Détail de votre annonce"
-            variant="outlined"
-            value={description || ""}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-          <TextField
-            sx={{
-              backgroundColor: "white",
-            }}
-            id="price"
-            size="small"
-            label="Prix de votre annonce"
-            variant="outlined"
-            value={price || ""}
-            onChange={(e) =>
-              setPrice(e.target.value === "" ? 0 : Number(e.target.value))
-            }
-            required
-          />
-          <TextField
-            sx={{
-              backgroundColor: "white",
-            }}
+            className="adForm_boxForm_input"
             id="location"
             size="small"
             label="Ville"
@@ -242,9 +200,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
           <FormControl fullWidth>
             <InputLabel id="subcategory-select-label">Catégorie*</InputLabel>
             <Select
-              sx={{
-                backgroundColor: "white",
-              }}
+              className="adForm_boxForm_input"
               labelId="subcategory-select-label"
               id="subcategory-select"
               value={subCategoryId || ""}
@@ -278,9 +234,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
           <FormControl fullWidth>
             <InputLabel id="tags">Tag(s)</InputLabel>
             <Select
-              sx={{
-                backgroundColor: "white",
-              }}
+              className="adForm_boxForm_input"
               labelId="tags-label"
               id="select-tags"
               multiple

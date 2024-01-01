@@ -108,10 +108,10 @@ export type UserFormData = {
   nickName: string;
   email: string;
   password: string;
-  picture: string;
-  adress: string;
+  picture?: string;
+  adress?: string;
   zipCode: string;
   city: string;
-  phoneNumber: string;
+  phoneNumber?: string;
   isAdmin: boolean;
 };

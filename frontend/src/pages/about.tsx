@@ -1,13 +1,13 @@
-import Layout from "@/components/Layout";
+import LayoutFull from "@/components/layout/LayoutFull";
 
 const about = () => {
   return (
-    <Layout title="About">
+    <LayoutFull title="About">
       <main className="main-content">
         <p>youyouyouyouy dfdfdfdfdf</p>
         <p>tafljsdf ^fk</p>
       </main>
-    </Layout>
+    </LayoutFull>
   );
 };
 

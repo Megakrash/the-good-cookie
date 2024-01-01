@@ -1,11 +1,11 @@
-import Layout from "@/components/Layout";
+import LayoutLight from "@/components/layout/LayoutLight";
 import UserForm from "@/components/users/userForm/UserForm";
 
 const SignUpPage = (): React.ReactNode => {
   return (
-    <Layout title="TGC : Inscription">
+    <LayoutLight title="TGC : Inscription">
       <UserForm />
-    </Layout>
+    </LayoutLight>
   );
 };
 

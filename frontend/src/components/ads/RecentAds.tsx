@@ -1,9 +1,10 @@
 import React from "react";
 import AdCard from "./AdCard";
-import { AdsTypes } from "@/types";
+import { AdsTypes } from "@/types/types";
 import { queryAllAds } from "../graphql/Ads";
 import { useQuery } from "@apollo/client";
 import { Box, Typography } from "@mui/material";
+import Link from "next/link";
 
 const RecentAds = (): React.ReactNode => {
   const { data } = useQuery<{ items: AdsTypes }>(queryAllAds);
@@ -33,6 +34,7 @@ const RecentAds = (): React.ReactNode => {
       <Typography
         sx={{
           marginBottom: "15px",
+          width: "auto",
         }}
         variant="h4"
       >
@@ -41,7 +43,9 @@ const RecentAds = (): React.ReactNode => {
       {Object.entries(groupedAds).map(([categoryId, group]) => (
         <Box sx={{ marginBottom: "20px" }} key={categoryId}>
           <Typography variant="h5" sx={{ marginBottom: "15px" }}>
-            Catégorie : {group.category.name}
+            <Link href={`/categories/${categoryId}`}>
+              Catégorie : {group.category.name}
+            </Link>
           </Typography>
           <Box
             sx={{

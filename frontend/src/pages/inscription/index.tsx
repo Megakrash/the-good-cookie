@@ -1,10 +1,10 @@
-import Layout from "@/components/Layout";
+import LayoutLight from "@/components/layout/LayoutLight";
 import { Button, Typography, Link, Box } from "@mui/material";
-import { PATH_IMAGE } from "@/configApi";
+import { PATH_IMAGE } from "@/api/configApi";
 
 const SignPage = (): React.ReactNode => {
   return (
-    <Layout title="TGC : Inscription / Connexion">
+    <LayoutLight title="TGC : Inscription / Connexion">
       <Box
         sx={{
           height: "250px",
@@ -35,12 +35,12 @@ const SignPage = (): React.ReactNode => {
           <Typography variant="subtitle2" gutterBottom>
             Déjà inscrit ?
           </Typography>
-          <Link variant="body2" href="/inscription/connexion">
+          <Link variant="body2" href="/connexion">
             {"Connectez-vous"}
           </Link>
         </Box>
       </Box>
-    </Layout>
+    </LayoutLight>
   );
 };
 

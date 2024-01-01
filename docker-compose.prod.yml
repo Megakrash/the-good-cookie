@@ -1,6 +1,10 @@
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      target: prod
+      args:
+        DOCKER_BUILDKIT: 1
     ports:
       - 5000:5000
     env_file: ./backend/.env
@@ -12,6 +16,10 @@ services:
     ports:
       - "5433:5432"
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      target: prod
+      args:
+        DOCKER_BUILDKIT: 1
     ports:
       - 3000:3000

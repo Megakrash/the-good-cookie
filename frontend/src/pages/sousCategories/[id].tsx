@@ -1,7 +1,7 @@
-import Layout from "@/components/Layout";
+import LayoutFull from "@/components/layout/LayoutFull";
 import { useRouter } from "next/router";
 import AdCard from "@/components/ads/AdCard";
-import { SubCategoryTypes } from "@/types";
+import { SubCategoryTypes } from "@/types/types";
 import Link from "next/link";
 import { useQuery } from "@apollo/client";
 import { querySubCatAndAds } from "@/components/graphql/SubCategories";
@@ -22,7 +22,7 @@ const SubCategoryComponent = (): React.ReactNode => {
   return (
     <>
       {subCategory && subCategory.category && (
-        <Layout title={`TGG : ${subCategory.name}`}>
+        <LayoutFull title={`TGG : ${subCategory.name}`}>
           <div>
             <Link href={`/categories/${subCategory.category.id}`}>
               <p>{subCategory.category.name.toUpperCase()}</p>
@@ -42,7 +42,7 @@ const SubCategoryComponent = (): React.ReactNode => {
           ) : (
             <p>{`Aucune offre dans la catégorie ${subCategory.name} pour le moment !`}</p>
           )}
-        </Layout>
+        </LayoutFull>
       )}
     </>
   );

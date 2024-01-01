@@ -1,6 +1,6 @@
-import Layout from "@/components/Layout";
+import LayoutFull from "@/components/layout/LayoutFull";
 import { useRouter } from "next/router";
-import { AdTypes } from "@/types";
+import { AdTypes } from "@/types/types";
 import AdCard from "@/components/ads/AdCard";
 import { queryAdById } from "@/components/graphql/Ads";
 import { useQuery } from "@apollo/client";
@@ -17,9 +17,9 @@ const AdDetailComponent = (): React.ReactNode => {
   return (
     <>
       {ad && (
-        <Layout title={`TGG : ${ad.title}`}>
+        <LayoutFull title={`TGG : ${ad.title}`}>
           <AdCard key={ad.id} ad={ad} />
-        </Layout>
+        </LayoutFull>
       )}
     </>
   );

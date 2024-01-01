@@ -1,7 +1,7 @@
-import { AdTypes } from "@/types";
+import LayoutFull from "@/components/layout/LayoutFull";
+import { AdTypes } from "@/types/types";
 import AdForm from "@/components/ads/adForm/AdForm";
 import AdCard from "@/components/ads/AdCard";
-import Layout from "@/components/Layout";
 import { queryAdById } from "@/components/graphql/Ads";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
@@ -20,7 +20,7 @@ export default function EditAd() {
   const ad = data ? data.item : null;
 
   return (
-    <Layout title="Modifier mon annonce">
+    <LayoutFull title="Modifier mon annonce">
       {ad && (
         <Box
           sx={{
@@ -44,6 +44,6 @@ export default function EditAd() {
           </Box>
         </Box>
       )}
-    </Layout>
+    </LayoutFull>
   );
 }

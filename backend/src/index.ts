@@ -38,6 +38,8 @@ import express from "express";
 import http from "http";
 import cors from "cors";
 import path from "path";
+import axios from "axios";
+import { Request, Response } from "express";
 
 //-----------------------------------------
 //-----------------APOLLO SERVER-----------
@@ -83,7 +85,7 @@ async function start() {
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: 5000 }, resolve)
   );
-  console.log(`🚀 Server ready at port 5000`);
+  console.log(`🚀 Server ready at port 5000 🚀`);
 }
 
 start();
@@ -92,18 +94,51 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, "../public")));
 
-app.post("/upload", uploadAdPicture.single("file"), (req, res) => {
-  if (req.file) {
-    res.json({ filename: req.file.filename });
-  } else {
-    res.status(400).send("No file was uploaded.");
+//-----------------------------------------
+//-----------EXPRESS MIDDLEWARES-----------
+//-----------------------------------------
+
+// Upload Ad picture
+app.post(
+  "/upload",
+  uploadAdPicture.single("file"),
+  (req: Request, res: Response) => {
+    if (req.file) {
+      res.json({ filename: req.file.filename });
+    } else {
+      res.status(400).send("No file was uploaded.");
+    }
+  }
+);
+
+// Upload Avatar picture
+app.post(
+  "/avatar",
+  uploadUserPicture.single("file"),
+  (req: Request, res: Response) => {
+    if (req.file) {
+      res.json({ filename: req.file.filename });
+    } else {
+      res.status(400).send("No file was uploaded.");
+    }
+  }
+);
+
+// Api search adress.gouv
+app.get("/search-address", async (req: Request, res: Response) => {
+  try {
+    const query = req.query.q;
+    const response = await axios.get(
+      `https://api-adresse.data.gouv.fr/search/?q=city=${query}&limit=5`
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error("Erreur lors de la requête à l'API:", error);
+    res.status(500).send("Erreur interne du serveur");
   }
 });
 
-app.post("/avatar", uploadUserPicture.single("file"), (req, res) => {
-  if (req.file) {
-    res.json({ filename: req.file.filename });
-  } else {
-    res.status(400).send("No file was uploaded.");
-  }
-});
+// Send contact email
+import { verifyRecaptchaToken } from "./utils/reCaptcha";
+import { sendContactEmail } from "./utils/nodeMailer";
+app.post("/sendcontactemail", verifyRecaptchaToken, sendContactEmail);

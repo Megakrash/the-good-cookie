@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import AdCard from "../ads/AdCard";
-import { CategoriesTypes, AdsTypes, TagsTypes } from "@/types";
+import { CategoriesTypes, AdsTypes, TagsTypes } from "@/types/types";
 import { queryAllCatAndSub } from "../graphql/Categories";
 import { queryAllAds } from "../graphql/Ads";
 import { queryAllTags } from "../graphql/Tags";
@@ -17,7 +17,7 @@ import {
   Button,
 } from "@mui/material";
 import { FilterAlt, FilterAltOff } from "@mui/icons-material";
-import { PATH_IMAGE } from "@/configApi";
+import { PATH_IMAGE } from "@/api/configApi";
 
 const Search = (): React.ReactNode => {
   // Get Categories&SubCategories & Tags
@@ -98,155 +98,140 @@ const Search = (): React.ReactNode => {
 
   return (
     <>
-      <Box
-        sx={{
-          width: "100%",
-          minHeight: "300px",
-          display: "flex",
-          backgroundColor: "white",
-        }}
-      >
+      <Box className="search">
         {categories && tags && (
           <Box
-            sx={{
-              width: "95%",
-              marginTop: "10px",
-              marginBottom: "10px",
-              marginLeft: "auto",
-              marginRight: "auto",
-              display: "flex",
-              flexDirection: "row",
-              gap: "25px",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+            className="search_box"
             component="form"
             autoComplete="off"
             onSubmit={handleSearchClick}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                width: "30ch",
-                gap: "15px",
-              }}
-            >
-              <FormControl fullWidth>
-                <InputLabel id="subcategory-select-label">Catégorie</InputLabel>
-                <Select
-                  labelId="subcategory-select-label"
-                  id="subcategory-select"
-                  value={selectedSubCategory || ""}
-                  onChange={handleChangeCategory}
-                  label="Sélectionnez une sous-catégorie"
-                >
-                  <MenuItem value="" disabled>
-                    Sélectionnez une catégorie
-                  </MenuItem>
-                  {categories.map((category) => [
-                    <MenuItem key={category.id} value="" disabled>
-                      {category.name}
-                    </MenuItem>,
-                    ...category.subCategories.map((subCategory) => (
-                      <MenuItem
-                        key={`subcategory-${category.id}-${subCategory.id}`}
-                        value={subCategory.id}
-                        style={{ marginLeft: "20px" }}
-                      >
-                        {subCategory.name}
-                      </MenuItem>
-                    )),
-                  ])}
-                </Select>
-              </FormControl>
-              <TextField
-                id="location"
-                size="small"
-                label="Où ?"
-                variant="outlined"
-                value={selectedLocation || ""}
-                onChange={(e) => setSelectedLocation(e.target.value)}
-                required
-              />
-
+            <Box className="search_box_form">
+              <Box className="search_box_form_miniBox">
+                <FormControl fullWidth>
+                  <InputLabel size="small" id="subcategory-select-label">
+                    Catégorie
+                  </InputLabel>
+                  <Select
+                    className="search_input"
+                    labelId="subcategory-select-label"
+                    id="subcategory-select"
+                    size="small"
+                    value={selectedSubCategory || ""}
+                    onChange={handleChangeCategory}
+                    label="Sélectionnez une sous-catégorie"
+                  >
+                    <MenuItem value="" disabled>
+                      Sélectionnez une catégorie
+                    </MenuItem>
+                    {categories.map((category) => [
+                      <MenuItem key={category.id} value="" disabled>
+                        {category.name}
+                      </MenuItem>,
+                      ...category.subCategories.map((subCategory) => (
+                        <MenuItem
+                          key={`subcategory-${category.id}-${subCategory.id}`}
+                          value={subCategory.id}
+                          style={{ marginLeft: "20px" }}
+                        >
+                          {subCategory.name}
+                        </MenuItem>
+                      )),
+                    ])}
+                  </Select>
+                </FormControl>
+                <TextField
+                  className="search_input"
+                  id="location"
+                  size="small"
+                  label="Où ?"
+                  variant="outlined"
+                  value={selectedLocation || ""}
+                  onChange={(e) => setSelectedLocation(e.target.value)}
+                  required
+                />
+              </Box>
               {showQueries && (
                 <>
-                  <TextField
-                    id="title"
-                    size="small"
-                    label="Quoi ?"
-                    variant="outlined"
-                    value={title || ""}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-
-                  <TextField
-                    type="number"
-                    id="minPrice"
-                    size="small"
-                    label="Prix minimum €"
-                    variant="outlined"
-                    value={minPrice || ""}
-                    onChange={(e) =>
-                      setMinPrice(
-                        e.target.value === ""
-                          ? undefined
-                          : Number(e.target.value)
-                      )
-                    }
-                  />
-                  <TextField
-                    type="number"
-                    id="mexPrice"
-                    size="small"
-                    label="Prix maximum €"
-                    variant="outlined"
-                    value={maxPrice || ""}
-                    onChange={(e) =>
-                      setMaxPrice(
-                        e.target.value === ""
-                          ? undefined
-                          : Number(e.target.value)
-                      )
-                    }
-                  />
-                  <FormControl>
-                    <InputLabel id="tags">Tag(s)</InputLabel>
-                    <Select
-                      labelId="tags"
-                      id="select-tags"
-                      multiple
-                      value={selectedTags}
-                      onChange={handleChange}
-                      input={<OutlinedInput label="Tag" />}
-                      renderValue={(selected) =>
-                        selected
-                          .map(
-                            (id) =>
-                              tags.find((tag) => tag.id.toString() === id)
-                                ?.name || ""
-                          )
-                          .join(", ")
+                  <Box className="search_box_form_miniBox">
+                    <TextField
+                      className="search_input"
+                      type="number"
+                      id="minPrice"
+                      size="small"
+                      label="Prix minimum €"
+                      variant="outlined"
+                      value={minPrice || ""}
+                      onChange={(e) =>
+                        setMinPrice(
+                          e.target.value === ""
+                            ? undefined
+                            : Number(e.target.value)
+                        )
                       }
-                    >
-                      {tags.map((tag) => (
-                        <MenuItem key={tag.id} value={tag.id}>
-                          {tag.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                    />
+                    <TextField
+                      className="search_input"
+                      id="title"
+                      size="small"
+                      label="Quoi ?"
+                      variant="outlined"
+                      value={title || ""}
+                      onChange={(e) => setTitle(e.target.value)}
+                    />
+                  </Box>
+                  <Box className="search_box_form_miniBox">
+                    <TextField
+                      className="search_input"
+                      type="number"
+                      id="maxPrice"
+                      size="small"
+                      label="Prix maximum €"
+                      variant="outlined"
+                      value={maxPrice || ""}
+                      onChange={(e) =>
+                        setMaxPrice(
+                          e.target.value === ""
+                            ? undefined
+                            : Number(e.target.value)
+                        )
+                      }
+                    />
+                    <FormControl>
+                      <InputLabel size="small" id="tags">
+                        Tag(s)
+                      </InputLabel>
+                      <Select
+                        className="search_input"
+                        labelId="tags"
+                        id="select-tags"
+                        size="small"
+                        multiple
+                        value={selectedTags}
+                        onChange={handleChange}
+                        input={<OutlinedInput label="Tag" />}
+                        renderValue={(selected) =>
+                          selected
+                            .map(
+                              (id) =>
+                                tags.find((tag) => tag.id.toString() === id)
+                                  ?.name || ""
+                            )
+                            .join(", ")
+                        }
+                      >
+                        {tags.map((tag) => (
+                          <MenuItem key={tag.id} value={tag.id}>
+                            {tag.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
                 </>
               )}
             </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                gap: "15px",
-              }}
-            >
+            <Box className="search_box_buttons">
               <Button
                 variant="contained"
                 size="large"
@@ -255,13 +240,7 @@ const Search = (): React.ReactNode => {
               >
                 Rechercher
               </Button>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                }}
-              >
+              <Box className="search_box_buttons_filter">
                 <Button
                   variant="contained"
                   size="small"

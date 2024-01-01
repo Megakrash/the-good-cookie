@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { AppBar, Box, Button, ButtonGroup } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import Link from "next/link";
-import { CategoriesTypes } from "@/types";
+import { CategoriesTypes } from "@/types/types";
 import { useQuery } from "@apollo/client";
 import { queryAllCatAndSub } from "../graphql/Categories";
 
