@@ -1,4 +1,4 @@
-import LayoutFull from "@/components/LayoutFull";
+import LayoutFull from "@/components/layout/LayoutFull";
 import UserConnection from "@/components/users/userConnexion/UserConnexion";
 
 const SignUpPage = (): React.ReactNode => {

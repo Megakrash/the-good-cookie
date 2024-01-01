@@ -1,4 +1,4 @@
-import LayoutFull from "@/components/LayoutFull";
+import LayoutFull from "@/components/layout/LayoutFull";
 import { AdTypes } from "@/types/types";
 import AdForm from "@/components/ads/adForm/AdForm";
 import AdCard from "@/components/ads/AdCard";

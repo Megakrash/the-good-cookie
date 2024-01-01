@@ -1,4 +1,4 @@
-import LayoutFull from "@/components/LayoutFull";
+import LayoutFull from "@/components/layout/LayoutFull";
 import AdForm from "@/components/ads/adForm/AdForm";
 
 const NewAd = (): React.ReactNode => {

@@ -1,10 +1,10 @@
 import React, { FormEvent, useRef, useState } from "react";
 import axios from "axios";
-import UserName from "./UserName";
-import UserPassword from "./UserPassword";
-import UserZipCity from "./UserZipCity";
-import UserEmail from "./UserEmail";
-import UserPhone from "./UserPhone";
+import UserName from "./components/UserName";
+import UserPassword from "./components/UserPassword";
+import UserZipCity from "./components/UserZipCity";
+import UserEmail from "./components/UserEmail";
+import UserPhone from "./components/UserPhone";
 import toast, { Toaster } from "react-hot-toast";
 import {
   Box,

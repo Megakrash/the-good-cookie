@@ -1,4 +1,4 @@
-import LayoutFull from "@/components/LayoutFull";
+import LayoutFull from "@/components/layout/LayoutFull";
 import ContactHeader from "@/components/contact/ContactHeader";
 import ContactForm from "@/components/contact/ContactForm";
 

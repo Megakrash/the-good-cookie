@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 
 type AdTitleProps = {
   title: string;

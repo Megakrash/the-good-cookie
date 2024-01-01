@@ -10,9 +10,9 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FormEvent, useRef, useState } from "react";
-import UserName from "../users/userForm/UserName";
-import UserEmail from "../users/userForm/UserEmail";
-import UserPhone from "../users/userForm/UserPhone";
+import UserName from "../users/userForm/components/UserName";
+import UserEmail from "../users/userForm/components/UserEmail";
+import UserPhone from "../users/userForm/components/UserPhone";
 import toast, { Toaster } from "react-hot-toast";
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";

@@ -1,4 +1,4 @@
-import LayoutFull from "@/components/LayoutFull";
+import LayoutFull from "@/components/layout/LayoutFull";
 import { useRouter } from "next/router";
 import AdCard from "@/components/ads/AdCard";
 import { SubCategoryTypes } from "@/types/types";

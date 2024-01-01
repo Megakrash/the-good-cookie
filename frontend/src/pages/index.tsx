@@ -1,4 +1,4 @@
-import LayoutFull from "@/components/LayoutFull";
+import LayoutFull from "@/components/layout/LayoutFull";
 import RecentAds from "@/components/ads/RecentAds";
 import Search from "@/components/search/Search";
 

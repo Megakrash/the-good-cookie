@@ -1,14 +1,13 @@
 import { ReactNode } from "react";
 import Head from "next/head";
-import Header from "./header/Header";
-import Navbar from "./navbar/Navbar";
+import Header from "../header/Header";
 
 type LayoutProps = {
   title: string;
   children: ReactNode;
 };
 
-const LayoutFull = (props: LayoutProps): ReactNode => {
+const LayoutLight = (props: LayoutProps): ReactNode => {
   return (
     <>
       <Head>
@@ -18,10 +17,9 @@ const LayoutFull = (props: LayoutProps): ReactNode => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <Navbar />
       <main className="main-content">{props.children}</main>
     </>
   );
 };
 
-export default LayoutFull;
+export default LayoutLight;

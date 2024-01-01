@@ -31,15 +31,18 @@ import {
   Button,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import DeleteAdPicture from "./DeleteAdPicture";
+import DeleteAdPicture from "./components/DeleteAdPicture";
 import { DownloadInput } from "@/styles/MuiStyled";
-import AdTitle from "./AdTitle";
+import AdTitle from "./components/AdTitle";
+import AdDescription from "./components/AdDescription";
+import AdPrice from "./components/AdPrice";
 
 type AdFormProps = {
   ad?: AdTypes;
 };
 
 const AdForm = (props: AdFormProps): React.ReactNode => {
+  const router = useRouter();
   // Get Categories&SubCategories & Tags
   const { data: dataCategories } = useQuery<{ items: CategoriesTypes }>(
     queryAllCatAndSub
@@ -69,8 +72,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
     setSelectedTags(selectedOptions);
   };
 
-  // Submit & Update
-  const router = useRouter();
+  // Submit & Update queries
 
   const [doCreate, { loading: createLoading }] = useMutation(mutationCreateAd, {
     refetchQueries: [queryAllAds],
@@ -129,6 +131,8 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         });
         if (!result.errors?.length) {
           toast("Annonce mise à jour");
+        } else {
+          toast("Erreur pendant la mise à jour de votre annonce");
         }
       }
     } catch (error) {
@@ -178,31 +182,11 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
             {!props.ad ? "Création de votre annonce" : "Modifier votre annonce"}
           </h2>
           <AdTitle title={title} setTitle={setTitle} />
-          <TextField
-            className="adForm_boxForm_input"
-            id="description"
-            multiline
-            fullWidth
-            minRows={8}
-            maxRows={24}
-            label="Détail de votre annonce"
-            variant="outlined"
-            value={description || ""}
-            onChange={(e) => setDescription(e.target.value)}
-            required
+          <AdDescription
+            description={description}
+            setDescription={setDescription}
           />
-          <TextField
-            className="adForm_boxForm_input"
-            id="price"
-            size="small"
-            label="Prix de votre annonce"
-            variant="outlined"
-            value={price || ""}
-            onChange={(e) =>
-              setPrice(e.target.value === "" ? 0 : Number(e.target.value))
-            }
-            required
-          />
+          <AdPrice price={price} setPrice={setPrice} />
           <TextField
             className="adForm_boxForm_input"
             id="location"

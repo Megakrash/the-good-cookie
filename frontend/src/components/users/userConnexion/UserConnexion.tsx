@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Button, Card, FormControl, Typography } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
-import UserEmail from "../userForm/UserEmail";
-import UserPassword from "../userForm/UserPassword";
+import UserEmail from "../userForm/components/UserEmail";
+import UserPassword from "../userForm/components/UserPassword";
 
 const UserConnection = (): React.ReactNode => {
   const [email, setEmail] = useState<string>("");

@@ -1,4 +1,4 @@
-import LayoutLight from "@/components/LayoutLight";
+import LayoutLight from "@/components/layout/LayoutLight";
 import { Button, Typography, Link, Box } from "@mui/material";
 import { PATH_IMAGE } from "@/api/configApi";
 

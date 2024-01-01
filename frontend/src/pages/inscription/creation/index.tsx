@@ -1,4 +1,4 @@
-import LayoutLight from "@/components/LayoutLight";
+import LayoutLight from "@/components/layout/LayoutLight";
 import UserForm from "@/components/users/userForm/UserForm";
 
 const SignUpPage = (): React.ReactNode => {
