@@ -94,6 +94,11 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, "../public")));
 
+//-----------------------------------------
+//-----------EXPRESS MIDDLEWARES-----------
+//-----------------------------------------
+
+// Upload Ad picture
 app.post(
   "/upload",
   uploadAdPicture.single("file"),
@@ -106,6 +111,7 @@ app.post(
   }
 );
 
+// Upload Avatar picture
 app.post(
   "/avatar",
   uploadUserPicture.single("file"),
@@ -117,6 +123,7 @@ app.post(
     }
   }
 );
+
 // Api search adress.gouv
 app.get("/search-address", async (req: Request, res: Response) => {
   try {
