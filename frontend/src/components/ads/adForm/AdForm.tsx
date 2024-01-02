@@ -65,7 +65,6 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   }
   const [price, setPrice] = useState<number>(0);
   const [zipCode, setZipCode] = useState<string>("");
-  console.log(zipCode);
   const [city, setCity] = useState<string>("");
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
   const [subCategoryId, setSubCategoryId] = useState<null | number>();

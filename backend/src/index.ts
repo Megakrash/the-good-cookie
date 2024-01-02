@@ -44,8 +44,9 @@ import { Request, Response } from "express";
 //-----------------------------------------
 //-----------------APOLLO SERVER-----------
 //-----------------------------------------
-interface MyContext {
-  token?: String;
+export interface MyContext {
+  req: Request;
+  res: Response;
 }
 
 const app = express();
@@ -78,14 +79,17 @@ async function start() {
     cors<cors.CorsRequest>(),
     express.json({ limit: "50mb" }),
     expressMiddleware(server, {
-      context: async ({ req }) => ({ token: req.headers.token }),
+      context: async ({ req, res }: { req: Request; res: Response }) => ({
+        req,
+        res,
+      }),
     })
   );
 
   await new Promise<void>((resolve) =>
-    httpServer.listen({ port: 5000 }, resolve)
+    httpServer.listen({ port: port }, resolve)
   );
-  console.log(`🚀 Server ready at port 5000 🚀`);
+  console.log(`🚀 Server ready at port ${port} 🚀`);
 }
 
 start();

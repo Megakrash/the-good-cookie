@@ -9,3 +9,12 @@ export const mutationCreateUser = gql`
     }
   }
 `;
+
+export const mutationUserLogin = gql`
+  mutation userLogin($data: UserLoginInput!) {
+    item: userLogin(data: $data) {
+      id
+      nickName
+    }
+  }
+`;

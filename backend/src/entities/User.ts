@@ -50,14 +50,13 @@ export class User extends BaseEntity {
   @Field({ nullable: true })
   picture?: string;
 
-  @Column({ length: 100 })
-  @IsEmail()
+  @Column({ length: 255, unique: true })
   @Field()
+  @IsEmail()
   email!: string;
 
   @Column({ length: 250 })
-  @Field()
-  password!: string;
+  hashedPassword!: string;
 
   @Column()
   @Length(8, 12, { message: "Entre 8 et 12 caractères" })
@@ -132,6 +131,7 @@ export class UserCreateInput {
   email!: string;
 
   @Field()
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
   password!: string;
 
   @Field({ nullable: true })
@@ -168,12 +168,6 @@ export class UserUpdateInput {
   picture!: string;
 
   @Field({ nullable: true })
-  email!: string;
-
-  @Field({ nullable: true })
-  password!: string;
-
-  @Field({ nullable: true })
   adress!: string;
 
   @Field({ nullable: true })
@@ -193,4 +187,13 @@ export class UserUpdateInput {
 
   @Field(() => [ObjectId], { nullable: true })
   ads!: ObjectId[];
+}
+
+@InputType()
+export class UserLoginInput {
+  @Field()
+  email!: string;
+
+  @Field()
+  password!: string;
 }
