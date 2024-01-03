@@ -121,9 +121,6 @@ export class AdCreateInput {
   @Field()
   subCategory!: ObjectId;
 
-  @Field(() => ObjectId)
-  user!: ObjectId;
-
   @Field(() => [ObjectId])
   tags!: ObjectId[];
 }
@@ -153,9 +150,6 @@ export class AdUpdateInput {
 
   @Field({ nullable: true })
   subCategory!: ObjectId;
-
-  @Field(() => ObjectId, { nullable: true })
-  user!: ObjectId;
 
   @Field(() => [ObjectId], { nullable: true })
   tags!: ObjectId[];

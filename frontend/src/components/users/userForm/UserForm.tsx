@@ -90,6 +90,7 @@ const UserForm = (): React.ReactNode => {
         },
       });
       if ("id" in result.data?.item) {
+        toast(`Bienvenue ${result.data?.item.nickName} !}`);
         router.replace(`/connexion`);
       } else {
         toast("Erreur pendant la création de votre compte");

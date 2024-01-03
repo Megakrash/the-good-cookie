@@ -93,7 +93,6 @@ export type AdFormData = {
   price: number;
   subCategory: { id: number } | null;
   tags?: AdTags | null;
-  user?: { id: number };
 };
 
 // Tags
@@ -118,5 +117,20 @@ export type UserFormData = {
   city: string;
   coordinates: [number, number];
   phoneNumber?: string;
+  isAdmin: boolean;
+};
+
+export type UserTypes = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  nickName: string;
+  email: string;
+  picture?: string;
+  adress?: string;
+  zipCode: string;
+  city: string;
+  phoneNumber?: string;
+  registrationDate: string;
   isAdmin: boolean;
 };

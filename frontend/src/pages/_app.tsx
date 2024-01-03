@@ -1,9 +1,17 @@
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import {
+  ApolloClient,
+  ApolloProvider,
+  HttpLink,
+  InMemoryCache,
+} from "@apollo/client";
 import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import UserContext from "@/context/UserContext";
 import { CssBaseline } from "@mui/material";
 import "@/styles/index.scss";
+import { useState } from "react";
+import { UserTypes } from "@/types/types";
 
 const theme = createTheme({
   palette: {
@@ -23,18 +31,24 @@ const theme = createTheme({
     },
   },
 });
-
 const client = new ApolloClient({
-  uri: "http://localhost:5000/",
+  link: new HttpLink({
+    uri: "http://localhost:5000/",
+    credentials: "include",
+  }),
   cache: new InMemoryCache(),
 });
 
 function App({ Component, pageProps }: AppProps) {
+  const [user, setUser] = useState<UserTypes | null>(null);
+
   return (
     <ApolloProvider client={client}>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Component {...pageProps} />
+        <UserContext.Provider value={{ user, setUser }}>
+          <CssBaseline />
+          <Component {...pageProps} />
+        </UserContext.Provider>
       </ThemeProvider>
     </ApolloProvider>
   );

@@ -1,12 +1,4 @@
-import {
-  Arg,
-  Query,
-  Resolver,
-  Mutation,
-  ID,
-  Ctx,
-  Authorized,
-} from "type-graphql";
+import { Arg, Query, Resolver, Mutation, Ctx, Authorized } from "type-graphql";
 import {
   User,
   UserCreateInput,
@@ -18,6 +10,7 @@ import { currentDate } from "../utils/date";
 import * as argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { MyContext } from "../index";
+import Cookies from "cookies";
 
 @Resolver(User)
 export class UsersResolver {
@@ -28,17 +21,27 @@ export class UsersResolver {
     });
     return users;
   }
+
+  // @Authorized()
+  // @Query(() => User)
+  // async userById(@Ctx() context: MyContext): Promise<User> {
+  //   const userId = context.user?.id;
+  //   const user = await User.findOne({
+  //     where: { id: userId },
+  //     relations: { ads: true },
+  //   });
+  //   if (!user) {
+  //     throw new Error("User not found");
+  //   }
+  //   return user;
+  // }
+
+  @Authorized()
   @Query(() => User)
-  async userById(@Arg("id") id: number): Promise<User> {
-    const user = await User.findOne({
-      where: { id },
-      relations: { ads: true },
-    });
-    if (!user) {
-      throw new Error("User not found");
-    }
-    return user;
+  async me(@Ctx() context: MyContext): Promise<User> {
+    return context.user as User;
   }
+
   @Mutation(() => User)
   async userCreate(
     @Arg("data", () => UserCreateInput) data: UserCreateInput
@@ -85,29 +88,30 @@ export class UsersResolver {
     const token = jwt.sign(
       {
         exp: Math.floor(Date.now() / 1000) + 60 * 60,
-        data: user.id,
+        userId: user.id,
       },
       process.env.JWT_SECRET_KEY || ""
     );
 
-    const tokenData = JSON.stringify({ token: token, user: user.id });
-    context.res.cookie("TGCToken", tokenData, {
+    const cookie = new Cookies(context.req, context.res);
+    cookie.set("TGCookie", token, {
       httpOnly: true,
       secure: false,
       expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
     });
-
     return user;
   }
 
-  // @Authorized()
+  @Authorized()
   @Mutation(() => User, { nullable: true })
   async userUpdate(
-    @Arg("id", () => ID) id: number,
+    @Ctx() context: MyContext,
     @Arg("data") data: UserUpdateInput
   ): Promise<User | null> {
+    const userId = context.user?.id;
+
     const user = await User.findOne({
-      where: { id: id },
+      where: { id: userId },
       relations: { ads: true },
     });
 
@@ -126,7 +130,7 @@ export class UsersResolver {
       if (errors.length === 0) {
         await User.save(user);
         return await User.findOne({
-          where: { id: id },
+          where: { id: userId },
           relations: {
             ads: true,
           },
@@ -138,15 +142,18 @@ export class UsersResolver {
     return user;
   }
 
+  @Authorized()
   @Mutation(() => User, { nullable: true })
-  async userDelete(@Arg("id", () => ID) id: number): Promise<User | null> {
+  async userDelete(@Ctx() context: MyContext): Promise<User | null> {
+    const id = context.user?.id;
+
     const user = await User.findOne({
       where: { id: id },
       relations: { ads: true },
     });
     if (user) {
       await user.remove();
-      user.id = id;
+      user;
     } else {
       throw new Error(`Error delete user`);
     }

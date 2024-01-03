@@ -18,11 +18,12 @@ const SubCategoryComponent = (): React.ReactNode => {
   );
 
   const subCategory = data ? data.item : null;
-
   return (
-    <>
+    <LayoutFull
+      title={subCategory ? `TGC : ${subCategory.name}` : `TGC : Catégorie`}
+    >
       {subCategory && subCategory.category && (
-        <LayoutFull title={`TGG : ${subCategory.name}`}>
+        <>
           <div>
             <Link href={`/categories/${subCategory.category.id}`}>
               <p>{subCategory.category.name.toUpperCase()}</p>
@@ -42,9 +43,9 @@ const SubCategoryComponent = (): React.ReactNode => {
           ) : (
             <p>{`Aucune offre dans la catégorie ${subCategory.name} pour le moment !`}</p>
           )}
-        </LayoutFull>
+        </>
       )}
-    </>
+    </LayoutFull>
   );
 };
 

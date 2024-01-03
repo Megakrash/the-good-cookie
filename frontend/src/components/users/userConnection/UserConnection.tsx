@@ -23,12 +23,15 @@ const UserConnection = (): React.ReactNode => {
         variables: { data: { email, password } },
       });
       if ("id" in data.item) {
-        router.replace(`/compte`);
         toast(`Connexion réussie, bienvenue ${data.item.nickName}`, {
           style: { background: "#0fcc45", color: "#fff" },
         });
+        setTimeout(() => {
+          router.replace(`/compte`);
+        }, 3000);
       }
     } catch (error) {
+      console.log(error);
       toast("Email ou mot de passe incorrect", {
         style: { background: "#e14d2a", color: "#fff" },
       });

@@ -1,10 +1,20 @@
-import { Arg, Query, Resolver, Mutation, ID, Int } from "type-graphql";
+import {
+  Arg,
+  Query,
+  Resolver,
+  Mutation,
+  ID,
+  Int,
+  Ctx,
+  Authorized,
+} from "type-graphql";
 import { In, MoreThanOrEqual, LessThanOrEqual, Between, ILike } from "typeorm";
 import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from "../entities/Ad";
 import { validate } from "class-validator";
 import { currentDate } from "../utils/date";
 import { merge } from "../utils/utils";
 import fs from "fs";
+import { MyContext } from "../index";
 
 @Resolver(Ad)
 export class AdsResolver {
@@ -84,14 +94,36 @@ export class AdsResolver {
     return ad;
   }
 
+  @Query(() => [Ad])
+  async adsByUser(@Arg("id", () => ID) id: number): Promise<Ad[]> {
+    const ads = await Ad.find({
+      where: { user: { id } },
+      relations: { user: true, subCategory: true, tags: true },
+    });
+
+    if (ads.length === 0) {
+      throw new Error("No ads found for this user");
+    }
+
+    return ads;
+  }
+
+  @Authorized()
   @Mutation(() => Ad)
   async adCreate(
+    @Ctx() context: MyContext,
     @Arg("data", () => AdCreateInput) data: AdCreateInput
   ): Promise<Ad> {
     const createdDate = currentDate();
     const updateDate = currentDate();
     const newAd = new Ad();
-    Object.assign(newAd, data, { createdDate }, { updateDate });
+    Object.assign(
+      newAd,
+      data,
+      { user: context.user },
+      { createdDate },
+      { updateDate }
+    );
 
     const errors = await validate(newAd);
     if (errors.length === 0) {
@@ -102,16 +134,18 @@ export class AdsResolver {
     }
   }
 
+  @Authorized()
   @Mutation(() => Ad, { nullable: true })
   async AdUpdate(
+    @Ctx() context: MyContext,
     @Arg("id", () => ID) id: number,
     @Arg("data") data: AdUpdateInput
   ): Promise<Ad | null> {
     const ad = await Ad.findOne({
       where: { id: id },
-      relations: { tags: true },
+      relations: { tags: true, user: true },
     });
-    if (ad) {
+    if (ad && ad.user.id === context.user?.id) {
       if ("picture" in data && data.picture === "" && ad.picture) {
         const filePath = `./public/assets/images/ads/${ad.picture}`;
         try {
@@ -147,12 +181,17 @@ export class AdsResolver {
     return ad;
   }
 
+  @Authorized()
   @Mutation(() => Ad, { nullable: true })
-  async adDelete(@Arg("id", () => ID) id: number): Promise<Ad | null> {
+  async adDelete(
+    @Ctx() context: MyContext,
+    @Arg("id", () => ID) id: number
+  ): Promise<Ad | null> {
     const ad = await Ad.findOne({
       where: { id: id },
+      relations: { user: true },
     });
-    if (ad) {
+    if (ad && ad.user.id === context.user?.id) {
       await ad.remove();
       ad.id = id;
     }

@@ -66,7 +66,7 @@ export class User extends BaseEntity {
   @Column({ length: 100, nullable: true })
   @IsOptional()
   @Length(5, 100, { message: "Entre 5 et 100 caractères" })
-  @Field()
+  @Field({ nullable: true })
   adress!: string;
 
   @Column({ length: 5, nullable: true })
@@ -100,7 +100,7 @@ export class User extends BaseEntity {
   @Length(10, 10, {
     message: "Le numéro de téléphone doit avoir exactement 10 chiffres",
   })
-  @Field()
+  @Field({ nullable: true })
   phoneNumber!: string;
 
   @Column({ type: "boolean", default: false })

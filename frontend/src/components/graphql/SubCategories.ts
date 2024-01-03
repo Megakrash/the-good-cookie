@@ -13,7 +13,7 @@ export const querySubCatAndAds = gql`
         createdDate
         updateDate
         picture
-        location
+        city
         tags {
           id
           name

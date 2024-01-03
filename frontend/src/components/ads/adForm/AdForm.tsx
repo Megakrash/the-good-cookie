@@ -113,7 +113,6 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         coordinates,
         subCategory: subCategoryId ? { id: Number(subCategoryId) } : null,
         tags: selectedTags,
-        user: { id: 9 },
       };
 
       if (!props.ad) {

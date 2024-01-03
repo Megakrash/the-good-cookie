@@ -4,6 +4,7 @@
 
 import "reflect-metadata";
 import { dataSource } from "./datasource";
+import { User } from "./entities/User";
 
 //-----------------------------------------
 //-----------------MULTER------------------
@@ -29,6 +30,7 @@ import { AdsResolver } from "./resolvers/Ads";
 import { CategoriesResolver } from "./resolvers/Categories";
 import { SubCategoriesResolver } from "./resolvers/SubCategories";
 import { UsersResolver } from "./resolvers/Users";
+import { customAuthChecker } from "./auth";
 
 //-----------------------------------------
 //-----------------EXPRESS-----------------
@@ -47,13 +49,19 @@ import { Request, Response } from "express";
 export interface MyContext {
   req: Request;
   res: Response;
+  user?: User;
 }
 
 const app = express();
 const corsOptions = {
   origin: "http://localhost:3000",
+  credentials: true,
   optionsSuccessStatus: 200,
 };
+app.use(cors(corsOptions));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.static(path.join(__dirname, "../public")));
+
 async function start() {
   const port = 5000;
   const schema = await buildSchema({
@@ -64,6 +72,7 @@ async function start() {
       SubCategoriesResolver,
       UsersResolver,
     ],
+    authChecker: customAuthChecker,
   });
 
   const httpServer = http.createServer(app);
@@ -76,7 +85,6 @@ async function start() {
   await server.start();
   app.use(
     "/",
-    cors<cors.CorsRequest>(),
     express.json({ limit: "50mb" }),
     expressMiddleware(server, {
       context: async ({ req, res }: { req: Request; res: Response }) => ({
@@ -93,10 +101,6 @@ async function start() {
 }
 
 start();
-
-app.use(express.json());
-app.use(cors(corsOptions));
-app.use(express.static(path.join(__dirname, "../public")));
 
 //-----------------------------------------
 //-----------EXPRESS MIDDLEWARES-----------
