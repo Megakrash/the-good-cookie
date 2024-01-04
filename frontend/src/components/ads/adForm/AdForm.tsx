@@ -36,7 +36,7 @@ import { DownloadInput } from "@/styles/MuiStyled";
 import AdTitle from "./components/AdTitle";
 import AdDescription from "./components/AdDescription";
 import AdPrice from "./components/AdPrice";
-import UserZipCity from "@/components/users/userForm/components/UserZipCity";
+import UserZipCity from "@/components/users/components/UserZipCity";
 
 type AdFormProps = {
   ad?: AdTypes;

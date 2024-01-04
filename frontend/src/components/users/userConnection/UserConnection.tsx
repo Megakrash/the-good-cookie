@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Button, Card, FormControl, Typography } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
-import UserEmail from "../userForm/components/UserEmail";
-import UserPassword from "../userForm/components/UserPassword";
+import UserEmail from "../components/UserEmail";
+import UserPassword from "../components/UserPassword";
 import { mutationUserLogin } from "@/components/graphql/Users";
 import { useMutation } from "@apollo/client";
 import toast, { Toaster } from "react-hot-toast";
