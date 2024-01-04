@@ -4,7 +4,6 @@
 
 import "reflect-metadata";
 import { dataSource } from "./datasource";
-import { User } from "./entities/User";
 
 //-----------------------------------------
 //-----------------PICTURES----------------
@@ -48,10 +47,15 @@ import { Request, Response } from "express";
 //-----------------------------------------
 //-----------------APOLLO SERVER-----------
 //-----------------------------------------
+export type UserContext = {
+  id: number;
+  nickName: string;
+};
+
 export interface MyContext {
   req: Request;
   res: Response;
-  user?: User;
+  user?: UserContext;
 }
 
 const app = express();

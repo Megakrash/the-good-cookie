@@ -11,7 +11,7 @@ export class SubCategoriesResolver {
   @Query(() => [SubCategory])
   async subCategoriesGetAll(): Promise<SubCategory[]> {
     const subCategories = await SubCategory.find({
-      relations: { ads: true, category: true },
+      relations: { ads: { picture: true }, category: true },
       order: { name: "ASC" },
     });
     return subCategories;
@@ -21,7 +21,10 @@ export class SubCategoriesResolver {
   async subCategoryById(@Arg("id", () => ID) id: number): Promise<SubCategory> {
     const subCategory = await SubCategory.findOne({
       where: { id },
-      relations: { ads: { tags: true, user: true }, category: true },
+      relations: {
+        ads: { tags: true, user: { picture: true }, picture: true },
+        category: true,
+      },
       order: {
         ads: {
           updateDate: "DESC",
@@ -86,7 +89,7 @@ export class SubCategoriesResolver {
   ): Promise<SubCategory | null> {
     const subCategory = await SubCategory.findOne({
       where: { id: id },
-      relations: { ads: true },
+      relations: { ads: { picture: true } },
     });
     if (subCategory) {
       await subCategory.remove();

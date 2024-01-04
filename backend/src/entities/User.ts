@@ -201,3 +201,12 @@ export class UserLoginInput {
   @Field()
   password!: string;
 }
+
+@ObjectType()
+export class UserContext {
+  @Field()
+  id!: number;
+
+  @Field()
+  nickName!: string;
+}

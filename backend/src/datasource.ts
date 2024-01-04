@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 import { DataSource } from "typeorm";
 import { Category } from "./entities/Category";
 import { Ad } from "./entities/Ad";

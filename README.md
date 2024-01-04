@@ -4,7 +4,7 @@ Solo project carried out as part of the training at the Wild Code School for the
 
 ### Project launch
 
-- Create .env in the backend & at the root of the project
+- Copy `.env.sample` and create `.env` in the backend
 - Run command `npm i` in the frontend to install the dependencies
 - Run command `docker-compose build` at the root to create backend & postgres images
 - Run command `docker-compose up` at the root to launch backend & postgres

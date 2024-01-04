@@ -71,7 +71,7 @@ export class AdsResolver {
             category: true,
           },
           tags: true,
-          user: true,
+          user: { picture: true },
           picture: true,
         },
         order: {
@@ -88,7 +88,12 @@ export class AdsResolver {
   async adById(@Arg("id", () => ID) id: number): Promise<Ad> {
     const ad = await Ad.findOne({
       where: { id },
-      relations: { subCategory: true, tags: true, user: true, picture: true },
+      relations: {
+        subCategory: true,
+        tags: true,
+        user: { picture: true },
+        picture: true,
+      },
     });
     if (!ad) {
       throw new Error("Ad not found");

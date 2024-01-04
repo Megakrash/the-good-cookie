@@ -3,18 +3,20 @@ import { Button, Card, FormControl, Typography } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
 import UserEmail from "../components/UserEmail";
 import UserPassword from "../components/UserPassword";
-import { mutationUserLogin } from "@/components/graphql/Users";
+import { mutationUserLogin, queryMeContext } from "@/components/graphql/Users";
 import { useMutation } from "@apollo/client";
 import toast, { Toaster } from "react-hot-toast";
 import router from "next/router";
 
 const UserConnection = (): React.ReactNode => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("jl.debre@relou.wtf");
+  const [password, setPassword] = useState<string>("Warcraft!!2023");
   const handlePasswordChange = (newPassword: React.SetStateAction<string>) => {
     setPassword(newPassword);
   };
-  const [doLogin] = useMutation(mutationUserLogin);
+  const [doLogin] = useMutation(mutationUserLogin, {
+    refetchQueries: [queryMeContext],
+  });
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -28,10 +30,9 @@ const UserConnection = (): React.ReactNode => {
         });
         setTimeout(() => {
           router.replace(`/compte`);
-        }, 3000);
+        }, 1500);
       }
     } catch (error) {
-      console.log(error);
       toast("Email ou mot de passe incorrect", {
         style: { background: "#e14d2a", color: "#fff" },
       });
