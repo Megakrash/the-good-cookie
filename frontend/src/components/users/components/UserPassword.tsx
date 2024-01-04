@@ -20,21 +20,25 @@ type UserPasswordProps = {
 
 const UserPassword = (props: UserPasswordProps): React.ReactNode => {
   // Criteria & errors
-  const [touched, setTouched] = useState(false);
+  const [touched, setTouched] = useState<Boolean>(false);
   const validatePassword = (password: string) => {
     return {
       "9 caractères minimum": password.length >= 9,
       "Un nombre": /\d/.test(password),
-      "Un caractère en majuscule": /[A-Z]/.test(password),
-      "Un caractère en minuscule": /[a-z]/.test(password),
+      "Majuscule et minuscule":
+        /[A-Z]/.test(password) && /[a-z]/.test(password),
+      "Un caractère spécial":
+        /[\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\:\'\"\\\|\,\.\/\<\>\?]/.test(
+          password
+        ),
     };
   };
 
   const [passwordCriteria, setPasswordCriteria] = useState({
     "9 caractères minimum": false,
     "Un nombre": false,
-    "Un caractère en majuscule": false,
-    "Un caractère en minuscule": false,
+    "Majuscule et minuscule": false,
+    "Un caractère spécial": false,
   });
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +50,7 @@ const UserPassword = (props: UserPasswordProps): React.ReactNode => {
   const showError = touched && !Object.values(passwordCriteria).every(Boolean);
 
   // See the password
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState<Boolean>(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 

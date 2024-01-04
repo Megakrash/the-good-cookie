@@ -18,7 +18,6 @@ export const verifyRecaptchaToken = async (
       res.status(500).send("reCAPTCHA verification failed");
     }
   } catch (error) {
-    console.error(error);
     res.status(500).send("Error verifying reCAPTCHA");
   }
 };

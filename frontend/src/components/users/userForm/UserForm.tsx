@@ -1,10 +1,10 @@
 import React, { FormEvent, useRef, useState } from "react";
 import axios from "axios";
-import UserName from "./components/UserName";
-import UserPassword from "./components/UserPassword";
-import UserZipCity from "./components/UserZipCity";
-import UserEmail from "./components/UserEmail";
-import UserPhone from "./components/UserPhone";
+import UserName from "../components/UserName";
+import UserPassword from "../components/UserPassword";
+import UserZipCity from "../components/UserZipCity";
+import UserEmail from "../components/UserEmail";
+import UserPhone from "../components/UserPhone";
 import toast, { Toaster } from "react-hot-toast";
 import {
   Box,
@@ -90,6 +90,7 @@ const UserForm = (): React.ReactNode => {
         },
       });
       if ("id" in result.data?.item) {
+        toast(`Bienvenue ${result.data?.item.nickName} !}`);
         router.replace(`/connexion`);
       } else {
         toast("Erreur pendant la création de votre compte");

@@ -36,7 +36,7 @@ import { DownloadInput } from "@/styles/MuiStyled";
 import AdTitle from "./components/AdTitle";
 import AdDescription from "./components/AdDescription";
 import AdPrice from "./components/AdPrice";
-import UserZipCity from "@/components/users/userForm/components/UserZipCity";
+import UserZipCity from "@/components/users/components/UserZipCity";
 
 type AdFormProps = {
   ad?: AdTypes;
@@ -65,7 +65,6 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   }
   const [price, setPrice] = useState<number>(0);
   const [zipCode, setZipCode] = useState<string>("");
-  console.log(zipCode);
   const [city, setCity] = useState<string>("");
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
   const [subCategoryId, setSubCategoryId] = useState<null | number>();
@@ -114,7 +113,6 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         coordinates,
         subCategory: subCategoryId ? { id: Number(subCategoryId) } : null,
         tags: selectedTags,
-        user: { id: 9 },
       };
 
       if (!props.ad) {
