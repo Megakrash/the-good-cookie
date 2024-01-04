@@ -152,7 +152,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
       setCoordinates(props.ad.coordinates);
       setCity(props.ad.city);
       setPrice(props.ad.price);
-      setCurentPicture(props.ad.picture);
+      setCurentPicture(props.ad.picture.filename);
       setSubCategoryId(props.ad.subCategory ? props.ad.subCategory.id : null);
       const transformedTags = props.ad.tags.map((tag) => ({ id: tag.id }));
       setSelectedTags(transformedTags);

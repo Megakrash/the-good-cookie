@@ -114,7 +114,7 @@ export class AdCreateInput {
   price!: number;
 
   @Field({ nullable: true })
-  pictureId?: string;
+  pictureId?: number;
 
   @Field()
   zipCode!: string;
