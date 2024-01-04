@@ -60,14 +60,14 @@ const UserForm = (): React.ReactNode => {
     dataFile.append("file", picture);
 
     try {
-      let filename: string;
+      let pictureId: number | null = null;
       if (picture) {
         const uploadResponse = await axios.post(`${API_URL}avatar`, dataFile, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
-        filename = uploadResponse.data.filename;
+        pictureId = uploadResponse.data.id;
       }
 
       const data: UserFormData = {
@@ -76,7 +76,7 @@ const UserForm = (): React.ReactNode => {
         nickName,
         email,
         password,
-        picture: filename ? filename : "",
+        pictureId,
         zipCode,
         city,
         coordinates,

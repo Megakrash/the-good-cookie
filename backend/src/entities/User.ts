@@ -4,6 +4,8 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
 } from "typeorm";
 import {
   IsBoolean,
@@ -17,6 +19,7 @@ import { Field, ID, InputType, ObjectType } from "type-graphql";
 import { Ad } from "./Ad";
 import { ObjectId } from "./ObjectId";
 import { IsCoordinates } from "./Coordinates";
+import { Picture } from "./Picture";
 
 @Entity()
 @ObjectType()
@@ -46,9 +49,10 @@ export class User extends BaseEntity {
   @Field({ nullable: true })
   nickName!: string;
 
-  @Column({ length: 500 })
+  @OneToOne(() => Picture, { nullable: true })
+  @JoinColumn()
   @Field({ nullable: true })
-  picture?: string;
+  picture?: Picture;
 
   @Column({ length: 255, unique: true })
   @Field()
@@ -125,7 +129,7 @@ export class UserCreateInput {
   nickName!: string;
 
   @Field({ nullable: true })
-  picture?: string;
+  pictureId?: number;
 
   @Field()
   email!: string;

@@ -9,7 +9,10 @@ export const queryAllAds = gql`
       price
       createdDate
       updateDate
-      picture
+      picture {
+        id
+        filename
+      }
       city
       subCategory {
         id
@@ -40,7 +43,10 @@ export const queryAdById = gql`
       price
       createdDate
       updateDate
-      picture
+      picture {
+        id
+        filename
+      }
       city
       zipCode
       coordinates

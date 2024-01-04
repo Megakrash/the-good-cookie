@@ -52,7 +52,10 @@ export type AdTypes = {
   price: number;
   createdDate: string;
   updateDate: string;
-  picture: string;
+  picture: {
+    id: number;
+    filename: string;
+  };
   zipCode: string;
   city: string;
   coordinates: [number, number];
@@ -89,7 +92,7 @@ export type AdFormData = {
   zipCode: string;
   city: string;
   coordinates: [number, number];
-  picture: string;
+  pictureId: number;
   price: number;
   subCategory: { id: number } | null;
   tags?: AdTags | null;
@@ -111,7 +114,7 @@ export type UserFormData = {
   nickName: string;
   email: string;
   password: string;
-  picture?: string;
+  pictureId: number;
   adress?: string;
   zipCode: string;
   city: string;
@@ -126,7 +129,10 @@ export type UserTypes = {
   lastName: string;
   nickName: string;
   email: string;
-  picture?: string;
+  picture: {
+    id: number;
+    filename: string;
+  };
   adress?: string;
   zipCode: string;
   city: string;

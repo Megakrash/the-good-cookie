@@ -6,6 +6,7 @@ import { Ad } from "./entities/Ad";
 import { Tag } from "./entities/Tag";
 import { SubCategory } from "./entities/SubCategory";
 import { User } from "./entities/User";
+import { Picture } from "./entities/Picture";
 
 export const dataSource = new DataSource({
   type: "postgres",
@@ -14,7 +15,7 @@ export const dataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [Category, Ad, Tag, SubCategory, User],
+  entities: [Category, Ad, Tag, SubCategory, User, Picture],
   synchronize: true,
   // logging: true,
 });

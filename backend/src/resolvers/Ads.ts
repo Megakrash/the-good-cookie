@@ -15,6 +15,7 @@ import { currentDate } from "../utils/date";
 import { merge } from "../utils/utils";
 import fs from "fs";
 import { MyContext } from "../index";
+import { Picture } from "../entities/Picture";
 
 @Resolver(Ad)
 export class AdsResolver {
@@ -71,6 +72,7 @@ export class AdsResolver {
           },
           tags: true,
           user: true,
+          picture: true,
         },
         order: {
           updateDate: "DESC",
@@ -86,7 +88,7 @@ export class AdsResolver {
   async adById(@Arg("id", () => ID) id: number): Promise<Ad> {
     const ad = await Ad.findOne({
       where: { id },
-      relations: { subCategory: true, tags: true, user: true },
+      relations: { subCategory: true, tags: true, user: true, picture: true },
     });
     if (!ad) {
       throw new Error("Ad not found");
@@ -98,7 +100,7 @@ export class AdsResolver {
   async adsByUser(@Arg("id", () => ID) id: number): Promise<Ad[]> {
     const ads = await Ad.find({
       where: { user: { id } },
-      relations: { user: true, subCategory: true, tags: true },
+      relations: { user: true, subCategory: true, tags: true, picture: true },
     });
 
     if (ads.length === 0) {
@@ -125,61 +127,69 @@ export class AdsResolver {
       { updateDate }
     );
 
+    if (data.pictureId) {
+      const picture = await Picture.findOne({ where: { id: data.pictureId } });
+      if (!picture) {
+        throw new Error("Picture not found");
+      }
+      newAd.picture = picture;
+    }
+
     const errors = await validate(newAd);
     if (errors.length === 0) {
       await newAd.save();
       return newAd;
     } else {
-      throw new Error(`Error occured: ${JSON.stringify(errors)}`);
+      throw new Error(`Error occurred: ${JSON.stringify(errors)}`);
     }
   }
 
-  @Authorized()
-  @Mutation(() => Ad, { nullable: true })
-  async AdUpdate(
-    @Ctx() context: MyContext,
-    @Arg("id", () => ID) id: number,
-    @Arg("data") data: AdUpdateInput
-  ): Promise<Ad | null> {
-    const ad = await Ad.findOne({
-      where: { id: id },
-      relations: { tags: true, user: true },
-    });
-    if (ad && ad.user.id === context.user?.id) {
-      if ("picture" in data && data.picture === "" && ad.picture) {
-        const filePath = `./public/assets/images/ads/${ad.picture}`;
-        try {
-          fs.unlink(filePath, (err: NodeJS.ErrnoException | null) => {
-            if (err) {
-              console.error(`Error deleting image: ${err}`);
-            }
-          });
-        } catch (err) {
-          console.error(`Error deleting image: ${err}`);
-        }
-        ad.picture = "";
-      }
+  // @Authorized()
+  // @Mutation(() => Ad, { nullable: true })
+  // async AdUpdate(
+  //   @Ctx() context: MyContext,
+  //   @Arg("id", () => ID) id: number,
+  //   @Arg("data") data: AdUpdateInput
+  // ): Promise<Ad | null> {
+  //   const ad = await Ad.findOne({
+  //     where: { id: id },
+  //     relations: { tags: true, user: true, picture: true },
+  //   });
+  //   if (ad && ad.user.id === context.user?.id) {
+  //     if ("picture" in data && data.picture === "" && ad.picture) {
+  //       const filePath = `./public/assets/images/ads/${ad.picture}`;
+  //       try {
+  //         fs.unlink(filePath, (err: NodeJS.ErrnoException | null) => {
+  //           if (err) {
+  //             console.error(`Error deleting image: ${err}`);
+  //           }
+  //         });
+  //       } catch (err) {
+  //         console.error(`Error deleting image: ${err}`);
+  //       }
+  //       ad.picture = "";
+  //     }
 
-      const updateDate = currentDate();
-      const dataWithUpdateDate = { ...data, updateDate };
-      merge(ad, dataWithUpdateDate);
+  //     const updateDate = currentDate();
+  //     const dataWithUpdateDate = { ...data, updateDate };
+  //     merge(ad, dataWithUpdateDate);
 
-      const errors = await validate(ad);
-      if (errors.length === 0) {
-        await Ad.save(ad);
-        return await Ad.findOne({
-          where: { id: id },
-          relations: {
-            subCategory: true,
-            tags: true,
-          },
-        });
-      } else {
-        throw new Error(`Error occured: ${JSON.stringify(errors)}`);
-      }
-    }
-    return ad;
-  }
+  //     const errors = await validate(ad);
+  //     if (errors.length === 0) {
+  //       await Ad.save(ad);
+  //       return await Ad.findOne({
+  //         where: { id: id },
+  //         relations: {
+  //           subCategory: true,
+  //           tags: true,
+  //         },
+  //       });
+  //     } else {
+  //       throw new Error(`Error occured: ${JSON.stringify(errors)}`);
+  //     }
+  //   }
+  //   return ad;
+  // }
 
   @Authorized()
   @Mutation(() => Ad, { nullable: true })

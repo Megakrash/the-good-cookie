@@ -93,20 +93,20 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
     dataFile.append("file", newPicture);
 
     try {
-      let filename: string;
+      let pictureId: number | null = null;
       if (newPicture) {
         const uploadResponse = await axios.post(`${API_URL}upload`, dataFile, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
-        filename = uploadResponse.data.filename;
+        pictureId = uploadResponse.data.id;
       }
 
       const data: AdFormData = {
         title,
         description,
-        picture: filename || props.ad.picture,
+        pictureId,
         price,
         city,
         zipCode,
@@ -152,7 +152,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
       setCoordinates(props.ad.coordinates);
       setCity(props.ad.city);
       setPrice(props.ad.price);
-      setCurentPicture(props.ad.picture);
+      setCurentPicture(props.ad.picture.filename);
       setSubCategoryId(props.ad.subCategory ? props.ad.subCategory.id : null);
       const transformedTags = props.ad.tags.map((tag) => ({ id: tag.id }));
       setSelectedTags(transformedTags);

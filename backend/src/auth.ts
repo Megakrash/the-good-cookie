@@ -22,7 +22,10 @@ export const customAuthChecker: AuthCheckerFn<MyContext> = async (
       process.env.JWT_SECRET_KEY || "supersecret"
     );
     if (typeof payload === "object" && "userId" in payload) {
-      const user = await User.findOneBy({ id: payload.userId });
+      const user = await User.findOne({
+        where: { id: payload.userId },
+        relations: { picture: true },
+      });
 
       if (user !== null) {
         context.user = Object.assign(user, { hashedPassword: undefined });

@@ -11,13 +11,14 @@ import * as argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { MyContext } from "../index";
 import Cookies from "cookies";
+import { Picture } from "../entities/Picture";
 
 @Resolver(User)
 export class UsersResolver {
   @Query(() => [User])
   async usersGetAll(): Promise<User[]> {
     const users = await User.find({
-      relations: { ads: true },
+      relations: { ads: true, picture: true },
     });
     return users;
   }
@@ -54,6 +55,14 @@ export class UsersResolver {
     const registrationDate = currentDate();
     const newUser = new User();
     Object.assign(newUser, data, { registrationDate });
+
+    if (data.pictureId) {
+      const picture = await Picture.findOne({ where: { id: data.pictureId } });
+      if (!picture) {
+        throw new Error("Picture not found");
+      }
+      newUser.picture = picture;
+    }
 
     try {
       newUser.hashedPassword = await argon2.hash(data.password);
