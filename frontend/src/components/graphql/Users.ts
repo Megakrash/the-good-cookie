@@ -31,6 +31,7 @@ export const queryMe = gql`
       adress
       zipCode
       city
+      coordinates
       phoneNumber
       registrationDate
       isAdmin

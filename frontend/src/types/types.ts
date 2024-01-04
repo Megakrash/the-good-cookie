@@ -130,6 +130,7 @@ export type UserTypes = {
   adress?: string;
   zipCode: string;
   city: string;
+  coordinates: [number, number];
   phoneNumber?: string;
   registrationDate: string;
   isAdmin: boolean;
