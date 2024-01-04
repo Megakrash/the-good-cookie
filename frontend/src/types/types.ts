@@ -114,7 +114,7 @@ export type UserFormData = {
   nickName: string;
   email: string;
   password: string;
-  picture?: string;
+  pictureId: number;
   adress?: string;
   zipCode: string;
   city: string;
@@ -129,7 +129,10 @@ export type UserTypes = {
   lastName: string;
   nickName: string;
   email: string;
-  picture?: string;
+  picture: {
+    id: number;
+    filename: string;
+  };
   adress?: string;
   zipCode: string;
   city: string;

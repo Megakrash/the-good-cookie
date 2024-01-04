@@ -51,10 +51,6 @@ export class Ad extends BaseEntity {
   @Field()
   updateDate!: string;
 
-  // @Column({ length: 500 })
-  // @Field()
-  // picture!: string;
-
   @OneToOne(() => Picture, { nullable: true })
   @JoinColumn()
   @Field()

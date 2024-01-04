@@ -110,18 +110,6 @@ start();
 //-----------------------------------------
 
 // Upload Ad picture
-// app.post(
-//   "/upload",
-//   uploadAdPicture.single("file"),
-//   (req: Request, res: Response) => {
-//     if (req.file) {
-//       res.json({ filename: req.file.filename });
-//     } else {
-//       res.status(400).send("No file was uploaded.");
-//     }
-//   }
-// );
-
 app.post("/upload", uploadAdPicture.single("file"), async (req, res) => {
   if (req.file) {
     try {
@@ -136,17 +124,18 @@ app.post("/upload", uploadAdPicture.single("file"), async (req, res) => {
 });
 
 // Upload Avatar picture
-app.post(
-  "/avatar",
-  uploadUserPicture.single("file"),
-  (req: Request, res: Response) => {
-    if (req.file) {
-      res.json({ filename: req.file.filename });
-    } else {
-      res.status(400).send("No file was uploaded.");
+app.post("/avatar", uploadUserPicture.single("file"), async (req, res) => {
+  if (req.file) {
+    try {
+      const picture = await createImage(req.file.filename);
+      res.json(picture);
+    } catch (error) {
+      res.status(500).send("Error saving picture");
     }
+  } else {
+    res.status(400).send("No file was uploaded.");
   }
-);
+});
 
 // Api search adress.gouv
 app.get("/search-address", async (req: Request, res: Response) => {
