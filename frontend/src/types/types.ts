@@ -89,7 +89,7 @@ export type AdFormData = {
   zipCode: string;
   city: string;
   coordinates: [number, number];
-  picture: string;
+  pictureId: string;
   price: number;
   subCategory: { id: number } | null;
   tags?: AdTags | null;

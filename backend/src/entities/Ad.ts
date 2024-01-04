@@ -8,13 +8,15 @@ import {
   Index,
   ManyToMany,
   JoinTable,
+  OneToOne,
 } from "typeorm";
-import { Length, IsInt, Matches, IsNumberString } from "class-validator";
+import { Length, IsInt, IsNumberString } from "class-validator";
 import { IsCoordinates } from "./Coordinates";
 import { Field, ID, InputType, ObjectType, Int } from "type-graphql";
 import { SubCategory } from "./SubCategory";
 import { Tag } from "./Tag";
 import { User } from "./User";
+import { Picture } from "./Picture";
 import { ObjectId } from "./ObjectId";
 
 @Entity()
@@ -49,9 +51,14 @@ export class Ad extends BaseEntity {
   @Field()
   updateDate!: string;
 
-  @Column({ length: 500 })
+  // @Column({ length: 500 })
+  // @Field()
+  // picture!: string;
+
+  @OneToOne(() => Picture, { nullable: true })
+  @JoinColumn()
   @Field()
-  picture!: string;
+  picture?: Picture;
 
   @Column({ length: 5, nullable: true })
   @IsNumberString(
@@ -106,8 +113,8 @@ export class AdCreateInput {
   @Field()
   price!: number;
 
-  @Field()
-  picture!: string;
+  @Field({ nullable: true })
+  pictureId?: string;
 
   @Field()
   zipCode!: string;

@@ -7,10 +7,11 @@ import { dataSource } from "./datasource";
 import { User } from "./entities/User";
 
 //-----------------------------------------
-//-----------------MULTER------------------
+//-----------------PICTURES----------------
 //-----------------------------------------
 
-import { uploadAdPicture, uploadUserPicture } from "./multer/multer";
+import { uploadAdPicture, uploadUserPicture } from "./picture/multer";
+import { createImage } from "./picture/createPicture";
 
 //-----------------------------------------
 //----------GRAPHQL / APOLLO SERVER--------
@@ -31,6 +32,7 @@ import { CategoriesResolver } from "./resolvers/Categories";
 import { SubCategoriesResolver } from "./resolvers/SubCategories";
 import { UsersResolver } from "./resolvers/Users";
 import { customAuthChecker } from "./auth";
+import { PictureResolver } from "./resolvers/Pictures";
 
 //-----------------------------------------
 //-----------------EXPRESS-----------------
@@ -71,6 +73,7 @@ async function start() {
       CategoriesResolver,
       SubCategoriesResolver,
       UsersResolver,
+      PictureResolver,
     ],
     authChecker: customAuthChecker,
   });
@@ -107,17 +110,30 @@ start();
 //-----------------------------------------
 
 // Upload Ad picture
-app.post(
-  "/upload",
-  uploadAdPicture.single("file"),
-  (req: Request, res: Response) => {
-    if (req.file) {
-      res.json({ filename: req.file.filename });
-    } else {
-      res.status(400).send("No file was uploaded.");
+// app.post(
+//   "/upload",
+//   uploadAdPicture.single("file"),
+//   (req: Request, res: Response) => {
+//     if (req.file) {
+//       res.json({ filename: req.file.filename });
+//     } else {
+//       res.status(400).send("No file was uploaded.");
+//     }
+//   }
+// );
+
+app.post("/upload", uploadAdPicture.single("file"), async (req, res) => {
+  if (req.file) {
+    try {
+      const picture = await createImage(req.file.filename);
+      res.json(picture);
+    } catch (error) {
+      res.status(500).send("Error saving picture");
     }
+  } else {
+    res.status(400).send("No file was uploaded.");
   }
-);
+});
 
 // Upload Avatar picture
 app.post(
