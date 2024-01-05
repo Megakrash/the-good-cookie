@@ -8,7 +8,6 @@ import {
   JoinColumn,
 } from "typeorm";
 import {
-  IsBoolean,
   IsEmail,
   IsNumberString,
   IsOptional,
@@ -16,18 +15,25 @@ import {
   Matches,
 } from "class-validator";
 import {
-  Authorized,
   Field,
   ID,
   InputType,
   ObjectType,
-  UseMiddleware,
+  registerEnumType,
 } from "type-graphql";
 import { Ad } from "./Ad";
 import { ObjectId } from "./ObjectId";
 import { IsCoordinates } from "./Coordinates";
 import { Picture } from "./Picture";
-import { UserPrivateField } from "../utils/utils";
+
+export enum Role {
+  USER = "USER",
+  ADMIN = "ADMIN",
+}
+
+registerEnumType(Role, {
+  name: "Role",
+});
 
 @Entity()
 @ObjectType()
@@ -57,15 +63,13 @@ export class User extends BaseEntity {
   @Field({ nullable: true })
   nickName!: string;
 
-  @OneToOne(() => Picture, { nullable: true })
+  @OneToOne(() => Picture, { nullable: true, onDelete: "CASCADE" })
   @JoinColumn()
   @Field({ nullable: true })
   picture?: Picture;
 
   @Column({ length: 255, unique: true })
   @Field()
-  @Authorized()
-  @UseMiddleware(UserPrivateField)
   @IsEmail()
   email!: string;
 
@@ -117,10 +121,13 @@ export class User extends BaseEntity {
   @Field({ nullable: true })
   phoneNumber!: string;
 
-  @Column({ type: "boolean", default: false })
-  @IsBoolean()
-  @Field()
-  isAdmin!: boolean;
+  @Column({
+    type: "enum",
+    enum: Role,
+    default: Role.USER,
+  })
+  @Field(() => Role)
+  role!: Role;
 
   @OneToMany(() => Ad, (ad) => ad.user)
   @Field(() => [Ad])
@@ -163,8 +170,8 @@ export class UserCreateInput {
   @Field({ nullable: true })
   phoneNumber?: string;
 
-  @Field()
-  isAdmin!: boolean;
+  @Field(() => Role)
+  role!: Role;
 }
 
 @InputType()
@@ -197,7 +204,7 @@ export class UserUpdateInput {
   phoneNumber!: string;
 
   @Field({ nullable: true })
-  isAdmin!: boolean;
+  role!: Role;
 
   @Field(() => [ObjectId], { nullable: true })
   ads!: ObjectId[];
@@ -219,4 +226,7 @@ export class UserContext {
 
   @Field()
   nickName!: string;
+
+  @Field(() => Role)
+  role!: Role;
 }

@@ -16,7 +16,7 @@ import { createImage } from "./picture/createPicture";
 //----------GRAPHQL / APOLLO SERVER--------
 //-----------------------------------------
 
-import { buildSchema } from "type-graphql";
+import { buildSchema, registerEnumType } from "type-graphql";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
@@ -32,6 +32,7 @@ import { SubCategoriesResolver } from "./resolvers/SubCategories";
 import { UsersResolver } from "./resolvers/Users";
 import { customAuthChecker } from "./auth";
 import { PictureResolver } from "./resolvers/Pictures";
+import { Role } from "./entities/User";
 
 //-----------------------------------------
 //-----------------EXPRESS-----------------
@@ -50,6 +51,7 @@ import { Request, Response } from "express";
 export type UserContext = {
   id: number;
   nickName: string;
+  role: Role;
 };
 
 export interface MyContext {

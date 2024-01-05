@@ -51,7 +51,7 @@ export class Ad extends BaseEntity {
   @Field()
   updateDate!: string;
 
-  @OneToOne(() => Picture, { nullable: true })
+  @OneToOne(() => Picture, { nullable: true, onDelete: "CASCADE" })
   @JoinColumn()
   @Field()
   picture?: Picture;
@@ -140,7 +140,7 @@ export class AdUpdateInput {
   price!: number;
 
   @Field({ nullable: true })
-  picture!: string;
+  pictureId!: number;
 
   @Field({ nullable: true })
   zipCode!: string;
