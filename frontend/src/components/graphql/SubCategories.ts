@@ -12,7 +12,10 @@ export const querySubCatAndAds = gql`
         price
         createdDate
         updateDate
-        picture
+        picture {
+          id
+          filename
+        }
         city
         tags {
           id
@@ -21,7 +24,10 @@ export const querySubCatAndAds = gql`
         user {
           id
           nickName
-          picture
+          picture {
+            id
+            filename
+          }
         }
       }
       category {

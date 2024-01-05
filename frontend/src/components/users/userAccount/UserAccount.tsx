@@ -1,25 +1,13 @@
-import { useContext, useEffect, useState } from "react";
-import UserContext from "@/context/UserContext";
+import { useEffect, useState } from "react";
 import { Card, Typography } from "@mui/material";
 import { queryMe } from "@/components/graphql/Users";
 import { useQuery } from "@apollo/client";
-import { UserTypes } from "../../../types/types";
+import { UserTypes } from "@/types/UserTypes";
 
 const UserAccount = (): React.ReactNode => {
-  // Context
-  const { user, setUser } = useContext(UserContext);
   // User infos
   const { data, error } = useQuery<{ item: UserTypes }>(queryMe);
   const userInfos = data ? data.item : null;
-  if (error) {
-    console.error("Error:", error);
-  }
-  // Set user infos in context
-  useEffect(() => {
-    if (userInfos) {
-      setUser(userInfos);
-    }
-  }, [userInfos]);
   // Form states
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
@@ -51,7 +39,7 @@ const UserAccount = (): React.ReactNode => {
   }, [userInfos]);
   return (
     <Card>
-      {user && (
+      {userInfos && (
         <Typography variant="h4" gutterBottom>
           {`Hey ${nickName} !`}
         </Typography>

@@ -1,12 +1,13 @@
 import LayoutFull from "@/components/layout/LayoutFull";
 import { useRouter } from "next/router";
 import SubCategoriesCard from "@/components/subCategories/SubCategoriesCard";
-import { CategoryTypes } from "@/types/types";
+import { CategoryTypes } from "@/types/CategoryTypes";
 import { useQuery } from "@apollo/client";
 import { queryCatByIdAndSub } from "@/components/graphql/Categories";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { Box } from "@mui/material";
+import IconBreadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 
 const responsive = {
   desktopB: {
@@ -48,11 +49,18 @@ const CategoryComponent = (): React.ReactNode => {
   );
 
   const category = data ? data.item : null;
-
   return (
     <>
       {category && (
         <LayoutFull title={`TGG : ${category.name}`}>
+          <IconBreadcrumbs
+            items={[
+              {
+                url: "/final-item",
+                text: `${category.name.toUpperCase()}`,
+              },
+            ]}
+          />
           <div>
             {category.subCategories.length >= 1 ? (
               <Box

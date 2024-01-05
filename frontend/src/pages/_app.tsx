@@ -1,17 +1,19 @@
+import "@/styles/index.scss";
 import {
   ApolloClient,
   ApolloProvider,
   HttpLink,
   InMemoryCache,
+  useQuery,
 } from "@apollo/client";
 import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import UserContext from "@/context/UserContext";
 import { CssBaseline } from "@mui/material";
-import "@/styles/index.scss";
-import { useState } from "react";
-import { UserTypes } from "@/types/types";
+import { queryMeContext } from "@/components/graphql/Users";
+import { Suspense, useEffect } from "react";
+import { useRouter } from "next/router";
+import { UserContextTypes } from "@/types/UserTypes";
 
 const theme = createTheme({
   palette: {
@@ -39,16 +41,62 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-function App({ Component, pageProps }: AppProps) {
-  const [user, setUser] = useState<UserTypes | null>(null);
+const privatePages = ["/compte", "/annonces/new"];
 
+function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { loading, error, refetch } = useQuery<{ items: UserContextTypes }>(
+    queryMeContext
+  );
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      if (privatePages.includes(url)) {
+        refetch();
+      }
+    };
+
+    router.events.on("routeChangeComplete", handleRouteChange);
+
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router, refetch]);
+
+  useEffect(() => {
+    if (privatePages.includes(router.pathname) && error) {
+      router.replace("/connexion");
+    }
+  }, [router, error]);
+
+  if (loading) {
+    return (
+      <div>
+        {" "}
+        <Suspense
+          fallback={
+            <div className="loader-container">
+              <div className="spinner" />
+              <p>Chargement</p>
+            </div>
+          }
+        />
+        ;
+      </div>
+    );
+  }
+
+  return children;
+}
+
+function App({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
       <ThemeProvider theme={theme}>
-        <UserContext.Provider value={{ user, setUser }}>
+        <AuthProvider>
           <CssBaseline />
           <Component {...pageProps} />
-        </UserContext.Provider>
+        </AuthProvider>
       </ThemeProvider>
     </ApolloProvider>
   );

@@ -1,11 +1,11 @@
-import { AuthCheckerFn } from "type-graphql";
-import { MyContext } from "./index";
-import Cookies from "cookies";
+import { AuthChecker } from "type-graphql";
 import jwt from "jsonwebtoken";
+import Cookies from "cookies";
+import { MyContext } from "./index";
 import { User } from "./entities/User";
 
-export const customAuthChecker: AuthCheckerFn<MyContext> = async (
-  { root, args, context, info },
+export const customAuthChecker: AuthChecker<MyContext> = async (
+  { context },
   roles
 ): Promise<boolean> => {
   const cookie = new Cookies(context.req, context.res);
@@ -17,29 +17,33 @@ export const customAuthChecker: AuthCheckerFn<MyContext> = async (
   }
 
   try {
-    const payload = jwt.verify(
-      token,
-      process.env.JWT_SECRET_KEY || "supersecret"
-    );
-    if (typeof payload === "object" && "userId" in payload) {
-      const user = await User.findOne({
-        where: { id: payload.userId },
-        relations: { picture: true },
-      });
+    const payload = jwt.verify(token, process.env.JWT_SECRET_KEY || "");
 
-      if (user !== null) {
-        context.user = Object.assign(user, { hashedPassword: undefined });
-        return true;
+    if (typeof payload === "object" && "userId" in payload) {
+      const user = await User.findOneBy({ id: payload.userId });
+
+      if (user) {
+        context.user = {
+          id: user.id,
+          nickName: user.nickName,
+          role: user.role,
+        };
+
+        if (roles.length === 0) {
+          return true;
+        }
+
+        return roles.includes(user.role);
       } else {
-        console.error("user not found");
+        console.error("User not found");
         return false;
       }
     } else {
-      console.error("invalid token, msising userid");
+      console.error("Invalid token, missing userId");
       return false;
     }
-  } catch {
-    console.error("invalid token");
+  } catch (error) {
+    console.error("Invalid token");
     return false;
   }
 };

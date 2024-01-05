@@ -71,7 +71,7 @@ export class AdsResolver {
             category: true,
           },
           tags: true,
-          user: true,
+          user: { picture: true },
           picture: true,
         },
         order: {
@@ -88,7 +88,12 @@ export class AdsResolver {
   async adById(@Arg("id", () => ID) id: number): Promise<Ad> {
     const ad = await Ad.findOne({
       where: { id },
-      relations: { subCategory: true, tags: true, user: true, picture: true },
+      relations: {
+        subCategory: { category: true },
+        tags: true,
+        user: { picture: true },
+        picture: true,
+      },
     });
     if (!ad) {
       throw new Error("Ad not found");
@@ -110,7 +115,7 @@ export class AdsResolver {
     return ads;
   }
 
-  @Authorized()
+  @Authorized("ADMIN", "USER")
   @Mutation(() => Ad)
   async adCreate(
     @Ctx() context: MyContext,
@@ -143,55 +148,60 @@ export class AdsResolver {
       throw new Error(`Error occurred: ${JSON.stringify(errors)}`);
     }
   }
+  @Authorized("ADMIN", "USER")
+  @Mutation(() => Ad, { nullable: true })
+  async AdUpdate(
+    @Ctx() context: MyContext,
+    @Arg("id", () => ID) id: number,
+    @Arg("data") data: AdUpdateInput
+  ): Promise<Ad | null> {
+    const ad = await Ad.findOne({
+      where: { id: id },
+      relations: { tags: true, user: true, picture: true },
+    });
+    if (ad && ad.user.id === context.user?.id) {
+      if (
+        "pictureId" in data &&
+        data.pictureId === null &&
+        ad.picture?.filename
+      ) {
+        try {
+          await Picture.delete({ id: ad.picture.id });
+          const filePath = `./public/assets/images/ads/${ad.picture.filename}`;
 
-  // @Authorized()
-  // @Mutation(() => Ad, { nullable: true })
-  // async AdUpdate(
-  //   @Ctx() context: MyContext,
-  //   @Arg("id", () => ID) id: number,
-  //   @Arg("data") data: AdUpdateInput
-  // ): Promise<Ad | null> {
-  //   const ad = await Ad.findOne({
-  //     where: { id: id },
-  //     relations: { tags: true, user: true, picture: true },
-  //   });
-  //   if (ad && ad.user.id === context.user?.id) {
-  //     if ("picture" in data && data.picture === "" && ad.picture) {
-  //       const filePath = `./public/assets/images/ads/${ad.picture}`;
-  //       try {
-  //         fs.unlink(filePath, (err: NodeJS.ErrnoException | null) => {
-  //           if (err) {
-  //             console.error(`Error deleting image: ${err}`);
-  //           }
-  //         });
-  //       } catch (err) {
-  //         console.error(`Error deleting image: ${err}`);
-  //       }
-  //       ad.picture = "";
-  //     }
+          fs.unlink(filePath, (err: NodeJS.ErrnoException | null) => {
+            if (err) {
+              console.error(`Error deleting image: ${err}`);
+            }
+          });
+        } catch (err) {
+          console.error(`Error deleting image: ${err}`);
+        }
+      }
 
-  //     const updateDate = currentDate();
-  //     const dataWithUpdateDate = { ...data, updateDate };
-  //     merge(ad, dataWithUpdateDate);
+      const updateDate = currentDate();
+      const dataWithUpdateDate = { ...data, updateDate };
+      merge(ad, dataWithUpdateDate);
 
-  //     const errors = await validate(ad);
-  //     if (errors.length === 0) {
-  //       await Ad.save(ad);
-  //       return await Ad.findOne({
-  //         where: { id: id },
-  //         relations: {
-  //           subCategory: true,
-  //           tags: true,
-  //         },
-  //       });
-  //     } else {
-  //       throw new Error(`Error occured: ${JSON.stringify(errors)}`);
-  //     }
-  //   }
-  //   return ad;
-  // }
+      const errors = await validate(ad);
+      if (errors.length === 0) {
+        await Ad.save(ad);
+        return await Ad.findOne({
+          where: { id: id },
+          relations: {
+            subCategory: true,
+            tags: true,
+            picture: true,
+          },
+        });
+      } else {
+        throw new Error(`Error occured: ${JSON.stringify(errors)}`);
+      }
+    }
+    return ad;
+  }
 
-  @Authorized()
+  @Authorized("ADMIN", "USER")
   @Mutation(() => Ad, { nullable: true })
   async adDelete(
     @Ctx() context: MyContext,

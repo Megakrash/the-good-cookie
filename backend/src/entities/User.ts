@@ -8,18 +8,32 @@ import {
   JoinColumn,
 } from "typeorm";
 import {
-  IsBoolean,
   IsEmail,
   IsNumberString,
   IsOptional,
   Length,
   Matches,
 } from "class-validator";
-import { Field, ID, InputType, ObjectType } from "type-graphql";
+import {
+  Field,
+  ID,
+  InputType,
+  ObjectType,
+  registerEnumType,
+} from "type-graphql";
 import { Ad } from "./Ad";
 import { ObjectId } from "./ObjectId";
 import { IsCoordinates } from "./Coordinates";
 import { Picture } from "./Picture";
+
+export enum Role {
+  USER = "USER",
+  ADMIN = "ADMIN",
+}
+
+registerEnumType(Role, {
+  name: "Role",
+});
 
 @Entity()
 @ObjectType()
@@ -49,7 +63,7 @@ export class User extends BaseEntity {
   @Field({ nullable: true })
   nickName!: string;
 
-  @OneToOne(() => Picture, { nullable: true })
+  @OneToOne(() => Picture, { nullable: true, onDelete: "CASCADE" })
   @JoinColumn()
   @Field({ nullable: true })
   picture?: Picture;
@@ -107,10 +121,13 @@ export class User extends BaseEntity {
   @Field({ nullable: true })
   phoneNumber!: string;
 
-  @Column({ type: "boolean", default: false })
-  @IsBoolean()
-  @Field()
-  isAdmin!: boolean;
+  @Column({
+    type: "enum",
+    enum: Role,
+    default: Role.USER,
+  })
+  @Field(() => Role)
+  role!: Role;
 
   @OneToMany(() => Ad, (ad) => ad.user)
   @Field(() => [Ad])
@@ -153,8 +170,8 @@ export class UserCreateInput {
   @Field({ nullable: true })
   phoneNumber?: string;
 
-  @Field()
-  isAdmin!: boolean;
+  @Field(() => Role)
+  role!: Role;
 }
 
 @InputType()
@@ -187,7 +204,7 @@ export class UserUpdateInput {
   phoneNumber!: string;
 
   @Field({ nullable: true })
-  isAdmin!: boolean;
+  role!: Role;
 
   @Field(() => [ObjectId], { nullable: true })
   ads!: ObjectId[];
@@ -200,4 +217,16 @@ export class UserLoginInput {
 
   @Field()
   password!: string;
+}
+
+@ObjectType()
+export class UserContext {
+  @Field()
+  id!: number;
+
+  @Field()
+  nickName!: string;
+
+  @Field(() => Role)
+  role!: Role;
 }

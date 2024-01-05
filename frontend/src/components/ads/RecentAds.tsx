@@ -1,6 +1,6 @@
 import React from "react";
 import AdCard from "./AdCard";
-import { AdsTypes } from "@/types/types";
+import { AdsTypes } from "@/types/AdTypes";
 import { queryAllAds } from "../graphql/Ads";
 import { useQuery } from "@apollo/client";
 import { Box, Typography } from "@mui/material";

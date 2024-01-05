@@ -1,6 +1,7 @@
 import { Arg, Query, Resolver, Mutation, Ctx, Authorized } from "type-graphql";
 import {
   User,
+  UserContext,
   UserCreateInput,
   UserLoginInput,
   UserUpdateInput,
@@ -36,12 +37,6 @@ export class UsersResolver {
   //   }
   //   return user;
   // }
-
-  @Authorized()
-  @Query(() => User)
-  async me(@Ctx() context: MyContext): Promise<User> {
-    return context.user as User;
-  }
 
   @Mutation(() => User)
   async userCreate(
@@ -96,7 +91,7 @@ export class UsersResolver {
 
     const token = jwt.sign(
       {
-        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+        exp: Math.floor(Date.now() + 2 * 60 * 60 * 1000),
         userId: user.id,
       },
       process.env.JWT_SECRET_KEY || ""
@@ -109,6 +104,41 @@ export class UsersResolver {
       expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
     });
     return user;
+  }
+
+  @Authorized()
+  @Query(() => UserContext)
+  async meContext(@Ctx() context: MyContext): Promise<UserContext> {
+    if (!context.user) {
+      throw new Error("User not found");
+    }
+    const user = context.user as UserContext;
+    return user;
+  }
+
+  @Authorized()
+  @Query(() => User)
+  async me(@Ctx() context: MyContext): Promise<User> {
+    if (!context.user) {
+      throw new Error("User not found");
+    }
+    const user = await User.findOne({
+      where: { id: context.user.id },
+      relations: { picture: true },
+    });
+
+    return user as User;
+  }
+
+  @Mutation(() => Boolean)
+  async userSignOut(@Ctx() context: MyContext): Promise<Boolean> {
+    const cookie = new Cookies(context.req, context.res);
+    cookie.set("TGCookie", "", {
+      httpOnly: true,
+      secure: false,
+      maxAge: 0,
+    });
+    return true;
   }
 
   @Authorized()

@@ -41,3 +41,18 @@ export const queryMe = gql`
     }
   }
 `;
+
+export const queryMeContext = gql`
+  query meContext {
+    item: meContext {
+      id
+      nickName
+    }
+  }
+`;
+
+export const mutationSignOut = gql`
+  mutation userSignOut {
+    userSignOut
+  }
+`;

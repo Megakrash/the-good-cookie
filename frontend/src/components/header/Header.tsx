@@ -1,22 +1,22 @@
-import NavSubCategories from "../subCategories/NavSubCategories";
 import Link from "next/link";
-import { CategoriesTypes } from "@/types/types";
-import { useQuery } from "@apollo/client";
-import { queryAllCatAndSub } from "../graphql/Categories";
+import IconButton from "@mui/material/IconButton";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import { useMutation } from "@apollo/client";
+import { mutationSignOut, queryMeContext } from "../graphql/Users";
 
 export default function Header(): React.ReactNode {
-  const { data, error, loading } = useQuery<{ items: CategoriesTypes }>(
-    queryAllCatAndSub
-  );
-
-  const categories = data ? data.items : [];
+  const [doSignout] = useMutation(mutationSignOut, {
+    refetchQueries: [queryMeContext],
+  });
+  async function logout() {
+    doSignout();
+  }
 
   return (
     <header className="header">
       <div className="main-menu">
         <h1>
           <Link href="/" className="button logo link-button">
-            <span className="mobile-short-label">TGC</span>
             <span className="desktop-long-label">THE GOOD CORNER</span>
           </Link>
         </h1>
@@ -35,6 +35,9 @@ export default function Header(): React.ReactNode {
         <Link href="/contact" className="button link-button">
           <span className="desktop-long-label">Contact</span>
         </Link>
+        <IconButton onClick={logout} color="primary" aria-label="Logout">
+          <ExitToAppIcon fontSize="inherit" />
+        </IconButton>
       </div>
     </header>
   );
