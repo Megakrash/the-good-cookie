@@ -130,7 +130,7 @@ export class UsersResolver {
     return user as User;
   }
 
-  @Mutation(() => User)
+  @Mutation(() => Boolean)
   async userSignOut(@Ctx() context: MyContext): Promise<Boolean> {
     const cookie = new Cookies(context.req, context.res);
     cookie.set("TGCookie", "", {

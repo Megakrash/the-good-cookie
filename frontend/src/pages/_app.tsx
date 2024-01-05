@@ -11,8 +11,9 @@ import dynamic from "next/dynamic";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import { queryMeContext } from "@/components/graphql/Users";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter } from "next/router";
+import { UserContextTypes } from "@/types/UserTypes";
 
 const theme = createTheme({
   palette: {
@@ -43,7 +44,9 @@ const client = new ApolloClient({
 const privatePages = ["/compte", "/annonces/new"];
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { loading, error, refetch } = useQuery(queryMeContext);
+  const { loading, error, refetch } = useQuery<{ items: UserContextTypes }>(
+    queryMeContext
+  );
   const router = useRouter();
 
   useEffect(() => {
@@ -67,7 +70,20 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [router, error]);
 
   if (loading) {
-    return <p>Chargement...</p>;
+    return (
+      <div>
+        {" "}
+        <Suspense
+          fallback={
+            <div className="loader-container">
+              <div className="spinner" />
+              <p>Chargement</p>
+            </div>
+          }
+        />
+        ;
+      </div>
+    );
   }
 
   return children;

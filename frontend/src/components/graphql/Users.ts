@@ -50,3 +50,9 @@ export const queryMeContext = gql`
     }
   }
 `;
+
+export const mutationSignOut = gql`
+  mutation userSignOut {
+    userSignOut
+  }
+`;
