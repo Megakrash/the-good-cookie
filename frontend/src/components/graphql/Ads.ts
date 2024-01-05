@@ -56,6 +56,10 @@ export const queryAdById = gql`
       subCategory {
         id
         name
+        category {
+          id
+          name
+        }
       }
       tags {
         id

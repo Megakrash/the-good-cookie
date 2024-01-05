@@ -89,7 +89,7 @@ export class AdsResolver {
     const ad = await Ad.findOne({
       where: { id },
       relations: {
-        subCategory: true,
+        subCategory: { category: true },
         tags: true,
         user: { picture: true },
         picture: true,

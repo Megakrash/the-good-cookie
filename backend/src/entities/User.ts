@@ -15,11 +15,19 @@ import {
   Length,
   Matches,
 } from "class-validator";
-import { Field, ID, InputType, ObjectType } from "type-graphql";
+import {
+  Authorized,
+  Field,
+  ID,
+  InputType,
+  ObjectType,
+  UseMiddleware,
+} from "type-graphql";
 import { Ad } from "./Ad";
 import { ObjectId } from "./ObjectId";
 import { IsCoordinates } from "./Coordinates";
 import { Picture } from "./Picture";
+import { UserPrivateField } from "../utils/utils";
 
 @Entity()
 @ObjectType()
@@ -56,6 +64,8 @@ export class User extends BaseEntity {
 
   @Column({ length: 255, unique: true })
   @Field()
+  @Authorized()
+  @UseMiddleware(UserPrivateField)
   @IsEmail()
   email!: string;
 

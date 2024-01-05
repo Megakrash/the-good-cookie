@@ -91,7 +91,7 @@ export class UsersResolver {
 
     const token = jwt.sign(
       {
-        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+        exp: Math.floor(Date.now() + 2 * 60 * 60 * 1000),
         userId: user.id,
       },
       process.env.JWT_SECRET_KEY || ""

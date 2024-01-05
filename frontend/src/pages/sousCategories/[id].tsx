@@ -1,10 +1,10 @@
 import LayoutFull from "@/components/layout/LayoutFull";
 import { useRouter } from "next/router";
 import AdCard from "@/components/ads/AdCard";
-import { SubCategoryTypes } from "@/types/types";
-import Link from "next/link";
+import { SubCategoryTypes } from "@/types/SubCategoryTypes";
 import { useQuery } from "@apollo/client";
 import { querySubCatAndAds } from "@/components/graphql/SubCategories";
+import IconBreadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 
 const SubCategoryComponent = (): React.ReactNode => {
   const router = useRouter();
@@ -24,14 +24,15 @@ const SubCategoryComponent = (): React.ReactNode => {
     >
       {subCategory && subCategory.category && (
         <>
-          <div>
-            <Link href={`/categories/${subCategory.category.id}`}>
-              <p>{subCategory.category.name.toUpperCase()}</p>
-            </Link>
-            <Link href={`/sousCategories/${subCategory.id}`}>
-              <p>{subCategory.name.toUpperCase()}</p>
-            </Link>
-          </div>
+          <IconBreadcrumbs
+            items={[
+              {
+                url: `/categories/${subCategory.category.id}`,
+                text: `${subCategory.category.name.toUpperCase()}`,
+              },
+              { url: "/final-item", text: `${subCategory.name.toUpperCase()}` },
+            ]}
+          />
 
           <p>{`Toutes les offres de la catégorie ${subCategory.name}`}</p>
           {Array.isArray(subCategory.ads) && subCategory.ads.length > 0 ? (
