@@ -9,7 +9,7 @@ import toast, { Toaster } from "react-hot-toast";
 import router from "next/router";
 
 const UserConnection = (): React.ReactNode => {
-  const [email, setEmail] = useState<string>("jl.debre@relou.wtf");
+  const [email, setEmail] = useState<string>("jl.debre2@relou.wtf");
   const [password, setPassword] = useState<string>("Warcraft!!2023");
   const handlePasswordChange = (newPassword: React.SetStateAction<string>) => {
     setPassword(newPassword);

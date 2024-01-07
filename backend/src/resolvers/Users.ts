@@ -1,4 +1,12 @@
-import { Arg, Query, Resolver, Mutation, Ctx, Authorized } from "type-graphql";
+import {
+  Arg,
+  Query,
+  Resolver,
+  Mutation,
+  Ctx,
+  Authorized,
+  ID,
+} from "type-graphql";
 import {
   User,
   UserContext,
@@ -13,30 +21,23 @@ import jwt from "jsonwebtoken";
 import { MyContext } from "../index";
 import Cookies from "cookies";
 import { Picture } from "../entities/Picture";
+import path from "path";
+import { promises as fsPromises } from "fs";
 
 @Resolver(User)
 export class UsersResolver {
+  @Authorized("ADMIN")
   @Query(() => [User])
-  async usersGetAll(): Promise<User[]> {
-    const users = await User.find({
-      relations: { ads: true, picture: true },
-    });
-    return users;
+  async usersGetAll(@Ctx() context: MyContext): Promise<User[]> {
+    if (context.user?.role === "ADMIN") {
+      const users = await User.find({
+        relations: { ads: true, picture: true },
+      });
+      return users;
+    } else {
+      throw new Error("Not authorized");
+    }
   }
-
-  // @Authorized()
-  // @Query(() => User)
-  // async userById(@Ctx() context: MyContext): Promise<User> {
-  //   const userId = context.user?.id;
-  //   const user = await User.findOne({
-  //     where: { id: userId },
-  //     relations: { ads: true },
-  //   });
-  //   if (!user) {
-  //     throw new Error("User not found");
-  //   }
-  //   return user;
-  // }
 
   @Mutation(() => User)
   async userCreate(
@@ -106,7 +107,7 @@ export class UsersResolver {
     return user;
   }
 
-  @Authorized()
+  @Authorized("ADMIN", "USER")
   @Query(() => UserContext)
   async meContext(@Ctx() context: MyContext): Promise<UserContext> {
     if (!context.user) {
@@ -116,7 +117,7 @@ export class UsersResolver {
     return user;
   }
 
-  @Authorized()
+  @Authorized("ADMIN", "USER")
   @Query(() => User)
   async me(@Ctx() context: MyContext): Promise<User> {
     if (!context.user) {
@@ -130,6 +131,7 @@ export class UsersResolver {
     return user as User;
   }
 
+  @Authorized("ADMIN", "USER")
   @Mutation(() => Boolean)
   async userSignOut(@Ctx() context: MyContext): Promise<Boolean> {
     const cookie = new Cookies(context.req, context.res);
@@ -141,7 +143,7 @@ export class UsersResolver {
     return true;
   }
 
-  @Authorized()
+  @Authorized("ADMIN", "USER")
   @Mutation(() => User, { nullable: true })
   async userUpdate(
     @Ctx() context: MyContext,
@@ -151,10 +153,15 @@ export class UsersResolver {
 
     const user = await User.findOne({
       where: { id: userId },
-      relations: { ads: true },
+      relations: { ads: true, picture: true },
     });
 
-    if (user) {
+    if (
+      user &&
+      (user.id === context.user?.id || context.user?.role === "ADMIN")
+    ) {
+      let oldPictureId: number | null = null;
+      let oldPictureName: string | null = null;
       if (data.ads) {
         data.ads = data.ads.map((entry) => {
           const existingRelation = user.ads.find(
@@ -163,11 +170,39 @@ export class UsersResolver {
           return existingRelation || entry;
         });
       }
+      if (data.pictureId && user.picture?.id) {
+        oldPictureId = user.picture.id;
+        oldPictureName = user.picture.filename;
+        const newPicture = await Picture.findOne({
+          where: { id: data.pictureId },
+        });
+        if (!newPicture) {
+          throw new Error("New picture not found");
+        }
+        user.picture = newPicture;
+      }
+
       Object.assign(user, data);
 
       const errors = await validate(user);
       if (errors.length === 0) {
         await User.save(user);
+        if (oldPictureId && oldPictureName) {
+          const oldPicture = await Picture.findOneBy({ id: oldPictureId });
+          if (oldPicture) {
+            try {
+              await Picture.remove(oldPicture);
+              const filePath = path.join(
+                __dirname,
+                `../../public/assets/images/ads/${oldPictureName}`
+              );
+              await fsPromises.unlink(filePath);
+            } catch (error) {
+              console.error("Error removing picture", error);
+            }
+          }
+        }
+
         return await User.findOne({
           where: { id: userId },
           relations: {
@@ -181,17 +216,37 @@ export class UsersResolver {
     return user;
   }
 
-  @Authorized()
+  @Authorized("ADMIN", "USER")
   @Mutation(() => User, { nullable: true })
-  async userDelete(@Ctx() context: MyContext): Promise<User | null> {
-    const id = context.user?.id;
-
+  async userDelete(
+    @Ctx() context: MyContext,
+    @Arg("id", () => ID) id: number
+  ): Promise<User | null> {
     const user = await User.findOne({
       where: { id: id },
-      relations: { ads: true },
+      relations: { ads: true, picture: true },
     });
-    if (user) {
+    if (
+      user &&
+      (user.id === context.user?.id || context.user?.role === "ADMIN")
+    ) {
+      const pictureId = user.picture?.id;
       await user.remove();
+      if (pictureId) {
+        const picture = await Picture.findOne({ where: { id: pictureId } });
+        if (picture) {
+          try {
+            await Picture.remove(picture);
+            const filePath = path.join(
+              __dirname,
+              `../../public/assets/images/ads/${picture.filename}`
+            );
+            await fsPromises.unlink(filePath);
+          } catch (error) {
+            console.error("Error removing picture", error);
+          }
+        }
+      }
       user;
     } else {
       throw new Error(`Error delete user`);

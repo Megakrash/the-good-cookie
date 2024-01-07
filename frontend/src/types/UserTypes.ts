@@ -29,7 +29,7 @@ export type UserTypes = {
   coordinates: [number, number];
   phoneNumber?: string;
   registrationDate: string;
-  isAdmin: boolean;
+  role: string;
 };
 
 export type UserContextTypes = {
