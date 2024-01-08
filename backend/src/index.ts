@@ -9,8 +9,8 @@ import { dataSource } from "./datasource";
 //-----------------PICTURES----------------
 //-----------------------------------------
 
-import { uploadAdPicture, uploadUserPicture } from "./picture/multer";
-import { createImage } from "./picture/createPicture";
+import { uploadPicture } from "./utils/pictureServices/multer";
+import { createImage } from "./utils/pictureServices/pictureServices";
 
 //-----------------------------------------
 //----------GRAPHQL / APOLLO SERVER--------
@@ -116,21 +116,7 @@ start();
 //-----------------------------------------
 
 // Upload Ad picture
-app.post("/upload", uploadAdPicture.single("file"), async (req, res) => {
-  if (req.file) {
-    try {
-      const picture = await createImage(req.file.filename);
-      res.json(picture);
-    } catch (error) {
-      res.status(500).send("Error saving picture");
-    }
-  } else {
-    res.status(400).send("No file was uploaded.");
-  }
-});
-
-// Upload Avatar picture
-app.post("/avatar", uploadUserPicture.single("file"), async (req, res) => {
+app.post("/picture", uploadPicture.single("file"), async (req, res) => {
   if (req.file) {
     try {
       const picture = await createImage(req.file.filename);

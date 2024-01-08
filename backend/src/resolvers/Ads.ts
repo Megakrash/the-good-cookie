@@ -12,6 +12,7 @@ import { In, MoreThanOrEqual, LessThanOrEqual, Between, ILike } from "typeorm";
 import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from "../entities/Ad";
 import { validate } from "class-validator";
 import { currentDate } from "../utils/date";
+import { deletePicture } from "../utils/pictureServices/pictureServices";
 import { merge } from "../utils/utils";
 import { promises as fsPromises } from "fs";
 import { MyContext } from "../index";
@@ -166,10 +167,8 @@ export class AdsResolver {
       (ad.user.id === context.user?.id || context.user?.role === "ADMIN")
     ) {
       let oldPictureId = null;
-      let oldPictureName = null;
       if (data.pictureId && ad.picture?.id) {
         oldPictureId = ad.picture.id;
-        oldPictureName = ad.picture.filename;
         const newPicture = await Picture.findOne({
           where: { id: data.pictureId },
         });
@@ -186,20 +185,8 @@ export class AdsResolver {
       const errors = await validate(ad);
       if (errors.length === 0) {
         await Ad.save(ad);
-        if (oldPictureId && oldPictureName) {
-          const oldPicture = await Picture.findOneBy({ id: oldPictureId });
-          if (oldPicture) {
-            try {
-              await Picture.remove(oldPicture);
-              const filePath = path.join(
-                __dirname,
-                `../../public/assets/images/ads/${oldPictureName}`
-              );
-              await fsPromises.unlink(filePath);
-            } catch (error) {
-              console.error("Error removing picture", error);
-            }
-          }
+        if (oldPictureId) {
+          await deletePicture(oldPictureId);
         }
 
         return await Ad.findOne({
@@ -235,19 +222,7 @@ export class AdsResolver {
       const pictureId = ad.picture?.id;
       await ad.remove();
       if (pictureId) {
-        const picture = await Picture.findOne({ where: { id: pictureId } });
-        if (picture) {
-          try {
-            await Picture.remove(picture);
-            const filePath = path.join(
-              __dirname,
-              `../../public/assets/images/ads/${picture.filename}`
-            );
-            await fsPromises.unlink(filePath);
-          } catch (error) {
-            console.error("Error removing picture", error);
-          }
-        }
+        await deletePicture(pictureId);
       }
       ad.id = id;
     }

@@ -306,7 +306,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
                   margin: "auto",
                   objectFit: "contain",
                 }}
-                image={`${PATH_IMAGE}/ads/${props.ad.picture.filename}`}
+                image={`${PATH_IMAGE}/pictures/${props.ad.picture.filename}`}
               />
               <Button
                 component="label"
