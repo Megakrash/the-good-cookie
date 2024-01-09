@@ -1,13 +1,9 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { API_URL } from "@/api/configApi";
+import { API_URL, PATH_IMAGE } from "@/api/configApi";
 import axios from "axios";
-import {
-  AdFormData,
-  CategoriesTypes,
-  TagsTypes,
-  AdTypes,
-  AdTags,
-} from "@/types/types";
+import { AdFormData, AdTypes, AdTags } from "@/types/AdTypes";
+import { CategoriesTypes } from "@/types/CategoryTypes";
+import { TagsTypes } from "@/types/TagTypes";
 import toast, { Toaster } from "react-hot-toast";
 import { queryAllCatAndSub } from "@/components/graphql/Categories";
 import { queryAllTags } from "../../graphql/Tags";
@@ -26,12 +22,11 @@ import {
   OutlinedInput,
   Select,
   SelectChangeEvent,
-  TextField,
   Box,
   Button,
+  CardMedia,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import DeleteAdPicture from "./components/DeleteAdPicture";
 import { DownloadInput } from "@/styles/MuiStyled";
 import AdTitle from "./components/AdTitle";
 import AdDescription from "./components/AdDescription";
@@ -58,9 +53,13 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   const [description, setDescription] = useState<string>("");
   const [curentPicture, setCurentPicture] = useState<string>("");
   const [newPicture, setNewPicture] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   function handleFileSelection(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files[0]) {
-      setNewPicture(event.target.files[0]);
+      const file = event.target.files[0];
+      setNewPicture(file);
+      setCurentPicture("");
+      setPreviewUrl(URL.createObjectURL(file));
     }
   }
   const [price, setPrice] = useState<number>(0);
@@ -106,13 +105,13 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
       const data: AdFormData = {
         title,
         description,
-        pictureId,
         price,
         city,
         zipCode,
         coordinates,
         subCategory: subCategoryId ? { id: Number(subCategoryId) } : null,
         tags: selectedTags,
+        ...(pictureId !== null && { pictureId }),
       };
 
       if (!props.ad) {
@@ -194,6 +193,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
           />
           <AdPrice price={price} setPrice={setPrice} />
           <UserZipCity
+            zipCode={zipCode}
             setCity={setCity}
             setZipCode={setZipCode}
             setCoordinates={setCoordinates}
@@ -257,21 +257,70 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
           </FormControl>
 
           {curentPicture === "" ? (
-            <Button
-              component="label"
-              variant="contained"
-              startIcon={<CloudUploadIcon />}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "15px",
+              }}
             >
-              Image pour votre annonce
-              <DownloadInput
-                type="file"
-                accept=".jpg, .png, .webp"
-                onChange={handleFileSelection}
-                required={!props.ad}
-              />
-            </Button>
+              {previewUrl && (
+                <CardMedia
+                  sx={{
+                    width: "100%",
+                    height: 200,
+                    margin: "auto",
+                    objectFit: "contain",
+                  }}
+                  image={previewUrl}
+                />
+              )}
+              <Button
+                component="label"
+                variant="contained"
+                startIcon={<CloudUploadIcon />}
+              >
+                Image pour votre annonce
+                <DownloadInput
+                  type="file"
+                  accept=".jpg, .png, .webp"
+                  onChange={handleFileSelection}
+                  required={!props.ad}
+                />
+              </Button>
+            </Box>
           ) : (
-            <DeleteAdPicture adId={props.ad.id} adPicture={curentPicture} />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "15px",
+              }}
+            >
+              <CardMedia
+                sx={{
+                  width: "100%",
+                  height: 200,
+                  margin: "auto",
+                  objectFit: "contain",
+                }}
+                image={`${PATH_IMAGE}/pictures/${props.ad.picture.filename}`}
+              />
+              <Button
+                component="label"
+                variant="contained"
+                startIcon={<CloudUploadIcon />}
+              >
+                {`Modifier l'image`}
+                <DownloadInput
+                  type="file"
+                  accept=".jpg, .png, .webp"
+                  onChange={handleFileSelection}
+                />
+              </Button>
+            </Box>
           )}
 
           <Button

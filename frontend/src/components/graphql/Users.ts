@@ -37,7 +37,7 @@ export const queryMe = gql`
       coordinates
       phoneNumber
       registrationDate
-      isAdmin
+      role
     }
   }
 `;

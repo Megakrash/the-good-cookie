@@ -5,6 +5,7 @@ import { ListItemButton, List, Box } from "@mui/material";
 import { API_URL } from "@/api/configApi";
 
 type UserZipCityProps = {
+  zipCode: string;
   setCity: (city: string) => void;
   setZipCode: (zipCode: string) => void;
   setCoordinates: (coordinates: [number, number]) => void;
@@ -78,7 +79,7 @@ const UserZipCity = (props: UserZipCityProps): React.ReactNode => {
         label="Code postal"
         variant="outlined"
         size="small"
-        value={inputValue}
+        value={inputValue !== "" ? inputValue : props.zipCode}
         onChange={handleInputChange}
         required
       />

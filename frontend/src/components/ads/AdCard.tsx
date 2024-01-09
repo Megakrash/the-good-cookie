@@ -1,4 +1,4 @@
-import { AdTypes } from "@/types/types";
+import { AdTypes } from "@/types/AdTypes";
 import { PATH_IMAGE } from "@/api/configApi";
 // import Link from "next/link";
 // import DeleteAd from "./AdDelete";
@@ -20,11 +20,11 @@ const AdCard = (props: AdCardProps): React.ReactNode => {
   // Path images
   const adImageUrl =
     props.ad.picture.filename && props.ad.picture.filename !== ""
-      ? `${PATH_IMAGE}/ads/${props.ad.picture.filename}`
+      ? `${PATH_IMAGE}/pictures/${props.ad.picture.filename}`
       : `${PATH_IMAGE}/default/default.png`;
   const userImageUrl =
     props.ad.user.picture.filename && props.ad.user.picture.filename !== ""
-      ? `${PATH_IMAGE}/users/${props.ad.user.picture.filename}`
+      ? `${PATH_IMAGE}/pictures/${props.ad.user.picture.filename}`
       : `${PATH_IMAGE}/default/avatar.webp`;
 
   function capitalizeFirstLetter(text: string): string {

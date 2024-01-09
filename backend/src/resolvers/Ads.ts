@@ -12,10 +12,12 @@ import { In, MoreThanOrEqual, LessThanOrEqual, Between, ILike } from "typeorm";
 import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from "../entities/Ad";
 import { validate } from "class-validator";
 import { currentDate } from "../utils/date";
+import { deletePicture } from "../utils/pictureServices/pictureServices";
 import { merge } from "../utils/utils";
-import fs from "fs";
+import { promises as fsPromises } from "fs";
 import { MyContext } from "../index";
 import { Picture } from "../entities/Picture";
+import path from "path";
 
 @Resolver(Ad)
 export class AdsResolver {
@@ -148,6 +150,7 @@ export class AdsResolver {
       throw new Error(`Error occurred: ${JSON.stringify(errors)}`);
     }
   }
+
   @Authorized("ADMIN", "USER")
   @Mutation(() => Ad, { nullable: true })
   async AdUpdate(
@@ -159,24 +162,20 @@ export class AdsResolver {
       where: { id: id },
       relations: { tags: true, user: true, picture: true },
     });
-    if (ad && ad.user.id === context.user?.id) {
-      if (
-        "pictureId" in data &&
-        data.pictureId === null &&
-        ad.picture?.filename
-      ) {
-        try {
-          await Picture.delete({ id: ad.picture.id });
-          const filePath = `./public/assets/images/ads/${ad.picture.filename}`;
-
-          fs.unlink(filePath, (err: NodeJS.ErrnoException | null) => {
-            if (err) {
-              console.error(`Error deleting image: ${err}`);
-            }
-          });
-        } catch (err) {
-          console.error(`Error deleting image: ${err}`);
+    if (
+      ad &&
+      (ad.user.id === context.user?.id || context.user?.role === "ADMIN")
+    ) {
+      let oldPictureId = null;
+      if (data.pictureId && ad.picture?.id) {
+        oldPictureId = ad.picture.id;
+        const newPicture = await Picture.findOne({
+          where: { id: data.pictureId },
+        });
+        if (!newPicture) {
+          throw new Error("New picture not found");
         }
+        ad.picture = newPicture;
       }
 
       const updateDate = currentDate();
@@ -186,17 +185,22 @@ export class AdsResolver {
       const errors = await validate(ad);
       if (errors.length === 0) {
         await Ad.save(ad);
+        if (oldPictureId) {
+          await deletePicture(oldPictureId);
+        }
+
         return await Ad.findOne({
           where: { id: id },
           relations: {
             subCategory: true,
             tags: true,
             picture: true,
+            user: { picture: true },
           },
         });
-      } else {
-        throw new Error(`Error occured: ${JSON.stringify(errors)}`);
       }
+    } else {
+      throw new Error(`Error occured: ${JSON.stringify(Error)}`);
     }
     return ad;
   }
@@ -209,10 +213,17 @@ export class AdsResolver {
   ): Promise<Ad | null> {
     const ad = await Ad.findOne({
       where: { id: id },
-      relations: { user: true },
+      relations: { user: true, picture: true },
     });
-    if (ad && ad.user.id === context.user?.id) {
+    if (
+      ad &&
+      (ad.user.id === context.user?.id || context.user?.role === "ADMIN")
+    ) {
+      const pictureId = ad.picture?.id;
       await ad.remove();
+      if (pictureId) {
+        await deletePicture(pictureId);
+      }
       ad.id = id;
     }
     return ad;

@@ -63,7 +63,7 @@ export class User extends BaseEntity {
   @Field({ nullable: true })
   nickName!: string;
 
-  @OneToOne(() => Picture, { nullable: true, onDelete: "CASCADE" })
+  @OneToOne(() => Picture, { nullable: true })
   @JoinColumn()
   @Field({ nullable: true })
   picture?: Picture;
@@ -186,7 +186,7 @@ export class UserUpdateInput {
   nickName!: string;
 
   @Field({ nullable: true })
-  picture!: string;
+  pictureId?: number;
 
   @Field({ nullable: true })
   adress!: string;
