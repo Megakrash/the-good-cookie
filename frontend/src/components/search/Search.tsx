@@ -54,7 +54,6 @@ const Search = (): React.ReactNode => {
   };
 
   // Location
-  // const [city, setCity] = useState<string>("");
   const [lat, setLat] = useState<number>();
   const [long, setLong] = useState<number>();
   const [radius, setRadius] = useState<number>(30);

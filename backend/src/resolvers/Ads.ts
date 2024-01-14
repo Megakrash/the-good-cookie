@@ -52,16 +52,9 @@ export class AdsResolver {
         }
       }
 
-      // if (where?.city) {
-      //   queryWhere.city = ILike(`%${where.city}%`);
-      // }
-
       if (where?.tags) {
         queryWhere.tags = { id: In(where.tags) };
       }
-      // if (where?.createdDate) {
-      //   queryWhere.date = MoreThanOrEqual(where.createdDate);
-      // }
 
       let ads = await Ad.find({
         take: take ?? 50,

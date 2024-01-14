@@ -180,9 +180,6 @@ export class AdsWhere {
   @Field(() => Int, { nullable: true })
   maxPrice?: number;
 
-  // @Field(() => String, { nullable: true })
-  // city?: string;
-
   @Field(() => LocationInput, { nullable: true })
   location?: LocationInput;
 

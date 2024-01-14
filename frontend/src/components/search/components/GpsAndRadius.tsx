@@ -10,28 +10,13 @@ import {
   Radio,
 } from "@mui/material";
 import { API_URL } from "@/api/configApi";
+import { FeatureType, SuggestionType } from "@/types/GpsTypes";
 
 type GpsAndRadiusProps = {
   setLat: (lat: number) => void;
   setLong: (long: number) => void;
   setRadius: (radius: number) => void;
   radius: number;
-};
-type SuggestionType = {
-  label: string;
-  postcode: string;
-  city: string;
-  coordinates: [number, number];
-};
-
-type FeatureType = {
-  properties: {
-    postcode: string;
-    city: string;
-  };
-  geometry: {
-    coordinates: [number, number];
-  };
 };
 
 const GpsAndRadius = (props: GpsAndRadiusProps): React.ReactNode => {

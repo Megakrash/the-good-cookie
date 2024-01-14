@@ -77,7 +77,6 @@ const CategoryComponent = (): React.ReactNode => {
                   infinite
                   centerMode={true}
                   renderDotsOutside={true}
-                  // itemClass="carousel-item-padding-40-px"
                 >
                   {category.subCategories.map((subCat) => (
                     <SubCategoriesCard
