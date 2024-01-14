@@ -1,6 +1,9 @@
 import React, { FormEvent, useState } from "react";
 import AdCard from "../ads/AdCard";
-import { CategoriesTypes, AdsTypes, TagsTypes } from "@/types/types";
+import GpsAndRadius from "./components/GpsAndRadius";
+import { CategoriesTypes } from "@/types/CategoryTypes";
+import { AdsTypes } from "@/types/AdTypes";
+import { TagsTypes } from "@/types/TagTypes";
 import { queryAllCatAndSub } from "../graphql/Categories";
 import { queryAllAds } from "../graphql/Ads";
 import { queryAllTags } from "../graphql/Tags";
@@ -51,7 +54,10 @@ const Search = (): React.ReactNode => {
   };
 
   // Location
-  const [selectedLocation, setSelectedLocation] = useState<string>();
+  // const [city, setCity] = useState<string>("");
+  const [lat, setLat] = useState<number>();
+  const [long, setLong] = useState<number>();
+  const [radius, setRadius] = useState<number>(30);
   // Min Price
   const [minPrice, setMinPrice] = useState<number>();
   // Max Price
@@ -72,7 +78,8 @@ const Search = (): React.ReactNode => {
       variables: {
         where: {
           subCategory: selectedSubCategory,
-          city: selectedLocation,
+          location: { latitude: lat, longitude: long },
+          radius: radius,
           minPrice: minPrice,
           maxPrice: maxPrice,
           title: title,
@@ -89,7 +96,9 @@ const Search = (): React.ReactNode => {
   const resetForm = (): void => {
     setSelectedSubCategory(undefined);
     setSelectedTags([]);
-    setSelectedLocation(undefined);
+    setLat(undefined);
+    setLong(undefined);
+    setRadius(30);
     setMinPrice(undefined);
     setMaxPrice(undefined);
     setTitle(undefined);
@@ -109,7 +118,7 @@ const Search = (): React.ReactNode => {
               <Box className="search_box_form_miniBox">
                 <FormControl fullWidth>
                   <InputLabel size="small" id="subcategory-select-label">
-                    Catégorie
+                    Catégorie*
                   </InputLabel>
                   <Select
                     className="search_input"
@@ -119,6 +128,7 @@ const Search = (): React.ReactNode => {
                     value={selectedSubCategory || ""}
                     onChange={handleChangeCategory}
                     label="Sélectionnez une sous-catégorie"
+                    required
                   >
                     <MenuItem value="" disabled>
                       Sélectionnez une catégorie
@@ -139,15 +149,11 @@ const Search = (): React.ReactNode => {
                     ])}
                   </Select>
                 </FormControl>
-                <TextField
-                  className="search_input"
-                  id="location"
-                  size="small"
-                  label="Où ?"
-                  variant="outlined"
-                  value={selectedLocation || ""}
-                  onChange={(e) => setSelectedLocation(e.target.value)}
-                  required
+                <GpsAndRadius
+                  setLat={setLat}
+                  setLong={setLong}
+                  setRadius={setRadius}
+                  radius={radius}
                 />
               </Box>
               {showQueries && (
