@@ -94,7 +94,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
     try {
       let pictureId: number | null = null;
       if (newPicture) {
-        const uploadResponse = await axios.post(`${API_URL}upload`, dataFile, {
+        const uploadResponse = await axios.post(`${API_URL}picture`, dataFile, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

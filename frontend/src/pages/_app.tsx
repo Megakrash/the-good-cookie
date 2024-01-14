@@ -48,10 +48,9 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     queryMeContext
   );
   const router = useRouter();
-
   useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      if (privatePages.includes(url)) {
+    const handleRouteChange = () => {
+      if (privatePages.includes(router.pathname)) {
         refetch();
       }
     };

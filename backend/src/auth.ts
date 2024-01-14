@@ -10,7 +10,6 @@ export const customAuthChecker: AuthChecker<MyContext> = async (
 ): Promise<boolean> => {
   const cookie = new Cookies(context.req, context.res);
   const token = cookie.get("TGCookie");
-
   if (!token) {
     console.error("No Token");
     return false;
@@ -28,18 +27,13 @@ export const customAuthChecker: AuthChecker<MyContext> = async (
           nickName: user.nickName,
           role: user.role,
         };
-
-        if (roles.length === 0) {
-          return true;
-        }
-
-        return roles.includes(user.role);
+        return roles.length === 0 || roles.includes(user.role);
       } else {
         console.error("User not found");
         return false;
       }
     } else {
-      console.error("Invalid token, missing userId");
+      console.error("Invalid token");
       return false;
     }
   } catch (error) {

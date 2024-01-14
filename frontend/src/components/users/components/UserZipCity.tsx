@@ -35,7 +35,7 @@ const UserZipCity = (props: UserZipCityProps): React.ReactNode => {
     const newValue = event.target.value;
     setInputValue(newValue);
 
-    if (newValue.length >= 5) {
+    if (newValue.length >= 4) {
       axios(`${API_URL}search-address?q=${newValue}`)
         .then((res) => {
           if (res.data && res.data.features) {

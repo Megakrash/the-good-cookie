@@ -96,10 +96,12 @@ async function start() {
     "/",
     express.json({ limit: "50mb" }),
     expressMiddleware(server, {
-      context: async ({ req, res }: { req: Request; res: Response }) => ({
-        req,
-        res,
-      }),
+      context: async (args) => {
+        return {
+          req: args.req,
+          res: args.res,
+        };
+      },
     })
   );
 
