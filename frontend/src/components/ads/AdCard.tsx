@@ -1,9 +1,5 @@
 import { AdTypes } from "@/types/AdTypes";
 import { PATH_IMAGE } from "@/api/configApi";
-// import Link from "next/link";
-// import DeleteAd from "./AdDelete";
-// import CardActions from "@mui/material/CardActions";
-// import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -33,97 +29,89 @@ const AdCard = (props: AdCardProps): React.ReactNode => {
 
   return (
     <>
-      {
-        props.ad && (
-          <CardActionArea
+      {props.ad && (
+        <CardActionArea
+          sx={{
+            width: 332,
+          }}
+          href={`/annonces/${props.ad.id}`}
+        >
+          <Card
             sx={{
-              width: 332,
+              width: 330,
+              height: 380,
+              "&:hover": {
+                border: (theme) => `2px solid ${theme.palette.primary.main}`,
+              },
             }}
-            href={`/annonces/${props.ad.id}`}
           >
-            <Card
+            <CardMedia
+              component="img"
               sx={{
-                width: 330,
-                height: 380,
-                "&:hover": {
-                  border: (theme) => `2px solid ${theme.palette.primary.main}`,
-                },
+                width: "100%",
+                height: 200,
+                margin: "auto",
+                objectFit: "contain",
               }}
-            >
-              <CardMedia
-                component="img"
-                sx={{
-                  width: "100%",
-                  height: 200,
-                  margin: "auto",
-                  objectFit: "contain",
-                }}
-                image={adImageUrl}
-                title={props.ad.title}
-              />
-              <CardContent>
-                <Typography
-                  gutterBottom
-                  variant="body1"
-                  color="text.secondary"
-                  component="div"
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    <PlaceIcon sx={{ marginRight: "4px" }} />{" "}
-                    {capitalizeFirstLetter(props.ad.city)}
-                  </Box>
-                </Typography>
-                <Typography
-                  sx={{
-                    height: "75px",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    width: "100%",
-                  }}
-                  variant="h5"
-                >
-                  {props.ad.title}
-                </Typography>
+              image={adImageUrl}
+              title={props.ad.title}
+            />
+            <CardContent>
+              <Typography
+                gutterBottom
+                variant="body1"
+                color="text.secondary"
+                component="div"
+              >
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "space-between",
                   }}
                 >
-                  <Typography variant="body1" color="primary">
-                    {props.ad.price}€
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Avatar alt={props.ad.user.nickName} src={userImageUrl} />
-                    <Typography variant="body2" color="text.secondary">
-                      {props.ad.user.nickName}
-                    </Typography>
-                  </Box>
+                  <PlaceIcon sx={{ marginRight: "4px" }} />{" "}
+                  {capitalizeFirstLetter(props.ad.city)}
                 </Box>
-              </CardContent>
-            </Card>
-          </CardActionArea>
-        )
-        //  <CardActions>
-        //       <Link href={`/annonces/${props.id}/edit`}>
-        //         <Button size="small">{`Modifier`}</Button>
-        //       </Link>
-        //       <DeleteAd id={props.id} />
-        //     </CardActions>
-      }{" "}
+              </Typography>
+              <Typography
+                sx={{
+                  height: "75px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  width: "100%",
+                }}
+                variant="h5"
+              >
+                {props.ad.title}
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography variant="body1" color="primary">
+                  {props.ad.price}€
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Avatar alt={props.ad.user.nickName} src={userImageUrl} />
+                  <Typography variant="body2" color="text.secondary">
+                    {props.ad.user.nickName}
+                  </Typography>
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+        </CardActionArea>
+      )}
     </>
   );
 };
