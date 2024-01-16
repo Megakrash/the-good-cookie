@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Button, Card, FormControl, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  FormControl,
+  Link,
+  Typography,
+} from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
 import UserEmail from "../components/UserEmail";
 import UserPassword from "../components/UserPassword";
@@ -67,6 +74,20 @@ const UserConnection = (): React.ReactNode => {
           Connexion
         </Button>
       </FormControl>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          gap: "5px",
+        }}
+      >
+        <Typography variant="subtitle2" gutterBottom>
+          Pas encore de compte ?
+        </Typography>
+        <Link variant="body2" href="/inscription/creation">
+          {"Inscrivez-vous"}
+        </Link>
+      </Box>
     </Card>
   );
 };

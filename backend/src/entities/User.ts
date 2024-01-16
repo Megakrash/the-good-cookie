@@ -227,6 +227,9 @@ export class UserContext {
   @Field()
   nickName!: string;
 
+  @Field()
+  picture!: string;
+
   @Field(() => Role)
   role!: Role;
 }

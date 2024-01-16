@@ -51,6 +51,7 @@ import { Request, Response } from "express";
 export type UserContext = {
   id: number;
   nickName: string;
+  picture: string;
   role: Role;
 };
 

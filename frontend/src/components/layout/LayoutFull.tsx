@@ -19,7 +19,7 @@ const LayoutFull = (props: LayoutProps): ReactNode => {
       </Head>
       <Header />
       <Navbar />
-      <main className="main-content">{props.children}</main>
+      <main>{props.children}</main>
     </>
   );
 };

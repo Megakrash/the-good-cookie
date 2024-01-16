@@ -17,17 +17,22 @@ import {
   Typography,
 } from "@mui/material";
 import AdbIcon from "@mui/icons-material/Adb";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import SearchIcon from "@mui/icons-material/Search";
+import ContactSupportIcon from "@mui/icons-material/ContactSupport";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LoginIcon from "@mui/icons-material/Login";
 import MenuIcon from "@mui/icons-material/Menu";
 import React from "react";
-
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+import { useRouter } from "next/router";
+import { PATH_IMAGE } from "@/api/configApi";
 
 export default function Header(): React.ReactNode {
+  const router = useRouter();
   // User connected ?
-  const { data } = useQuery<{ items: UserContextTypes }>(queryMeContext);
-  const userConnected = data ? data.items : [];
-
+  const { data, error } = useQuery<{ item: UserContextTypes }>(queryMeContext);
+  const userConnected = data ? data.item : null;
+  console.log(data);
   // Logout
   const [doSignout] = useMutation(mutationSignOut, {
     refetchQueries: [queryMeContext],
@@ -70,10 +75,10 @@ export default function Header(): React.ReactNode {
             />
           </Link>
           <Typography
-            variant="h6"
+            variant="h4"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -87,7 +92,7 @@ export default function Header(): React.ReactNode {
             THE GOOD CORNER
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          {/* <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -122,7 +127,7 @@ export default function Header(): React.ReactNode {
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
+          </Box> */}
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
@@ -143,23 +148,62 @@ export default function Header(): React.ReactNode {
             TGC
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+            <Button
+              startIcon={<EditNoteIcon fontSize="large" />}
+              onClick={() => {
+                handleCloseNavMenu();
+                router.replace(`/annonces/new`);
+              }}
+              sx={{ my: 2, color: "white", display: "block" }}
+            >
+              Déposer une annonce
+            </Button>
+            <Button
+              startIcon={<SearchIcon />}
+              onClick={() => {
+                handleCloseNavMenu();
+                router.replace(`/recherche`);
+              }}
+              sx={{ my: 2, color: "white", display: "block" }}
+            >
+              Recherche
+            </Button>
+            <Button
+              startIcon={<AccountCircleIcon />}
+              onClick={() => {
+                handleCloseNavMenu();
+                router.replace(`/compte`);
+              }}
+              sx={{ my: 2, color: "white", display: "block" }}
+            >
+              Compte
+            </Button>
+            <Button
+              startIcon={<ContactSupportIcon />}
+              onClick={() => {
+                handleCloseNavMenu();
+                router.replace(`/contact`);
+              }}
+              sx={{ my: 2, color: "white", display: "block" }}
+            >
+              contact
+            </Button>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title="Ouvrir le menu du profil">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar
+                  alt="User avatar"
+                  src={
+                    userConnected
+                      ? `${PATH_IMAGE}/pictures/${userConnected.picture}`
+                      : `${PATH_IMAGE}/default/avatar.webp`
+                  }
+                />
               </IconButton>
             </Tooltip>
+
             <Menu
               sx={{ mt: "45px" }}
               id="menu-appbar"
@@ -176,42 +220,37 @@ export default function Header(): React.ReactNode {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              {userConnected ? (
+                <Box>
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseUserMenu();
+                      router.replace(`/compte`);
+                    }}
+                  >
+                    <AccountCircleIcon />
+                    <Typography textAlign="center">Mon compte</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={logout}>
+                    <ExitToAppIcon />
+                    <Typography textAlign="center">Se déconnecter</Typography>
+                  </MenuItem>
+                </Box>
+              ) : (
+                <MenuItem
+                  onClick={() => {
+                    handleCloseUserMenu();
+                    router.replace(`/connexion`);
+                  }}
+                >
+                  <LoginIcon />
+                  <Typography textAlign="center">Connexion</Typography>
                 </MenuItem>
-              ))}
+              )}
             </Menu>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
-    // <header className="header">
-    //   <div className="main-menu">
-    //     <h1>
-    //       <Link href="/" className="button logo link-button">
-    //         <span className="desktop-long-label">THE GOOD CORNER</span>
-    //       </Link>
-    //     </h1>
-    //     <Link href="/annonces/new" className="button link-button">
-    //       <span className="desktop-long-label">Publier une annonce</span>
-    //     </Link>
-    //     <Link href="/inscription" className="button link-button">
-    //       <span className="desktop-long-label">Mon compte</span>
-    //     </Link>
-    //     <Link href="/inscription/creation" className="button link-button">
-    //       <span className="desktop-long-label">Créer un compte</span>
-    //     </Link>
-    //     <Link href="/connexion" className="button link-button">
-    //       <span className="desktop-long-label">Connexion</span>
-    //     </Link>
-    //     <Link href="/contact" className="button link-button">
-    //       <span className="desktop-long-label">Contact</span>
-    //     </Link>
-    //     <IconButton onClick={logout} color="primary" aria-label="Logout">
-    //       <ExitToAppIcon fontSize="inherit" />
-    //     </IconButton>
-    //   </div>
-    // </header>
   );
 }
