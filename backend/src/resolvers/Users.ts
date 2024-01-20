@@ -132,7 +132,6 @@ export class UsersResolver {
     return user as User;
   }
 
-  @Authorized("ADMIN", "USER")
   @Mutation(() => Boolean)
   async userSignOut(@Ctx() context: MyContext): Promise<Boolean> {
     const cookie = new Cookies(context.req, context.res);

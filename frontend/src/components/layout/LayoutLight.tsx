@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import Head from "next/head";
-import Header from "../header/Header";
+import Header from "../appBar/AppBar";
 
 type LayoutProps = {
   title: string;
@@ -17,7 +17,7 @@ const LayoutLight = (props: LayoutProps): ReactNode => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <main className="main-content">{props.children}</main>
+      <main>{props.children}</main>
     </>
   );
 };

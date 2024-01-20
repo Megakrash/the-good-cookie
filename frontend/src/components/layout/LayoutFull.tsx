@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import Head from "next/head";
-import Header from "../header/Header";
+import Header from "../appBar/AppBar";
 import Navbar from "../navbar/Navbar";
 
 type LayoutProps = {
@@ -19,7 +19,7 @@ const LayoutFull = (props: LayoutProps): ReactNode => {
       </Head>
       <Header />
       <Navbar />
-      <main className="main-content">{props.children}</main>
+      <main>{props.children}</main>
     </>
   );
 };

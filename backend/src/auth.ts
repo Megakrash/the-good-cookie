@@ -19,13 +19,16 @@ export const customAuthChecker: AuthChecker<MyContext> = async (
     const payload = jwt.verify(token, process.env.JWT_SECRET_KEY || "");
 
     if (typeof payload === "object" && "userId" in payload) {
-      const user = await User.findOneBy({ id: payload.userId });
-
+      const user = await User.findOne({
+        where: { id: payload.userId },
+        relations: { picture: true },
+      });
       if (user) {
         context.user = {
           id: user.id,
           nickName: user.nickName,
           role: user.role,
+          picture: user.picture?.filename || "",
         };
         return roles.length === 0 || roles.includes(user.role);
       } else {
