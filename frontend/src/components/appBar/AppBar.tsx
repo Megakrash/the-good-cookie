@@ -2,8 +2,8 @@ import Link from "next/link";
 import IconButton from "@mui/material/IconButton";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { useMutation, useQuery } from "@apollo/client";
-import { mutationSignOut, queryMeContext } from "../graphql/Users";
-import { UserContextTypes } from "@/types/UserTypes";
+import { mutationSignOut, queryMe, queryMeContext } from "../graphql/Users";
+import { UserContextTypes, UserTypes } from "@/types/UserTypes";
 import {
   AppBar,
   Avatar,
@@ -16,30 +16,56 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import AdbIcon from "@mui/icons-material/Adb";
+import CookieIcon from "@mui/icons-material/Cookie";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import SearchIcon from "@mui/icons-material/Search";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LoginIcon from "@mui/icons-material/Login";
 import MenuIcon from "@mui/icons-material/Menu";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { PATH_IMAGE } from "@/api/configApi";
+
+const buttonStyles = {
+  color: "white",
+  "& .MuiButton-startIcon": {
+    marginRight: "-4px",
+  },
+};
 
 export default function Header(): React.ReactNode {
   const router = useRouter();
   // User connected ?
   const { data, error } = useQuery<{ item: UserContextTypes }>(queryMeContext);
-  const userConnected = data ? data.item : null;
-  console.log(data);
-  // Logout
+  const [userContext, setUserContext] = useState<UserContextTypes>(null);
+  const [userConnected, setUserConnected] = useState<Boolean>(false);
+
+  useEffect(() => {
+    if (error) {
+      setUserContext(null);
+      setUserConnected(false);
+    }
+    if (data?.item) {
+      setUserContext(data.item);
+      setUserConnected(true);
+    }
+  }, [data, error]);
+
+  // Signout
   const [doSignout] = useMutation(mutationSignOut, {
-    refetchQueries: [queryMeContext],
+    onCompleted: () => {
+      setUserContext(null);
+      setAnchorElUser(null);
+      setUserConnected(false);
+    },
+    refetchQueries: [{ query: queryMeContext }],
   });
   async function logout() {
     doSignout();
   }
+
+  // Open / Close menu
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -64,42 +90,30 @@ export default function Header(): React.ReactNode {
   return (
     <AppBar position="static" sx={{ backgroundColor: "#343a40" }}>
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Link href="/">
-            <AdbIcon
-              sx={{
-                display: { xs: "none", md: "flex" },
-                mr: 1,
-                color: "#e89116",
-              }}
-            />
-          </Link>
-          <Typography
-            variant="h4"
-            noWrap
-            component="a"
-            href="/"
+        <Toolbar disableGutters className="header">
+          <Box
+            className="header_title"
             sx={{
-              mr: 2,
               display: { xs: "none", md: "flex" },
-              // fontFamily: "monospace",
-              fontWeight: 700,
-              // letterSpacing: ".3rem",
-              color: "#e89116",
-              textDecoration: "none",
             }}
           >
-            THE GOOD CORNER
-          </Typography>
-
-          {/* <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+            <Link href="/">
+              <CookieIcon className="header_title_logo" />
+            </Link>
+            <Link href="/" className="header_title_name">
+              THE GOOD CORNER
+            </Link>
+          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              sx={{
+                color: "#e89116",
+              }}
             >
               <MenuIcon />
             </IconButton>
@@ -121,27 +135,59 @@ export default function Header(): React.ReactNode {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem
+                onClick={() => {
+                  handleCloseNavMenu();
+                  router.replace(`/annonces/new`);
+                }}
+              >
+                <Typography textAlign="center"> Déposer une annonce</Typography>
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleCloseNavMenu();
+                  router.replace(`/recherche`);
+                }}
+              >
+                <Typography textAlign="center"> Recherche</Typography>
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleCloseNavMenu();
+                  router.replace(`/compte`);
+                }}
+              >
+                <Typography textAlign="center"> Compte</Typography>
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleCloseNavMenu();
+                  router.replace(`/contact`);
+                }}
+              >
+                <Typography textAlign="center"> Contact</Typography>
+              </MenuItem>
             </Menu>
-          </Box> */}
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          </Box>
+          <CookieIcon
+            sx={{
+              display: { xs: "flex", md: "none" },
+              mr: 1,
+              color: "#e89116",
+            }}
+          />
           <Typography
-            variant="h5"
+            variant="h4"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
+              letterSpacing: ".2rem",
+              color: "#e89116",
               textDecoration: "none",
             }}
           >
@@ -149,42 +195,46 @@ export default function Header(): React.ReactNode {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Button
+              className="header_link_button"
               startIcon={<EditNoteIcon fontSize="large" />}
               onClick={() => {
                 handleCloseNavMenu();
                 router.replace(`/annonces/new`);
               }}
-              sx={{ my: 2, color: "white", display: "block" }}
+              sx={buttonStyles}
             >
               Déposer une annonce
             </Button>
             <Button
+              className="header_link_button"
               startIcon={<SearchIcon />}
               onClick={() => {
                 handleCloseNavMenu();
                 router.replace(`/recherche`);
               }}
-              sx={{ my: 2, color: "white", display: "block" }}
+              sx={buttonStyles}
             >
               Recherche
             </Button>
             <Button
+              className="header_link_button"
               startIcon={<AccountCircleIcon />}
               onClick={() => {
                 handleCloseNavMenu();
                 router.replace(`/compte`);
               }}
-              sx={{ my: 2, color: "white", display: "block" }}
+              sx={buttonStyles}
             >
               Compte
             </Button>
             <Button
+              className="header_link_button"
               startIcon={<ContactSupportIcon />}
               onClick={() => {
                 handleCloseNavMenu();
                 router.replace(`/contact`);
               }}
-              sx={{ my: 2, color: "white", display: "block" }}
+              sx={buttonStyles}
             >
               contact
             </Button>
@@ -196,8 +246,8 @@ export default function Header(): React.ReactNode {
                 <Avatar
                   alt="User avatar"
                   src={
-                    userConnected
-                      ? `${PATH_IMAGE}/pictures/${userConnected.picture}`
+                    userConnected && userContext.picture
+                      ? `${PATH_IMAGE}/pictures/${userContext.picture}`
                       : `${PATH_IMAGE}/default/avatar.webp`
                   }
                 />

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import Head from "next/head";
-import Header from "../header/Header";
+import Header from "../appBar/AppBar";
 
 type LayoutProps = {
   title: string;

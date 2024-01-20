@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { AppBar, Box, Button, ButtonGroup } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import Link from "next/link";
-import { CategoriesTypes } from "@/types/types";
+import { CategoriesTypes } from "@/types/CategoryTypes";
 import { useQuery } from "@apollo/client";
 import { queryAllCatAndSub } from "../graphql/Categories";
 
@@ -32,7 +32,7 @@ const Navbar = (): React.ReactNode => {
     currentCategory && (isCategoryPage || isSubCategoryPage);
 
   return (
-    <Box sx={{ position: "sticky", top: 0, zIndex: 1100 }}>
+    <Box sx={{ position: "sticky", top: -1, zIndex: 1100, marginTop: "-1%" }}>
       <AppBar
         sx={{
           height: "40px",
