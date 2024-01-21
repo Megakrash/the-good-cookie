@@ -10,7 +10,8 @@ export type UserFormData = {
   city: string;
   coordinates: [number, number];
   phoneNumber?: string;
-  isAdmin: boolean;
+  isVerified: boolean;
+  role: string;
 };
 
 export type UserTypes = {

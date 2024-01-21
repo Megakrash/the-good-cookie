@@ -18,7 +18,7 @@ import {
 import ReCAPTCHA from "react-google-recaptcha";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { mutationCreateUser } from "@/components/graphql/Users";
-import { UserFormData } from "@/types/types";
+import { UserFormData } from "@/types/UserTypes";
 import { API_URL, RECAPTCHA_SITE_KEY } from "@/api/configApi";
 import { useMutation } from "@apollo/client";
 import router from "next/router";
@@ -62,7 +62,7 @@ const UserForm = (): React.ReactNode => {
     try {
       let pictureId: number | null = null;
       if (picture) {
-        const uploadResponse = await axios.post(`${API_URL}avatar`, dataFile, {
+        const uploadResponse = await axios.post(`${API_URL}picture`, dataFile, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -80,7 +80,8 @@ const UserForm = (): React.ReactNode => {
         zipCode,
         city,
         coordinates,
-        isAdmin: false,
+        isVerified: false,
+        role: "USER",
         ...(phoneNumber !== "" && { phoneNumber }),
       };
 
@@ -90,8 +91,12 @@ const UserForm = (): React.ReactNode => {
         },
       });
       if ("id" in result.data?.item) {
-        toast(`Bienvenue ${result.data?.item.nickName} !}`);
-        router.replace(`/connexion`);
+        toast(
+          `Bienvenue ${result.data?.item.nickName} ! Un email de confirmation vous a été envoyé.`
+        );
+        setTimeout(() => {
+          router.replace(`/`);
+        }, 2000);
       } else {
         toast("Erreur pendant la création de votre compte");
       }
@@ -144,6 +149,7 @@ const UserForm = (): React.ReactNode => {
         />
         <Box className="userForm_control_box">
           <UserZipCity
+            zipCode={zipCode}
             setCity={setCity}
             setZipCode={setZipCode}
             setCoordinates={setCoordinates}

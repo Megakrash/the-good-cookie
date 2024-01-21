@@ -21,9 +21,8 @@ import jwt from "jsonwebtoken";
 import { MyContext } from "../index";
 import Cookies from "cookies";
 import { Picture } from "../entities/Picture";
-import path from "path";
-import { promises as fsPromises } from "fs";
 import { deletePicture } from "../utils/pictureServices/pictureServices";
+import { sendVerificationEmail } from "../utils/mailServices/verificationEmail";
 
 @Resolver(User)
 export class UsersResolver {
@@ -70,6 +69,7 @@ export class UsersResolver {
     const errors = await validate(newUser);
     if (errors.length === 0) {
       await newUser.save();
+      await sendVerificationEmail(newUser.email, newUser.nickName);
       return newUser;
     } else {
       throw new Error(`Error occured: ${JSON.stringify(errors)}`);
