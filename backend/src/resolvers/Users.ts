@@ -13,6 +13,7 @@ import {
   UserCreateInput,
   UserLoginInput,
   UserUpdateInput,
+  VerifyEmailResponse,
 } from "../entities/User";
 import { validate } from "class-validator";
 import { currentDate } from "../utils/date";
@@ -22,7 +23,10 @@ import { MyContext } from "../index";
 import Cookies from "cookies";
 import { Picture } from "../entities/Picture";
 import { deletePicture } from "../utils/pictureServices/pictureServices";
-import { sendVerificationEmail } from "../utils/mailServices/verificationEmail";
+import {
+  sendVerificationEmail,
+  sendConfirmationEmail,
+} from "../utils/mailServices/verificationEmail";
 
 @Resolver(User)
 export class UsersResolver {
@@ -73,6 +77,53 @@ export class UsersResolver {
       return newUser;
     } else {
       throw new Error(`Error occured: ${JSON.stringify(errors)}`);
+    }
+  }
+
+  @Mutation(() => VerifyEmailResponse)
+  async verifyEmail(@Arg("token") token: string): Promise<VerifyEmailResponse> {
+    let userEmail: string | null = null;
+    let userNickName: string | null = null;
+
+    try {
+      const decodedToken = jwt.decode(token);
+      if (
+        typeof decodedToken === "object" &&
+        decodedToken &&
+        "email" in decodedToken
+      ) {
+        userEmail = decodedToken.email;
+        userNickName = decodedToken.nickName;
+      }
+
+      const payload = jwt.verify(
+        token,
+        process.env.JWT_VERIFY_EMAIL_SECRET_KEY || ""
+      );
+      if (typeof payload === "object" && payload.email) {
+        const user = await User.findOneBy({ email: payload.email });
+        if (!user) {
+          return { success: false, message: "User not found" };
+        }
+
+        user.isVerified = true;
+        await user.save();
+        await sendConfirmationEmail(user.email, user.nickName);
+        return { success: true, message: "Email verified" };
+      } else {
+        return { success: false, message: "Invalid Token" };
+      }
+    } catch (error) {
+      if (error instanceof jwt.TokenExpiredError && userEmail && userNickName) {
+        await sendVerificationEmail(userEmail, userNickName);
+        return {
+          success: false,
+          message:
+            "The verification link has expired. A new verification email has been sent.",
+        };
+      } else {
+        return { success: false, message: "Error verifying email." };
+      }
     }
   }
 

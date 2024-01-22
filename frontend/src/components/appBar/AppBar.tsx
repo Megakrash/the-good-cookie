@@ -101,7 +101,7 @@ export default function Header(): React.ReactNode {
               <CookieIcon className="header_title_logo" />
             </Link>
             <Link href="/" className="header_title_name">
-              THE GOOD CORNER
+              THE GOOD COOKIE
             </Link>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>

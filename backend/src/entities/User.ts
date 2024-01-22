@@ -242,3 +242,12 @@ export class UserContext {
   @Field(() => Role)
   role!: Role;
 }
+
+@ObjectType()
+export class VerifyEmailResponse {
+  @Field()
+  success!: boolean;
+
+  @Field({ nullable: true })
+  message?: string;
+}

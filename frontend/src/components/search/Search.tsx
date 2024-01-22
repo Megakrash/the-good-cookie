@@ -20,6 +20,7 @@ import {
   Button,
 } from "@mui/material";
 import { FilterAlt, FilterAltOff } from "@mui/icons-material";
+import { PATH_IMAGE } from "@/api/configApi";
 
 const Search = (): React.ReactNode => {
   // Get Categories&SubCategories & Tags
@@ -105,7 +106,14 @@ const Search = (): React.ReactNode => {
 
   return (
     <>
-      <Box className="search">
+      <Box
+        className="search"
+        sx={{
+          backgroundImage: `url(${PATH_IMAGE}/general/search.png)`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+        }}
+      >
         {categories && tags && (
           <Box
             className="search_box"
