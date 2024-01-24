@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
-import { Button, CircularProgress, Container, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CircularProgress,
+  Container,
+  Typography,
+} from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
-import { mutationVerifyEmail } from "../components/graphql/Users";
+import { mutationVerifyEmail } from "@/components/graphql/Users";
 
 type UserEmailVerify = {
   success: boolean;
   message: string;
 };
 
-const VerifyEmail = () => {
+const EmailVerify = () => {
   const router = useRouter();
   const { token } = router.query;
+  const [requestSend, setRequestSend] = useState(false);
   const [verified, setVerified] = useState(false);
   const [verifyEmail, { loading, error }] = useMutation<{
     item: UserEmailVerify;
@@ -20,7 +27,9 @@ const VerifyEmail = () => {
     variables: { token },
     onCompleted: (data) => {
       if (data.item.success === true) {
-        toast.success(data.item.message);
+        toast(data.item.message, {
+          style: { background: "#e89116", color: "#fff" },
+        });
         setVerified(true);
       } else {
         toast.error(data.item.message);
@@ -29,21 +38,15 @@ const VerifyEmail = () => {
   });
 
   useEffect(() => {
-    if (token) {
+    if (token && !requestSend) {
       verifyEmail();
+      setRequestSend(true);
     }
-  }, [token, verifyEmail]);
+  }, [token]);
 
   return (
-    <Container maxWidth="sm" sx={{ textAlign: "center", paddingTop: "2rem" }}>
-      <Toaster
-        toastOptions={{
-          style: {
-            background: "#ff8a00",
-            color: "#fff",
-          },
-        }}
-      />
+    <Card className="userForm emailVerify">
+      <Toaster />
       <Typography variant="h4">{`Vérification de l'Email`}</Typography>
       {loading ? (
         <CircularProgress />
@@ -65,8 +68,8 @@ const VerifyEmail = () => {
       >
         {`Retour à l'accueil`}
       </Button>
-    </Container>
+    </Card>
   );
 };
 
-export default VerifyEmail;
+export default EmailVerify;

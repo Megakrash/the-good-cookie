@@ -10,6 +10,7 @@ import {
   Box,
   Button,
   Card,
+  CardMedia,
   FormControl,
   Link,
   TextField,
@@ -46,9 +47,12 @@ const UserForm = (): React.ReactNode => {
   const [email, setEmail] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [picture, setPicture] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   function handleFileSelection(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files[0]) {
-      setPicture(event.target.files[0]);
+      const file = event.target.files[0];
+      setPicture(file);
+      setPreviewUrl(URL.createObjectURL(file));
     }
   }
   // SUBMIT
@@ -159,6 +163,18 @@ const UserForm = (): React.ReactNode => {
             setPhoneNumber={setPhoneNumber}
           />
         </Box>
+        {previewUrl && (
+          <CardMedia
+            sx={{
+              width: "200px",
+              height: "200px",
+              margin: "auto",
+              objectFit: "cover",
+              borderRadius: "5px",
+            }}
+            image={previewUrl}
+          />
+        )}
         <Button
           component="label"
           variant="contained"
