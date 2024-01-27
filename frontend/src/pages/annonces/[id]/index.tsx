@@ -15,7 +15,6 @@ const AdDetailComponent = (): React.ReactNode => {
   });
 
   const ad = data ? data.item : null;
-  console.log(ad);
   return (
     <>
       {ad && (

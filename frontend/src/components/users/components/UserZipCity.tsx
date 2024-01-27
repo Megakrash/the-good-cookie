@@ -3,28 +3,13 @@ import axios from "axios";
 import TextField from "@mui/material/TextField";
 import { ListItemButton, List, Box } from "@mui/material";
 import { API_URL } from "@/api/configApi";
+import { FeatureType, SuggestionType } from "@/types/GpsTypes";
 
 type UserZipCityProps = {
   zipCode: string;
   setCity: (city: string) => void;
   setZipCode: (zipCode: string) => void;
   setCoordinates: (coordinates: [number, number]) => void;
-};
-type SuggestionType = {
-  label: string;
-  postcode: string;
-  city: string;
-  coordinates: [number, number];
-};
-
-type FeatureType = {
-  properties: {
-    postcode: string;
-    city: string;
-  };
-  geometry: {
-    coordinates: [number, number];
-  };
 };
 
 const UserZipCity = (props: UserZipCityProps): React.ReactNode => {
@@ -35,7 +20,7 @@ const UserZipCity = (props: UserZipCityProps): React.ReactNode => {
     const newValue = event.target.value;
     setInputValue(newValue);
 
-    if (newValue.length >= 5) {
+    if (newValue.length >= 4) {
       axios(`${API_URL}search-address?q=${newValue}`)
         .then((res) => {
           if (res.data && res.data.features) {

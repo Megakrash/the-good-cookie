@@ -1,37 +1,5 @@
-import * as nodemailer from "nodemailer";
 import { Request, Response } from "express";
-
-type EmailOptions = {
-  from: string;
-  to: string;
-  replyTo?: string;
-  subject: string;
-  html: string;
-};
-
-const sendEmail = (emailOptions: EmailOptions) => {
-  const transporter = nodemailer.createTransport({
-    host: process.env.MAIL_HOST,
-    port: Number(process.env.MAIL_PORT),
-    secure: true,
-    auth: {
-      user: process.env.MAIL_USER,
-      pass: process.env.MAIL_PASSWORD,
-    },
-  });
-  return new Promise((resolve, reject) => {
-    transporter.sendMail(
-      emailOptions,
-      (error: unknown, info: nodemailer.SentMessageInfo): void => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(info);
-        }
-      }
-    );
-  });
-};
+import { sendEmail, EmailOptions } from "./nodeMailer";
 
 export const sendContactEmail = (req: Request, res: Response) => {
   const { formDetails } = req.body;
@@ -39,7 +7,7 @@ export const sendContactEmail = (req: Request, res: Response) => {
   const mailOptions1: EmailOptions = {
     from: process.env.MAIL_USER || "contact@tgc.megakrash.com",
     to: formDetails.email,
-    subject: "Votre message à The Good Corner",
+    subject: "Votre message à The Good Cookie",
     html: `<!DOCTYPE html>
       <html lang="fr">
       <head>
@@ -55,7 +23,7 @@ export const sendContactEmail = (req: Request, res: Response) => {
             <p>Cordialement,</p>
             <p>Votre message : ${formDetails.message}.</p>
             <div style="float:left;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
-              <p>The Good Corner</p>
+              <p>The Good Cookie</p>
               <p>1 avenue de la bonne affaire</p>
               <p>98562 GoodDealCity</p>
               <p>XX XX XX XX XX</p>

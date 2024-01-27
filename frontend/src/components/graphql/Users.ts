@@ -10,6 +10,15 @@ export const mutationCreateUser = gql`
   }
 `;
 
+export const mutationVerifyEmail = gql`
+  mutation verifyEmail($token: String!) {
+    item: verifyEmail(token: $token) {
+      success
+      message
+    }
+  }
+`;
+
 export const mutationUserLogin = gql`
   mutation userLogin($data: UserLoginInput!) {
     item: userLogin(data: $data) {
@@ -47,6 +56,7 @@ export const queryMeContext = gql`
     item: meContext {
       id
       nickName
+      picture
     }
   }
 `;

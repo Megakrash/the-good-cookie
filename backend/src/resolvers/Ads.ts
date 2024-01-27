@@ -14,10 +14,9 @@ import { validate } from "class-validator";
 import { currentDate } from "../utils/date";
 import { deletePicture } from "../utils/pictureServices/pictureServices";
 import { merge } from "../utils/utils";
-import { promises as fsPromises } from "fs";
 import { MyContext } from "../index";
 import { Picture } from "../entities/Picture";
-import path from "path";
+import { getDistanceFromLatLonInKm } from "../utils/gpsDistance";
 
 @Resolver(Ad)
 export class AdsResolver {
@@ -53,18 +52,11 @@ export class AdsResolver {
         }
       }
 
-      if (where?.city) {
-        queryWhere.city = ILike(`%${where.city}%`);
-      }
-
       if (where?.tags) {
         queryWhere.tags = { id: In(where.tags) };
       }
-      if (where?.createdDate) {
-        queryWhere.date = MoreThanOrEqual(where.createdDate);
-      }
 
-      const ads = await Ad.find({
+      let ads = await Ad.find({
         take: take ?? 50,
         skip,
         where: queryWhere,
@@ -80,6 +72,26 @@ export class AdsResolver {
           updateDate: "DESC",
         },
       });
+
+      if (where?.location && where.radius !== undefined) {
+        const { latitude, longitude } = where.location;
+        const radius = where.radius;
+        ads = ads.filter((ad) => {
+          if (!ad.coordinates || ad.coordinates.length !== 2) {
+            return false;
+          }
+
+          const [adLat, adLon] = ad.coordinates;
+          const distance = getDistanceFromLatLonInKm(
+            latitude,
+            longitude,
+            adLat,
+            adLon
+          );
+          return distance <= radius;
+        });
+      }
+
       return ads;
     } catch (errors) {
       throw new Error(`Error occured: ${JSON.stringify(errors)}`);

@@ -14,6 +14,7 @@ import { queryMeContext } from "@/components/graphql/Users";
 import { Suspense, useEffect } from "react";
 import { useRouter } from "next/router";
 import { UserContextTypes } from "@/types/UserTypes";
+import Header from "@/components/appBar/AppBar";
 
 const theme = createTheme({
   palette: {
@@ -44,14 +45,13 @@ const client = new ApolloClient({
 const privatePages = ["/compte", "/annonces/new"];
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { loading, error, refetch } = useQuery<{ items: UserContextTypes }>(
-    queryMeContext
-  );
+  const { loading, error, refetch } = useQuery<{
+    item: UserContextTypes;
+  }>(queryMeContext);
   const router = useRouter();
-
   useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      if (privatePages.includes(url)) {
+    const handleRouteChange = () => {
+      if (privatePages.includes(router.pathname)) {
         refetch();
       }
     };
@@ -95,6 +95,7 @@ function App({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={theme}>
         <AuthProvider>
           <CssBaseline />
+          <Header />
           <Component {...pageProps} />
         </AuthProvider>
       </ThemeProvider>

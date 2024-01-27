@@ -12,7 +12,7 @@ import {
 } from "typeorm";
 import { Length, IsInt, IsNumberString } from "class-validator";
 import { IsCoordinates } from "./Coordinates";
-import { Field, ID, InputType, ObjectType, Int } from "type-graphql";
+import { Field, ID, InputType, ObjectType, Int, Float } from "type-graphql";
 import { SubCategory } from "./SubCategory";
 import { Tag } from "./Tag";
 import { User } from "./User";
@@ -157,6 +157,14 @@ export class AdUpdateInput {
   @Field(() => [ObjectId], { nullable: true })
   tags!: ObjectId[];
 }
+@InputType()
+export class LocationInput {
+  @Field(() => Float)
+  latitude!: number;
+
+  @Field(() => Float)
+  longitude!: number;
+}
 
 @InputType()
 export class AdsWhere {
@@ -172,8 +180,11 @@ export class AdsWhere {
   @Field(() => Int, { nullable: true })
   maxPrice?: number;
 
-  @Field(() => String, { nullable: true })
-  city?: string;
+  @Field(() => LocationInput, { nullable: true })
+  location?: LocationInput;
+
+  @Field(() => Int, { nullable: true })
+  radius?: number;
 
   @Field(() => String, { nullable: true })
   createdDate?: string;

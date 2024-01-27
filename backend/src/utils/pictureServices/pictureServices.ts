@@ -20,7 +20,7 @@ export async function deletePicture(
 
       const filePath = path.join(
         __dirname,
-        `../../public/assets/images/ads/${picture.filename}`
+        `../../public/assets/images/pictures/${picture.filename}`
       );
       await fsPromises.unlink(filePath);
 

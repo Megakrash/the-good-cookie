@@ -51,6 +51,7 @@ import { Request, Response } from "express";
 export type UserContext = {
   id: number;
   nickName: string;
+  picture: string;
   role: Role;
 };
 
@@ -96,10 +97,12 @@ async function start() {
     "/",
     express.json({ limit: "50mb" }),
     expressMiddleware(server, {
-      context: async ({ req, res }: { req: Request; res: Response }) => ({
-        req,
-        res,
-      }),
+      context: async (args) => {
+        return {
+          req: args.req,
+          res: args.res,
+        };
+      },
     })
   );
 
@@ -115,7 +118,7 @@ start();
 //-----------EXPRESS MIDDLEWARES-----------
 //-----------------------------------------
 
-// Upload Ad picture
+// Upload picture
 app.post("/picture", uploadPicture.single("file"), async (req, res) => {
   if (req.file) {
     try {
@@ -145,5 +148,5 @@ app.get("/search-address", async (req: Request, res: Response) => {
 
 // Send contact email
 import { verifyRecaptchaToken } from "./utils/reCaptcha";
-import { sendContactEmail } from "./utils/nodeMailer";
+import { sendContactEmail } from "./utils/mailServices/contactEmail";
 app.post("/sendcontactemail", verifyRecaptchaToken, sendContactEmail);

@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Button, Card, FormControl, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  FormControl,
+  Link,
+  Typography,
+} from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
 import UserEmail from "../components/UserEmail";
 import UserPassword from "../components/UserPassword";
@@ -33,7 +40,7 @@ const UserConnection = (): React.ReactNode => {
         }, 1500);
       }
     } catch (error) {
-      toast("Email ou mot de passe incorrect", {
+      toast(error.message, {
         style: { background: "#e14d2a", color: "#fff" },
       });
       setEmail("");
@@ -45,7 +52,7 @@ const UserConnection = (): React.ReactNode => {
     <Card className="userForm userSignin">
       <Toaster />
       <Typography variant="h4" gutterBottom>
-        Connexion
+        Cookiexion
       </Typography>
       <FormControl
         className="userForm_control"
@@ -64,9 +71,23 @@ const UserConnection = (): React.ReactNode => {
           type="submit"
           endIcon={<LoginIcon />}
         >
-          Connexion
+          Cookiexion
         </Button>
       </FormControl>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          gap: "5px",
+        }}
+      >
+        <Typography variant="subtitle2" gutterBottom>
+          Pas encore de cookie compte ?
+        </Typography>
+        <Link variant="body2" href="/inscription/creation">
+          {"Inscrivez-vous"}
+        </Link>
+      </Box>
     </Card>
   );
 };
