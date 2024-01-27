@@ -118,7 +118,7 @@ start();
 //-----------EXPRESS MIDDLEWARES-----------
 //-----------------------------------------
 
-// Upload Ad picture
+// Upload picture
 app.post("/picture", uploadPicture.single("file"), async (req, res) => {
   if (req.file) {
     try {
@@ -148,5 +148,5 @@ app.get("/search-address", async (req: Request, res: Response) => {
 
 // Send contact email
 import { verifyRecaptchaToken } from "./utils/reCaptcha";
-import { sendContactEmail } from "./utils/nodeMailer";
+import { sendContactEmail } from "./utils/mailServices/contactEmail";
 app.post("/sendcontactemail", verifyRecaptchaToken, sendContactEmail);

@@ -1,6 +1,7 @@
 import LayoutFull from "@/components/layout/LayoutFull";
 
 const about = () => {
+  console.log("about");
   return (
     <LayoutFull title="About">
       <main className="main-content">

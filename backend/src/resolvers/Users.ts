@@ -13,6 +13,7 @@ import {
   UserCreateInput,
   UserLoginInput,
   UserUpdateInput,
+  VerifyEmailResponse,
 } from "../entities/User";
 import { validate } from "class-validator";
 import { currentDate } from "../utils/date";
@@ -21,9 +22,11 @@ import jwt from "jsonwebtoken";
 import { MyContext } from "../index";
 import Cookies from "cookies";
 import { Picture } from "../entities/Picture";
-import path from "path";
-import { promises as fsPromises } from "fs";
 import { deletePicture } from "../utils/pictureServices/pictureServices";
+import {
+  sendVerificationEmail,
+  sendConfirmationEmail,
+} from "../utils/mailServices/verificationEmail";
 
 @Resolver(User)
 export class UsersResolver {
@@ -70,9 +73,57 @@ export class UsersResolver {
     const errors = await validate(newUser);
     if (errors.length === 0) {
       await newUser.save();
+      await sendVerificationEmail(newUser.email, newUser.nickName);
       return newUser;
     } else {
       throw new Error(`Error occured: ${JSON.stringify(errors)}`);
+    }
+  }
+
+  @Mutation(() => VerifyEmailResponse)
+  async verifyEmail(@Arg("token") token: string): Promise<VerifyEmailResponse> {
+    let userEmail: string | null = null;
+    let userNickName: string | null = null;
+
+    try {
+      const decodedToken = jwt.decode(token);
+      if (
+        typeof decodedToken === "object" &&
+        decodedToken &&
+        "email" in decodedToken
+      ) {
+        userEmail = decodedToken.email;
+        userNickName = decodedToken.nickName;
+      }
+
+      const payload = jwt.verify(
+        token,
+        process.env.JWT_VERIFY_EMAIL_SECRET_KEY || ""
+      );
+      if (typeof payload === "object" && payload.email) {
+        const user = await User.findOneBy({ email: payload.email });
+        if (!user) {
+          return { success: false, message: "Utilisateur non trouvé" };
+        }
+
+        user.isVerified = true;
+        await user.save();
+        await sendConfirmationEmail(user.email, user.nickName);
+        return { success: true, message: "Email vérifié avec succès !" };
+      } else {
+        return { success: false, message: "Invalid Token" };
+      }
+    } catch (error) {
+      if (error instanceof jwt.TokenExpiredError && userEmail && userNickName) {
+        await sendVerificationEmail(userEmail, userNickName);
+        return {
+          success: false,
+          message:
+            "Le lien a expiré, un nouveau lien de vérification a été envoyé à votre adresse email.",
+        };
+      } else {
+        return { success: false, message: "Error verifying email." };
+      }
     }
   }
 
@@ -83,12 +134,15 @@ export class UsersResolver {
   ) {
     const user = await User.findOne({ where: { email: data.email } });
     if (!user) {
-      throw new Error("Wrong email or password");
+      throw new Error("Email ou mot de passe incorrect");
+    }
+    if (!user.isVerified) {
+      throw new Error("Email non vérifié, consultez votre boite mail");
     }
 
     const valid = await argon2.verify(user.hashedPassword, data.password);
     if (!valid) {
-      throw new Error("Wrong email or password");
+      throw new Error("Email ou mot de passe incorrect");
     }
 
     const token = jwt.sign(

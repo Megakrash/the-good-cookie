@@ -132,6 +132,9 @@ export class User extends BaseEntity {
   @OneToMany(() => Ad, (ad) => ad.user)
   @Field(() => [Ad])
   ads!: Ad[];
+
+  @Column({ default: false })
+  isVerified!: boolean;
 }
 
 @InputType()
@@ -172,6 +175,9 @@ export class UserCreateInput {
 
   @Field(() => Role)
   role!: Role;
+
+  @Field()
+  isVerified!: boolean;
 }
 
 @InputType()
@@ -208,6 +214,9 @@ export class UserUpdateInput {
 
   @Field(() => [ObjectId], { nullable: true })
   ads!: ObjectId[];
+
+  @Field()
+  isVerified!: boolean;
 }
 
 @InputType()
@@ -232,4 +241,13 @@ export class UserContext {
 
   @Field(() => Role)
   role!: Role;
+}
+
+@ObjectType()
+export class VerifyEmailResponse {
+  @Field()
+  success!: boolean;
+
+  @Field({ nullable: true })
+  message?: string;
 }
