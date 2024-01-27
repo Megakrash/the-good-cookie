@@ -2,8 +2,8 @@ import Link from "next/link";
 import IconButton from "@mui/material/IconButton";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { useMutation, useQuery } from "@apollo/client";
-import { mutationSignOut, queryMe, queryMeContext } from "../graphql/Users";
-import { UserContextTypes, UserTypes } from "@/types/UserTypes";
+import { mutationSignOut, queryMeContext } from "../graphql/Users";
+import { UserContextTypes } from "@/types/UserTypes";
 import {
   AppBar,
   Avatar,
@@ -58,6 +58,7 @@ export default function Header(): React.ReactNode {
       setUserContext(null);
       setAnchorElUser(null);
       setUserConnected(false);
+      router.replace(`/connexion`);
     },
     refetchQueries: [{ query: queryMeContext }],
   });

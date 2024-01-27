@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import Head from "next/head";
-import Header from "../appBar/AppBar";
 import Navbar from "../navbar/Navbar";
 
 type LayoutProps = {
@@ -17,7 +16,6 @@ const LayoutFull = (props: LayoutProps): ReactNode => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header />
       <Navbar />
       <main>{props.children}</main>
     </>
