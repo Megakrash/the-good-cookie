@@ -52,7 +52,7 @@ const UserConnection = (): React.ReactNode => {
     <Card className="userForm userSignin">
       <Toaster />
       <Typography variant="h4" gutterBottom>
-        Connexion
+        Cookiexion
       </Typography>
       <FormControl
         className="userForm_control"
@@ -71,7 +71,7 @@ const UserConnection = (): React.ReactNode => {
           type="submit"
           endIcon={<LoginIcon />}
         >
-          Connexion
+          Cookiexion
         </Button>
       </FormControl>
       <Box
@@ -82,7 +82,7 @@ const UserConnection = (): React.ReactNode => {
         }}
       >
         <Typography variant="subtitle2" gutterBottom>
-          Pas encore de compte ?
+          Pas encore de cookie compte ?
         </Typography>
         <Link variant="body2" href="/inscription/creation">
           {"Inscrivez-vous"}
