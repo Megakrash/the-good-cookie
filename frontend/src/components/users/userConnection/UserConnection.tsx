@@ -16,8 +16,8 @@ import toast, { Toaster } from "react-hot-toast";
 import router from "next/router";
 
 const UserConnection = (): React.ReactNode => {
-  const [email, setEmail] = useState<string>("jl.debre2@relou.wtf");
-  const [password, setPassword] = useState<string>("Warcraft!!2023");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const handlePasswordChange = (newPassword: React.SetStateAction<string>) => {
     setPassword(newPassword);
   };
@@ -40,7 +40,7 @@ const UserConnection = (): React.ReactNode => {
         }, 1500);
       }
     } catch (error) {
-      toast("Email ou mot de passe incorrect", {
+      toast(error.message, {
         style: { background: "#e14d2a", color: "#fff" },
       });
       setEmail("");

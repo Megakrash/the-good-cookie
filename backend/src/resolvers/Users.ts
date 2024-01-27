@@ -103,13 +103,13 @@ export class UsersResolver {
       if (typeof payload === "object" && payload.email) {
         const user = await User.findOneBy({ email: payload.email });
         if (!user) {
-          return { success: false, message: "User not found" };
+          return { success: false, message: "Utilisateur non trouvé" };
         }
 
         user.isVerified = true;
         await user.save();
         await sendConfirmationEmail(user.email, user.nickName);
-        return { success: true, message: "Email verified" };
+        return { success: true, message: "Email vérifié avec succès !" };
       } else {
         return { success: false, message: "Invalid Token" };
       }
@@ -119,7 +119,7 @@ export class UsersResolver {
         return {
           success: false,
           message:
-            "The verification link has expired. A new verification email has been sent.",
+            "Le lien a expiré, un nouveau lien de vérification a été envoyé à votre adresse email.",
         };
       } else {
         return { success: false, message: "Error verifying email." };
@@ -134,12 +134,15 @@ export class UsersResolver {
   ) {
     const user = await User.findOne({ where: { email: data.email } });
     if (!user) {
-      throw new Error("Wrong email or password");
+      throw new Error("Email ou mot de passe incorrect");
+    }
+    if (!user.isVerified) {
+      throw new Error("Email non vérifié, consultez votre boite mail");
     }
 
     const valid = await argon2.verify(user.hashedPassword, data.password);
     if (!valid) {
-      throw new Error("Wrong email or password");
+      throw new Error("Email ou mot de passe incorrect");
     }
 
     const token = jwt.sign(

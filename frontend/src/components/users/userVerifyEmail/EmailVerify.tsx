@@ -63,10 +63,10 @@ const EmailVerify = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => router.push("/")}
+        onClick={() => router.push("/connexion")}
         sx={{ marginTop: "1rem" }}
       >
-        {`Retour à l'accueil`}
+        {`Page de connexion`}
       </Button>
     </Card>
   );
