@@ -120,7 +120,7 @@ const UserForm = (): React.ReactNode => {
         }}
       />
       <Typography variant="h4" gutterBottom>
-        Création de votre compte
+        Création de votre Cookie compte
       </Typography>
       <FormControl
         className="userForm_control"
@@ -200,14 +200,14 @@ const UserForm = (): React.ReactNode => {
           disabled={!recaptcha && true}
           endIcon={<SendIcon />}
         >
-          Créer mon compte
+          Créer mon Cookie compte
         </Button>
 
         <Box className="userForm_control_boxConnect">
           <Typography variant="subtitle2" gutterBottom>
             Déjà inscrit ?
           </Typography>
-          <Link variant="body2" href="/inscription/connexion">
+          <Link variant="body2" href="/connexion">
             {"Connectez-vous"}
           </Link>
         </Box>
