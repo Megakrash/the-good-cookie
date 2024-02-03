@@ -84,7 +84,7 @@ const UserConnection = (): React.ReactNode => {
         <Typography variant="subtitle2" gutterBottom>
           Pas encore de cookie compte ?
         </Typography>
-        <Link variant="body2" href="/inscription/creation">
+        <Link variant="body2" href="/inscription">
           {"Inscrivez-vous"}
         </Link>
       </Box>
