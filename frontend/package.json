@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "echo '----- Checking Frontend...' && prettier --debug-check . && eslint --ext .jsx . && echo '----- Done :+1:'"
   },
   "dependencies": {
     "@apollo/client": "^3.9.2",
@@ -30,6 +30,7 @@
     "@types/react-google-recaptcha": "^2.1.8",
     "eslint": "^8.49.0",
     "eslint-config-next": "^13.4.19",
+    "prettier": "^3.2.4",
     "sass": "^1.70.0",
     "typescript": "^5.2.2"
   }

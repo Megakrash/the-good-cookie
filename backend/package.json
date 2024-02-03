@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsnd --poll --respawn --transpile-only ./src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "echo '----- Checking Backend...' && prettier --debug-check . && eslint --ext .jsx . && echo '----- Done :+1:'"
   },
   "author": "",
   "license": "ISC",
@@ -30,12 +31,18 @@
     "typeorm": "^0.3.17"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.14",
     "@types/cookies": "^0.7.10",
+    "@types/cors": "^2.8.14",
     "@types/express": "^4.17.20",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/multer": "^1.4.9",
     "@types/nodemailer": "^6.4.14",
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "3.2.4",
     "ts-node-dev": "^2.0.0"
   }
 }

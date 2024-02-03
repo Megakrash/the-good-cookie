@@ -1,0 +1,17 @@
+{
+  "name": "the-good-cookie",
+  "version": "1.0.0",
+  "description": "Solo project carried out as part of the training at the Wild Code School for the preparation of the title \"Application developer designer\".",
+  "main": "index.js",
+  "keywords": [],
+  "author": "Megakrash",
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^9.0.10"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "cd backend && npm lint && cd ../frontend && npm lint"
+    }
+  }
+}
