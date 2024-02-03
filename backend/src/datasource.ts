@@ -8,11 +8,11 @@ import { Picture } from "./entities/Picture";
 
 export const dataSource = new DataSource({
   type: "postgres",
-  host: process.env.DB_HOST,
+  host: process.env.POSTGRES_HOST,
   port: Number(process.env.DB_PORT),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  username: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DB,
   entities: [Category, Ad, Tag, SubCategory, User, Picture],
   synchronize: true,
   // logging: true,

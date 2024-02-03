@@ -77,6 +77,14 @@ const ContactForm = (): React.ReactNode => {
             },
           }
         );
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setMessage("");
+        setPhoneNumber("");
+        setRecaptcha(false);
+        captchaRef.current.reset();
+        setLoading(false);
       });
   };
   return (
