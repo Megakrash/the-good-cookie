@@ -6,7 +6,7 @@ type UserPhoneProps = {
   setPhoneNumber: (email: string) => void;
 };
 
-const UserPhone = (props: UserPhoneProps): React.ReactNode => {
+function UserPhone(props: UserPhoneProps): React.ReactNode {
   return (
     <TextField
       fullWidth
@@ -28,6 +28,6 @@ const UserPhone = (props: UserPhoneProps): React.ReactNode => {
       }}
     />
   );
-};
+}
 
 export default UserPhone;

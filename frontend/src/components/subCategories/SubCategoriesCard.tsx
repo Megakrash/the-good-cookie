@@ -6,7 +6,7 @@ import { PATH_IMAGE } from "@/api/configApi";
 import { CardActionArea } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
-const SubCategoriesCard = (props: SubCategoryTypes): React.ReactNode => {
+function SubCategoriesCard(props: SubCategoryTypes): React.ReactNode {
   const picturePath: string = `${PATH_IMAGE}/subCategory/${props.picture}`;
   return (
     <Card sx={{ width: 280, marginBottom: "25px" }}>
@@ -29,6 +29,6 @@ const SubCategoriesCard = (props: SubCategoryTypes): React.ReactNode => {
       </CardActionArea>
     </Card>
   );
-};
+}
 
 export default SubCategoriesCard;

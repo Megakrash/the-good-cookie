@@ -5,7 +5,7 @@ type NavSubcategoriesProps = {
   name: string;
 };
 
-const NavSubCategories = (props: NavSubcategoriesProps): React.ReactNode => {
+function NavSubCategories(props: NavSubcategoriesProps): React.ReactNode {
   return (
     <>
       {" "}
@@ -17,6 +17,6 @@ const NavSubCategories = (props: NavSubcategoriesProps): React.ReactNode => {
       </Link>
     </>
   );
-};
+}
 
 export default NavSubCategories;

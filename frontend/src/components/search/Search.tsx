@@ -1,12 +1,7 @@
 import React, { FormEvent, useState } from "react";
-import AdCard from "../ads/AdCard";
-import GpsAndRadius from "./components/GpsAndRadius";
 import { CategoriesTypes } from "@/types/CategoryTypes";
 import { AdsTypes } from "@/types/AdTypes";
 import { TagsTypes } from "@/types/TagTypes";
-import { queryAllCatAndSub } from "../graphql/Categories";
-import { queryAllAds } from "../graphql/Ads";
-import { queryAllTags } from "../graphql/Tags";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import {
   FormControl,
@@ -21,8 +16,13 @@ import {
 } from "@mui/material";
 import { FilterAlt, FilterAltOff } from "@mui/icons-material";
 import { PATH_IMAGE } from "@/api/configApi";
+import { queryAllTags } from "../graphql/Tags";
+import { queryAllAds } from "../graphql/Ads";
+import { queryAllCatAndSub } from "../graphql/Categories";
+import GpsAndRadius from "./components/GpsAndRadius";
+import AdCard from "../ads/AdCard";
 
-const Search = (): React.ReactNode => {
+function Search(): React.ReactNode {
   // Get Categories&SubCategories & Tags
   const {
     data: dataCategories,
@@ -66,7 +66,7 @@ const Search = (): React.ReactNode => {
   const [title, setTitle] = useState<string>();
 
   //-----------------
-  //----- Search-----
+  // ----- Search-----
   //-----------------
 
   const [doSearch, { data: dataSearch, loading: loadingSearch }] =
@@ -79,10 +79,10 @@ const Search = (): React.ReactNode => {
         where: {
           subCategory: selectedSubCategory,
           location: { latitude: lat, longitude: long },
-          radius: radius,
-          minPrice: minPrice,
-          maxPrice: maxPrice,
-          title: title,
+          radius,
+          minPrice,
+          maxPrice,
+          title,
           tags: selectedTags.length > 0 ? selectedTags : undefined,
         },
       },
@@ -90,7 +90,7 @@ const Search = (): React.ReactNode => {
   };
 
   //-----------------
-  //--Reset form-----
+  // --Reset form-----
   //-----------------
 
   const resetForm = (): void => {
@@ -291,6 +291,6 @@ const Search = (): React.ReactNode => {
       )}
     </>
   );
-};
+}
 
 export default Search;

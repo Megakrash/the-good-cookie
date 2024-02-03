@@ -12,7 +12,7 @@ type UserZipCityProps = {
   setCoordinates: (coordinates: [number, number]) => void;
 };
 
-const UserZipCity = (props: UserZipCityProps): React.ReactNode => {
+function UserZipCity(props: UserZipCityProps): React.ReactNode {
   const [inputValue, setInputValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
@@ -82,6 +82,6 @@ const UserZipCity = (props: UserZipCityProps): React.ReactNode => {
       )}
     </Box>
   );
-};
+}
 
 export default UserZipCity;

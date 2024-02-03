@@ -4,7 +4,7 @@ import { queryMe } from "@/components/graphql/Users";
 import { useQuery } from "@apollo/client";
 import { UserTypes } from "@/types/UserTypes";
 
-const UserAccount = (): React.ReactNode => {
+function UserAccount(): React.ReactNode {
   // User infos
   const { data, error } = useQuery<{ item: UserTypes }>(queryMe);
   const userInfos = data ? data.item : null;
@@ -46,6 +46,6 @@ const UserAccount = (): React.ReactNode => {
       )}
     </Card>
   );
-};
+}
 
 export default UserAccount;

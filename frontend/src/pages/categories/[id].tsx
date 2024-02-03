@@ -37,7 +37,7 @@ const responsive = {
   },
 };
 
-const CategoryComponent = (): React.ReactNode => {
+function CategoryComponent(): React.ReactNode {
   const router = useRouter();
   const { id } = router.query;
   const { data, error, loading } = useQuery<{ item: CategoryTypes }>(
@@ -75,8 +75,8 @@ const CategoryComponent = (): React.ReactNode => {
                   containerClass="carousel-container"
                   responsive={responsive}
                   infinite
-                  centerMode={true}
-                  renderDotsOutside={true}
+                  centerMode
+                  renderDotsOutside
                 >
                   {category.subCategories.map((subCat) => (
                     <SubCategoriesCard
@@ -96,6 +96,6 @@ const CategoryComponent = (): React.ReactNode => {
       )}
     </>
   );
-};
+}
 
 export default CategoryComponent;

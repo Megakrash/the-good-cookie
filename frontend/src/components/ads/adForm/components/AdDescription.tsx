@@ -6,7 +6,7 @@ type AdDescriptionProps = {
   setDescription: (description: string) => void;
 };
 
-const AdDescription = (props: AdDescriptionProps): React.ReactNode => {
+function AdDescription(props: AdDescriptionProps): React.ReactNode {
   return (
     <TextField
       className="adForm_boxForm_input"
@@ -22,6 +22,6 @@ const AdDescription = (props: AdDescriptionProps): React.ReactNode => {
       required
     />
   );
-};
+}
 
 export default AdDescription;

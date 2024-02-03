@@ -10,15 +10,15 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FormEvent, useRef, useState } from "react";
-import UserName from "../users/components/UserName";
-import UserEmail from "../users/components/UserEmail";
-import UserPhone from "../users/components/UserPhone";
 import toast, { Toaster } from "react-hot-toast";
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
 import { API_URL, RECAPTCHA_SITE_KEY } from "@/api/configApi";
+import UserPhone from "../users/components/UserPhone";
+import UserEmail from "../users/components/UserEmail";
+import UserName from "../users/components/UserName";
 
-const ContactForm = (): React.ReactNode => {
+function ContactForm(): React.ReactNode {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -157,6 +157,6 @@ const ContactForm = (): React.ReactNode => {
       </FormControl>
     </Card>
   );
-};
+}
 
 export default ContactForm;

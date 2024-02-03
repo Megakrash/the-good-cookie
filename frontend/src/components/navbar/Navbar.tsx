@@ -7,7 +7,7 @@ import { CategoriesTypes } from "@/types/CategoryTypes";
 import { useQuery } from "@apollo/client";
 import { queryAllCatAndSub } from "../graphql/Categories";
 
-const Navbar = (): React.ReactNode => {
+function Navbar(): React.ReactNode {
   const { data } = useQuery<{ items: CategoriesTypes }>(queryAllCatAndSub);
   const categories = data ? data.items : [];
   const router = useRouter();
@@ -117,5 +117,5 @@ const Navbar = (): React.ReactNode => {
       )}
     </Box>
   );
-};
+}
 export default Navbar;

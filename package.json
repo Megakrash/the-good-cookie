@@ -11,7 +11,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "cd backend && npm lint && cd ../frontend && npm lint"
+      "pre-commit": "cd backend && npm run lint && cd ../frontend && npm run lint"
     }
   }
 }

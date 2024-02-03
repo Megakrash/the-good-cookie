@@ -12,7 +12,7 @@ type AdCardProps = {
   ad?: AdTypes;
 };
 
-const AdCard = (props: AdCardProps): React.ReactNode => {
+function AdCard(props: AdCardProps): React.ReactNode {
   // Path images
   const adImageUrl =
     props.ad.picture.filename && props.ad.picture.filename !== ""
@@ -114,6 +114,6 @@ const AdCard = (props: AdCardProps): React.ReactNode => {
       )}
     </>
   );
-};
+}
 
 export default AdCard;

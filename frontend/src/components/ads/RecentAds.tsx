@@ -1,25 +1,31 @@
 import React from "react";
-import AdCard from "./AdCard";
 import { AdsTypes } from "@/types/AdTypes";
-import { queryAllAds } from "../graphql/Ads";
 import { useQuery } from "@apollo/client";
 import { Box, Typography } from "@mui/material";
 import Link from "next/link";
+import { queryAllAds } from "../graphql/Ads";
+import AdCard from "./AdCard";
 
-const RecentAds = (): React.ReactNode => {
+function RecentAds(): React.ReactNode {
   const { data } = useQuery<{ items: AdsTypes }>(queryAllAds);
   const ads = data ? data.items : [];
   function groupAdsByCategory(
     ads: AdsTypes
   ): Record<number, { category: { id: number; name: string }; ads: AdsTypes }> {
-    return ads.reduce((acc, ad) => {
-      const { id, name } = ad.subCategory.category;
-      if (!acc[id]) {
-        acc[id] = { category: { id, name }, ads: [] };
-      }
-      acc[id].ads.push(ad);
-      return acc;
-    }, {} as Record<number, { category: { id: number; name: string }; ads: AdsTypes }>);
+    return ads.reduce(
+      (acc, ad) => {
+        const { id, name } = ad.subCategory.category;
+        if (!acc[id]) {
+          acc[id] = { category: { id, name }, ads: [] };
+        }
+        acc[id].ads.push(ad);
+        return acc;
+      },
+      {} as Record<
+        number,
+        { category: { id: number; name: string }; ads: AdsTypes }
+      >
+    );
   }
 
   const groupedAds = groupAdsByCategory(ads);
@@ -63,6 +69,6 @@ const RecentAds = (): React.ReactNode => {
       ))}
     </Box>
   );
-};
+}
 
 export default RecentAds;

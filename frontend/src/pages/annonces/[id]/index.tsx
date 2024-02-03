@@ -6,7 +6,7 @@ import { queryAdById } from "@/components/graphql/Ads";
 import { useQuery } from "@apollo/client";
 import IconBreadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 
-const AdDetailComponent = (): React.ReactNode => {
+function AdDetailComponent(): React.ReactNode {
   const router = useRouter();
   const { id } = router.query;
   const { data, error, loading } = useQuery<{ item: AdTypes }>(queryAdById, {
@@ -37,6 +37,6 @@ const AdDetailComponent = (): React.ReactNode => {
       )}
     </>
   );
-};
+}
 
 export default AdDetailComponent;

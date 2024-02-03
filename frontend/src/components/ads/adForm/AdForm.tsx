@@ -6,7 +6,6 @@ import { CategoriesTypes } from "@/types/CategoryTypes";
 import { TagsTypes } from "@/types/TagTypes";
 import toast, { Toaster } from "react-hot-toast";
 import { queryAllCatAndSub } from "@/components/graphql/Categories";
-import { queryAllTags } from "../../graphql/Tags";
 import {
   queryAllAds,
   queryAdById,
@@ -28,16 +27,17 @@ import {
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { DownloadInput } from "@/styles/MuiStyled";
+import UserZipCity from "@/components/users/components/UserZipCity";
 import AdTitle from "./components/AdTitle";
 import AdDescription from "./components/AdDescription";
 import AdPrice from "./components/AdPrice";
-import UserZipCity from "@/components/users/components/UserZipCity";
+import { queryAllTags } from "../../graphql/Tags";
 
 type AdFormProps = {
   ad?: AdTypes;
 };
 
-const AdForm = (props: AdFormProps): React.ReactNode => {
+function AdForm(props: AdFormProps): React.ReactNode {
   const router = useRouter();
   // Get Categories&SubCategories & Tags
   const { data: dataCategories } = useQuery<{ items: CategoriesTypes }>(
@@ -70,7 +70,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   const [selectedTags, setSelectedTags] = useState<AdTags>([]);
   const handleChangeTag = (event: SelectChangeEvent<number[]>) => {
     const value: number[] = event.target.value as unknown as number[];
-    const selectedOptions: AdTags = value.map((id) => ({ id: id }));
+    const selectedOptions: AdTags = value.map((id) => ({ id }));
     setSelectedTags(selectedOptions);
   };
 
@@ -117,7 +117,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
       if (!props.ad) {
         const result = await doCreate({
           variables: {
-            data: data,
+            data,
           },
         });
         if ("id" in result.data?.item) {
@@ -128,7 +128,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
       } else {
         const result = await doUpdate({
           variables: {
-            data: data,
+            data,
             adUpdateId: props.ad?.id,
           },
         });
@@ -335,6 +335,6 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
       )}
     </Box>
   );
-};
+}
 
 export default AdForm;

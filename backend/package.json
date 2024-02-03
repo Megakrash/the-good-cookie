@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsnd --poll --respawn --transpile-only ./src/index.ts",
     "build": "tsc",
-    "lint": "echo '----- Checking Backend...' && prettier --debug-check . && eslint --ext .jsx . && echo '----- Done :+1:'"
+    "lint": "echo '----- Checking Backend...' && prettier --debug-check . && eslint --ext .ts . && echo '----- Done :+1:'"
   },
   "author": "",
   "license": "ISC",

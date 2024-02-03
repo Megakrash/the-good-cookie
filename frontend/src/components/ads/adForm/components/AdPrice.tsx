@@ -6,7 +6,7 @@ type AdPriceProps = {
   setPrice: (price: number) => void;
 };
 
-const AdPrice = (props: AdPriceProps): React.ReactNode => {
+function AdPrice(props: AdPriceProps): React.ReactNode {
   return (
     <TextField
       className="adForm_boxForm_input"
@@ -21,6 +21,6 @@ const AdPrice = (props: AdPriceProps): React.ReactNode => {
       required
     />
   );
-};
+}
 
 export default AdPrice;

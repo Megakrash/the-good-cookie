@@ -6,7 +6,7 @@ type UserEmailProps = {
   setEmail: (email: string) => void;
 };
 
-const UserEmail = (props: UserEmailProps): React.ReactNode => {
+function UserEmail(props: UserEmailProps): React.ReactNode {
   return (
     <TextField
       fullWidth
@@ -20,6 +20,6 @@ const UserEmail = (props: UserEmailProps): React.ReactNode => {
       required
     />
   );
-};
+}
 
 export default UserEmail;
