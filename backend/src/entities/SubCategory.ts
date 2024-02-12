@@ -7,63 +7,63 @@ import {
   Index,
   ManyToOne,
   JoinColumn,
-} from "typeorm";
-import { Length } from "class-validator";
-import { Field, ID, InputType, ObjectType } from "type-graphql";
-import { Ad } from "./Ad";
-import { Category } from "./Category";
-import { ObjectId } from "./ObjectId";
+} from 'typeorm'
+import { Length } from 'class-validator'
+import { Field, ID, InputType, ObjectType } from 'type-graphql'
+import { Ad } from './Ad'
+import { Category } from './Category'
+import { ObjectId } from './ObjectId'
 
 @Entity()
 @ObjectType()
 export class SubCategory extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
-  id!: number;
+  id!: number
 
   @Column({ length: 50 })
-  @Length(3, 50, { message: "Entre 3 et 50 caractères" })
+  @Length(3, 50, { message: 'Entre 3 et 50 caractères' })
   @Index()
   @Field()
-  name!: string;
+  name!: string
 
   @Column({ length: 100 })
-  @Length(10, 100, { message: "Entre 10 et 100 caractères" })
+  @Length(10, 100, { message: 'Entre 10 et 100 caractères' })
   @Field()
-  picture!: string;
+  picture!: string
 
   @OneToMany(() => Ad, (ad) => ad.subCategory)
   @Field(() => [Ad])
-  ads!: Ad[];
+  ads!: Ad[]
 
   @ManyToOne(() => Category, (Category) => Category.subCategories, {
-    onDelete: "CASCADE",
+    onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: "category" })
+  @JoinColumn({ name: 'category' })
   @Field(() => Category)
-  category!: Category;
+  category!: Category
 }
 
 @InputType()
 export class SubCategoryCreateInput {
   @Field()
-  name!: string;
+  name!: string
 
   @Field()
-  picture!: string;
+  picture!: string
 
   @Field(() => ObjectId)
-  category!: ObjectId;
+  category!: ObjectId
 }
 
 @InputType()
 export class SubCategoryUpdateInput {
   @Field({ nullable: true })
-  name!: string;
+  name!: string
 
   @Field({ nullable: true })
-  picture!: string;
+  picture!: string
 
   @Field(() => ObjectId, { nullable: true })
-  category!: ObjectId;
+  category!: ObjectId
 }

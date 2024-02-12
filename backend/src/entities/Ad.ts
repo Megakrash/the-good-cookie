@@ -9,186 +9,186 @@ import {
   ManyToMany,
   JoinTable,
   OneToOne,
-} from "typeorm";
-import { Length, IsInt, IsNumberString } from "class-validator";
-import { IsCoordinates } from "./Coordinates";
-import { Field, ID, InputType, ObjectType, Int, Float } from "type-graphql";
-import { SubCategory } from "./SubCategory";
-import { Tag } from "./Tag";
-import { User } from "./User";
-import { Picture } from "./Picture";
-import { ObjectId } from "./ObjectId";
+} from 'typeorm'
+import { Length, IsInt, IsNumberString } from 'class-validator'
+import { Field, ID, InputType, ObjectType, Int, Float } from 'type-graphql'
+import { IsCoordinates } from './Coordinates'
+import { SubCategory } from './SubCategory'
+import { Tag } from './Tag'
+import { User } from './User'
+import { Picture } from './Picture'
+import { ObjectId } from './ObjectId'
 
 @Entity()
 @ObjectType()
 export class Ad extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
-  id!: number;
+  id!: number
 
   @Column({ length: 100 })
-  @Length(10, 100, { message: "Entre 10 et 100 caractères" })
+  @Length(10, 100, { message: 'Entre 10 et 100 caractères' })
   @Index()
   @Field()
-  title!: string;
+  title!: string
 
   @Column()
   @Field()
-  description!: string;
+  description!: string
 
   @Column()
   @IsInt()
   @Field()
-  price!: number;
+  price!: number
 
   @Column()
-  @Length(8, 12, { message: "Entre 8 et 12 caractères" })
+  @Length(8, 12, { message: 'Entre 8 et 12 caractères' })
   @Field()
-  createdDate!: string;
+  createdDate!: string
 
   @Column()
-  @Length(8, 12, { message: "Entre 8 et 12 caractères" })
+  @Length(8, 12, { message: 'Entre 8 et 12 caractères' })
   @Field()
-  updateDate!: string;
+  updateDate!: string
 
   @OneToOne(() => Picture, { nullable: true })
   @JoinColumn()
   @Field(() => Picture)
-  picture!: Picture;
+  picture!: Picture
 
   @Column({ length: 5, nullable: true })
   @IsNumberString(
     {},
-    { message: "Le code postal doit être une chaîne de chiffres" }
+    { message: 'Le code postal doit être une chaîne de chiffres' }
   )
-  @Length(5, 5, { message: "Le code postal doit avoir exactement 5 chiffres" })
+  @Length(5, 5, { message: 'Le code postal doit avoir exactement 5 chiffres' })
   @Field()
-  zipCode!: string;
+  zipCode!: string
 
   @Column({ length: 50, nullable: true })
-  @Length(3, 50, { message: "Entre 3 et 50 caractères" })
+  @Length(3, 50, { message: 'Entre 3 et 50 caractères' })
   @Field()
-  city!: string;
+  city!: string
 
-  @Column("simple-array")
+  @Column('simple-array')
   @IsCoordinates({
     message:
-      "Les coordonnées doivent être un tableau de deux éléments : latitude et longitude",
+      'Les coordonnées doivent être un tableau de deux éléments : latitude et longitude',
   })
   @Field(() => [Number])
-  coordinates!: number[];
+  coordinates!: number[]
 
   @ManyToOne(() => SubCategory, (subCategory) => subCategory.ads, {
-    onDelete: "CASCADE",
+    onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: "subCategory" })
+  @JoinColumn({ name: 'subCategory' })
   @Field(() => SubCategory)
-  subCategory!: SubCategory;
+  subCategory!: SubCategory
 
   @ManyToOne(() => User, (user) => user.ads, {
-    onDelete: "CASCADE",
+    onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: "user" })
+  @JoinColumn({ name: 'user' })
   @Field(() => User)
-  user!: User;
+  user!: User
 
   @ManyToMany(() => Tag, (tag) => tag.ads)
   @JoinTable()
   @Field(() => [Tag])
-  tags!: Tag[];
+  tags!: Tag[]
 }
 
 @InputType()
 export class AdCreateInput {
   @Field()
-  title!: string;
+  title!: string
 
   @Field()
-  description!: string;
+  description!: string
 
   @Field()
-  price!: number;
+  price!: number
 
   @Field({ nullable: true })
-  pictureId?: number;
+  pictureId?: number
 
   @Field()
-  zipCode!: string;
+  zipCode!: string
 
   @Field()
-  city!: string;
+  city!: string
 
   @Field(() => [Number])
-  coordinates!: number[];
+  coordinates!: number[]
 
   @Field()
-  subCategory!: ObjectId;
+  subCategory!: ObjectId
 
   @Field(() => [ObjectId])
-  tags!: ObjectId[];
+  tags!: ObjectId[]
 }
 
 @InputType()
 export class AdUpdateInput {
   @Field({ nullable: true })
-  title!: string;
+  title!: string
 
   @Field({ nullable: true })
-  description!: string;
+  description!: string
 
   @Field({ nullable: true })
-  price!: number;
+  price!: number
 
   @Field({ nullable: true })
-  pictureId?: number;
+  pictureId?: number
 
   @Field({ nullable: true })
-  zipCode!: string;
+  zipCode!: string
 
   @Field({ nullable: true })
-  city!: string;
+  city!: string
 
   @Field(() => [Number], { nullable: true })
-  coordinates!: number[];
+  coordinates!: number[]
 
   @Field({ nullable: true })
-  subCategory!: ObjectId;
+  subCategory!: ObjectId
 
   @Field(() => [ObjectId], { nullable: true })
-  tags!: ObjectId[];
+  tags!: ObjectId[]
 }
 @InputType()
 export class LocationInput {
   @Field(() => Float)
-  latitude!: number;
+  latitude!: number
 
   @Field(() => Float)
-  longitude!: number;
+  longitude!: number
 }
 
 @InputType()
 export class AdsWhere {
   @Field(() => [ID], { nullable: true })
-  subCategory?: number[];
+  subCategory?: number[]
 
   @Field(() => String, { nullable: true })
-  title?: string;
+  title?: string
 
   @Field(() => Int, { nullable: true })
-  minPrice?: number;
+  minPrice?: number
 
   @Field(() => Int, { nullable: true })
-  maxPrice?: number;
+  maxPrice?: number
 
   @Field(() => LocationInput, { nullable: true })
-  location?: LocationInput;
+  location?: LocationInput
 
   @Field(() => Int, { nullable: true })
-  radius?: number;
+  radius?: number
 
   @Field(() => String, { nullable: true })
-  createdDate?: string;
+  createdDate?: string
 
   @Field(() => [String], { nullable: true })
-  tags?: string[];
+  tags?: string[]
 }

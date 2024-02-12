@@ -1,13 +1,13 @@
-import { Request, Response } from "express";
-import { sendEmail, EmailOptions } from "./nodeMailer";
+import { Request, Response } from 'express'
+import { sendEmail, EmailOptions } from './nodeMailer'
 
 export const sendContactEmail = (req: Request, res: Response) => {
-  const { formDetails } = req.body;
+  const { formDetails } = req.body
 
   const mailOptions1: EmailOptions = {
-    from: process.env.MAIL_USER || "contact@tgc.megakrash.com",
+    from: process.env.MAIL_USER || 'contact@tgc.megakrash.com',
     to: formDetails.email,
-    subject: "Votre message à The Good Cookie",
+    subject: 'Votre message à The Good Cookie',
     html: `<!DOCTYPE html>
       <html lang="fr">
       <head>
@@ -74,11 +74,11 @@ export const sendContactEmail = (req: Request, res: Response) => {
       </body>
       </html>
       `,
-  };
+  }
 
   const mailOptions2: EmailOptions = {
-    from: process.env.MAIL_USER || "contact@tgc.megakrash.com",
-    to: process.env.MAIL_USER || "contact@tgc.megakrash.com",
+    from: process.env.MAIL_USER || 'contact@tgc.megakrash.com',
+    to: process.env.MAIL_USER || 'contact@tgc.megakrash.com',
     replyTo: formDetails.email,
     subject: "Vous avez un nouveau message d'un client",
     html: `<!DOCTYPE html>
@@ -101,13 +101,13 @@ export const sendContactEmail = (req: Request, res: Response) => {
       </body>
       </html>
       `,
-  };
+  }
 
   Promise.all([sendEmail(mailOptions1), sendEmail(mailOptions2)])
     .then(() => {
-      res.status(200).send("Emails envoyés avec succès");
+      res.status(200).send('Emails envoyés avec succès')
     })
     .catch(() => {
-      res.status(500).send("Une erreur s'est produite");
-    });
-};
+      res.status(500).send("Une erreur s'est produite")
+    })
+}

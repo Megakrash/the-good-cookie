@@ -1,10 +1,10 @@
-import { Arg, Mutation, Query, Resolver, ID, Authorized } from "type-graphql";
+import { Arg, Mutation, Query, Resolver, ID, Authorized } from 'type-graphql'
+import { validate } from 'class-validator'
 import {
   SubCategory,
   SubCategoryCreateInput,
   SubCategoryUpdateInput,
-} from "../entities/SubCategory";
-import { validate } from "class-validator";
+} from '../entities/SubCategory'
 
 @Resolver(SubCategory)
 export class SubCategoriesResolver {
@@ -12,13 +12,13 @@ export class SubCategoriesResolver {
   async subCategoriesGetAll(): Promise<SubCategory[]> {
     const subCategories = await SubCategory.find({
       relations: { ads: { picture: true }, category: true },
-      order: { name: "ASC" },
-    });
-    return subCategories;
+      order: { name: 'ASC' },
+    })
+    return subCategories
   }
 
   @Query(() => SubCategory)
-  async subCategoryById(@Arg("id", () => ID) id: number): Promise<SubCategory> {
+  async subCategoryById(@Arg('id', () => ID) id: number): Promise<SubCategory> {
     const subCategory = await SubCategory.findOne({
       where: { id },
       relations: {
@@ -27,77 +27,76 @@ export class SubCategoriesResolver {
       },
       order: {
         ads: {
-          updateDate: "DESC",
+          updateDate: 'DESC',
         },
       },
-    });
+    })
     if (!subCategory) {
-      throw new Error("SubCategory not found");
+      throw new Error('SubCategory not found')
     }
 
-    return subCategory;
+    return subCategory
   }
 
-  @Authorized("ADMIN")
+  @Authorized('ADMIN')
   @Mutation(() => SubCategory)
   async subCategoryCreate(
-    @Arg("data", () => SubCategoryCreateInput) data: SubCategoryCreateInput
+    @Arg('data', () => SubCategoryCreateInput) data: SubCategoryCreateInput
   ): Promise<SubCategory> {
-    const newSubCategory = new SubCategory();
-    Object.assign(newSubCategory, data);
-    const subCategoryName: string = data.name;
+    const newSubCategory = new SubCategory()
+    Object.assign(newSubCategory, data)
+    const subCategoryName: string = data.name
     const existingSubCategory = await SubCategory.findOne({
       where: { name: subCategoryName },
-    });
+    })
 
     if (existingSubCategory) {
-      throw new Error(`SubCategory name "${subCategoryName}" already in use`);
+      throw new Error(`SubCategory name "${subCategoryName}" already in use`)
     } else {
-      const errors = await validate(newSubCategory);
+      const errors = await validate(newSubCategory)
       if (errors.length === 0) {
-        await newSubCategory.save();
-        return newSubCategory;
-      } else {
-        throw new Error(`Error occured: ${JSON.stringify(errors)}`);
+        await newSubCategory.save()
+        return newSubCategory
       }
+      throw new Error(`Error occured: ${JSON.stringify(errors)}`)
     }
   }
 
-  @Authorized("ADMIN")
+  @Authorized('ADMIN')
   @Mutation(() => SubCategory, { nullable: true })
   async subCategoryUpdate(
-    @Arg("id", () => ID) id: number,
-    @Arg("data") data: SubCategoryUpdateInput
+    @Arg('id', () => ID) id: number,
+    @Arg('data') data: SubCategoryUpdateInput
   ): Promise<SubCategory | null> {
     const updatedSubCategory = await SubCategory.findOne({
-      where: { id: id },
-    });
+      where: { id },
+    })
     if (updatedSubCategory) {
-      Object.assign(updatedSubCategory, data);
+      Object.assign(updatedSubCategory, data)
 
-      const errors = await validate(updatedSubCategory);
+      const errors = await validate(updatedSubCategory)
       if (errors.length === 0) {
-        await updatedSubCategory.save();
+        await updatedSubCategory.save()
       } else {
-        throw new Error(`Error occured: ${JSON.stringify(errors)}`);
+        throw new Error(`Error occured: ${JSON.stringify(errors)}`)
       }
     }
-    return updatedSubCategory;
+    return updatedSubCategory
   }
 
-  @Authorized("ADMIN")
+  @Authorized('ADMIN')
   @Mutation(() => SubCategory, { nullable: true })
   async subCategoryDelete(
-    @Arg("id", () => ID) id: number
+    @Arg('id', () => ID) id: number
   ): Promise<SubCategory | null> {
     const subCategory = await SubCategory.findOne({
-      where: { id: id },
+      where: { id },
       relations: { ads: { picture: true } },
-    });
+    })
     if (subCategory) {
-      await subCategory.remove();
-      subCategory.id = id;
+      await subCategory.remove()
+      subCategory.id = id
     }
-    return subCategory;
+    return subCategory
   }
 }
