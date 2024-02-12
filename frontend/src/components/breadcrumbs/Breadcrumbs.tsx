@@ -15,7 +15,7 @@ type IconBreadcrumbsProps = {
   items: BreadcrumbItem[];
 };
 
-const IconBreadcrumbs = ({ items }: IconBreadcrumbsProps): React.ReactNode => {
+function IconBreadcrumbs({ items }: IconBreadcrumbsProps): React.ReactNode {
   return (
     <Breadcrumbs aria-label="breadcrumb">
       <Link
@@ -53,5 +53,5 @@ const IconBreadcrumbs = ({ items }: IconBreadcrumbsProps): React.ReactNode => {
       })}
     </Breadcrumbs>
   );
-};
+}
 export default IconBreadcrumbs;

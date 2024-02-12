@@ -6,7 +6,7 @@ type LayoutProps = {
   children: ReactNode;
 };
 
-const LayoutLight = (props: LayoutProps): ReactNode => {
+function LayoutLight(props: LayoutProps): ReactNode {
   return (
     <>
       <Head>
@@ -18,6 +18,6 @@ const LayoutLight = (props: LayoutProps): ReactNode => {
       <main>{props.children}</main>
     </>
   );
-};
+}
 
 export default LayoutLight;

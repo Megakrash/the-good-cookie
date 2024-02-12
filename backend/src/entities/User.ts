@@ -6,248 +6,248 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
-} from "typeorm";
+} from 'typeorm'
 import {
   IsEmail,
   IsNumberString,
   IsOptional,
   Length,
   Matches,
-} from "class-validator";
+} from 'class-validator'
 import {
   Field,
   ID,
   InputType,
   ObjectType,
   registerEnumType,
-} from "type-graphql";
-import { Ad } from "./Ad";
-import { ObjectId } from "./ObjectId";
-import { IsCoordinates } from "./Coordinates";
-import { Picture } from "./Picture";
+} from 'type-graphql'
+import { Ad } from './Ad'
+import { ObjectId } from './ObjectId'
+import { IsCoordinates } from './Coordinates'
+import { Picture } from './Picture'
 
 export enum Role {
-  USER = "USER",
-  ADMIN = "ADMIN",
+  USER = 'USER',
+  ADMIN = 'ADMIN',
 }
 
 registerEnumType(Role, {
-  name: "Role",
-});
+  name: 'Role',
+})
 
 @Entity()
 @ObjectType()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
-  id!: number;
+  id!: number
 
   @Column({ length: 50 })
-  @Length(2, 50, { message: "Entre 2 et 50 caractères" })
+  @Length(2, 50, { message: 'Entre 2 et 50 caractères' })
   @Matches(/^[a-zA-ZÀ-ÿ-]+$/, {
-    message: "Le prénom ne doit contenir que des lettres",
+    message: 'Le prénom ne doit contenir que des lettres',
   })
   @Field()
-  firstName!: string;
+  firstName!: string
 
   @Column({ length: 50 })
-  @Length(2, 50, { message: "Entre 2 et 50 caractères" })
+  @Length(2, 50, { message: 'Entre 2 et 50 caractères' })
   @Matches(/^[a-zA-ZÀ-ÿ-]+$/, {
-    message: "Le nom de famille ne doit contenir que des lettres",
+    message: 'Le nom de famille ne doit contenir que des lettres',
   })
   @Field()
-  lastName!: string;
+  lastName!: string
 
   @Column({ length: 50, nullable: true })
-  @Length(2, 50, { message: "Entre 2 et 50 caractères" })
+  @Length(2, 50, { message: 'Entre 2 et 50 caractères' })
   @Field({ nullable: true })
-  nickName!: string;
+  nickName!: string
 
   @OneToOne(() => Picture, { nullable: true })
   @JoinColumn()
   @Field({ nullable: true })
-  picture?: Picture;
+  picture?: Picture
 
   @Column({ length: 255, unique: true })
   @Field()
   @IsEmail()
-  email!: string;
+  email!: string
 
   @Column({ length: 250 })
-  hashedPassword!: string;
+  hashedPassword!: string
 
   @Column()
-  @Length(8, 12, { message: "Entre 8 et 12 caractères" })
+  @Length(8, 12, { message: 'Entre 8 et 12 caractères' })
   @Field()
-  registrationDate!: string;
+  registrationDate!: string
 
   @Column({ length: 100, nullable: true })
   @IsOptional()
-  @Length(5, 100, { message: "Entre 5 et 100 caractères" })
+  @Length(5, 100, { message: 'Entre 5 et 100 caractères' })
   @Field({ nullable: true })
-  adress!: string;
+  adress!: string
 
   @Column({ length: 5, nullable: true })
   @IsNumberString(
     {},
-    { message: "Le code postal doit être une chaîne de chiffres" }
+    { message: 'Le code postal doit être une chaîne de chiffres' }
   )
-  @Length(5, 5, { message: "Le code postal doit avoir exactement 5 chiffres" })
+  @Length(5, 5, { message: 'Le code postal doit avoir exactement 5 chiffres' })
   @Field()
-  zipCode!: string;
+  zipCode!: string
 
   @Column({ length: 50, nullable: true })
-  @Length(3, 50, { message: "Entre 3 et 50 caractères" })
+  @Length(3, 50, { message: 'Entre 3 et 50 caractères' })
   @Field()
-  city!: string;
+  city!: string
 
-  @Column("simple-array")
+  @Column('simple-array')
   @IsCoordinates({
     message:
-      "Les coordonnées doivent être un tableau de deux éléments : latitude et longitude",
+      'Les coordonnées doivent être un tableau de deux éléments : latitude et longitude',
   })
   @Field(() => [Number])
-  coordinates!: number[];
+  coordinates!: number[]
 
   @Column({ length: 10, nullable: true })
   @IsOptional()
   @IsNumberString(
     {},
-    { message: "Le numéro de téléphone doit être une chaîne de chiffres" }
+    { message: 'Le numéro de téléphone doit être une chaîne de chiffres' }
   )
   @Length(10, 10, {
-    message: "Le numéro de téléphone doit avoir exactement 10 chiffres",
+    message: 'Le numéro de téléphone doit avoir exactement 10 chiffres',
   })
   @Field({ nullable: true })
-  phoneNumber!: string;
+  phoneNumber!: string
 
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: Role,
     default: Role.USER,
   })
   @Field(() => Role)
-  role!: Role;
+  role!: Role
 
   @OneToMany(() => Ad, (ad) => ad.user)
   @Field(() => [Ad])
-  ads!: Ad[];
+  ads!: Ad[]
 
   @Column({ default: false })
-  isVerified!: boolean;
+  isVerified!: boolean
 }
 
 @InputType()
 export class UserCreateInput {
   @Field()
-  firstName!: string;
+  firstName!: string
 
   @Field()
-  lastName!: string;
+  lastName!: string
 
   @Field()
-  nickName!: string;
+  nickName!: string
 
   @Field({ nullable: true })
-  pictureId?: number;
+  pictureId?: number
 
   @Field()
-  email!: string;
+  email!: string
 
   @Field()
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
-  password!: string;
+  password!: string
 
   @Field({ nullable: true })
-  adress?: string;
+  adress?: string
 
   @Field()
-  zipCode!: string;
+  zipCode!: string
 
   @Field()
-  city!: string;
+  city!: string
 
   @Field(() => [Number])
-  coordinates!: number[];
+  coordinates!: number[]
 
   @Field({ nullable: true })
-  phoneNumber?: string;
+  phoneNumber?: string
 
   @Field(() => Role)
-  role!: Role;
+  role!: Role
 
   @Field()
-  isVerified!: boolean;
+  isVerified!: boolean
 }
 
 @InputType()
 export class UserUpdateInput {
   @Field({ nullable: true })
-  firstName!: string;
+  firstName!: string
 
   @Field({ nullable: true })
-  lastName!: string;
+  lastName!: string
 
   @Field({ nullable: true })
-  nickName!: string;
+  nickName!: string
 
   @Field({ nullable: true })
-  pictureId?: number;
+  pictureId?: number
 
   @Field({ nullable: true })
-  adress!: string;
+  adress!: string
 
   @Field({ nullable: true })
-  zipCode!: string;
+  zipCode!: string
 
   @Field({ nullable: true })
-  city!: string;
+  city!: string
 
   @Field(() => [Number], { nullable: true })
-  coordinates!: number[];
+  coordinates!: number[]
 
   @Field({ nullable: true })
-  phoneNumber!: string;
+  phoneNumber!: string
 
   @Field({ nullable: true })
-  role!: Role;
+  role!: Role
 
   @Field(() => [ObjectId], { nullable: true })
-  ads!: ObjectId[];
+  ads!: ObjectId[]
 
   @Field()
-  isVerified!: boolean;
+  isVerified!: boolean
 }
 
 @InputType()
 export class UserLoginInput {
   @Field()
-  email!: string;
+  email!: string
 
   @Field()
-  password!: string;
+  password!: string
 }
 
 @ObjectType()
 export class UserContext {
   @Field()
-  id!: number;
+  id!: number
 
   @Field()
-  nickName!: string;
+  nickName!: string
 
   @Field()
-  picture!: string;
+  picture!: string
 
   @Field(() => Role)
-  role!: Role;
+  role!: Role
 }
 
 @ObjectType()
 export class VerifyEmailResponse {
   @Field()
-  success!: boolean;
+  success!: boolean
 
   @Field({ nullable: true })
-  message?: string;
+  message?: string
 }

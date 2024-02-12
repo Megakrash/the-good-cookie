@@ -16,7 +16,7 @@ type UserEmailVerify = {
   message: string;
 };
 
-const EmailVerify = () => {
+function EmailVerify() {
   const router = useRouter();
   const { token } = router.query;
   const [requestSend, setRequestSend] = useState(false);
@@ -66,10 +66,10 @@ const EmailVerify = () => {
         onClick={() => router.push("/connexion")}
         sx={{ marginTop: "1rem" }}
       >
-        {`Page de connexion`}
+        Page de connexion
       </Button>
     </Card>
   );
-};
+}
 
 export default EmailVerify;

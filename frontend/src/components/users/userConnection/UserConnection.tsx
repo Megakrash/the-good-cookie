@@ -8,14 +8,14 @@ import {
   Typography,
 } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
-import UserEmail from "../components/UserEmail";
-import UserPassword from "../components/UserPassword";
 import { mutationUserLogin, queryMeContext } from "@/components/graphql/Users";
 import { useMutation } from "@apollo/client";
 import toast, { Toaster } from "react-hot-toast";
 import router from "next/router";
+import UserPassword from "../components/UserPassword";
+import UserEmail from "../components/UserEmail";
 
-const UserConnection = (): React.ReactNode => {
+function UserConnection(): React.ReactNode {
   const [email, setEmail] = useState<string>("jl.debre2@relou.wtf");
   const [password, setPassword] = useState<string>("Warcraft!!2023");
   const handlePasswordChange = (newPassword: React.SetStateAction<string>) => {
@@ -85,11 +85,11 @@ const UserConnection = (): React.ReactNode => {
           Pas encore de cookie compte ?
         </Typography>
         <Link variant="body2" href="/inscription">
-          {"Inscrivez-vous"}
+          Inscrivez-vous
         </Link>
       </Box>
     </Card>
   );
-};
+}
 
 export default UserConnection;

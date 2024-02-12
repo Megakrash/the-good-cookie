@@ -6,14 +6,14 @@ type AdTitleProps = {
   setTitle: (title: string) => void;
 };
 
-const AdTitle = (props: AdTitleProps): React.ReactNode => {
+function AdTitle(props: AdTitleProps): React.ReactNode {
   const [titleError, setTitleError] = useState<string>("");
 
   const validateTitle = (title: string) =>
     /^[\wÀ-ÿ- !@#$%^&*()_+`~{}\[\]:;"'<>,.?\/\\|=]{4,}$/.test(title);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const { value } = e.target;
     props.setTitle(value);
     if (!validateTitle(value)) {
       setTitleError("Taille minimum 4 caractères");
@@ -36,6 +36,6 @@ const AdTitle = (props: AdTitleProps): React.ReactNode => {
       helperText={titleError}
     />
   );
-};
+}
 
 export default AdTitle;

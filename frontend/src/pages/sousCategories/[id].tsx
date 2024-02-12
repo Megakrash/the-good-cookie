@@ -6,7 +6,7 @@ import { useQuery } from "@apollo/client";
 import { querySubCatAndAds } from "@/components/graphql/SubCategories";
 import IconBreadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 
-const SubCategoryComponent = (): React.ReactNode => {
+function SubCategoryComponent(): React.ReactNode {
   const router = useRouter();
   const { id } = router.query;
   const { data, error, loading } = useQuery<{ item: SubCategoryTypes }>(
@@ -48,6 +48,6 @@ const SubCategoryComponent = (): React.ReactNode => {
       )}
     </LayoutFull>
   );
-};
+}
 
 export default SubCategoryComponent;

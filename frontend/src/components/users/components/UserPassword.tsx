@@ -18,7 +18,7 @@ type UserPasswordProps = {
   onPasswordChange: (newPassword: string) => void;
 };
 
-const UserPassword = (props: UserPasswordProps): React.ReactNode => {
+function UserPassword(props: UserPasswordProps): React.ReactNode {
   // Criteria & errors
   const [touched, setTouched] = useState<Boolean>(false);
   const validatePassword = (password: string) => {
@@ -122,6 +122,6 @@ const UserPassword = (props: UserPasswordProps): React.ReactNode => {
       )}
     </>
   );
-};
+}
 
 export default UserPassword;

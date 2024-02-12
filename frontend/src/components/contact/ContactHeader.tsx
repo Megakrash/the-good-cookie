@@ -1,7 +1,7 @@
 import { Button, Typography, Box } from "@mui/material";
 import { PATH_IMAGE } from "@/api/configApi";
 
-const ContactHeader = (): React.ReactNode => {
+function ContactHeader(): React.ReactNode {
   return (
     <Box
       sx={{
@@ -29,6 +29,6 @@ const ContactHeader = (): React.ReactNode => {
       </Typography>
     </Box>
   );
-};
+}
 
 export default ContactHeader;

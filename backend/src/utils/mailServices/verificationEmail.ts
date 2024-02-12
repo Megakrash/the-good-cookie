@@ -1,5 +1,5 @@
-import jwt from "jsonwebtoken";
-import { sendEmail, EmailOptions } from "./nodeMailer";
+import jwt from 'jsonwebtoken'
+import { sendEmail, EmailOptions } from './nodeMailer'
 
 export const sendVerificationEmail = async (
   userEmail: string,
@@ -7,16 +7,16 @@ export const sendVerificationEmail = async (
 ) => {
   const token = jwt.sign(
     { email: userEmail, nickName: userNickName },
-    process.env.JWT_VERIFY_EMAIL_SECRET_KEY || "",
-    { expiresIn: "12h" }
-  );
+    process.env.JWT_VERIFY_EMAIL_SECRET_KEY || '',
+    { expiresIn: '12h' }
+  )
 
-  const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+  const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${token}`
 
   const emailOptions: EmailOptions = {
-    from: process.env.MAIL_USER || "contact@tgc.megakrash.com",
-    to: userEmail || "contact@tgc.megakrash.com",
-    subject: "Finalisez votre inscription sur The Good Cookie",
+    from: process.env.MAIL_USER || 'contact@tgc.megakrash.com',
+    to: userEmail || 'contact@tgc.megakrash.com',
+    subject: 'Finalisez votre inscription sur The Good Cookie',
     html: `<!DOCTYPE html>
     <html lang="fr">
     <head>
@@ -82,26 +82,26 @@ export const sendVerificationEmail = async (
     </body>
     </html>
     `,
-  };
+  }
 
   try {
-    const info = await sendEmail(emailOptions);
-    return info;
+    const info = await sendEmail(emailOptions)
+    return info
   } catch (error) {
-    throw new Error(`Error sending verification email: ${error}`);
+    throw new Error(`Error sending verification email: ${error}`)
   }
-};
+}
 
 export const sendConfirmationEmail = async (
   userEmail: string,
   userNickName: string
 ) => {
-  const frontLink = `${process.env.FRONTEND_URL}/connexion`;
+  const frontLink = `${process.env.FRONTEND_URL}/connexion`
 
   const emailOptions: EmailOptions = {
-    from: process.env.MAIL_USER || "contact@tgc.megakrash.com",
-    to: userEmail || "contact@tgc.megakrash.com",
-    subject: "Bienvenue sur The Good Cookie !",
+    from: process.env.MAIL_USER || 'contact@tgc.megakrash.com',
+    to: userEmail || 'contact@tgc.megakrash.com',
+    subject: 'Bienvenue sur The Good Cookie !',
     html: `<!DOCTYPE html>
     <html lang="fr">
     <head>
@@ -168,12 +168,12 @@ export const sendConfirmationEmail = async (
     </body>
     </html>
     `,
-  };
+  }
 
   try {
-    const info = await sendEmail(emailOptions);
-    return info;
+    const info = await sendEmail(emailOptions)
+    return info
   } catch (error) {
-    throw new Error(`Error sending verification email: ${error}`);
+    throw new Error(`Error sending verification email: ${error}`)
   }
-};
+}

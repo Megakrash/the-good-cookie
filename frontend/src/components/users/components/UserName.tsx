@@ -8,14 +8,14 @@ type UserNameProps = {
   setLastName: (lastName: string) => void;
 };
 
-const UserName = (props: UserNameProps): React.ReactNode => {
+function UserName(props: UserNameProps): React.ReactNode {
   const [firstNameError, setFirstNameError] = useState<string>("");
   const [lastNameError, setLastNameError] = useState<string>("");
 
   const validateName = (name: string) => /^[a-zA-ZÀ-ÿ\s-]{2,50}$/.test(name);
 
   const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const { value } = e.target;
     props.setFirstName(value);
     if (!validateName(value)) {
       setFirstNameError(
@@ -27,7 +27,7 @@ const UserName = (props: UserNameProps): React.ReactNode => {
   };
 
   const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const { value } = e.target;
     props.setLastName(value);
     if (!validateName(value)) {
       setLastNameError(
@@ -66,6 +66,6 @@ const UserName = (props: UserNameProps): React.ReactNode => {
       />
     </Box>
   );
-};
+}
 
 export default UserName;

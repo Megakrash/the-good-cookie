@@ -2,7 +2,6 @@ import Link from "next/link";
 import IconButton from "@mui/material/IconButton";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { useMutation, useQuery } from "@apollo/client";
-import { mutationSignOut, queryMeContext } from "../graphql/Users";
 import { UserContextTypes } from "@/types/UserTypes";
 import {
   AppBar,
@@ -26,6 +25,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { PATH_IMAGE } from "@/api/configApi";
+import { mutationSignOut, queryMeContext } from "../graphql/Users";
 
 const buttonStyles = {
   color: "white",

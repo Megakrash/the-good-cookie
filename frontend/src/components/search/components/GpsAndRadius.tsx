@@ -19,7 +19,7 @@ type GpsAndRadiusProps = {
   radius: number;
 };
 
-const GpsAndRadius = (props: GpsAndRadiusProps): React.ReactNode => {
+function GpsAndRadius(props: GpsAndRadiusProps): React.ReactNode {
   const [inputValue, setInputValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
@@ -146,6 +146,6 @@ const GpsAndRadius = (props: GpsAndRadiusProps): React.ReactNode => {
       </FormGroup>
     </Box>
   );
-};
+}
 
 export default GpsAndRadius;

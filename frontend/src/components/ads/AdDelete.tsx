@@ -1,15 +1,15 @@
 import { ReactNode } from "react";
 import { useMutation } from "@apollo/client";
-import { mutationDeleteAd, queryAllAds } from "../graphql/Ads";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { mutationDeleteAd, queryAllAds } from "../graphql/Ads";
 
 type DeleteAdProps = {
   id: number;
 };
 
-const DeleteAd = (props: DeleteAdProps): ReactNode => {
+function DeleteAd(props: DeleteAdProps): ReactNode {
   const [doDelete] = useMutation(mutationDeleteAd, {
     refetchQueries: [queryAllAds],
   });
@@ -29,8 +29,10 @@ const DeleteAd = (props: DeleteAdProps): ReactNode => {
         type="button"
         onClick={deleteAd}
         size="small"
-      >{`Effacer`}</Button>
+      >
+        Effacer
+      </Button>
     </CardActions>
   );
-};
+}
 export default DeleteAd;

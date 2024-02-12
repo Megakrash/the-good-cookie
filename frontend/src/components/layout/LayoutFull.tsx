@@ -7,7 +7,7 @@ type LayoutProps = {
   children: ReactNode;
 };
 
-const LayoutFull = (props: LayoutProps): ReactNode => {
+function LayoutFull(props: LayoutProps): ReactNode {
   return (
     <>
       <Head>
@@ -20,6 +20,6 @@ const LayoutFull = (props: LayoutProps): ReactNode => {
       <main>{props.children}</main>
     </>
   );
-};
+}
 
 export default LayoutFull;

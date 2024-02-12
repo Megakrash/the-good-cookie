@@ -1,10 +1,5 @@
 import React, { FormEvent, useRef, useState } from "react";
 import axios from "axios";
-import UserName from "../components/UserName";
-import UserPassword from "../components/UserPassword";
-import UserZipCity from "../components/UserZipCity";
-import UserEmail from "../components/UserEmail";
-import UserPhone from "../components/UserPhone";
 import toast, { Toaster } from "react-hot-toast";
 import {
   Box,
@@ -25,8 +20,13 @@ import { useMutation } from "@apollo/client";
 import router from "next/router";
 import { DownloadInput } from "@/styles/MuiStyled";
 import SendIcon from "@mui/icons-material/Send";
+import UserPhone from "../components/UserPhone";
+import UserEmail from "../components/UserEmail";
+import UserZipCity from "../components/UserZipCity";
+import UserPassword from "../components/UserPassword";
+import UserName from "../components/UserName";
 
-const UserForm = (): React.ReactNode => {
+function UserForm(): React.ReactNode {
   // ReCaptcha
   const [recaptcha, setRecaptcha] = useState(false);
   const captchaRef = useRef(null);
@@ -91,7 +91,7 @@ const UserForm = (): React.ReactNode => {
 
       const result = await doCreate({
         variables: {
-          data: data,
+          data,
         },
       });
       if ("id" in result.data?.item) {
@@ -180,7 +180,7 @@ const UserForm = (): React.ReactNode => {
           variant="contained"
           startIcon={<CloudUploadIcon />}
         >
-          {`Télécharger une image de profil`}
+          Télécharger une image de profil
           <DownloadInput
             type="file"
             accept=".jpg, .png, .webp"
@@ -208,12 +208,12 @@ const UserForm = (): React.ReactNode => {
             Déjà inscrit ?
           </Typography>
           <Link variant="body2" href="/connexion">
-            {"Connectez-vous"}
+            Connectez-vous
           </Link>
         </Box>
       </FormControl>
     </Card>
   );
-};
+}
 
 export default UserForm;
