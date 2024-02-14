@@ -32,7 +32,7 @@ function UserConnection(): React.ReactNode {
         variables: { data: { email, password } },
       });
       if ("id" in data.item) {
-        toast(`Connexion réussie, bienvenue ${data.item.nickName}`, {
+        toast(`Connexion réussie, bienvenue ${data.item.firstName}`, {
           style: { background: "#0fcc45", color: "#fff" },
         });
         setTimeout(() => {
@@ -84,7 +84,7 @@ function UserConnection(): React.ReactNode {
         <Typography variant="subtitle2" gutterBottom>
           Pas encore de cookie compte ?
         </Typography>
-        <Link variant="body2" href="/inscription">
+        <Link variant="body2" href="/signup">
           Inscrivez-vous
         </Link>
       </Box>
