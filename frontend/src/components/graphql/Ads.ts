@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
 
 export const queryAllAds = gql`
   query adsAll($where: AdsWhere) {
@@ -36,7 +36,7 @@ export const queryAllAds = gql`
       }
     }
   }
-`;
+`
 export const queryAdById = gql`
   query AdById($adByIdId: ID!) {
     item: adById(id: $adByIdId) {
@@ -75,7 +75,7 @@ export const queryAdById = gql`
       }
     }
   }
-`;
+`
 
 export const mutationCreateAd = gql`
   mutation adCreate($data: AdCreateInput!) {
@@ -83,7 +83,7 @@ export const mutationCreateAd = gql`
       id
     }
   }
-`;
+`
 
 export const mutationUpdateAd = gql`
   mutation adUpdate($data: AdUpdateInput!, $adUpdateId: ID!) {
@@ -91,7 +91,7 @@ export const mutationUpdateAd = gql`
       id
     }
   }
-`;
+`
 
 export const mutationDeleteAd = gql`
   mutation adDelete($adDeleteId: ID!) {
@@ -100,4 +100,4 @@ export const mutationDeleteAd = gql`
       title
     }
   }
-`;
+`

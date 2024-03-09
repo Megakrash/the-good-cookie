@@ -1,6 +1,6 @@
-import LayoutFull from "@/components/layout/LayoutFull";
-import ContactHeader from "@/components/contact/ContactHeader";
-import ContactForm from "@/components/contact/ContactForm";
+import LayoutFull from '@/components/layout/LayoutFull'
+import ContactHeader from '@/components/contact/ContactHeader'
+import ContactForm from '@/components/contact/ContactForm'
 
 function SignPage(): React.ReactNode {
   return (
@@ -8,7 +8,7 @@ function SignPage(): React.ReactNode {
       <ContactHeader />
       <ContactForm />
     </LayoutFull>
-  );
+  )
 }
 
-export default SignPage;
+export default SignPage

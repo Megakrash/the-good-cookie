@@ -1,10 +1,10 @@
-import React from "react";
-import { TextField } from "@mui/material";
+import React from 'react'
+import { TextField } from '@mui/material'
 
 type UserEmailProps = {
-  email: string;
-  setEmail: (email: string) => void;
-};
+  email: string
+  setEmail: (email: string) => void
+}
 
 function UserEmail(props: UserEmailProps): React.ReactNode {
   return (
@@ -15,11 +15,11 @@ function UserEmail(props: UserEmailProps): React.ReactNode {
       size="small"
       label="Email"
       variant="outlined"
-      value={props.email || ""}
+      value={props.email || ''}
       onChange={(e) => props.setEmail(e.target.value)}
       required
     />
-  );
+  )
 }
 
-export default UserEmail;
+export default UserEmail

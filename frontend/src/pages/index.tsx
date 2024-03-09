@@ -1,6 +1,6 @@
-import LayoutFull from "@/components/layout/LayoutFull";
-import RecentAds from "@/components/ads/RecentAds";
-import Search from "@/components/search/Search";
+import LayoutFull from '@/components/layout/LayoutFull'
+import RecentAds from '@/components/ads/RecentAds'
+import Search from '@/components/search/Search'
 
 function Home(): React.ReactNode {
   return (
@@ -8,7 +8,7 @@ function Home(): React.ReactNode {
       <Search />
       <RecentAds />
     </LayoutFull>
-  );
+  )
 }
 
-export default Home;
+export default Home

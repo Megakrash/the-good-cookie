@@ -1,71 +1,41 @@
-import React, { useState } from "react";
-import { Box, TextField } from "@mui/material";
+import React, { useState } from 'react'
+import { TextField } from '@mui/material'
 
 type UserNameProps = {
-  firstName: string;
-  setFirstName: (firstName: string) => void;
-  lastName: string;
-  setLastName: (lastName: string) => void;
-};
-
-function UserName(props: UserNameProps): React.ReactNode {
-  const [firstNameError, setFirstNameError] = useState<string>("");
-  const [lastNameError, setLastNameError] = useState<string>("");
-
-  const validateName = (name: string) => /^[a-zA-ZÀ-ÿ\s-]{2,50}$/.test(name);
-
-  const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    props.setFirstName(value);
-    if (!validateName(value)) {
-      setFirstNameError(
-        "Ne doit contenir que des lettres (minimum 2, maximum 50)"
-      );
-    } else {
-      setFirstNameError("");
-    }
-  };
-
-  const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    props.setLastName(value);
-    if (!validateName(value)) {
-      setLastNameError(
-        "Ne doit contenir que des lettres (minimum 2, maximum 50)"
-      );
-    } else {
-      setLastNameError("");
-    }
-  };
-
-  return (
-    <Box className="userForm_control_box">
-      <TextField
-        fullWidth
-        id="firstName"
-        size="small"
-        label="Prénom"
-        variant="outlined"
-        value={props.firstName}
-        onChange={handleFirstNameChange}
-        required
-        error={!!firstNameError}
-        helperText={firstNameError}
-      />
-      <TextField
-        fullWidth
-        id="lastName"
-        size="small"
-        label="Nom"
-        variant="outlined"
-        value={props.lastName}
-        onChange={handleLastNameChange}
-        required
-        error={!!lastNameError}
-        helperText={lastNameError}
-      />
-    </Box>
-  );
+  userName: string
+  setUserName: (firstName: string) => void
+  type: string
 }
 
-export default UserName;
+function UserName(props: UserNameProps): React.ReactNode {
+  const [nameError, setNameError] = useState<string>('')
+
+  const validateName = (name: string) => /^[a-zA-ZÀ-ÿ\s-]{2,50}$/.test(name)
+
+  const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target
+    props.setUserName(value)
+    if (!validateName(value)) {
+      setNameError('Ne doit contenir que des lettres (minimum 2, maximum 50)')
+    } else {
+      setNameError('')
+    }
+  }
+
+  return (
+    <TextField
+      fullWidth
+      id={props.type === 'firstName' ? 'firstName' : 'lastName'}
+      size="small"
+      label={props.type === 'firstName' ? 'Prénom' : 'Nom'}
+      variant="outlined"
+      value={props.userName}
+      onChange={handleFirstNameChange}
+      required
+      error={!!nameError}
+      helperText={nameError}
+    />
+  )
+}
+
+export default UserName

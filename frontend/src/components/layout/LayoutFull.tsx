@@ -1,11 +1,11 @@
-import { ReactNode } from "react";
-import Head from "next/head";
-import Navbar from "../navbar/Navbar";
+import { ReactNode } from 'react'
+import Head from 'next/head'
+import Navbar from '../navbar/Navbar'
 
 type LayoutProps = {
-  title: string;
-  children: ReactNode;
-};
+  title: string
+  children: ReactNode
+}
 
 function LayoutFull(props: LayoutProps): ReactNode {
   return (
@@ -19,7 +19,7 @@ function LayoutFull(props: LayoutProps): ReactNode {
       <Navbar />
       <main>{props.children}</main>
     </>
-  );
+  )
 }
 
-export default LayoutFull;
+export default LayoutFull

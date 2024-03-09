@@ -1,4 +1,4 @@
-import LayoutFull from "@/components/layout/LayoutFull";
+import LayoutFull from '@/components/layout/LayoutFull'
 
 const about = () => {
   return (
@@ -8,7 +8,7 @@ const about = () => {
         <p>tafljsdf ^fk</p>
       </main>
     </LayoutFull>
-  );
-};
+  )
+}
 
-export default about;
+export default about
