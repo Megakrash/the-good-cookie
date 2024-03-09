@@ -38,9 +38,6 @@ function SignUp(): React.ReactNode {
   const [lastName, setLastName] = useState<string>('')
   const [nickName, setNickName] = useState<string>('')
   const [password, setPassword] = useState<string>('')
-  const handlePasswordChange = (newPassword: React.SetStateAction<string>) => {
-    setPassword(newPassword)
-  }
   const [zipCode, setZipCode] = useState<string>('')
   const [city, setCity] = useState<string>('')
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0])
@@ -208,7 +205,7 @@ function SignUp(): React.ReactNode {
           <Typography variant="subtitle2" gutterBottom>
             Déjà inscrit ?
           </Typography>
-          <Link variant="body2" href="/connexion">
+          <Link variant="body2" href="/signin">
             Connectez-vous
           </Link>
         </Box>

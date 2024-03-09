@@ -58,7 +58,7 @@ export default function Header(): React.ReactNode {
       setUserContext(null)
       setAnchorElUser(null)
       setUserConnected(false)
-      router.replace(`/connexion`)
+      router.replace(`/signin`)
     },
     refetchQueries: [{ query: queryMeContext }],
   })
