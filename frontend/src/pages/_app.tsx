@@ -33,6 +33,15 @@ const theme = createTheme({
       dark: '#24282C',
     },
   },
+  typography: {
+    fontFamily: 'Poppins, sans-serif',
+    h1: {
+      fontFamily: 'Impact, sans-serif',
+    },
+    h2: {
+      fontFamily: 'Impact, sans-serif',
+    },
+  },
 })
 const client = new ApolloClient({
   link: new HttpLink({
@@ -65,7 +74,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (privatePages.includes(router.pathname) && error) {
-      router.replace('/connexion')
+      router.replace('/signin')
     }
   }, [router, error])
 

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
 // Variables
 @import './variables.colors.scss';
 
@@ -6,7 +8,7 @@
 
 // Components
 @import '../components/appBar/appBar.scss';
-@import '../components/users/userForm/userForm.scss';
+@import '../components/users/signUp/userForm.scss';
 @import '../components/users/userVerifyEmail/emailVerify.scss';
 @import '../components/ads/adForm/adForm.scss';
 @import '../components/search/search.scss';

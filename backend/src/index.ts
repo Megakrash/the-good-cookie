@@ -3,45 +3,39 @@
 //-----------------------------------------
 
 import 'reflect-metadata'
-import { buildSchema } from 'type-graphql'
-import { ApolloServer } from '@apollo/server'
-import { expressMiddleware } from '@apollo/server/express4'
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
-import express, { Request, Response } from 'express'
-import http from 'http'
-import cors from 'cors'
-import path from 'path'
-import axios from 'axios'
 import { dataSource } from './datasource'
 
 //-----------------------------------------
-// -----------------PICTURES----------------
+// -----------------PICTURES---------------
 //-----------------------------------------
 
 import { uploadPicture } from './utils/pictureServices/multer'
 import { createImage } from './utils/pictureServices/pictureServices'
 
 //-----------------------------------------
-// ----------GRAPHQL / APOLLO SERVER--------
+// ----------GRAPHQL / APOLLO SERVER-------
 //-----------------------------------------
 
+import { getSchema } from './schema'
+import { ApolloServer } from '@apollo/server'
+import { expressMiddleware } from '@apollo/server/express4'
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
+
 //-----------------------------------------
-// -----------------RESOLVERS---------------
+// -----------------TYPES------------------
 //-----------------------------------------
 
-import { TagsResolver } from './resolvers/Tags'
-import { AdsResolver } from './resolvers/Ads'
-import { CategoriesResolver } from './resolvers/Categories'
-import { SubCategoriesResolver } from './resolvers/SubCategories'
-import { UsersResolver } from './resolvers/Users'
-import { customAuthChecker } from './auth'
-import { PictureResolver } from './resolvers/Pictures'
 import { Role } from './entities/User'
 
 //-----------------------------------------
-// -----------------EXPRESS-----------------
+// -----------------EXPRESS----------------
 //-----------------------------------------
 
+import express, { Request, Response } from 'express'
+import http from 'http'
+import cors from 'cors'
+import path from 'path'
+import axios from 'axios'
 // Send contact email
 import { verifyRecaptchaToken } from './utils/reCaptcha'
 import { sendContactEmail } from './utils/mailServices/contactEmail'
@@ -73,18 +67,8 @@ app.use(express.json({ limit: '50mb' }))
 app.use(express.static(path.join(__dirname, '../public')))
 
 async function start() {
-  const port = 5000
-  const schema = await buildSchema({
-    resolvers: [
-      TagsResolver,
-      AdsResolver,
-      CategoriesResolver,
-      SubCategoriesResolver,
-      UsersResolver,
-      PictureResolver,
-    ],
-    authChecker: customAuthChecker,
-  })
+  const port = process.env.BACKEND_PORT || 5000
+  const schema = await getSchema()
 
   const httpServer = http.createServer(app)
   const server = new ApolloServer({
