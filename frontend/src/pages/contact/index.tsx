@@ -1,14 +1,14 @@
-import LayoutFull from "@/components/layout/LayoutFull";
-import ContactHeader from "@/components/contact/ContactHeader";
-import ContactForm from "@/components/contact/ContactForm";
+import LayoutFull from '@/components/layout/LayoutFull'
+import ContactHeader from '@/components/contact/ContactHeader'
+import ContactForm from '@/components/contact/ContactForm'
 
-const SignPage = (): React.ReactNode => {
+function SignPage(): React.ReactNode {
   return (
     <LayoutFull title="TGC : Contact">
       <ContactHeader />
       <ContactForm />
     </LayoutFull>
-  );
-};
+  )
+}
 
-export default SignPage;
+export default SignPage

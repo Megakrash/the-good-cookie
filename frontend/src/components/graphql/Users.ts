@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
 
 export const mutationCreateUser = gql`
   mutation userCreate($data: UserCreateInput!) {
@@ -8,7 +8,7 @@ export const mutationCreateUser = gql`
       registrationDate
     }
   }
-`;
+`
 
 export const mutationVerifyEmail = gql`
   mutation verifyEmail($token: String!) {
@@ -17,16 +17,16 @@ export const mutationVerifyEmail = gql`
       message
     }
   }
-`;
+`
 
 export const mutationUserLogin = gql`
   mutation userLogin($data: UserLoginInput!) {
     item: userLogin(data: $data) {
       id
-      nickName
+      firstName
     }
   }
-`;
+`
 
 export const queryMe = gql`
   query me {
@@ -49,7 +49,7 @@ export const queryMe = gql`
       role
     }
   }
-`;
+`
 
 export const queryMeContext = gql`
   query meContext {
@@ -59,10 +59,10 @@ export const queryMeContext = gql`
       picture
     }
   }
-`;
+`
 
 export const mutationSignOut = gql`
   mutation userSignOut {
     userSignOut
   }
-`;
+`

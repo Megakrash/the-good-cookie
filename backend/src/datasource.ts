@@ -1,19 +1,18 @@
-import { DataSource } from "typeorm";
-import { Category } from "./entities/Category";
-import { Ad } from "./entities/Ad";
-import { Tag } from "./entities/Tag";
-import { SubCategory } from "./entities/SubCategory";
-import { User } from "./entities/User";
-import { Picture } from "./entities/Picture";
+import { DataSource } from 'typeorm'
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions'
+
+export const dataSourceOptions: PostgresConnectionOptions = {
+  type: 'postgres',
+  entities: [`${__dirname}/entities/*.ts`],
+  synchronize: true,
+  username: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DB,
+  logging: process.env.DOCKER_LOGS === 'true' ? true : false,
+}
 
 export const dataSource = new DataSource({
-  type: "postgres",
+  ...dataSourceOptions,
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  entities: [Category, Ad, Tag, SubCategory, User, Picture],
-  synchronize: true,
-  // logging: true,
-});
+})

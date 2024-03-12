@@ -1,20 +1,20 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { Field, ID, InputType, ObjectType } from "type-graphql";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Field, ID, InputType, ObjectType } from 'type-graphql'
 
 @Entity()
 @ObjectType()
 export class Picture extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
-  id!: number;
+  id!: number
 
   @Column()
   @Field()
-  filename!: string;
+  filename!: string
 }
 
 @InputType()
 export class PictureCreateInput {
   @Field()
-  filename!: string;
+  filename!: string
 }

@@ -1,13 +1,8 @@
-import React, { FormEvent, useState } from "react";
-import AdCard from "../ads/AdCard";
-import GpsAndRadius from "./components/GpsAndRadius";
-import { CategoriesTypes } from "@/types/CategoryTypes";
-import { AdsTypes } from "@/types/AdTypes";
-import { TagsTypes } from "@/types/TagTypes";
-import { queryAllCatAndSub } from "../graphql/Categories";
-import { queryAllAds } from "../graphql/Ads";
-import { queryAllTags } from "../graphql/Tags";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import React, { FormEvent, useState } from 'react'
+import { CategoriesTypes } from '@/types/CategoryTypes'
+import { AdsTypes } from '@/types/AdTypes'
+import { TagsTypes } from '@/types/TagTypes'
+import { useLazyQuery, useQuery } from '@apollo/client'
 import {
   FormControl,
   InputLabel,
@@ -18,91 +13,96 @@ import {
   TextField,
   Box,
   Button,
-} from "@mui/material";
-import { FilterAlt, FilterAltOff } from "@mui/icons-material";
-import { PATH_IMAGE } from "@/api/configApi";
+} from '@mui/material'
+import { FilterAlt, FilterAltOff } from '@mui/icons-material'
+import { PATH_IMAGE } from '@/api/configApi'
+import { queryAllTags } from '../graphql/Tags'
+import { queryAllAds } from '../graphql/Ads'
+import { queryAllCatAndSub } from '../graphql/Categories'
+import GpsAndRadius from './components/GpsAndRadius'
+import AdCard from '../ads/AdCard'
 
-const Search = (): React.ReactNode => {
+function Search(): React.ReactNode {
   // Get Categories&SubCategories & Tags
   const {
     data: dataCategories,
     error: errorCategories,
     loading: loadindCategories,
-  } = useQuery<{ items: CategoriesTypes }>(queryAllCatAndSub);
-  const categories = dataCategories ? dataCategories.items : [];
+  } = useQuery<{ items: CategoriesTypes }>(queryAllCatAndSub)
+  const categories = dataCategories ? dataCategories.items : []
 
   const {
     data: dataTags,
     error: errorTags,
     loading: loadingTags,
-  } = useQuery<{ items: TagsTypes }>(queryAllTags);
-  const tags = dataTags ? dataTags.items : [];
+  } = useQuery<{ items: TagsTypes }>(queryAllTags)
+  const tags = dataTags ? dataTags.items : []
 
   //-----------------
   // Selected queries
   //-----------------
-  const [showQueries, setShowQueries] = useState<boolean>(false);
+  const [showQueries, setShowQueries] = useState<boolean>(false)
   // subCategories
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string>();
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string>()
   const handleChangeCategory = (event: SelectChangeEvent) => {
-    setSelectedSubCategory(event.target.value as string);
-  };
+    setSelectedSubCategory(event.target.value as string)
+  }
   // Tags
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
   const handleChange = (event: SelectChangeEvent<string[]>) => {
-    const value = event.target.value as string[];
-    setSelectedTags(value);
-  };
+    const value = event.target.value as string[]
+    setSelectedTags(value)
+  }
 
   // Location
-  const [lat, setLat] = useState<number>();
-  const [long, setLong] = useState<number>();
-  const [radius, setRadius] = useState<number>(30);
+  const [lat, setLat] = useState<number>()
+  const [long, setLong] = useState<number>()
+  const [radius, setRadius] = useState<number>(30)
   // Min Price
-  const [minPrice, setMinPrice] = useState<number>();
+  const [minPrice, setMinPrice] = useState<number>()
   // Max Price
-  const [maxPrice, setMaxPrice] = useState<number>();
+  const [maxPrice, setMaxPrice] = useState<number>()
   // Title
-  const [title, setTitle] = useState<string>();
+  const [title, setTitle] = useState<string>()
 
   //-----------------
-  //----- Search-----
+  // ----- Search-----
   //-----------------
 
   const [doSearch, { data: dataSearch, loading: loadingSearch }] =
-    useLazyQuery<{ items: AdsTypes }>(queryAllAds);
-  const searchResult = dataSearch ? dataSearch.items : [];
+    useLazyQuery<{ items: AdsTypes }>(queryAllAds)
+  const searchResult = dataSearch ? dataSearch.items : []
   const handleSearchClick = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault()
     doSearch({
       variables: {
         where: {
           subCategory: selectedSubCategory,
           location: { latitude: lat, longitude: long },
-          radius: radius,
-          minPrice: minPrice,
-          maxPrice: maxPrice,
-          title: title,
+          radius,
+          minPrice,
+          maxPrice,
+          title,
           tags: selectedTags.length > 0 ? selectedTags : undefined,
         },
       },
-    });
-  };
+    })
+  }
 
   //-----------------
-  //--Reset form-----
+  // --Reset form-----
   //-----------------
 
   const resetForm = (): void => {
-    setSelectedSubCategory(undefined);
-    setSelectedTags([]);
-    setLat(undefined);
-    setLong(undefined);
-    setRadius(30);
-    setMinPrice(undefined);
-    setMaxPrice(undefined);
-    setTitle(undefined);
-  };
+    setSelectedSubCategory(undefined)
+    setSelectedTags([])
+    setLat(undefined)
+    setLong(undefined)
+    setRadius(30)
+    setMinPrice(undefined)
+    setMaxPrice(undefined)
+    setTitle(undefined)
+  }
 
   return (
     <>
@@ -110,8 +110,8 @@ const Search = (): React.ReactNode => {
         className="search"
         sx={{
           backgroundImage: `url(${PATH_IMAGE}/general/search.png)`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
         }}
       >
         {categories && tags && (
@@ -132,7 +132,7 @@ const Search = (): React.ReactNode => {
                     labelId="subcategory-select-label"
                     id="subcategory-select"
                     size="small"
-                    value={selectedSubCategory || ""}
+                    value={selectedSubCategory || ''}
                     onChange={handleChangeCategory}
                     label="Sélectionnez une sous-catégorie"
                     required
@@ -148,7 +148,7 @@ const Search = (): React.ReactNode => {
                         <MenuItem
                           key={`subcategory-${category.id}-${subCategory.id}`}
                           value={subCategory.id}
-                          style={{ marginLeft: "20px" }}
+                          style={{ marginLeft: '20px' }}
                         >
                           {subCategory.name}
                         </MenuItem>
@@ -173,10 +173,10 @@ const Search = (): React.ReactNode => {
                       size="small"
                       label="Prix minimum €"
                       variant="outlined"
-                      value={minPrice || ""}
+                      value={minPrice || ''}
                       onChange={(e) =>
                         setMinPrice(
-                          e.target.value === ""
+                          e.target.value === ''
                             ? undefined
                             : Number(e.target.value)
                         )
@@ -188,7 +188,7 @@ const Search = (): React.ReactNode => {
                       size="small"
                       label="Quoi ?"
                       variant="outlined"
-                      value={title || ""}
+                      value={title || ''}
                       onChange={(e) => setTitle(e.target.value)}
                     />
                   </Box>
@@ -200,10 +200,10 @@ const Search = (): React.ReactNode => {
                       size="small"
                       label="Prix maximum €"
                       variant="outlined"
-                      value={maxPrice || ""}
+                      value={maxPrice || ''}
                       onChange={(e) =>
                         setMaxPrice(
-                          e.target.value === ""
+                          e.target.value === ''
                             ? undefined
                             : Number(e.target.value)
                         )
@@ -227,9 +227,9 @@ const Search = (): React.ReactNode => {
                             .map(
                               (id) =>
                                 tags.find((tag) => tag.id.toString() === id)
-                                  ?.name || ""
+                                  ?.name || ''
                             )
-                            .join(", ")
+                            .join(', ')
                         }
                       >
                         {tags.map((tag) => (
@@ -290,7 +290,7 @@ const Search = (): React.ReactNode => {
         </>
       )}
     </>
-  );
-};
+  )
+}
 
-export default Search;
+export default Search

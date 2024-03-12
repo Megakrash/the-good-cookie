@@ -1,78 +1,87 @@
-import "@/styles/index.scss";
+import '@/styles/index.scss'
 import {
   ApolloClient,
   ApolloProvider,
   HttpLink,
   InMemoryCache,
   useQuery,
-} from "@apollo/client";
-import type { AppProps } from "next/app";
-import dynamic from "next/dynamic";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { CssBaseline } from "@mui/material";
-import { queryMeContext } from "@/components/graphql/Users";
-import { Suspense, useEffect } from "react";
-import { useRouter } from "next/router";
-import { UserContextTypes } from "@/types/UserTypes";
-import Header from "@/components/appBar/AppBar";
+} from '@apollo/client'
+import type { AppProps } from 'next/app'
+import dynamic from 'next/dynamic'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { CssBaseline } from '@mui/material'
+import { queryMeContext } from '@/components/graphql/Users'
+import { Suspense, useEffect } from 'react'
+import { useRouter } from 'next/router'
+import { UserContextTypes } from '@/types/UserTypes'
+import Header from '@/components/appBar/AppBar'
 
 const theme = createTheme({
   palette: {
-    mode: "light",
+    mode: 'light',
     background: {
-      default: "#f5f5f5",
+      default: '#f5f5f5',
     },
     primary: {
-      main: "#ffa41b",
-      light: "#FFB648",
-      dark: "#e89116",
+      main: '#ffa41b',
+      light: '#FFB648',
+      dark: '#e89116',
     },
     secondary: {
-      main: "#343a40",
-      light: "#5C6166",
-      dark: "#24282C",
+      main: '#343a40',
+      light: '#5C6166',
+      dark: '#24282C',
     },
   },
-});
+  typography: {
+    fontFamily: 'Poppins, sans-serif',
+    h1: {
+      fontFamily: 'Impact, sans-serif',
+    },
+    h2: {
+      fontFamily: 'Impact, sans-serif',
+    },
+  },
+})
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: "http://localhost:5000/",
-    credentials: "include",
+    uri: 'http://localhost:5000/',
+    credentials: 'include',
   }),
   cache: new InMemoryCache(),
-});
+})
 
-const privatePages = ["/compte", "/annonces/new"];
+const privatePages = ['/compte', '/annonces/new']
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
   const { loading, error, refetch } = useQuery<{
-    item: UserContextTypes;
-  }>(queryMeContext);
-  const router = useRouter();
+    item: UserContextTypes
+  }>(queryMeContext)
+  const router = useRouter()
   useEffect(() => {
     const handleRouteChange = () => {
       if (privatePages.includes(router.pathname)) {
-        refetch();
+        refetch()
       }
-    };
+    }
 
-    router.events.on("routeChangeComplete", handleRouteChange);
+    router.events.on('routeChangeComplete', handleRouteChange)
 
     return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
-    };
-  }, [router, refetch]);
+      router.events.off('routeChangeComplete', handleRouteChange)
+    }
+  }, [router, refetch])
 
   useEffect(() => {
     if (privatePages.includes(router.pathname) && error) {
-      router.replace("/connexion");
+      router.replace('/signin')
     }
-  }, [router, error]);
+  }, [router, error])
 
   if (loading) {
     return (
       <div>
-        {" "}
+        {' '}
         <Suspense
           fallback={
             <div className="loader-container">
@@ -81,12 +90,11 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
             </div>
           }
         />
-        ;
       </div>
-    );
+    )
   }
 
-  return children;
+  return children
 }
 
 function App({ Component, pageProps }: AppProps) {
@@ -100,8 +108,8 @@ function App({ Component, pageProps }: AppProps) {
         </AuthProvider>
       </ThemeProvider>
     </ApolloProvider>
-  );
+  )
 }
 
 // Disabling SSR
-export default dynamic(() => Promise.resolve(App), { ssr: false });
+export default dynamic(() => Promise.resolve(App), { ssr: false })

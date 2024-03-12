@@ -3,20 +3,32 @@ services:
     build:
       context: ./backend
       target: dev
+    container_name: thegoodcookie-backend
     ports:
       - 5000:5000
     volumes:
       - ./backend/src/:/app/src/
-      - /app/public/
+      - assets:/app/public
     env_file: ./backend/.env
+    networks:
+      - thegoodcookie-network
+    depends_on:
+      - postgres
   postgres:
     image: postgres
     env_file: ./backend/.env
     volumes:
-      - /app/db
+      - postgres-data:/var/lib/postgresql/data
     ports:
       - "5433:5432"
-      # frontend:
+    networks:
+      - thegoodcookie-network
+volumes:
+  assets:
+  postgres-data:
+networks:
+  thegoodcookie-network:
+    # frontend:
   #   build:
   #     context: ./frontend
   #     target: dev

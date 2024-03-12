@@ -1,13 +1,13 @@
-import LayoutFull from "@/components/layout/LayoutFull";
-import { useRouter } from "next/router";
-import SubCategoriesCard from "@/components/subCategories/SubCategoriesCard";
-import { CategoryTypes } from "@/types/CategoryTypes";
-import { useQuery } from "@apollo/client";
-import { queryCatByIdAndSub } from "@/components/graphql/Categories";
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
-import { Box } from "@mui/material";
-import IconBreadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
+import LayoutFull from '@/components/layout/LayoutFull'
+import { useRouter } from 'next/router'
+import SubCategoriesCard from '@/components/subCategories/SubCategoriesCard'
+import { CategoryTypes } from '@/types/CategoryTypes'
+import { useQuery } from '@apollo/client'
+import { queryCatByIdAndSub } from '@/components/graphql/Categories'
+import Carousel from 'react-multi-carousel'
+import 'react-multi-carousel/lib/styles.css'
+import { Box } from '@mui/material'
+import IconBreadcrumbs from '@/components/breadcrumbs/Breadcrumbs'
 
 const responsive = {
   desktopB: {
@@ -35,20 +35,20 @@ const responsive = {
     items: 1,
     slidesToSlide: 1,
   },
-};
+}
 
-const CategoryComponent = (): React.ReactNode => {
-  const router = useRouter();
-  const { id } = router.query;
+function CategoryComponent(): React.ReactNode {
+  const router = useRouter()
+  const { id } = router.query
   const { data, error, loading } = useQuery<{ item: CategoryTypes }>(
     queryCatByIdAndSub,
     {
       variables: { categoryByIdId: id },
       skip: id === undefined,
     }
-  );
+  )
 
-  const category = data ? data.item : null;
+  const category = data ? data.item : null
   return (
     <>
       {category && (
@@ -56,7 +56,7 @@ const CategoryComponent = (): React.ReactNode => {
           <IconBreadcrumbs
             items={[
               {
-                url: "/final-item",
+                url: '/final-item',
                 text: `${category.name.toUpperCase()}`,
               },
             ]}
@@ -65,18 +65,18 @@ const CategoryComponent = (): React.ReactNode => {
             {category.subCategories.length >= 1 ? (
               <Box
                 sx={{
-                  width: "95%",
-                  marginTop: "50px",
-                  marginLeft: "auto",
-                  marginRight: "auto",
+                  width: '95%',
+                  marginTop: '50px',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
                 }}
               >
                 <Carousel
                   containerClass="carousel-container"
                   responsive={responsive}
                   infinite
-                  centerMode={true}
-                  renderDotsOutside={true}
+                  centerMode
+                  renderDotsOutside
                 >
                   {category.subCategories.map((subCat) => (
                     <SubCategoriesCard
@@ -95,7 +95,7 @@ const CategoryComponent = (): React.ReactNode => {
         </LayoutFull>
       )}
     </>
-  );
-};
+  )
+}
 
-export default CategoryComponent;
+export default CategoryComponent

@@ -1,10 +1,10 @@
-import { Arg, Query, Resolver, Mutation, ID, Authorized } from "type-graphql";
+import { Arg, Query, Resolver, Mutation, ID, Authorized } from 'type-graphql'
+import { validate } from 'class-validator'
 import {
   Category,
   CategoryCreateInput,
   CategoryUpdateInput,
-} from "../entities/Category";
-import { validate } from "class-validator";
+} from '../entities/Category'
 
 @Resolver(Category)
 export class CategoriesResolver {
@@ -12,83 +12,82 @@ export class CategoriesResolver {
   async categoriesGetAll(): Promise<Category[]> {
     const categories = await Category.find({
       relations: { subCategories: { ads: true } },
-      order: { name: "ASC" },
-    });
-    return categories;
+      order: { name: 'ASC' },
+    })
+    return categories
   }
 
   @Query(() => Category)
-  async categoryById(@Arg("id", () => ID) id: number): Promise<Category> {
+  async categoryById(@Arg('id', () => ID) id: number): Promise<Category> {
     const category = await Category.findOne({
       where: { id },
       relations: { subCategories: { ads: true } },
-    });
+    })
     if (!category) {
-      throw new Error("Category not found");
+      throw new Error('Category not found')
     }
-    return category;
+    return category
   }
 
-  @Authorized("ADMIN")
+  @Authorized('ADMIN')
   @Mutation(() => Category)
   async categoryCreate(
-    @Arg("data", () => CategoryCreateInput) data: CategoryCreateInput
+    @Arg('data', () => CategoryCreateInput) data: CategoryCreateInput
   ): Promise<Category> {
-    const newCategory = new Category();
-    Object.assign(newCategory, data);
-    const categoryName: string = data.name;
+    const newCategory = new Category()
+    Object.assign(newCategory, data)
+    const categoryName: string = data.name
     const existingCategory = await Category.findOne({
       where: { name: categoryName },
-    });
+    })
 
     if (existingCategory) {
-      throw new Error(`Category name "${categoryName}" already in use`);
+      throw new Error(`Category name "${categoryName}" already in use`)
     } else {
-      const errors = await validate(newCategory);
+      const errors = await validate(newCategory)
       if (errors.length === 0) {
-        await newCategory.save();
-        return newCategory;
-      } else {
-        throw new Error(`Error occured: ${JSON.stringify(errors)}`);
+        await newCategory.save()
+        return newCategory
       }
+      throw new Error(`Error occured: ${JSON.stringify(errors)}`)
     }
   }
 
-  @Authorized("ADMIN")
+  @Authorized('ADMIN')
   @Mutation(() => Category, { nullable: true })
   async categoryUpdate(
-    @Arg("id", () => ID) id: number,
-    @Arg("data") data: CategoryUpdateInput
+    @Arg('id', () => ID) id: number,
+    @Arg('data') data: CategoryUpdateInput
   ): Promise<Category | null> {
     const category = await Category.findOne({
-      where: { id: id },
-    });
+      where: { id },
+    })
     if (category) {
-      Object.assign(category, data);
+      Object.assign(category, data)
 
-      const errors = await validate(category);
+      const errors = await validate(category)
       if (errors.length === 0) {
-        await category.save();
+        await category.save()
       } else {
-        throw new Error(`Error occured: ${JSON.stringify(errors)}`);
+        throw new Error(`Error occured: ${JSON.stringify(errors)}`)
       }
     }
-    return category;
+    return category
   }
 
-  @Authorized("ADMIN")
+  @Authorized('ADMIN')
   @Mutation(() => Category, { nullable: true })
   async categoryDelete(
-    @Arg("id", () => ID) id: number
+    @Arg('id', () => ID) id: number
   ): Promise<Category | null> {
     const category = await Category.findOne({
-      where: { id: id },
+      where: { id },
       relations: { subCategories: true },
-    });
+    })
     if (category) {
-      await category.remove();
-      category.id = id;
+      await category.remove()
+      category.id = id
     }
-    return category;
+    return category
   }
 }

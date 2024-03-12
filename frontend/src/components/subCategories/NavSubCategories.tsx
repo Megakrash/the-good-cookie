@@ -1,14 +1,14 @@
-import Link from "next/link";
+import Link from 'next/link'
 
 type NavSubcategoriesProps = {
-  id: number;
-  name: string;
-};
+  id: number
+  name: string
+}
 
-const NavSubCategories = (props: NavSubcategoriesProps): React.ReactNode => {
+function NavSubCategories(props: NavSubcategoriesProps): React.ReactNode {
   return (
     <>
-      {" "}
+      {' '}
       <Link
         href={`/sousCategories/${props.id}`}
         className="category-navigation-link"
@@ -16,7 +16,7 @@ const NavSubCategories = (props: NavSubcategoriesProps): React.ReactNode => {
         {props.name}
       </Link>
     </>
-  );
-};
+  )
+}
 
-export default NavSubCategories;
+export default NavSubCategories
