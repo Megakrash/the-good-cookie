@@ -21,7 +21,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Generate version number
         id: version
-        run: ./generate_version.sh
+        run: .github/workflows/generate_version.sh
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
