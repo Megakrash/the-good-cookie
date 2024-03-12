@@ -3,6 +3,8 @@ name: Backend-release
 on:
   push:
     branches: dev
+    tags:
+      - "v*"
 
 jobs:
   docker:
@@ -20,7 +22,9 @@ jobs:
         with:
           images: name/app
           tags: |
+            type=ref,event=branch
             type=ref,event=tag
+            type=semver,pattern={{version}}
       - name: Print generated tags
         run: echo "The generated tags are ${{ steps.meta.outputs.tags }}"
       - name: Login to Docker Hub
