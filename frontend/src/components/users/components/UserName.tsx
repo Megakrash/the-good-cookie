@@ -7,7 +7,7 @@ type UserNameProps = {
   type: string
 }
 
-function UserName(props: UserNameProps): React.ReactNode {
+const UserName = (props: UserNameProps): React.ReactNode => {
   const [nameError, setNameError] = useState<string>('')
 
   const validateName = (name: string) => /^[a-zA-ZÀ-ÿ\s-]{2,50}$/.test(name)
