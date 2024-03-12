@@ -19,9 +19,14 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Generate version number
+        id: version
+        run: ./generate_version.sh
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
+          target: dev
+          platforms: linux/amd64, linux/arm64
           context: ./backend
           push: true
-          tags: ${{ secrets.DOCKERHUB_REPO }}:release
+          tags: ${{ secrets.DOCKERHUB_REPO }}:release-v${{ steps.version.outputs.VERSION }}
