@@ -1,42 +1,53 @@
-import React, { useState } from 'react'
-import { Box, Button, Card, FormControl, Link, Typography } from '@mui/material'
-import LoginIcon from '@mui/icons-material/Login'
-import { mutationUserLogin, queryMeContext } from '@/components/graphql/Users'
-import { useMutation } from '@apollo/client'
-import toast, { Toaster } from 'react-hot-toast'
-import router from 'next/router'
-import UserPassword from '../components/UserPassword'
-import UserEmail from '../components/UserEmail'
+import React, { useState } from 'react';
+import {
+  Box,
+  Button,
+  Card,
+  FormControl,
+  Link,
+  Typography,
+} from '@mui/material';
+import LoginIcon from '@mui/icons-material/Login';
+import { mutationUserLogin, queryMeContext } from '@/components/graphql/Users';
+import { useMutation } from '@apollo/client';
+import toast, { Toaster } from 'react-hot-toast';
+import router from 'next/router';
+import UserPassword from '../components/UserPassword';
+import UserEmail from '../components/UserEmail';
+import { VariablesColors } from '@/styles/Variables.colors';
 
-function SignIn(): React.ReactNode {
-  const [email, setEmail] = useState<string>('jl.debre2@relou.wtf')
-  const [password, setPassword] = useState<string>('Warcraft!!2023')
+const colors = new VariablesColors();
+const { color1, successColor, errorColor } = colors;
+
+const SignIn = (): React.ReactNode => {
+  const [email, setEmail] = useState<string>('jl.debre2@relou.wtf');
+  const [password, setPassword] = useState<string>('Warcraft!!2023');
   const [doLogin] = useMutation(mutationUserLogin, {
     refetchQueries: [queryMeContext],
-  })
+  });
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+    event.preventDefault();
     try {
       const { data } = await doLogin({
         variables: { data: { email, password } },
-      })
+      });
       if ('id' in data.item) {
         toast(`Connexion réussie, bienvenue ${data.item.firstName}`, {
-          style: { background: '#0fcc45', color: '#fff' },
-        })
+          style: { background: successColor, color: color1 },
+        });
         setTimeout(() => {
-          router.replace(`/compte`)
-        }, 1500)
+          router.replace(`/compte`);
+        }, 1500);
       }
     } catch (error) {
       toast(error.message, {
-        style: { background: '#e14d2a', color: '#fff' },
-      })
-      setEmail('')
-      setPassword('')
+        style: { background: errorColor, color: color1 },
+      });
+      setEmail('');
+      setPassword('');
     }
-  }
+  };
 
   return (
     <Card className="userForm userSignin">
@@ -76,7 +87,7 @@ function SignIn(): React.ReactNode {
         </Link>
       </Box>
     </Card>
-  )
-}
+  );
+};
 
-export default SignIn
+export default SignIn;

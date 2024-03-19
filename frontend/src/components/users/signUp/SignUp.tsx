@@ -1,6 +1,6 @@
-import React, { FormEvent, useRef, useState } from 'react'
-import axios from 'axios'
-import toast, { Toaster } from 'react-hot-toast'
+import React, { FormEvent, useRef, useState } from 'react';
+import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 import {
   Box,
   Button,
@@ -10,65 +10,65 @@ import {
   Link,
   TextField,
   Typography,
-} from '@mui/material'
-import ReCAPTCHA from 'react-google-recaptcha'
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'
-import { mutationCreateUser } from '@/components/graphql/Users'
-import { UserFormData } from '@/types/UserTypes'
-import { API_URL, RECAPTCHA_SITE_KEY } from '@/api/configApi'
-import { useMutation } from '@apollo/client'
-import router from 'next/router'
-import { DownloadInput } from '@/styles/MuiStyled'
-import SendIcon from '@mui/icons-material/Send'
-import UserPhone from '../components/UserPhone'
-import UserEmail from '../components/UserEmail'
-import UserZipCity from '../components/UserZipCity'
-import UserPassword from '../components/UserPassword'
-import UserName from '../components/UserName'
+} from '@mui/material';
+import ReCAPTCHA from 'react-google-recaptcha';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { mutationCreateUser } from '@/components/graphql/Users';
+import { UserFormData } from '@/types/UserTypes';
+import { API_URL, RECAPTCHA_SITE_KEY } from '@/api/configApi';
+import { useMutation } from '@apollo/client';
+import router from 'next/router';
+import { DownloadInput } from '@/styles/MuiStyled';
+import SendIcon from '@mui/icons-material/Send';
+import UserPhone from '../components/UserPhone';
+import UserEmail from '../components/UserEmail';
+import UserZipCity from '../components/UserZipCity';
+import UserPassword from '../components/UserPassword';
+import UserName from '../components/UserName';
 
 function SignUp(): React.ReactNode {
   // ReCaptcha
-  const [recaptcha, setRecaptcha] = useState(false)
-  const captchaRef = useRef(null)
+  const [recaptcha, setRecaptcha] = useState(false);
+  const captchaRef = useRef(null);
   const handleCaptchaChange = (value: string | null) => {
-    setRecaptcha(!!value)
-  }
+    setRecaptcha(!!value);
+  };
   // Form
-  const [firstName, setFirstName] = useState<string>('')
-  const [lastName, setLastName] = useState<string>('')
-  const [nickName, setNickName] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [zipCode, setZipCode] = useState<string>('')
-  const [city, setCity] = useState<string>('')
-  const [coordinates, setCoordinates] = useState<[number, number]>([0, 0])
-  const [email, setEmail] = useState<string>('')
-  const [phoneNumber, setPhoneNumber] = useState<string>('')
-  const [picture, setPicture] = useState<File | null>(null)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [nickName, setNickName] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [zipCode, setZipCode] = useState<string>('');
+  const [city, setCity] = useState<string>('');
+  const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
+  const [email, setEmail] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [picture, setPicture] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   function handleFileSelection(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0]
-      setPicture(file)
-      setPreviewUrl(URL.createObjectURL(file))
+      const file = event.target.files[0];
+      setPicture(file);
+      setPreviewUrl(URL.createObjectURL(file));
     }
   }
   // SUBMIT
-  const [doCreate] = useMutation(mutationCreateUser)
+  const [doCreate] = useMutation(mutationCreateUser);
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const dataFile = new FormData()
-    dataFile.append('title', nickName)
-    dataFile.append('file', picture)
+    event.preventDefault();
+    const dataFile = new FormData();
+    dataFile.append('title', nickName);
+    dataFile.append('file', picture);
 
     try {
-      let pictureId: number | null = null
+      let pictureId: number | null = null;
       if (picture) {
         const uploadResponse = await axios.post(`${API_URL}picture`, dataFile, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
-        })
-        pictureId = uploadResponse.data.id
+        });
+        pictureId = uploadResponse.data.id;
       }
 
       const data: UserFormData = {
@@ -84,26 +84,26 @@ function SignUp(): React.ReactNode {
         isVerified: false,
         role: 'USER',
         ...(phoneNumber !== '' && { phoneNumber }),
-      }
+      };
 
       const result = await doCreate({
         variables: {
           data,
         },
-      })
+      });
       if ('id' in result.data?.item) {
         toast(
-          `Bienvenue ${result.data?.item.nickName} ! Un email de confirmation vous a été envoyé.`
-        )
+          `Bienvenue ${result.data?.item.nickName} ! Un email de confirmation vous a été envoyé.`,
+        );
         setTimeout(() => {
-          router.replace(`/`)
-        }, 2000)
+          router.replace(`/`);
+        }, 2000);
       } else {
-        toast('Erreur pendant la création de votre compte')
+        toast('Erreur pendant la création de votre compte');
       }
     } catch (error) {
-      toast('Erreur pendant la création de votre compte')
-      console.error('error', error)
+      toast('Erreur pendant la création de votre compte');
+      console.error('error', error);
     }
   }
   return (
@@ -211,7 +211,7 @@ function SignUp(): React.ReactNode {
         </Box>
       </FormControl>
     </Card>
-  )
+  );
 }
 
-export default SignUp
+export default SignUp;
