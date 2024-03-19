@@ -5,6 +5,7 @@ import {
   InputAdornment,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 import {
   CheckCircle,
@@ -19,6 +20,7 @@ type UserPasswordProps = {
 };
 
 function UserPassword(props: UserPasswordProps): React.ReactNode {
+  const theme = useTheme();
   // Criteria & errors
   const [touched, setTouched] = useState<Boolean>(false);
   const validatePassword = (password: string) => {
@@ -96,6 +98,10 @@ function UserPassword(props: UserPasswordProps): React.ReactNode {
             display: 'flex',
             flexDirection: 'row',
             flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            [theme.breakpoints.down('sm')]: {
+              flexDirection: 'column',
+            },
           }}
         >
           {Object.entries(passwordCriteria).map(([criteria, check]) => (
@@ -108,6 +114,9 @@ function UserPassword(props: UserPasswordProps): React.ReactNode {
                 flexDirection: 'row',
                 alignItems: 'center',
                 gap: '5px',
+                [theme.breakpoints.down('sm')]: {
+                  width: '100%',
+                },
               }}
             >
               {check ? (

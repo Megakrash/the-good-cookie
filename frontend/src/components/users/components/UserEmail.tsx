@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TextField } from '@mui/material';
+import { isValidEmailRegex } from './UserRegex';
 
 type UserEmailProps = {
   email: string;
@@ -9,13 +10,10 @@ type UserEmailProps = {
 const UserEmail = (props: UserEmailProps): React.ReactNode => {
   const [emailError, setEmailError] = useState<string>('');
 
-  const validateEmail = (name: string) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(name);
-
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    props.setEmail(value);
-    if (!validateEmail(value)) {
+    const email = e.target.value;
+    props.setEmail(email);
+    if (!isValidEmailRegex(email)) {
       setEmailError('Doit être une adresse email valide');
     } else {
       setEmailError('');

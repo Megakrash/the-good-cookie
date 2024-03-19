@@ -110,7 +110,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
           width: '100vw',
         }}
       >
-        <CircularProgress size={164} />
+        <CircularProgress size={120} />
         <Typography variant="h4" gutterBottom>
           Chargement...
         </Typography>
