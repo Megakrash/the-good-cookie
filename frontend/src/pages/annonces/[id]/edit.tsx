@@ -1,23 +1,23 @@
-import LayoutFull from '@/components/layout/LayoutFull'
-import { AdTypes } from '@/types/AdTypes'
-import AdForm from '@/components/ads/adForm/AdForm'
-import AdCard from '@/components/ads/AdCard'
-import { queryAdById } from '@/components/graphql/Ads'
-import { useQuery } from '@apollo/client'
-import { useRouter } from 'next/router'
-import { Box } from '@mui/material'
+import LayoutFull from '@/components/layout/LayoutFull';
+import { AdTypes } from '@/types/AdTypes';
+import AdForm from '@/components/ads/adForm/AdForm';
+import AdCard from '@/components/ads/AdCard';
+import { queryAdById } from '@/components/graphql/Ads';
+import { useQuery } from '@apollo/client';
+import { useRouter } from 'next/router';
+import { Box } from '@mui/material';
 
 export default function EditAd() {
-  const router = useRouter()
-  const adId = router.query.id
+  const router = useRouter();
+  const adId = router.query.id;
 
   const { data } = useQuery<{ item: AdTypes }>(queryAdById, {
     variables: {
       adByIdId: adId,
     },
     skip: adId === undefined,
-  })
-  const ad = data ? data.item : null
+  });
+  const ad = data ? data.item : null;
 
   return (
     <LayoutFull title="Modifier mon annonce">
@@ -45,5 +45,5 @@ export default function EditAd() {
         </Box>
       )}
     </LayoutFull>
-  )
+  );
 }

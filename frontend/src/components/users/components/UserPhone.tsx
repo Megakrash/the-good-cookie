@@ -1,10 +1,10 @@
-import React from 'react'
-import { TextField } from '@mui/material'
+import React from 'react';
+import { TextField } from '@mui/material';
 
 type UserPhoneProps = {
-  phoneNumber: string
-  setPhoneNumber: (email: string) => void
-}
+  phoneNumber: string;
+  setPhoneNumber: (email: string) => void;
+};
 
 function UserPhone(props: UserPhoneProps): React.ReactNode {
   return (
@@ -17,17 +17,17 @@ function UserPhone(props: UserPhoneProps): React.ReactNode {
       variant="outlined"
       value={props.phoneNumber || ''}
       onChange={(e) => {
-        const inputNumber = e.target.value
-        const regex = /^[0-9]*$/
+        const inputNumber = e.target.value;
+        const regex = /^[0-9]*$/;
         if (regex.test(inputNumber)) {
-          props.setPhoneNumber(inputNumber)
+          props.setPhoneNumber(inputNumber);
         }
       }}
       inputProps={{
         maxLength: 10,
       }}
     />
-  )
+  );
 }
 
-export default UserPhone
+export default UserPhone;

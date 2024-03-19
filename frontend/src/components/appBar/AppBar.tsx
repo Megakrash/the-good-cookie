@@ -1,8 +1,8 @@
-import Link from 'next/link'
-import IconButton from '@mui/material/IconButton'
-import ExitToAppIcon from '@mui/icons-material/ExitToApp'
-import { useMutation, useQuery } from '@apollo/client'
-import { UserContextTypes } from '@/types/UserTypes'
+import Link from 'next/link';
+import IconButton from '@mui/material/IconButton';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { useMutation, useQuery } from '@apollo/client';
+import { UserContextTypes } from '@/types/UserTypes';
 import {
   AppBar,
   Avatar,
@@ -14,78 +14,80 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-} from '@mui/material'
-import CookieIcon from '@mui/icons-material/Cookie'
-import EditNoteIcon from '@mui/icons-material/EditNote'
-import SearchIcon from '@mui/icons-material/Search'
-import ContactSupportIcon from '@mui/icons-material/ContactSupport'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import LoginIcon from '@mui/icons-material/Login'
-import MenuIcon from '@mui/icons-material/Menu'
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import { PATH_IMAGE } from '@/api/configApi'
-import { mutationSignOut, queryMeContext } from '../graphql/Users'
+} from '@mui/material';
+import CookieIcon from '@mui/icons-material/Cookie';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import SearchIcon from '@mui/icons-material/Search';
+import ContactSupportIcon from '@mui/icons-material/ContactSupport';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LoginIcon from '@mui/icons-material/Login';
+import MenuIcon from '@mui/icons-material/Menu';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { PATH_IMAGE } from '@/api/configApi';
+import { mutationSignOut, queryMeContext } from '../graphql/Users';
 
 const buttonStyles = {
   color: 'white',
   '& .MuiButton-startIcon': {
     marginRight: '-4px',
   },
-}
+};
 
 export default function Header(): React.ReactNode {
-  const router = useRouter()
+  const router = useRouter();
   // User connected ?
-  const { data, error } = useQuery<{ item: UserContextTypes }>(queryMeContext)
-  const [userContext, setUserContext] = useState<UserContextTypes>(null)
-  const [userConnected, setUserConnected] = useState<Boolean>(false)
+  const { data, error } = useQuery<{ item: UserContextTypes }>(queryMeContext);
+  const [userContext, setUserContext] = useState<UserContextTypes>(null);
+  const [userConnected, setUserConnected] = useState<Boolean>(false);
 
   useEffect(() => {
     if (error) {
-      setUserContext(null)
-      setUserConnected(false)
+      setUserContext(null);
+      setUserConnected(false);
     }
     if (data?.item) {
-      setUserContext(data.item)
-      setUserConnected(true)
+      setUserContext(data.item);
+      setUserConnected(true);
     }
-  }, [data, error])
+  }, [data, error]);
 
   // Signout
   const [doSignout] = useMutation(mutationSignOut, {
     onCompleted: () => {
-      setUserContext(null)
-      setAnchorElUser(null)
-      setUserConnected(false)
-      router.replace(`/signin`)
+      setUserContext(null);
+      setAnchorElUser(null);
+      setUserConnected(false);
+      router.replace(`/signin`);
     },
     refetchQueries: [{ query: queryMeContext }],
-  })
+  });
   async function logout() {
-    doSignout()
+    doSignout();
   }
 
   // Open / Close menu
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+    null,
+  );
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  )
+    null,
+  );
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget)
-  }
+    setAnchorElNav(event.currentTarget);
+  };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget)
-  }
+    setAnchorElUser(event.currentTarget);
+  };
 
   const handleCloseNavMenu = () => {
-    setAnchorElNav(null)
-  }
+    setAnchorElNav(null);
+  };
 
   const handleCloseUserMenu = () => {
-    setAnchorElUser(null)
-  }
+    setAnchorElUser(null);
+  };
   return (
     <AppBar position="static" sx={{ backgroundColor: '#343a40' }}>
       <Container maxWidth="xl">
@@ -136,32 +138,32 @@ export default function Header(): React.ReactNode {
             >
               <MenuItem
                 onClick={() => {
-                  handleCloseNavMenu()
-                  router.replace(`/annonces/new`)
+                  handleCloseNavMenu();
+                  router.replace(`/annonces/new`);
                 }}
               >
                 <Typography textAlign="center"> Déposer une annonce</Typography>
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  handleCloseNavMenu()
-                  router.replace(`/recherche`)
+                  handleCloseNavMenu();
+                  router.replace(`/recherche`);
                 }}
               >
                 <Typography textAlign="center"> Recherche</Typography>
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  handleCloseNavMenu()
-                  router.replace(`/compte`)
+                  handleCloseNavMenu();
+                  router.replace(`/compte`);
                 }}
               >
                 <Typography textAlign="center"> Compte</Typography>
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  handleCloseNavMenu()
-                  router.replace(`/contact`)
+                  handleCloseNavMenu();
+                  router.replace(`/contact`);
                 }}
               >
                 <Typography textAlign="center"> Contact</Typography>
@@ -197,8 +199,8 @@ export default function Header(): React.ReactNode {
               className="header_link_button"
               startIcon={<EditNoteIcon fontSize="large" />}
               onClick={() => {
-                handleCloseNavMenu()
-                router.replace(`/annonces/new`)
+                handleCloseNavMenu();
+                router.replace(`/annonces/new`);
               }}
               sx={buttonStyles}
             >
@@ -208,8 +210,8 @@ export default function Header(): React.ReactNode {
               className="header_link_button"
               startIcon={<SearchIcon />}
               onClick={() => {
-                handleCloseNavMenu()
-                router.replace(`/recherche`)
+                handleCloseNavMenu();
+                router.replace(`/recherche`);
               }}
               sx={buttonStyles}
             >
@@ -219,8 +221,8 @@ export default function Header(): React.ReactNode {
               className="header_link_button"
               startIcon={<AccountCircleIcon />}
               onClick={() => {
-                handleCloseNavMenu()
-                router.replace(`/compte`)
+                handleCloseNavMenu();
+                router.replace(`/compte`);
               }}
               sx={buttonStyles}
             >
@@ -230,8 +232,8 @@ export default function Header(): React.ReactNode {
               className="header_link_button"
               startIcon={<ContactSupportIcon />}
               onClick={() => {
-                handleCloseNavMenu()
-                router.replace(`/contact`)
+                handleCloseNavMenu();
+                router.replace(`/contact`);
               }}
               sx={buttonStyles}
             >
@@ -273,8 +275,8 @@ export default function Header(): React.ReactNode {
                 <Box>
                   <MenuItem
                     onClick={() => {
-                      handleCloseUserMenu()
-                      router.replace(`/compte`)
+                      handleCloseUserMenu();
+                      router.replace(`/compte`);
                     }}
                   >
                     <AccountCircleIcon />
@@ -288,8 +290,8 @@ export default function Header(): React.ReactNode {
               ) : (
                 <MenuItem
                   onClick={() => {
-                    handleCloseUserMenu()
-                    router.replace(`/connexion`)
+                    handleCloseUserMenu();
+                    router.replace(`/connexion`);
                   }}
                 >
                   <LoginIcon />
@@ -301,5 +303,5 @@ export default function Header(): React.ReactNode {
         </Toolbar>
       </Container>
     </AppBar>
-  )
+  );
 }

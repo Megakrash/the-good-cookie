@@ -1,10 +1,10 @@
-import React from 'react'
-import { TextField } from '@mui/material'
+import React from 'react';
+import { TextField } from '@mui/material';
 
 type AdDescriptionProps = {
-  description: string
-  setDescription: (description: string) => void
-}
+  description: string;
+  setDescription: (description: string) => void;
+};
 
 function AdDescription(props: AdDescriptionProps): React.ReactNode {
   return (
@@ -21,7 +21,7 @@ function AdDescription(props: AdDescriptionProps): React.ReactNode {
       onChange={(e) => props.setDescription(e.target.value)}
       required
     />
-  )
+  );
 }
 
-export default AdDescription
+export default AdDescription;
