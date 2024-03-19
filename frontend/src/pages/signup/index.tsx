@@ -1,5 +1,5 @@
 import LayoutLight from '@/components/layout/LayoutLight';
-import SignUp from '@/components/users/signUp/SignUp';
+import SignUp from '@/components/users/signup/SignUp';
 
 function SignUpPage(): React.ReactNode {
   return (

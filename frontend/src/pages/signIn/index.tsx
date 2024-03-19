@@ -1,5 +1,5 @@
 import LayoutFull from '@/components/layout/LayoutFull';
-import SignIn from '@/components/users/signIn/SignIn';
+import SignIn from '@/components/users/signin/SignIn';
 
 function SignUpPage(): React.ReactNode {
   return (

@@ -6,7 +6,9 @@ import {
   Button,
   Card,
   CardMedia,
+  Divider,
   FormControl,
+  Grid,
   Link,
   TextField,
   Typography,
@@ -25,6 +27,13 @@ import UserEmail from '../components/UserEmail';
 import UserZipCity from '../components/UserZipCity';
 import UserPassword from '../components/UserPassword';
 import UserName from '../components/UserName';
+import StepForm from './StepForm';
+import { VariablesColors } from '@/styles/Variables.colors';
+import StepWelcome from './StepWelcome';
+import StepSubmit from './StepSubmit';
+
+const colors = new VariablesColors();
+const { color2, color5, errorColor } = colors;
 
 function SignUp(): React.ReactNode {
   // ReCaptcha
@@ -33,11 +42,18 @@ function SignUp(): React.ReactNode {
   const handleCaptchaChange = (value: string | null) => {
     setRecaptcha(!!value);
   };
+
   // Form
+  const [profil, setProfil] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [nickName, setNickName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const hidenPassword = (): string => {
+    const length = password.length;
+    const hidenPassword = '*'.repeat(length);
+    return hidenPassword;
+  };
   const [zipCode, setZipCode] = useState<string>('');
   const [city, setCity] = useState<string>('');
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
@@ -52,10 +68,33 @@ function SignUp(): React.ReactNode {
       setPreviewUrl(URL.createObjectURL(file));
     }
   }
+
+  // FORM STEPS
+  const [currentStep, setCurrentStep] = useState<string>('email');
+  const formSteps = [
+    {
+      step: 'email',
+      title: 'Votre adresse email',
+      data: email,
+    },
+    {
+      step: 'profil',
+      title: 'Votre profil',
+      data: profil,
+    },
+    { step: 'firstName', title: 'Votre prénom', data: firstName },
+    { step: 'lastName', title: 'Votre nom', data: lastName },
+    {
+      step: 'phoneNumber',
+      title: 'Votre numéro de téléphone',
+      data: phoneNumber,
+    },
+    { step: 'password', title: 'Votre mot de passe', data: password },
+  ];
+
   // SUBMIT
-  const [doCreate] = useMutation(mutationCreateUser);
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const [doCreate, loading] = useMutation(mutationCreateUser);
+  async function onSubmit() {
     const dataFile = new FormData();
     dataFile.append('title', nickName);
     dataFile.append('file', picture);
@@ -107,110 +146,211 @@ function SignUp(): React.ReactNode {
     }
   }
   return (
-    <Card className="userForm">
-      <Toaster
-        toastOptions={{
-          style: {
-            background: '#ff8a00',
-            color: '#fff',
-          },
-        }}
-      />
-      <Typography variant="h4" gutterBottom>
-        Création de votre Cookie compte
-      </Typography>
-      <FormControl
-        className="userForm_control"
-        component="form"
-        autoComplete="off"
-        onSubmit={onSubmit}
-      >
-        <UserName
-          userName={firstName}
-          setUserName={setFirstName}
-          type={'firstName'}
-        />
-        <UserName
-          userName={lastName}
-          setUserName={setLastName}
-          type={'lastName'}
-        />
-        <Box className="userForm_control_box">
-          <TextField
-            fullWidth
-            id="pseudo"
-            size="small"
-            label="Pseudo"
-            variant="outlined"
-            value={nickName || ''}
-            onChange={(e) => setNickName(e.target.value)}
-            required
-          />
-          <UserEmail email={email} setEmail={setEmail} />
-        </Box>
-        <UserPassword password={password} setPassword={setPassword} />
-        <Box className="userForm_control_box">
-          <UserZipCity
-            zipCode={zipCode}
-            setCity={setCity}
-            setZipCode={setZipCode}
-            setCoordinates={setCoordinates}
-          />
-          <UserPhone
-            phoneNumber={phoneNumber}
-            setPhoneNumber={setPhoneNumber}
-          />
-        </Box>
-        {previewUrl && (
-          <CardMedia
+    // <Card className="userForm">
+    //   <Toaster
+    //     toastOptions={{
+    //       style: {
+    //         background: '#ff8a00',
+    //         color: '#fff',
+    //       },
+    //     }}
+    //   />
+    //   <Typography variant="h4" gutterBottom>
+    //     Création de votre Cookie compte
+    //   </Typography>
+    //   <FormControl
+    //     className="userForm_control"
+    //     component="form"
+    //     autoComplete="off"
+    //     onSubmit={onSubmit}
+    //   >
+    //     <UserName
+    //       userName={firstName}
+    //       setUserName={setFirstName}
+    //       type={'firstName'}
+    //     />
+    //     <UserName
+    //       userName={lastName}
+    //       setUserName={setLastName}
+    //       type={'lastName'}
+    //     />
+    //     <Box className="userForm_control_box">
+    //       <TextField
+    //         fullWidth
+    //         id="pseudo"
+    //         size="small"
+    //         label="Pseudo"
+    //         variant="outlined"
+    //         value={nickName || ''}
+    //         onChange={(e) => setNickName(e.target.value)}
+    //         required
+    //       />
+    //       <UserEmail email={email} setEmail={setEmail} />
+    //     </Box>
+    //     <UserPassword password={password} setPassword={setPassword} />
+    //     <Box className="userForm_control_box">
+    //       <UserZipCity
+    //         zipCode={zipCode}
+    //         setCity={setCity}
+    //         setZipCode={setZipCode}
+    //         setCoordinates={setCoordinates}
+    //       />
+    //       <UserPhone
+    //         phoneNumber={phoneNumber}
+    //         setPhoneNumber={setPhoneNumber}
+    //       />
+    //     </Box>
+    //     {previewUrl && (
+    //       <CardMedia
+    //         sx={{
+    //           width: '200px',
+    //           height: '200px',
+    //           margin: 'auto',
+    //           objectFit: 'cover',
+    //           borderRadius: '5px',
+    //         }}
+    //         image={previewUrl}
+    //       />
+    //     )}
+    //     <Button
+    //       component="label"
+    //       variant="contained"
+    //       startIcon={<CloudUploadIcon />}
+    //     >
+    //       Télécharger une image de profil
+    //       <DownloadInput
+    //         type="file"
+    //         accept=".jpg, .png, .webp"
+    //         onChange={handleFileSelection}
+    //       />
+    //     </Button>
+    //     <ReCAPTCHA
+    //       sitekey={RECAPTCHA_SITE_KEY}
+    //       ref={captchaRef}
+    //       onChange={handleCaptchaChange}
+    //     />
+
+    //     <Button
+    //       variant="contained"
+    //       size="large"
+    //       type="submit"
+    //       disabled={!recaptcha && true}
+    //       endIcon={<SendIcon />}
+    //     >
+    //       Créer mon Cookie compte
+    //     </Button>
+
+    //     <Box className="userForm_control_boxConnect">
+    //       <Typography variant="subtitle2" gutterBottom>
+    //         Déjà inscrit ?
+    //       </Typography>
+    //       <Link variant="body2" href="/signin">
+    //         Connectez-vous
+    //       </Link>
+    //     </Box>
+    //   </FormControl>
+    // </Card>
+    <>
+      {currentStep === 'welcome' ? (
+        <StepWelcome email={email} />
+      ) : (
+        <Grid
+          container
+          item
+          xs={12}
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+          }}
+        >
+          <Toaster />
+          <Grid
+            item
+            xs={6}
+            sm={4}
+            md={3.5}
+            lg={3}
             sx={{
-              width: '200px',
-              height: '200px',
-              margin: 'auto',
-              objectFit: 'cover',
-              borderRadius: '5px',
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: color5,
+              height: '89vh',
+              padding: '1%',
             }}
-            image={previewUrl}
-          />
-        )}
-        <Button
-          component="label"
-          variant="contained"
-          startIcon={<CloudUploadIcon />}
-        >
-          Télécharger une image de profil
-          <DownloadInput
-            type="file"
-            accept=".jpg, .png, .webp"
-            onChange={handleFileSelection}
-          />
-        </Button>
-        <ReCAPTCHA
-          sitekey={RECAPTCHA_SITE_KEY}
-          ref={captchaRef}
-          onChange={handleCaptchaChange}
-        />
-
-        <Button
-          variant="contained"
-          size="large"
-          type="submit"
-          disabled={!recaptcha && true}
-          endIcon={<SendIcon />}
-        >
-          Créer mon Cookie compte
-        </Button>
-
-        <Box className="userForm_control_boxConnect">
-          <Typography variant="subtitle2" gutterBottom>
-            Déjà inscrit ?
-          </Typography>
-          <Link variant="body2" href="/signin">
-            Connectez-vous
-          </Link>
-        </Box>
-      </FormControl>
-    </Card>
+          >
+            <Typography
+              variant="h5"
+              fontWeight={600}
+              marginBottom={'25px'}
+              gutterBottom
+            >
+              Vos informations
+            </Typography>
+            {formSteps.map((el) => (
+              <Box key={el.step} sx={{ marginBottom: '25px' }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  {el.title}
+                </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  {el.step === 'password' ? (
+                    <Typography
+                      variant="subtitle2"
+                      fontWeight={700}
+                      gutterBottom
+                    >
+                      {!el.data ? '-' : hidenPassword()}
+                    </Typography>
+                  ) : (
+                    <Typography
+                      variant="subtitle2"
+                      fontWeight={700}
+                      gutterBottom
+                    >
+                      {el.data ? el.data : '-'}
+                    </Typography>
+                  )}
+                  {el.data && el.step !== currentStep && (
+                    <Button onClick={() => setCurrentStep(el.step)}>
+                      Modifier
+                    </Button>
+                  )}
+                </Box>
+                <Divider />
+              </Box>
+            ))}
+          </Grid>
+          <Grid item xs={6} sm={6} md={8.5}>
+            {currentStep === 'submit' ? (
+              <StepSubmit onSubmit={onSubmit} loading={loading.loading} />
+            ) : (
+              <StepForm
+                email={email}
+                setEmail={setEmail}
+                profil={profil}
+                setProfil={setProfil}
+                firstName={firstName}
+                setFirstName={setFirstName}
+                lastName={lastName}
+                setLastName={setLastName}
+                phoneNumber={phoneNumber}
+                setPhoneNumber={setPhoneNumber}
+                password={password}
+                setPassword={setPassword}
+                currentStep={currentStep}
+                setCurrentStep={setCurrentStep}
+              />
+            )}
+          </Grid>
+        </Grid>
+      )}
+    </>
   );
 }
 

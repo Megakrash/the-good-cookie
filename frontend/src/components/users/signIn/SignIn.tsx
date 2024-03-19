@@ -26,8 +26,8 @@ const { color1, successColor, errorColor } = colors;
 
 const SignIn = (): React.ReactNode => {
   const theme = useTheme();
-  const [email, setEmail] = useState<string>('jl.debre2@relou.wtf');
-  const [password, setPassword] = useState<string>('Warcraft!!2023');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
   useEffect(() => {
@@ -35,6 +35,7 @@ const SignIn = (): React.ReactNode => {
     const isPasswordValid = isValidPasswordRegex(password);
     setIsFormValid(isEmailValid && isPasswordValid);
   }, [email, password]);
+
   const [doLogin] = useMutation(mutationUserLogin, {
     refetchQueries: [queryMeContext],
   });
