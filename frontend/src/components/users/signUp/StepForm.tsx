@@ -18,6 +18,7 @@ import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import LockIcon from '@mui/icons-material/Lock';
 import UserProfil from '../components/UserProfil';
+import UserGender from '../components/UserGender';
 
 const colors = new VariablesColors();
 const { color4 } = colors;
@@ -27,6 +28,8 @@ type StepSignUpFormProps = {
   setEmail: (email: string) => void;
   profil: string;
   setProfil: (profil: string) => void;
+  gender: string;
+  setGender: (gender: string) => void;
   firstName: string;
   setFirstName: (firstName: string) => void;
   lastName: string;
@@ -63,6 +66,18 @@ const StepForm = (props: StepSignUpFormProps): React.ReactNode => {
         setProfil: props.setProfil,
       },
       isDisabled: () => props.profil === '',
+      nextStep: 'gender',
+    },
+    gender: {
+      title: 'Votre civilité ?',
+      subtitle: 'Pour savoir comment vous appeler.',
+      icon: AssignmentIndIcon,
+      Component: UserGender,
+      componentProps: {
+        gender: props.gender,
+        setGender: props.setGender,
+      },
+      isDisabled: () => props.gender === '',
       nextStep: 'firstName',
     },
     firstName: {

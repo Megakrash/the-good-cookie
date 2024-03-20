@@ -11,6 +11,10 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import PersonIcon from '@mui/icons-material/Person';
+import ManIcon from '@mui/icons-material/Man';
+import WomanIcon from '@mui/icons-material/Woman';
+import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
+
 import { VariablesColors } from './Variables.colors';
 
 const colors = new VariablesColors();
@@ -19,6 +23,9 @@ const { color5, color2, color1, color4, successColor } = colors;
 const iconList = {
   pro: EngineeringIcon,
   particular: PersonIcon,
+  man: ManIcon,
+  woman: WomanIcon,
+  alien: SelfImprovementIcon,
 };
 
 interface CustomRadioButtonProps

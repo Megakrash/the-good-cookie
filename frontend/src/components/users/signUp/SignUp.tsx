@@ -25,7 +25,9 @@ function SignUp(): React.ReactNode {
   };
 
   // Form
+  const [email, setEmail] = useState<string>('');
   const [profil, setProfil] = useState<string>('');
+  const [gender, setGender] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [nickName, setNickName] = useState<string>('');
@@ -38,7 +40,6 @@ function SignUp(): React.ReactNode {
   const [zipCode, setZipCode] = useState<string>('');
   const [city, setCity] = useState<string>('');
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
-  const [email, setEmail] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [picture, setPicture] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -58,11 +59,8 @@ function SignUp(): React.ReactNode {
       title: 'Votre adresse email',
       data: email,
     },
-    {
-      step: 'profil',
-      title: 'Votre profil',
-      data: profil,
-    },
+    { step: 'profil', title: 'Votre profil', data: profil },
+    { step: 'gender', title: 'Votre civilité', data: gender },
     { step: 'firstName', title: 'Votre prénom', data: firstName },
     { step: 'lastName', title: 'Votre nom', data: lastName },
     {
@@ -164,7 +162,7 @@ function SignUp(): React.ReactNode {
               Vos informations
             </Typography>
             {formSteps.map((el) => (
-              <Box key={el.step} sx={{ marginBottom: '25px' }}>
+              <Box key={el.step} sx={{ marginBottom: '5px' }}>
                 <Typography variant="subtitle2" gutterBottom>
                   {el.title}
                 </Typography>
@@ -179,7 +177,7 @@ function SignUp(): React.ReactNode {
                   {el.step === 'password' ? (
                     <Typography
                       variant="subtitle2"
-                      fontWeight={700}
+                      fontWeight={600}
                       gutterBottom
                     >
                       {!el.data ? '-' : hidenPassword()}
@@ -187,7 +185,7 @@ function SignUp(): React.ReactNode {
                   ) : (
                     <Typography
                       variant="subtitle2"
-                      fontWeight={700}
+                      fontWeight={600}
                       gutterBottom
                     >
                       {el.data ? el.data : '-'}
@@ -212,6 +210,8 @@ function SignUp(): React.ReactNode {
                 setEmail={setEmail}
                 profil={profil}
                 setProfil={setProfil}
+                gender={gender}
+                setGender={setGender}
                 firstName={firstName}
                 setFirstName={setFirstName}
                 lastName={lastName}
