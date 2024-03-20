@@ -1,39 +1,20 @@
-import React, { FormEvent, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
-import {
-  Box,
-  Button,
-  Card,
-  CardMedia,
-  Divider,
-  FormControl,
-  Grid,
-  Link,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Divider, Grid, Typography } from '@mui/material';
 import ReCAPTCHA from 'react-google-recaptcha';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { mutationCreateUser } from '@/components/graphql/Users';
 import { UserFormData } from '@/types/UserTypes';
 import { API_URL, RECAPTCHA_SITE_KEY } from '@/api/configApi';
 import { useMutation } from '@apollo/client';
 import router from 'next/router';
-import { DownloadInput } from '@/styles/MuiStyled';
-import SendIcon from '@mui/icons-material/Send';
-import UserPhone from '../components/UserPhone';
-import UserEmail from '../components/UserEmail';
-import UserZipCity from '../components/UserZipCity';
-import UserPassword from '../components/UserPassword';
-import UserName from '../components/UserName';
 import StepForm from './StepForm';
 import { VariablesColors } from '@/styles/Variables.colors';
 import StepWelcome from './StepWelcome';
 import StepSubmit from './StepSubmit';
 
 const colors = new VariablesColors();
-const { color2, color5, errorColor } = colors;
+const { color5 } = colors;
 
 function SignUp(): React.ReactNode {
   // ReCaptcha
@@ -146,110 +127,6 @@ function SignUp(): React.ReactNode {
     }
   }
   return (
-    // <Card className="userForm">
-    //   <Toaster
-    //     toastOptions={{
-    //       style: {
-    //         background: '#ff8a00',
-    //         color: '#fff',
-    //       },
-    //     }}
-    //   />
-    //   <Typography variant="h4" gutterBottom>
-    //     Création de votre Cookie compte
-    //   </Typography>
-    //   <FormControl
-    //     className="userForm_control"
-    //     component="form"
-    //     autoComplete="off"
-    //     onSubmit={onSubmit}
-    //   >
-    //     <UserName
-    //       userName={firstName}
-    //       setUserName={setFirstName}
-    //       type={'firstName'}
-    //     />
-    //     <UserName
-    //       userName={lastName}
-    //       setUserName={setLastName}
-    //       type={'lastName'}
-    //     />
-    //     <Box className="userForm_control_box">
-    //       <TextField
-    //         fullWidth
-    //         id="pseudo"
-    //         size="small"
-    //         label="Pseudo"
-    //         variant="outlined"
-    //         value={nickName || ''}
-    //         onChange={(e) => setNickName(e.target.value)}
-    //         required
-    //       />
-    //       <UserEmail email={email} setEmail={setEmail} />
-    //     </Box>
-    //     <UserPassword password={password} setPassword={setPassword} />
-    //     <Box className="userForm_control_box">
-    //       <UserZipCity
-    //         zipCode={zipCode}
-    //         setCity={setCity}
-    //         setZipCode={setZipCode}
-    //         setCoordinates={setCoordinates}
-    //       />
-    //       <UserPhone
-    //         phoneNumber={phoneNumber}
-    //         setPhoneNumber={setPhoneNumber}
-    //       />
-    //     </Box>
-    //     {previewUrl && (
-    //       <CardMedia
-    //         sx={{
-    //           width: '200px',
-    //           height: '200px',
-    //           margin: 'auto',
-    //           objectFit: 'cover',
-    //           borderRadius: '5px',
-    //         }}
-    //         image={previewUrl}
-    //       />
-    //     )}
-    //     <Button
-    //       component="label"
-    //       variant="contained"
-    //       startIcon={<CloudUploadIcon />}
-    //     >
-    //       Télécharger une image de profil
-    //       <DownloadInput
-    //         type="file"
-    //         accept=".jpg, .png, .webp"
-    //         onChange={handleFileSelection}
-    //       />
-    //     </Button>
-    //     <ReCAPTCHA
-    //       sitekey={RECAPTCHA_SITE_KEY}
-    //       ref={captchaRef}
-    //       onChange={handleCaptchaChange}
-    //     />
-
-    //     <Button
-    //       variant="contained"
-    //       size="large"
-    //       type="submit"
-    //       disabled={!recaptcha && true}
-    //       endIcon={<SendIcon />}
-    //     >
-    //       Créer mon Cookie compte
-    //     </Button>
-
-    //     <Box className="userForm_control_boxConnect">
-    //       <Typography variant="subtitle2" gutterBottom>
-    //         Déjà inscrit ?
-    //       </Typography>
-    //       <Link variant="body2" href="/signin">
-    //         Connectez-vous
-    //       </Link>
-    //     </Box>
-    //   </FormControl>
-    // </Card>
     <>
       {currentStep === 'welcome' ? (
         <StepWelcome email={email} />

@@ -29,7 +29,7 @@ const mocks = [
       variables: {
         data: {
           email: 'test@example.com',
-          password: 'password123',
+          password: 'Password123!!',
         },
       },
     },
@@ -49,7 +49,7 @@ const mocks = [
       variables: {
         data: {
           email: 'test@example.com',
-          password: 'wrongpassword123',
+          password: 'Wrongpassword123!!',
         },
       },
     },
@@ -62,7 +62,7 @@ const mocks = [
       variables: {
         data: {
           email: 'test@example.com',
-          password: 'anyPassword',
+          password: 'AnyPassword!!22',
         },
       },
     },
@@ -76,6 +76,8 @@ const mocks = [
     result: {
       data: {
         id: '1',
+        nickName: 'John',
+        picture: 'picture.jpg',
       },
     },
   },
@@ -92,25 +94,23 @@ describe('SignIn test component & toast', () => {
   });
   it('should render the initial component', () => {
     expect(
-      screen.getByText('Cookiexion', { selector: 'h4' }),
+      screen.getByText('Se connecter', { selector: 'h4' }),
     ).toBeInTheDocument();
     expect(screen.getByLabelText(/Email/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Mot de passe/)).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /Cookiexion/ }),
+      screen.getByRole('button', { name: /Se connecter/ }),
     ).toBeInTheDocument();
-    // expect(screen.getByText("Mot de passe oublié ?")).toBeInTheDocument();
-    expect(
-      screen.getByText('Pas encore de cookie compte ?'),
-    ).toBeInTheDocument();
-    expect(screen.getByText('Inscrivez-vous')).toBeInTheDocument();
-    // const forgotPasswordLink = screen.getByText("Mot de passe oublié ?");
-    // expect(forgotPasswordLink).toBeInTheDocument();
-    // expect(forgotPasswordLink.closest("a")).toHaveAttribute(
-    //   "href",
-    //   "/forgot-password"
-    // );
-    const signUpLink = screen.getByText('Inscrivez-vous');
+    expect(screen.getByText('Mot de passe oublié ?')).toBeInTheDocument();
+    expect(screen.getByText('Première connexion ?')).toBeInTheDocument();
+    expect(screen.getByText('Créez votre compte')).toBeInTheDocument();
+    const forgotPasswordLink = screen.getByText('Mot de passe oublié ?');
+    expect(forgotPasswordLink).toBeInTheDocument();
+    expect(forgotPasswordLink.closest('a')).toHaveAttribute(
+      'href',
+      '/forgot-password',
+    );
+    const signUpLink = screen.getByText('Créez votre compte');
     expect(signUpLink).toBeInTheDocument();
     expect(signUpLink.closest('a')).toHaveAttribute('href', '/signup');
   });
@@ -133,13 +133,13 @@ describe('SignIn test component & toast', () => {
       target: { value: 'test@example.com' },
     });
     fireEvent.change(screen.getByLabelText(/Mot de passe/), {
-      target: { value: 'password123' },
+      target: { value: 'Password123!!' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /Cookiexion/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Se connecter/ }));
 
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith('Connexion réussie, bienvenue John', {
-        style: { background: '#0fcc45', color: '#fff' },
+        style: { background: '#4caf50', color: 'white' },
       });
     });
   });
@@ -148,13 +148,13 @@ describe('SignIn test component & toast', () => {
       target: { value: 'test@example.com' },
     });
     fireEvent.change(screen.getByLabelText(/Mot de passe/), {
-      target: { value: 'wrongpassword123' },
+      target: { value: 'Wrongpassword123!!' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /Cookiexion/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Se connecter/ }));
 
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith('Email ou mot de passe incorrect', {
-        style: { background: '#e14d2a', color: '#fff' },
+        style: { background: '#f44336', color: 'white' },
       });
     });
   });
@@ -163,24 +163,24 @@ describe('SignIn test component & toast', () => {
       target: { value: 'test@example.com' },
     });
     fireEvent.change(screen.getByLabelText(/Mot de passe/), {
-      target: { value: 'anyPassword' },
+      target: { value: 'AnyPassword!!22' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /Cookiexion/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Se connecter/ }));
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith('Failed to fetch', {
-        style: { background: '#e14d2a', color: '#fff' },
+        style: { background: '#f44336', color: 'white' },
       });
     });
   });
-  //   it("has a link to the forgot password page", () => {
-  //     const forgotPasswordLink = screen.getByText("Mot de passe oublié ?");
-  //     expect(forgotPasswordLink.closest("a")).toHaveAttribute(
-  //       "href",
-  //       "/forgot-password"
-  //     );
-  //   });
+  it('has a link to the forgot password page', () => {
+    const forgotPasswordLink = screen.getByText('Mot de passe oublié ?');
+    expect(forgotPasswordLink.closest('a')).toHaveAttribute(
+      'href',
+      '/forgot-password',
+    );
+  });
   it('has a link to the signup page', () => {
-    const signUpLink = screen.getByText('Inscrivez-vous');
+    const signUpLink = screen.getByText('Créez votre compte');
     expect(signUpLink.closest('a')).toHaveAttribute('href', '/signup');
   });
 });
@@ -213,10 +213,17 @@ describe('SignIn test graphQl mutation', () => {
         target: { value: 'test@example.com' },
       });
       fireEvent.change(screen.getByLabelText(/Mot de passe/), {
-        target: { value: 'password123' },
+        target: { value: 'Password123!!' },
       });
-      fireEvent.click(screen.getByRole('button', { name: /Cookiexion/ }));
     });
+    await waitFor(() => {
+      const signInButton = screen.getByRole('button', {
+        name: /Se connecter/,
+      });
+      expect(signInButton).not.toBeDisabled();
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Se connecter/ }));
+
     await waitFor(() => {
       const loginMutationCall = graphQlMutation.find(
         (op) => op.operationName === 'userLogin',

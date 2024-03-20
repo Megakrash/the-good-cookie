@@ -146,7 +146,7 @@ const SignIn = (): React.ReactNode => {
                 Première connexion ?
               </Typography>
               <Link variant="body2" href="/signup">
-                {'Créer votre compte'}
+                {'Créez votre compte'}
               </Link>
             </Box>
           </Card>
