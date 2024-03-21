@@ -37,7 +37,7 @@ jobs:
           DATA="{\"title\":\"$TITLE\",\"body\":\"$BODY\",\"base\":\"dev\",\"head\":\"$BRANCH_NAME\",\"assignees\":[\"$ASSIGN_TO\"]}"
 
           curl -X POST \
-               -H "Authorization: token $GITHUB_TOKEN" \
+               -H "Authorization: ${{ secrets.MY_GITHUB_PAT }}" \
                -H "Content-Type: application/json" \
                -d "$DATA" \
                "$URL"
