@@ -1,19 +1,19 @@
-import React, { FormEvent, useEffect, useState } from 'react'
-import { API_URL, PATH_IMAGE } from '@/api/configApi'
-import axios from 'axios'
-import { AdFormData, AdTypes, AdTags } from '@/types/AdTypes'
-import { CategoriesTypes } from '@/types/CategoryTypes'
-import { TagsTypes } from '@/types/TagTypes'
-import toast, { Toaster } from 'react-hot-toast'
-import { queryAllCatAndSub } from '@/components/graphql/Categories'
+import React, { FormEvent, useEffect, useState } from 'react';
+import { API_URL, PATH_IMAGE } from '@/api/configApi';
+import axios from 'axios';
+import { AdFormData, AdTypes, AdTags } from '@/types/AdTypes';
+import { CategoriesTypes } from '@/types/CategoryTypes';
+import { TagsTypes } from '@/types/TagTypes';
+import toast, { Toaster } from 'react-hot-toast';
+import { queryAllCatAndSub } from '@/components/graphql/Categories';
 import {
   queryAllAds,
   queryAdById,
   mutationCreateAd,
   mutationUpdateAd,
-} from '@/components/graphql/Ads'
-import { useMutation, useQuery } from '@apollo/client'
-import { useRouter } from 'next/router'
+} from '@/components/graphql/Ads';
+import { useMutation, useQuery } from '@apollo/client';
+import { useRouter } from 'next/router';
 import {
   FormControl,
   InputLabel,
@@ -24,82 +24,82 @@ import {
   Box,
   Button,
   CardMedia,
-} from '@mui/material'
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'
-import { DownloadInput } from '@/styles/MuiStyled'
-import UserZipCity from '@/components/users/components/UserZipCity'
-import AdTitle from './components/AdTitle'
-import AdDescription from './components/AdDescription'
-import AdPrice from './components/AdPrice'
-import { queryAllTags } from '../../graphql/Tags'
+} from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { DownloadInput } from '@/styles/MuiStyled';
+import UserZipCity from '@/components/users/components/UserZipCity';
+import AdTitle from './components/AdTitle';
+import AdDescription from './components/AdDescription';
+import AdPrice from './components/AdPrice';
+import { queryAllTags } from '../../graphql/Tags';
 
 type AdFormProps = {
-  ad?: AdTypes
-}
+  ad?: AdTypes;
+};
 
 function AdForm(props: AdFormProps): React.ReactNode {
-  const router = useRouter()
+  const router = useRouter();
   // Get Categories&SubCategories & Tags
   const { data: dataCategories } = useQuery<{ items: CategoriesTypes }>(
-    queryAllCatAndSub
-  )
-  const categories = dataCategories ? dataCategories.items : []
+    queryAllCatAndSub,
+  );
+  const categories = dataCategories ? dataCategories.items : [];
 
-  const { data: dataTags } = useQuery<{ items: TagsTypes }>(queryAllTags)
-  const tags = dataTags ? dataTags.items : []
+  const { data: dataTags } = useQuery<{ items: TagsTypes }>(queryAllTags);
+  const tags = dataTags ? dataTags.items : [];
 
   // Form
-  const [title, setTitle] = useState<string>('')
-  const [description, setDescription] = useState<string>('')
-  const [curentPicture, setCurentPicture] = useState<string>('')
-  const [newPicture, setNewPicture] = useState<File | null>(null)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [curentPicture, setCurentPicture] = useState<string>('');
+  const [newPicture, setNewPicture] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   function handleFileSelection(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0]
-      setNewPicture(file)
-      setCurentPicture('')
-      setPreviewUrl(URL.createObjectURL(file))
+      const file = event.target.files[0];
+      setNewPicture(file);
+      setCurentPicture('');
+      setPreviewUrl(URL.createObjectURL(file));
     }
   }
-  const [price, setPrice] = useState<number>(0)
-  const [zipCode, setZipCode] = useState<string>('')
-  const [city, setCity] = useState<string>('')
-  const [coordinates, setCoordinates] = useState<[number, number]>([0, 0])
-  const [subCategoryId, setSubCategoryId] = useState<null | number>()
-  const [selectedTags, setSelectedTags] = useState<AdTags>([])
+  const [price, setPrice] = useState<number>(0);
+  const [zipCode, setZipCode] = useState<string>('');
+  const [city, setCity] = useState<string>('');
+  const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
+  const [subCategoryId, setSubCategoryId] = useState<null | number>();
+  const [selectedTags, setSelectedTags] = useState<AdTags>([]);
   const handleChangeTag = (event: SelectChangeEvent<number[]>) => {
-    const value: number[] = event.target.value as unknown as number[]
-    const selectedOptions: AdTags = value.map((id) => ({ id }))
-    setSelectedTags(selectedOptions)
-  }
+    const value: number[] = event.target.value as unknown as number[];
+    const selectedOptions: AdTags = value.map((id) => ({ id }));
+    setSelectedTags(selectedOptions);
+  };
 
   // Submit & Update queries
 
   const [doCreate, { loading: createLoading }] = useMutation(mutationCreateAd, {
     refetchQueries: [queryAllAds],
-  })
+  });
   const [doUpdate, { loading: updateLoading }] = useMutation(mutationUpdateAd, {
     refetchQueries: [queryAdById, queryAllAds],
-  })
-  const loading = createLoading || updateLoading
+  });
+  const loading = createLoading || updateLoading;
 
   // SUBMIT
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const dataFile = new FormData()
-    dataFile.append('title', title)
-    dataFile.append('file', newPicture)
+    event.preventDefault();
+    const dataFile = new FormData();
+    dataFile.append('title', title);
+    dataFile.append('file', newPicture);
 
     try {
-      let pictureId: number | null = null
+      let pictureId: number | null = null;
       if (newPicture) {
         const uploadResponse = await axios.post(`${API_URL}picture`, dataFile, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
-        })
-        pictureId = uploadResponse.data.id
+        });
+        pictureId = uploadResponse.data.id;
       }
 
       const data: AdFormData = {
@@ -112,18 +112,18 @@ function AdForm(props: AdFormProps): React.ReactNode {
         subCategory: subCategoryId ? { id: Number(subCategoryId) } : null,
         tags: selectedTags,
         ...(pictureId !== null && { pictureId }),
-      }
+      };
 
       if (!props.ad) {
         const result = await doCreate({
           variables: {
             data,
           },
-        })
+        });
         if ('id' in result.data?.item) {
-          router.replace(`/annonces/${result.data.item.id}`)
+          router.replace(`/annonces/${result.data.item.id}`);
         } else {
-          toast('Erreur pendant la création de votre annonce')
+          toast('Erreur pendant la création de votre annonce');
         }
       } else {
         const result = await doUpdate({
@@ -131,32 +131,32 @@ function AdForm(props: AdFormProps): React.ReactNode {
             data,
             adUpdateId: props.ad?.id,
           },
-        })
+        });
         if (!result.errors?.length) {
-          toast('Annonce mise à jour')
+          toast('Annonce mise à jour');
         } else {
-          toast('Erreur pendant la mise à jour de votre annonce')
+          toast('Erreur pendant la mise à jour de votre annonce');
         }
       }
     } catch (error) {
-      console.error('error', error)
+      console.error('error', error);
     }
   }
   // If update Ad
   useEffect(() => {
     if (props.ad) {
-      setTitle(props.ad.title)
-      setDescription(props.ad.description)
-      setZipCode(props.ad.zipCode)
-      setCoordinates(props.ad.coordinates)
-      setCity(props.ad.city)
-      setPrice(props.ad.price)
-      setCurentPicture(props.ad.picture.filename)
-      setSubCategoryId(props.ad.subCategory ? props.ad.subCategory.id : null)
-      const transformedTags = props.ad.tags.map((tag) => ({ id: tag.id }))
-      setSelectedTags(transformedTags)
+      setTitle(props.ad.title);
+      setDescription(props.ad.description);
+      setZipCode(props.ad.zipCode);
+      setCoordinates(props.ad.coordinates);
+      setCity(props.ad.city);
+      setPrice(props.ad.price);
+      setCurentPicture(props.ad.picture.filename);
+      setSubCategoryId(props.ad.subCategory ? props.ad.subCategory.id : null);
+      const transformedTags = props.ad.tags.map((tag) => ({ id: tag.id }));
+      setSelectedTags(transformedTags);
     }
-  }, [props.ad])
+  }, [props.ad]);
   return (
     <Box
       className="adForm"
@@ -207,7 +207,7 @@ function AdForm(props: AdFormProps): React.ReactNode {
               value={subCategoryId || ''}
               onChange={(e) =>
                 setSubCategoryId(
-                  e.target.value === '' ? undefined : Number(e.target.value)
+                  e.target.value === '' ? undefined : Number(e.target.value),
                 )
               }
               label="Sélectionnez une sous-catégorie"
@@ -334,7 +334,7 @@ function AdForm(props: AdFormProps): React.ReactNode {
         </Box>
       )}
     </Box>
-  )
+  );
 }
 
-export default AdForm
+export default AdForm;

@@ -1,26 +1,25 @@
-import React, { useState } from 'react'
-import { TextField } from '@mui/material'
+import React, { useState } from 'react';
+import { TextField } from '@mui/material';
+import { isValidNameRegex } from '../components/UserRegex';
 
 type UserNameProps = {
-  userName: string
-  setUserName: (firstName: string) => void
-  type: string
-}
+  userName: string;
+  setUserName: (firstName: string) => void;
+  type: string;
+};
 
 const UserName = (props: UserNameProps): React.ReactNode => {
-  const [nameError, setNameError] = useState<string>('')
-
-  const validateName = (name: string) => /^[a-zA-ZÀ-ÿ\s-]{2,50}$/.test(name)
+  const [nameError, setNameError] = useState<string>('');
 
   const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target
-    props.setUserName(value)
-    if (!validateName(value)) {
-      setNameError('Ne doit contenir que des lettres (minimum 2, maximum 50)')
+    const { value } = e.target;
+    props.setUserName(value);
+    if (!isValidNameRegex(value)) {
+      setNameError('Ne doit contenir que des lettres (minimum 2, maximum 50)');
     } else {
-      setNameError('')
+      setNameError('');
     }
-  }
+  };
 
   return (
     <TextField
@@ -35,7 +34,7 @@ const UserName = (props: UserNameProps): React.ReactNode => {
       error={!!nameError}
       helperText={nameError}
     />
-  )
-}
+  );
+};
 
-export default UserName
+export default UserName;

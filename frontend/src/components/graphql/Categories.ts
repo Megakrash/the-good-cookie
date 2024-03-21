@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const queryAllCatAndSub = gql`
   query getAllCategoriesAndSub {
@@ -11,7 +11,7 @@ export const queryAllCatAndSub = gql`
       }
     }
   }
-`
+`;
 
 export const queryCatByIdAndSub = gql`
   query categoryById($categoryByIdId: ID!) {
@@ -25,4 +25,4 @@ export const queryCatByIdAndSub = gql`
       }
     }
   }
-`
+`;

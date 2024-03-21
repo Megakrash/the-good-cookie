@@ -1,26 +1,26 @@
-import React, { useState } from 'react'
-import { TextField } from '@mui/material'
+import React, { useState } from 'react';
+import { TextField } from '@mui/material';
 
 type AdTitleProps = {
-  title: string
-  setTitle: (title: string) => void
-}
+  title: string;
+  setTitle: (title: string) => void;
+};
 
 function AdTitle(props: AdTitleProps): React.ReactNode {
-  const [titleError, setTitleError] = useState<string>('')
+  const [titleError, setTitleError] = useState<string>('');
 
   const validateTitle = (title: string) =>
-    /^[\wÀ-ÿ- !@#$%^&*()_+`~{}\[\]:;"'<>,.?\/\\|=]{4,}$/.test(title)
+    /^[\wÀ-ÿ- !@#$%^&*()_+`~{}\[\]:;"'<>,.?\/\\|=]{4,}$/.test(title);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target
-    props.setTitle(value)
+    const { value } = e.target;
+    props.setTitle(value);
     if (!validateTitle(value)) {
-      setTitleError('Taille minimum 4 caractères')
+      setTitleError('Taille minimum 4 caractères');
     } else {
-      setTitleError('')
+      setTitleError('');
     }
-  }
+  };
 
   return (
     <TextField
@@ -35,7 +35,7 @@ function AdTitle(props: AdTitleProps): React.ReactNode {
       error={!!titleError}
       helperText={titleError}
     />
-  )
+  );
 }
 
-export default AdTitle
+export default AdTitle;

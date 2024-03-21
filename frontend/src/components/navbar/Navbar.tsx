@@ -1,35 +1,35 @@
-import React from 'react'
-import { useRouter } from 'next/router'
-import { AppBar, Box, Button, ButtonGroup } from '@mui/material'
-import HomeIcon from '@mui/icons-material/Home'
-import Link from 'next/link'
-import { CategoriesTypes } from '@/types/CategoryTypes'
-import { useQuery } from '@apollo/client'
-import { queryAllCatAndSub } from '../graphql/Categories'
+import React from 'react';
+import { useRouter } from 'next/router';
+import { AppBar, Box, Button, ButtonGroup } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
+import Link from 'next/link';
+import { CategoriesTypes } from '@/types/CategoryTypes';
+import { useQuery } from '@apollo/client';
+import { queryAllCatAndSub } from '../graphql/Categories';
 
 function Navbar(): React.ReactNode {
-  const { data } = useQuery<{ items: CategoriesTypes }>(queryAllCatAndSub)
-  const categories = data ? data.items : []
-  const router = useRouter()
-  const currentPath = router.asPath
+  const { data } = useQuery<{ items: CategoriesTypes }>(queryAllCatAndSub);
+  const categories = data ? data.items : [];
+  const router = useRouter();
+  const currentPath = router.asPath;
 
-  const pathSegments = currentPath.split('/').filter(Boolean)
-  const isCategoryPage = pathSegments[0] === 'categories'
-  const isSubCategoryPage = pathSegments[0] === 'sousCategories'
-  const currentId = pathSegments[1]
+  const pathSegments = currentPath.split('/').filter(Boolean);
+  const isCategoryPage = pathSegments[0] === 'categories';
+  const isSubCategoryPage = pathSegments[0] === 'sousCategories';
+  const currentId = pathSegments[1];
 
   // Find the parent category if we're on a subcategory path, otherwise use the current category id.
   const currentCategory = isSubCategoryPage
     ? categories.find((category) =>
         category.subCategories.some(
-          (subCat) => subCat.id.toString() === currentId
-        )
+          (subCat) => subCat.id.toString() === currentId,
+        ),
       )
-    : categories.find((category) => category.id.toString() === currentId)
+    : categories.find((category) => category.id.toString() === currentId);
 
   // Only show subcategories in the AppBar if currentCategory has been determined.
   const showSubCategories =
-    currentCategory && (isCategoryPage || isSubCategoryPage)
+    currentCategory && (isCategoryPage || isSubCategoryPage);
 
   return (
     <Box sx={{ position: 'sticky', top: -1, zIndex: 1100, marginTop: '-1%' }}>
@@ -116,6 +116,6 @@ function Navbar(): React.ReactNode {
         </AppBar>
       )}
     </Box>
-  )
+  );
 }
-export default Navbar
+export default Navbar;

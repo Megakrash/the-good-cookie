@@ -1,9 +1,9 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
 type NavSubcategoriesProps = {
-  id: number
-  name: string
-}
+  id: number;
+  name: string;
+};
 
 function NavSubCategories(props: NavSubcategoriesProps): React.ReactNode {
   return (
@@ -16,7 +16,7 @@ function NavSubCategories(props: NavSubcategoriesProps): React.ReactNode {
         {props.name}
       </Link>
     </>
-  )
+  );
 }
 
-export default NavSubCategories
+export default NavSubCategories;

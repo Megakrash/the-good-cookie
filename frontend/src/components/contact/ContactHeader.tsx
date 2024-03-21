@@ -1,5 +1,5 @@
-import { Button, Typography, Box } from '@mui/material'
-import { PATH_IMAGE } from '@/api/configApi'
+import { Button, Typography, Box } from '@mui/material';
+import { PATH_IMAGE } from '@/api/configApi';
 
 function ContactHeader(): React.ReactNode {
   return (
@@ -28,7 +28,7 @@ function ContactHeader(): React.ReactNode {
         du Lundi au Samedi de 10H à 19H
       </Typography>
     </Box>
-  )
+  );
 }
 
-export default ContactHeader
+export default ContactHeader;

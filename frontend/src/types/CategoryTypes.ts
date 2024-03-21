@@ -1,13 +1,13 @@
 export type CategoryTypes = {
-  id: number
-  name: string
+  id: number;
+  name: string;
   subCategories: [
     {
-      id: number
-      name: string
-      picture: string
+      id: number;
+      name: string;
+      picture: string;
     },
-  ]
-}
+  ];
+};
 
-export type CategoriesTypes = CategoryTypes[]
+export type CategoriesTypes = CategoryTypes[];
