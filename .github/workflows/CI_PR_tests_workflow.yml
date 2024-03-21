@@ -11,22 +11,39 @@ on:
       - "backend/**"
 
 jobs:
+  paths:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      backend: ${{ steps.filter.outputs.backend }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check modified paths
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+            backend:
+              - 'backend/**'
+
   testFrontend:
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.changed_files, 'frontend/')
+    needs: paths
+    if: needs.paths.outputs.frontend == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Run tests on frontend
         run: cd frontend && npm i && npm test
 
   testBackend:
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.changed_files, 'backend/')
+    needs: paths
+    if: needs.paths.outputs.backend == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Run tests on backend
         run: cd backend && npm i && npm test
