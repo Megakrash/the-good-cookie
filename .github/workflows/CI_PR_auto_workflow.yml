@@ -37,12 +37,12 @@ jobs:
           DATA="{\"title\":\"$TITLE\",\"body\":\"$BODY\",\"base\":\"dev\",\"head\":\"$BRANCH_NAME\",\"assignees\":[\"$ASSIGN_TO\"],\"auto_assign\":true}"
 
           echo "Payload to create PR : ${DATA}"
-          RESPONSE=$(curl -X POST -H "Authorization: token $GITHUB_TOKEN" -d "$DATA" "$URL")
+          RESPONSE=$(curl -X POST -H "Authorization: token $GITHUB_TOKEN" -d "$DATA" "$URL" -v)
 
           # Extracting PR number from the response
-          PR_NUMBER=$(echo "$RESPONSE" | jq -r '.number')
+          PR_NUMBER=$(echo "$RESPONSE" | jq -r '.number' -v)
 
           # Assigning the PR to its author
           ASSIGN_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/assignees"
           ASSIGN_DATA="{\"assignees\":[\"$ASSIGN_TO\"]}"
-          curl -X POST -H "Authorization: token $GITHUB_TOKEN" -d "$ASSIGN_DATA" "$ASSIGN_URL"
+          curl -X POST -H "Authorization: token $GITHUB_TOKEN" -d "$ASSIGN_DATA" "$ASSIGN_URL -v"
