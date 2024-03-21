@@ -9,11 +9,7 @@ FROM node:18.18.2-alpine3.18 AS dev
 WORKDIR /app
 COPY package.json package.json
 COPY --from=deps /app/node_modules node_modules 
-COPY tsconfig.json tsconfig.json
-COPY .eslintrc.json .eslintrc.json
-COPY next.config.js next.config.js
-COPY public public
-COPY src src
+COPY . .
 CMD npm run dev
 
 # this step only compile the app (ts to js), do not launch this step
