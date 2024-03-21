@@ -1,48 +1,42 @@
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import { useMutation } from '@apollo/client'
-import {
-  Button,
-  Card,
-  CircularProgress,
-  Container,
-  Typography,
-} from '@mui/material'
-import toast, { Toaster } from 'react-hot-toast'
-import { mutationVerifyEmail } from '@/components/graphql/Users'
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useMutation } from '@apollo/client';
+import { Button, Card, CircularProgress, Typography } from '@mui/material';
+import toast, { Toaster } from 'react-hot-toast';
+import { mutationVerifyEmail } from '@/components/graphql/Users';
 
 type UserEmailVerify = {
-  success: boolean
-  message: string
-}
+  success: boolean;
+  message: string;
+};
 
 function EmailVerify() {
-  const router = useRouter()
-  const { token } = router.query
-  const [requestSend, setRequestSend] = useState(false)
-  const [verified, setVerified] = useState(false)
+  const router = useRouter();
+  const { token } = router.query;
+  const [requestSend, setRequestSend] = useState(false);
+  const [verified, setVerified] = useState(false);
   const [verifyEmail, { loading, error }] = useMutation<{
-    item: UserEmailVerify
+    item: UserEmailVerify;
   }>(mutationVerifyEmail, {
     variables: { token },
     onCompleted: (data) => {
       if (data.item.success === true) {
         toast(data.item.message, {
           style: { background: '#e89116', color: '#fff' },
-        })
-        setVerified(true)
+        });
+        setVerified(true);
       } else {
-        toast.error(data.item.message)
+        toast.error(data.item.message);
       }
     },
-  })
+  });
 
   useEffect(() => {
     if (token && !requestSend) {
-      verifyEmail()
-      setRequestSend(true)
+      verifyEmail();
+      setRequestSend(true);
     }
-  }, [token])
+  }, [token]);
 
   return (
     <Card className="userForm emailVerify">
@@ -69,7 +63,7 @@ function EmailVerify() {
         Page de connexion
       </Button>
     </Card>
-  )
+  );
 }
 
-export default EmailVerify
+export default EmailVerify;

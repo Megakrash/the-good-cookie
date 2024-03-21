@@ -1,82 +1,159 @@
-import React, { useState } from 'react'
-import { Box, Button, Card, FormControl, Link, Typography } from '@mui/material'
-import LoginIcon from '@mui/icons-material/Login'
-import { mutationUserLogin, queryMeContext } from '@/components/graphql/Users'
-import { useMutation } from '@apollo/client'
-import toast, { Toaster } from 'react-hot-toast'
-import router from 'next/router'
-import UserPassword from '../components/UserPassword'
-import UserEmail from '../components/UserEmail'
+import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Card,
+  FormControl,
+  Grid,
+  Link,
+  Typography,
+  useTheme,
+} from '@mui/material';
+import { mutationUserLogin, queryMeContext } from '@/components/graphql/Users';
+import { useMutation } from '@apollo/client';
+import toast, { Toaster } from 'react-hot-toast';
+import router from 'next/router';
+import UserPassword from '../components/UserPassword';
+import UserEmail from '../components/UserEmail';
+import { VariablesColors } from '@/styles/Variables.colors';
+import { GreyBtnOrangeHover } from '@/styles/MuiButtons';
+import {
+  isValidEmailRegex,
+  isValidPasswordRegex,
+} from '../components/UserRegex';
 
-function SignIn(): React.ReactNode {
-  const [email, setEmail] = useState<string>('jl.debre2@relou.wtf')
-  const [password, setPassword] = useState<string>('Warcraft!!2023')
+const colors = new VariablesColors();
+const { color1, successColor, errorColor } = colors;
+
+const SignIn = (): React.ReactNode => {
+  const theme = useTheme();
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
+
+  useEffect(() => {
+    const isEmailValid = isValidEmailRegex(email);
+    const isPasswordValid = isValidPasswordRegex(password);
+    setIsFormValid(isEmailValid && isPasswordValid);
+  }, [email, password]);
+
   const [doLogin] = useMutation(mutationUserLogin, {
     refetchQueries: [queryMeContext],
-  })
+  });
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+    event.preventDefault();
     try {
       const { data } = await doLogin({
         variables: { data: { email, password } },
-      })
+      });
       if ('id' in data.item) {
         toast(`Connexion réussie, bienvenue ${data.item.firstName}`, {
-          style: { background: '#0fcc45', color: '#fff' },
-        })
+          style: { background: successColor, color: color1 },
+        });
         setTimeout(() => {
-          router.replace(`/compte`)
-        }, 1500)
+          router.replace(`/compte`);
+        }, 1500);
       }
     } catch (error) {
       toast(error.message, {
-        style: { background: '#e14d2a', color: '#fff' },
-      })
-      setEmail('')
-      setPassword('')
+        style: { background: errorColor, color: color1 },
+      });
+      setEmail('');
+      setPassword('');
     }
-  }
+  };
 
   return (
-    <Card className="userForm userSignin">
-      <Toaster />
-      <Typography variant="h4" gutterBottom>
-        Cookiexion
+    <Grid
+      container
+      item
+      xs={12}
+      sx={{
+        marginTop: '1%',
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+      }}
+    >
+      <Typography variant="h4" fontWeight={600} gutterBottom>
+        Se connecter
       </Typography>
+      <Toaster />
       <FormControl
-        className="userForm_control"
         component="form"
         autoComplete="off"
         onSubmit={onSubmit}
-      >
-        <UserEmail email={email} setEmail={setEmail} />
-        <UserPassword password={password} setPassword={setPassword} />
-        <Button
-          variant="contained"
-          size="large"
-          type="submit"
-          endIcon={<LoginIcon />}
-        >
-          Cookiexion
-        </Button>
-      </FormControl>
-      <Box
         sx={{
+          width: '100%',
           display: 'flex',
-          flexDirection: 'row',
-          gap: '5px',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
       >
-        <Typography variant="subtitle2" gutterBottom>
-          Pas encore de cookie compte ?
-        </Typography>
-        <Link variant="body2" href="/signup">
-          Inscrivez-vous
-        </Link>
-      </Box>
-    </Card>
-  )
-}
+        <Grid item container xs={11} sm={7} md={6} lg={5} xl={4}>
+          <Card
+            sx={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 1,
+              padding: 5,
+              [theme.breakpoints.down('sm')]: {
+                padding: 3,
+              },
+            }}
+          >
+            <Grid
+              container
+              item
+              xs={12}
+              sm={11}
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 3,
+              }}
+            >
+              <UserEmail email={email} setEmail={setEmail} />
+              <UserPassword password={password} setPassword={setPassword} />
+            </Grid>
+            <Grid item xs={12}>
+              <Link variant="body2" href="/forgot-password">
+                {'Mot de passe oublié ?'}
+              </Link>
+            </Grid>
+            <Grid item xs={12} marginTop={3}>
+              <GreyBtnOrangeHover type="submit" disabled={!isFormValid}>
+                Se connecter
+              </GreyBtnOrangeHover>
+            </Grid>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                [theme.breakpoints.down('sm')]: {
+                  flexDirection: 'column',
+                },
+                gap: '5px',
+              }}
+            >
+              <Typography variant="subtitle2" gutterBottom>
+                Première connexion ?
+              </Typography>
+              <Link variant="body2" href="/signup">
+                {'Créez votre compte'}
+              </Link>
+            </Box>
+          </Card>
+        </Grid>
+      </FormControl>
+    </Grid>
+  );
+};
 
-export default SignIn
+export default SignIn;

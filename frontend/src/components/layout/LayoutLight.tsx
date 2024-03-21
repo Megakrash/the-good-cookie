@@ -1,10 +1,10 @@
-import { ReactNode } from 'react'
-import Head from 'next/head'
+import { ReactNode } from 'react';
+import Head from 'next/head';
 
 type LayoutProps = {
-  title: string
-  children: ReactNode
-}
+  title: string;
+  children: ReactNode;
+};
 
 function LayoutLight(props: LayoutProps): ReactNode {
   return (
@@ -17,7 +17,7 @@ function LayoutLight(props: LayoutProps): ReactNode {
       </Head>
       <main>{props.children}</main>
     </>
-  )
+  );
 }
 
-export default LayoutLight
+export default LayoutLight;

@@ -1,10 +1,10 @@
-import React from 'react'
-import { TextField } from '@mui/material'
+import React from 'react';
+import { TextField } from '@mui/material';
 
 type AdPriceProps = {
-  price: number
-  setPrice: (price: number) => void
-}
+  price: number;
+  setPrice: (price: number) => void;
+};
 
 function AdPrice(props: AdPriceProps): React.ReactNode {
   return (
@@ -20,7 +20,7 @@ function AdPrice(props: AdPriceProps): React.ReactNode {
       }
       required
     />
-  )
+  );
 }
 
-export default AdPrice
+export default AdPrice;

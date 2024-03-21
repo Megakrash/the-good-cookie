@@ -1,8 +1,8 @@
-import React, { FormEvent, useState } from 'react'
-import { CategoriesTypes } from '@/types/CategoryTypes'
-import { AdsTypes } from '@/types/AdTypes'
-import { TagsTypes } from '@/types/TagTypes'
-import { useLazyQuery, useQuery } from '@apollo/client'
+import React, { FormEvent, useState } from 'react';
+import { CategoriesTypes } from '@/types/CategoryTypes';
+import { AdsTypes } from '@/types/AdTypes';
+import { TagsTypes } from '@/types/TagTypes';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import {
   FormControl,
   InputLabel,
@@ -13,14 +13,14 @@ import {
   TextField,
   Box,
   Button,
-} from '@mui/material'
-import { FilterAlt, FilterAltOff } from '@mui/icons-material'
-import { PATH_IMAGE } from '@/api/configApi'
-import { queryAllTags } from '../graphql/Tags'
-import { queryAllAds } from '../graphql/Ads'
-import { queryAllCatAndSub } from '../graphql/Categories'
-import GpsAndRadius from './components/GpsAndRadius'
-import AdCard from '../ads/AdCard'
+} from '@mui/material';
+import { FilterAlt, FilterAltOff } from '@mui/icons-material';
+import { PATH_IMAGE } from '@/api/configApi';
+import { queryAllTags } from '../graphql/Tags';
+import { queryAllAds } from '../graphql/Ads';
+import { queryAllCatAndSub } from '../graphql/Categories';
+import GpsAndRadius from './components/GpsAndRadius';
+import AdCard from '../ads/AdCard';
 
 function Search(): React.ReactNode {
   // Get Categories&SubCategories & Tags
@@ -28,52 +28,52 @@ function Search(): React.ReactNode {
     data: dataCategories,
     error: errorCategories,
     loading: loadindCategories,
-  } = useQuery<{ items: CategoriesTypes }>(queryAllCatAndSub)
-  const categories = dataCategories ? dataCategories.items : []
+  } = useQuery<{ items: CategoriesTypes }>(queryAllCatAndSub);
+  const categories = dataCategories ? dataCategories.items : [];
 
   const {
     data: dataTags,
     error: errorTags,
     loading: loadingTags,
-  } = useQuery<{ items: TagsTypes }>(queryAllTags)
-  const tags = dataTags ? dataTags.items : []
+  } = useQuery<{ items: TagsTypes }>(queryAllTags);
+  const tags = dataTags ? dataTags.items : [];
 
   //-----------------
   // Selected queries
   //-----------------
-  const [showQueries, setShowQueries] = useState<boolean>(false)
+  const [showQueries, setShowQueries] = useState<boolean>(false);
   // subCategories
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string>()
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string>();
   const handleChangeCategory = (event: SelectChangeEvent) => {
-    setSelectedSubCategory(event.target.value as string)
-  }
+    setSelectedSubCategory(event.target.value as string);
+  };
   // Tags
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const handleChange = (event: SelectChangeEvent<string[]>) => {
-    const value = event.target.value as string[]
-    setSelectedTags(value)
-  }
+    const value = event.target.value as string[];
+    setSelectedTags(value);
+  };
 
   // Location
-  const [lat, setLat] = useState<number>()
-  const [long, setLong] = useState<number>()
-  const [radius, setRadius] = useState<number>(30)
+  const [lat, setLat] = useState<number>();
+  const [long, setLong] = useState<number>();
+  const [radius, setRadius] = useState<number>(30);
   // Min Price
-  const [minPrice, setMinPrice] = useState<number>()
+  const [minPrice, setMinPrice] = useState<number>();
   // Max Price
-  const [maxPrice, setMaxPrice] = useState<number>()
+  const [maxPrice, setMaxPrice] = useState<number>();
   // Title
-  const [title, setTitle] = useState<string>()
+  const [title, setTitle] = useState<string>();
 
   //-----------------
   // ----- Search-----
   //-----------------
 
   const [doSearch, { data: dataSearch, loading: loadingSearch }] =
-    useLazyQuery<{ items: AdsTypes }>(queryAllAds)
-  const searchResult = dataSearch ? dataSearch.items : []
+    useLazyQuery<{ items: AdsTypes }>(queryAllAds);
+  const searchResult = dataSearch ? dataSearch.items : [];
   const handleSearchClick = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+    event.preventDefault();
     doSearch({
       variables: {
         where: {
@@ -86,23 +86,23 @@ function Search(): React.ReactNode {
           tags: selectedTags.length > 0 ? selectedTags : undefined,
         },
       },
-    })
-  }
+    });
+  };
 
   //-----------------
   // --Reset form-----
   //-----------------
 
   const resetForm = (): void => {
-    setSelectedSubCategory(undefined)
-    setSelectedTags([])
-    setLat(undefined)
-    setLong(undefined)
-    setRadius(30)
-    setMinPrice(undefined)
-    setMaxPrice(undefined)
-    setTitle(undefined)
-  }
+    setSelectedSubCategory(undefined);
+    setSelectedTags([]);
+    setLat(undefined);
+    setLong(undefined);
+    setRadius(30);
+    setMinPrice(undefined);
+    setMaxPrice(undefined);
+    setTitle(undefined);
+  };
 
   return (
     <>
@@ -178,7 +178,7 @@ function Search(): React.ReactNode {
                         setMinPrice(
                           e.target.value === ''
                             ? undefined
-                            : Number(e.target.value)
+                            : Number(e.target.value),
                         )
                       }
                     />
@@ -205,7 +205,7 @@ function Search(): React.ReactNode {
                         setMaxPrice(
                           e.target.value === ''
                             ? undefined
-                            : Number(e.target.value)
+                            : Number(e.target.value),
                         )
                       }
                     />
@@ -227,7 +227,7 @@ function Search(): React.ReactNode {
                             .map(
                               (id) =>
                                 tags.find((tag) => tag.id.toString() === id)
-                                  ?.name || ''
+                                  ?.name || '',
                             )
                             .join(', ')
                         }
@@ -290,7 +290,7 @@ function Search(): React.ReactNode {
         </>
       )}
     </>
-  )
+  );
 }
 
-export default Search
+export default Search;

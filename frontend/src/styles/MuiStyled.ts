@@ -1,4 +1,4 @@
-import { styled } from '@mui/material'
+import { styled } from '@mui/material';
 
 export const DownloadInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -10,4 +10,4 @@ export const DownloadInput = styled('input')({
   left: 0,
   whiteSpace: 'nowrap',
   width: 1,
-})
+});
