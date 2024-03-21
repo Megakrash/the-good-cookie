@@ -6,24 +6,24 @@ import {
   FormControl,
   TextField,
   Typography,
-} from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
-import CircularProgress from '@mui/material/CircularProgress';
-import { FormEvent, useRef, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
-import ReCAPTCHA from 'react-google-recaptcha';
-import axios from 'axios';
-import { API_URL, RECAPTCHA_SITE_KEY } from '@/api/configApi';
-import UserPhone from '../users/components/UserPhone';
-import UserEmail from '../users/components/UserEmail';
-import UserName from '../users/components/UserName';
+} from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+import CircularProgress from "@mui/material/CircularProgress";
+import { FormEvent, useRef, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import ReCAPTCHA from "react-google-recaptcha";
+import axios from "axios";
+import { API_URL, RECAPTCHA_SITE_KEY } from "@/api/configApi";
+import UserPhone from "../users/components/UserPhone";
+import UserEmail from "../users/components/UserEmail";
+import UserName from "../users/components/UserName";
 
 function ContactForm(): React.ReactNode {
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [message, setMessage] = useState<string>('');
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   // ReCaptcha
@@ -37,9 +37,9 @@ function ContactForm(): React.ReactNode {
     e.preventDefault();
     const token = captchaRef.current.getValue();
     const formDetails = {
-      firstName: firstName === '' ? firstName : 'Non indiqué',
-      lastName: lastName === '' ? lastName : 'Non indiqué',
-      phoneNumber: phoneNumber === '' ? phoneNumber : 'Non indiqué',
+      firstName: firstName === "" ? firstName : "Non indiqué",
+      lastName: lastName === "" ? lastName : "Non indiqué",
+      phoneNumber: phoneNumber === "" ? phoneNumber : "Non indiqué",
       email,
       message,
     };
@@ -50,38 +50,38 @@ function ContactForm(): React.ReactNode {
         token,
       })
       .then(() => {
-        toast('Votre formulaire a été soumis avec succès.', {
+        toast("Votre formulaire a été soumis avec succès.", {
           style: {
-            background: 'green',
-            color: '#fff',
+            background: "green",
+            color: "#fff",
           },
         });
-        setFirstName('');
-        setLastName('');
-        setEmail('');
-        setMessage('');
-        setPhoneNumber('');
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setMessage("");
+        setPhoneNumber("");
         setRecaptcha(false);
         captchaRef.current.reset();
         setLoading(false);
       })
       .catch(() => {
-        console.error('error');
+        console.error("error");
         toast(
           `Une erreur s'est produite. Contactez-nous au 01 40 XX XX XX ou à
             contact@tgc.megakrash.com`,
           {
             style: {
-              background: 'red',
-              color: '#fff',
+              background: "red",
+              color: "#fff",
             },
           },
         );
-        setFirstName('');
-        setLastName('');
-        setEmail('');
-        setMessage('');
-        setPhoneNumber('');
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setMessage("");
+        setPhoneNumber("");
         setRecaptcha(false);
         captchaRef.current.reset();
         setLoading(false);
@@ -120,7 +120,7 @@ function ContactForm(): React.ReactNode {
           maxRows={24}
           label="Message"
           variant="outlined"
-          value={message || ''}
+          value={message || ""}
           onChange={(e) => setMessage(e.target.value)}
           required
         />
@@ -132,11 +132,11 @@ function ContactForm(): React.ReactNode {
         />
 
         {loading ? (
-          <Box sx={{ height: 40, margin: 'auto' }}>
+          <Box sx={{ height: 40, margin: "auto" }}>
             <Fade
               in={loading}
               style={{
-                transitionDelay: loading ? '800ms' : '0ms',
+                transitionDelay: loading ? "800ms" : "0ms",
               }}
               unmountOnExit
             >

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 type NavSubcategoriesProps = {
   id: number;
@@ -8,7 +8,7 @@ type NavSubcategoriesProps = {
 function NavSubCategories(props: NavSubcategoriesProps): React.ReactNode {
   return (
     <>
-      {' '}
+      {" "}
       <Link
         href={`/sousCategories/${props.id}`}
         className="category-navigation-link"

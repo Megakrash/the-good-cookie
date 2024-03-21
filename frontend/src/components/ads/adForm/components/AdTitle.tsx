@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { TextField } from '@mui/material';
+import React, { useState } from "react";
+import { TextField } from "@mui/material";
 
 type AdTitleProps = {
   title: string;
@@ -7,7 +7,7 @@ type AdTitleProps = {
 };
 
 function AdTitle(props: AdTitleProps): React.ReactNode {
-  const [titleError, setTitleError] = useState<string>('');
+  const [titleError, setTitleError] = useState<string>("");
 
   const validateTitle = (title: string) =>
     /^[\wÀ-ÿ- !@#$%^&*()_+`~{}\[\]:;"'<>,.?\/\\|=]{4,}$/.test(title);
@@ -16,9 +16,9 @@ function AdTitle(props: AdTitleProps): React.ReactNode {
     const { value } = e.target;
     props.setTitle(value);
     if (!validateTitle(value)) {
-      setTitleError('Taille minimum 4 caractères');
+      setTitleError("Taille minimum 4 caractères");
     } else {
-      setTitleError('');
+      setTitleError("");
     }
   };
 
@@ -29,7 +29,7 @@ function AdTitle(props: AdTitleProps): React.ReactNode {
       size="small"
       label="Titre de votre annonce"
       variant="outlined"
-      value={props.title || ''}
+      value={props.title || ""}
       onChange={handleTitleChange}
       required
       error={!!titleError}

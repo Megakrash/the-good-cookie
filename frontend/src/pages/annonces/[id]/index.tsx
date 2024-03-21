@@ -1,10 +1,10 @@
-import LayoutFull from '@/components/layout/LayoutFull';
-import { useRouter } from 'next/router';
-import { AdTypes } from '@/types/AdTypes';
-import AdCard from '@/components/ads/AdCard';
-import { queryAdById } from '@/components/graphql/Ads';
-import { useQuery } from '@apollo/client';
-import IconBreadcrumbs from '@/components/breadcrumbs/Breadcrumbs';
+import LayoutFull from "@/components/layout/LayoutFull";
+import { useRouter } from "next/router";
+import { AdTypes } from "@/types/AdTypes";
+import AdCard from "@/components/ads/AdCard";
+import { queryAdById } from "@/components/graphql/Ads";
+import { useQuery } from "@apollo/client";
+import IconBreadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 
 function AdDetailComponent(): React.ReactNode {
   const router = useRouter();
@@ -29,7 +29,7 @@ function AdDetailComponent(): React.ReactNode {
                 url: `/sousCategories/${ad.subCategory.id}`,
                 text: `${ad.subCategory.name.toUpperCase()}`,
               },
-              { url: '/final-item', text: `${ad.title.toUpperCase()}` },
+              { url: "/final-item", text: `${ad.title.toUpperCase()}` },
             ]}
           />
           <AdCard key={ad.id} ad={ad} />

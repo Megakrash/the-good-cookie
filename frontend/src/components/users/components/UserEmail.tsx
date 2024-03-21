@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { TextField } from '@mui/material';
-import { isValidEmailRegex } from './UserRegex';
+import React, { useState } from "react";
+import { TextField } from "@mui/material";
+import { isValidEmailRegex } from "./UserRegex";
 
 type UserEmailProps = {
   email: string;
@@ -8,15 +8,15 @@ type UserEmailProps = {
 };
 
 const UserEmail = (props: UserEmailProps): React.ReactNode => {
-  const [emailError, setEmailError] = useState<string>('');
+  const [emailError, setEmailError] = useState<string>("");
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const email = e.target.value;
     props.setEmail(email);
     if (!isValidEmailRegex(email)) {
-      setEmailError('Doit être une adresse email valide');
+      setEmailError("Doit être une adresse email valide");
     } else {
-      setEmailError('');
+      setEmailError("");
     }
   };
   return (
@@ -29,7 +29,7 @@ const UserEmail = (props: UserEmailProps): React.ReactNode => {
       error={!!emailError}
       helperText={emailError}
       fullWidth
-      value={props.email || ''}
+      value={props.email || ""}
       onChange={handlePasswordChange}
       required
     />

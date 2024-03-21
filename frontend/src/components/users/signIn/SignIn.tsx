@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -7,27 +7,27 @@ import {
   Link,
   Typography,
   useTheme,
-} from '@mui/material';
-import { mutationUserLogin, queryMeContext } from '@/components/graphql/Users';
-import { useMutation } from '@apollo/client';
-import toast, { Toaster } from 'react-hot-toast';
-import router from 'next/router';
-import UserPassword from '../components/UserPassword';
-import UserEmail from '../components/UserEmail';
-import { VariablesColors } from '@/styles/Variables.colors';
-import { GreyBtnOrangeHover } from '@/styles/MuiButtons';
+} from "@mui/material";
+import { mutationUserLogin, queryMeContext } from "@/components/graphql/Users";
+import { useMutation } from "@apollo/client";
+import toast, { Toaster } from "react-hot-toast";
+import router from "next/router";
+import UserPassword from "../components/UserPassword";
+import UserEmail from "../components/UserEmail";
+import { VariablesColors } from "@/styles/Variables.colors";
+import { GreyBtnOrangeHover } from "@/styles/MuiButtons";
 import {
   isValidEmailRegex,
   isValidPasswordRegex,
-} from '../components/UserRegex';
+} from "../components/UserRegex";
 
 const colors = new VariablesColors();
 const { color1, successColor, errorColor } = colors;
 
 const SignIn = (): React.ReactNode => {
   const theme = useTheme();
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const SignIn = (): React.ReactNode => {
       const { data } = await doLogin({
         variables: { data: { email, password } },
       });
-      if ('id' in data.item) {
+      if ("id" in data.item) {
         toast(`Connexion réussie, bienvenue ${data.item.firstName}`, {
           style: { background: successColor, color: color1 },
         });
@@ -58,8 +58,8 @@ const SignIn = (): React.ReactNode => {
       toast(error.message, {
         style: { background: errorColor, color: color1 },
       });
-      setEmail('');
-      setPassword('');
+      setEmail("");
+      setPassword("");
     }
   };
 
@@ -69,13 +69,13 @@ const SignIn = (): React.ReactNode => {
       item
       xs={12}
       sx={{
-        marginTop: '1%',
-        marginRight: 'auto',
-        marginLeft: 'auto',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
+        marginTop: "1%",
+        marginRight: "auto",
+        marginLeft: "auto",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
       }}
     >
       <Typography variant="h4" fontWeight={600} gutterBottom>
@@ -87,22 +87,22 @@ const SignIn = (): React.ReactNode => {
         autoComplete="off"
         onSubmit={onSubmit}
         sx={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <Grid item container xs={11} sm={7} md={6} lg={5} xl={4}>
           <Card
             sx={{
-              width: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
               gap: 1,
               padding: 5,
-              [theme.breakpoints.down('sm')]: {
+              [theme.breakpoints.down("sm")]: {
                 padding: 3,
               },
             }}
@@ -113,9 +113,9 @@ const SignIn = (): React.ReactNode => {
               xs={12}
               sm={11}
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
                 gap: 3,
               }}
             >
@@ -124,7 +124,7 @@ const SignIn = (): React.ReactNode => {
             </Grid>
             <Grid item xs={12}>
               <Link variant="body2" href="/forgot-password">
-                {'Mot de passe oublié ?'}
+                {"Mot de passe oublié ?"}
               </Link>
             </Grid>
             <Grid item xs={12} marginTop={3}>
@@ -134,19 +134,19 @@ const SignIn = (): React.ReactNode => {
             </Grid>
             <Box
               sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                [theme.breakpoints.down('sm')]: {
-                  flexDirection: 'column',
+                display: "flex",
+                flexDirection: "row",
+                [theme.breakpoints.down("sm")]: {
+                  flexDirection: "column",
                 },
-                gap: '5px',
+                gap: "5px",
               }}
             >
               <Typography variant="subtitle2" gutterBottom>
                 Première connexion ?
               </Typography>
               <Link variant="body2" href="/signup">
-                {'Créez votre compte'}
+                {"Créez votre compte"}
               </Link>
             </Box>
           </Card>

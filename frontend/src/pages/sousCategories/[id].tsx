@@ -1,10 +1,10 @@
-import LayoutFull from '@/components/layout/LayoutFull';
-import { useRouter } from 'next/router';
-import AdCard from '@/components/ads/AdCard';
-import { SubCategoryTypes } from '@/types/SubCategoryTypes';
-import { useQuery } from '@apollo/client';
-import { querySubCatAndAds } from '@/components/graphql/SubCategories';
-import IconBreadcrumbs from '@/components/breadcrumbs/Breadcrumbs';
+import LayoutFull from "@/components/layout/LayoutFull";
+import { useRouter } from "next/router";
+import AdCard from "@/components/ads/AdCard";
+import { SubCategoryTypes } from "@/types/SubCategoryTypes";
+import { useQuery } from "@apollo/client";
+import { querySubCatAndAds } from "@/components/graphql/SubCategories";
+import IconBreadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 
 function SubCategoryComponent(): React.ReactNode {
   const router = useRouter();
@@ -30,7 +30,7 @@ function SubCategoryComponent(): React.ReactNode {
                 url: `/categories/${subCategory.category.id}`,
                 text: `${subCategory.category.name.toUpperCase()}`,
               },
-              { url: '/final-item', text: `${subCategory.name.toUpperCase()}` },
+              { url: "/final-item", text: `${subCategory.name.toUpperCase()}` },
             ]}
           />
 

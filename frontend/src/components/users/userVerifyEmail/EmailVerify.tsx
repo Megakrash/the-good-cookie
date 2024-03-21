@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { useMutation } from '@apollo/client';
-import { Button, Card, CircularProgress, Typography } from '@mui/material';
-import toast, { Toaster } from 'react-hot-toast';
-import { mutationVerifyEmail } from '@/components/graphql/Users';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useMutation } from "@apollo/client";
+import { Button, Card, CircularProgress, Typography } from "@mui/material";
+import toast, { Toaster } from "react-hot-toast";
+import { mutationVerifyEmail } from "@/components/graphql/Users";
 
 type UserEmailVerify = {
   success: boolean;
@@ -22,7 +22,7 @@ function EmailVerify() {
     onCompleted: (data) => {
       if (data.item.success === true) {
         toast(data.item.message, {
-          style: { background: '#e89116', color: '#fff' },
+          style: { background: "#e89116", color: "#fff" },
         });
         setVerified(true);
       } else {
@@ -47,8 +47,8 @@ function EmailVerify() {
       ) : (
         <Typography>
           {verified
-            ? 'Votre email a été vérifié avec succès. Vous pouvez maintenant vous connecter.'
-            : 'Vérification en cours...'}
+            ? "Votre email a été vérifié avec succès. Vous pouvez maintenant vous connecter."
+            : "Vérification en cours..."}
         </Typography>
       )}
       {error && (
@@ -57,8 +57,8 @@ function EmailVerify() {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => router.push('/connexion')}
-        sx={{ marginTop: '1rem' }}
+        onClick={() => router.push("/connexion")}
+        sx={{ marginTop: "1rem" }}
       >
         Page de connexion
       </Button>
