@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get branch name
         id: branch-name
-        run: echo ::set-output name=branch::${GITHUB_REF#refs/heads/}
+        run: echo "{name}={value}" >> ${GITHUB_REF#refs/heads/}
 
       - name: Create Pull Request
         uses: repo-sync/pull-request@v2
