@@ -34,7 +34,13 @@ jobs:
           BODY="This is a work in progress pull request for branch ${GITHUB_REF_NAME}."
 
           URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls"
-          DATA="{\"title\":\"$TITLE\",\"body\":\"$BODY\",\"base\":\"dev\",\"head\":\"$BRANCH_NAME\",\"assignees\":[\"$ASSIGN_TO\"],\"auto_assign\":true}"
+          DATA="{\"title\":\"$TITLE\",\"body\":\"$BODY\",\"base\":\"dev\",\"head\":\"$BRANCH_NAME\",\"assignees\":[\"$ASSIGN_TO\"]}"
+
+          curl -X POST \
+               -H "Authorization: token $GITHUB_TOKEN" \
+               -H "Content-Type: application/json" \
+               -d "$DATA" \
+               "$URL"
 
           echo "Payload to create PR : ${DATA}"
           RESPONSE=$(curl -X POST -H "Authorization: token $GITHUB_TOKEN" -d "$DATA" "$URL" -v)
