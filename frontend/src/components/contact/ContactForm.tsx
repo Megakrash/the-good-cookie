@@ -100,10 +100,14 @@ function ContactForm(): React.ReactNode {
         onSubmit={sendContactEmail}
       >
         <UserName
-          lastName={lastName}
-          firstName={firstName}
-          setFirstName={setFirstName}
-          setLastName={setLastName}
+          userName={lastName}
+          setUserName={setLastName}
+          type="lastName"
+        />
+        <UserName
+          userName={firstName}
+          setUserName={setFirstName}
+          type="firstName"
         />
         <Box className="userForm_control_box">
           <UserEmail email={email} setEmail={setEmail} />
