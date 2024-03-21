@@ -1,12 +1,12 @@
-import { AdTypes } from '@/types/AdTypes';
-import { PATH_IMAGE } from '@/api/configApi';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import Avatar from '@mui/material/Avatar';
-import { Box, CardActionArea } from '@mui/material';
-import PlaceIcon from '@mui/icons-material/Place';
+import { AdTypes } from "@/types/AdTypes";
+import { PATH_IMAGE } from "@/api/configApi";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import { Box, CardActionArea } from "@mui/material";
+import PlaceIcon from "@mui/icons-material/Place";
 
 type AdCardProps = {
   ad?: AdTypes;
@@ -15,11 +15,11 @@ type AdCardProps = {
 function AdCard(props: AdCardProps): React.ReactNode {
   // Path images
   const adImageUrl =
-    props.ad.picture.filename && props.ad.picture.filename !== ''
+    props.ad.picture.filename && props.ad.picture.filename !== ""
       ? `${PATH_IMAGE}/pictures/${props.ad.picture.filename}`
       : `${PATH_IMAGE}/default/default.png`;
   const userImageUrl =
-    props.ad.user.picture.filename && props.ad.user.picture.filename !== ''
+    props.ad.user.picture.filename && props.ad.user.picture.filename !== ""
       ? `${PATH_IMAGE}/pictures/${props.ad.user.picture.filename}`
       : `${PATH_IMAGE}/default/avatar.webp`;
 
@@ -40,7 +40,7 @@ function AdCard(props: AdCardProps): React.ReactNode {
             sx={{
               width: 330,
               height: 380,
-              '&:hover': {
+              "&:hover": {
                 border: (theme) => `2px solid ${theme.palette.primary.main}`,
               },
             }}
@@ -48,10 +48,10 @@ function AdCard(props: AdCardProps): React.ReactNode {
             <CardMedia
               component="img"
               sx={{
-                width: '100%',
+                width: "100%",
                 height: 200,
-                margin: 'auto',
-                objectFit: 'contain',
+                margin: "auto",
+                objectFit: "contain",
               }}
               image={adImageUrl}
               title={props.ad.title}
@@ -65,20 +65,20 @@ function AdCard(props: AdCardProps): React.ReactNode {
               >
                 <Box
                   sx={{
-                    display: 'flex',
-                    alignItems: 'center',
+                    display: "flex",
+                    alignItems: "center",
                   }}
                 >
-                  <PlaceIcon sx={{ marginRight: '4px' }} />{' '}
+                  <PlaceIcon sx={{ marginRight: "4px" }} />{" "}
                   {capitalizeFirstLetter(props.ad.city)}
                 </Box>
               </Typography>
               <Typography
                 sx={{
-                  height: '75px',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  width: '100%',
+                  height: "75px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  width: "100%",
                 }}
                 variant="h5"
               >
@@ -86,9 +86,9 @@ function AdCard(props: AdCardProps): React.ReactNode {
               </Typography>
               <Box
                 sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                 }}
               >
                 <Typography variant="body1" color="primary">
@@ -96,10 +96,10 @@ function AdCard(props: AdCardProps): React.ReactNode {
                 </Typography>
                 <Box
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
                   <Avatar alt={props.ad.user.nickName} src={userImageUrl} />

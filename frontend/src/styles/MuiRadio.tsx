@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Radio,
   RadioProps,
@@ -6,16 +6,16 @@ import {
   FormControlLabelProps,
   styled,
   Grid,
-} from '@mui/material';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import EngineeringIcon from '@mui/icons-material/Engineering';
-import PersonIcon from '@mui/icons-material/Person';
-import ManIcon from '@mui/icons-material/Man';
-import WomanIcon from '@mui/icons-material/Woman';
-import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
+} from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import EngineeringIcon from "@mui/icons-material/Engineering";
+import PersonIcon from "@mui/icons-material/Person";
+import ManIcon from "@mui/icons-material/Man";
+import WomanIcon from "@mui/icons-material/Woman";
+import SelfImprovementIcon from "@mui/icons-material/SelfImprovement";
 
-import { VariablesColors } from './Variables.colors';
+import { VariablesColors } from "./Variables.colors";
 
 const colors = new VariablesColors();
 const { color5, color2, color1, color4, successColor } = colors;
@@ -29,7 +29,7 @@ const iconList = {
 };
 
 interface CustomRadioButtonProps
-  extends Omit<FormControlLabelProps, 'control'> {
+  extends Omit<FormControlLabelProps, "control"> {
   label: string;
   icon: keyof typeof iconList;
   radioProps?: RadioProps;
@@ -37,18 +37,18 @@ interface CustomRadioButtonProps
 
 export const CustomRadioButton = (props: CustomRadioButtonProps) => {
   const CustomRadio = styled(Radio)<RadioProps>(() => ({
-    '&.MuiRadio-root': {
+    "&.MuiRadio-root": {
       color: color5,
-      '&:hover': {
-        backgroundColor: 'transparent',
+      "&:hover": {
+        backgroundColor: "transparent",
       },
     },
-    '&.Mui-checked': {
+    "&.Mui-checked": {
       color: color4,
     },
-    '& .MuiSvgIcon-root': {
-      boxShadow: 'inset 1px 1px 2px rgba(0,0,0,0.3)',
-      borderRadius: '50%',
+    "& .MuiSvgIcon-root": {
+      boxShadow: "inset 1px 1px 2px rgba(0,0,0,0.3)",
+      borderRadius: "50%",
     },
   }));
 
@@ -62,22 +62,22 @@ export const CustomRadioButton = (props: CustomRadioButtonProps) => {
       item
       xs={12}
       sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%',
-        borderRadius: '10px',
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        width: "100%",
+        borderRadius: "10px",
         backgroundColor: color5,
         color: color2,
-        fontWeight: '600',
-        maxWidth: 'fit-content',
-        minWidth: '160px',
-        minHeight: '60px',
-        border: 'none',
-        outline: 'none',
-        cursor: 'pointer',
-        padding: '0 1rem',
+        fontWeight: "600",
+        maxWidth: "fit-content",
+        minWidth: "160px",
+        minHeight: "60px",
+        border: "none",
+        outline: "none",
+        cursor: "pointer",
+        padding: "0 1rem",
       }}
     >
       <StepIcon
@@ -90,7 +90,7 @@ export const CustomRadioButton = (props: CustomRadioButtonProps) => {
         {...props}
         label={props.label}
         labelPlacement="start"
-        sx={{ marginTop: '5px' }}
+        sx={{ marginTop: "5px" }}
         control={
           <CustomRadio
             {...props.radioProps}

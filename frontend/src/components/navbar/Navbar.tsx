@@ -1,11 +1,11 @@
-import React from 'react';
-import { useRouter } from 'next/router';
-import { AppBar, Box, Button, ButtonGroup } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
-import Link from 'next/link';
-import { CategoriesTypes } from '@/types/CategoryTypes';
-import { useQuery } from '@apollo/client';
-import { queryAllCatAndSub } from '../graphql/Categories';
+import React from "react";
+import { useRouter } from "next/router";
+import { AppBar, Box, Button, ButtonGroup } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
+import Link from "next/link";
+import { CategoriesTypes } from "@/types/CategoryTypes";
+import { useQuery } from "@apollo/client";
+import { queryAllCatAndSub } from "../graphql/Categories";
 
 function Navbar(): React.ReactNode {
   const { data } = useQuery<{ items: CategoriesTypes }>(queryAllCatAndSub);
@@ -13,9 +13,9 @@ function Navbar(): React.ReactNode {
   const router = useRouter();
   const currentPath = router.asPath;
 
-  const pathSegments = currentPath.split('/').filter(Boolean);
-  const isCategoryPage = pathSegments[0] === 'categories';
-  const isSubCategoryPage = pathSegments[0] === 'sousCategories';
+  const pathSegments = currentPath.split("/").filter(Boolean);
+  const isCategoryPage = pathSegments[0] === "categories";
+  const isSubCategoryPage = pathSegments[0] === "sousCategories";
   const currentId = pathSegments[1];
 
   // Find the parent category if we're on a subcategory path, otherwise use the current category id.
@@ -32,13 +32,13 @@ function Navbar(): React.ReactNode {
     currentCategory && (isCategoryPage || isSubCategoryPage);
 
   return (
-    <Box sx={{ position: 'sticky', top: -1, zIndex: 1100, marginTop: '-1%' }}>
+    <Box sx={{ position: "sticky", top: -1, zIndex: 1100, marginTop: "-1%" }}>
       <AppBar
         sx={{
-          height: '40px',
-          width: '100%',
-          marginTop: '5px',
-          alignItems: 'center',
+          height: "40px",
+          width: "100%",
+          marginTop: "5px",
+          alignItems: "center",
         }}
         position="sticky"
       >
@@ -48,7 +48,7 @@ function Navbar(): React.ReactNode {
           aria-label="Disabled elevation buttons"
         >
           <Link href="/">
-            <Button sx={{ height: '40px' }}>
+            <Button sx={{ height: "40px" }}>
               <HomeIcon />
             </Button>
           </Link>
@@ -58,10 +58,10 @@ function Navbar(): React.ReactNode {
                 <Link key={category.id} href={`/categories/${category.id}`}>
                   <Button
                     sx={{
-                      height: '40px',
+                      height: "40px",
                       backgroundColor:
                         currentCategory && currentCategory.id === category.id
-                          ? 'primary.dark'
+                          ? "primary.dark"
                           : null,
                     }}
                   >
@@ -76,9 +76,9 @@ function Navbar(): React.ReactNode {
       {showSubCategories && currentCategory.subCategories && (
         <AppBar
           sx={{
-            height: '40px',
-            width: '100%',
-            alignItems: 'center',
+            height: "40px",
+            width: "100%",
+            alignItems: "center",
           }}
           position="sticky"
           color="secondary"
@@ -97,13 +97,13 @@ function Navbar(): React.ReactNode {
                 <Button
                   variant="text"
                   sx={{
-                    height: '40px',
-                    color: 'white',
+                    height: "40px",
+                    color: "white",
                     backgroundColor:
                       isSubCategoryPage && subCat.id.toString() === currentId
-                        ? 'secondary.dark'
+                        ? "secondary.dark"
                         : null,
-                    '&:hover': {
+                    "&:hover": {
                       backgroundColor: (theme) => theme.palette.secondary.light,
                     },
                   }}

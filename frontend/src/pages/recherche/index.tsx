@@ -1,5 +1,5 @@
-import Search from '@/components/search/Search';
-import LayoutFull from '@/components/layout/LayoutFull';
+import Search from "@/components/search/Search";
+import LayoutFull from "@/components/layout/LayoutFull";
 
 function SearchPage(): React.ReactNode {
   return (

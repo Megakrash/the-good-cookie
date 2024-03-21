@@ -1,5 +1,5 @@
-import LayoutFull from '@/components/layout/LayoutFull';
-import AdForm from '@/components/ads/adForm/AdForm';
+import LayoutFull from "@/components/layout/LayoutFull";
+import AdForm from "@/components/ads/adForm/AdForm";
 
 function NewAd(): React.ReactNode {
   return (

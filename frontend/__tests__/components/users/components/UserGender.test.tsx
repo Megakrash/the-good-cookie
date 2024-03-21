@@ -1,41 +1,41 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import UserGender from '@/components/users/components/UserGender';
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import UserGender from "@/components/users/components/UserGender";
 
-describe('UserGender', () => {
+describe("UserGender", () => {
   const setGenderMock = jest.fn();
 
-  it('renders three gender options', () => {
+  it("renders three gender options", () => {
     render(<UserGender gender="" setGender={setGenderMock} />);
-    expect(screen.getByLabelText('Monsieur')).toBeInTheDocument();
-    expect(screen.getByLabelText('Madame')).toBeInTheDocument();
-    expect(screen.getByLabelText('Autre')).toBeInTheDocument();
+    expect(screen.getByLabelText("Monsieur")).toBeInTheDocument();
+    expect(screen.getByLabelText("Madame")).toBeInTheDocument();
+    expect(screen.getByLabelText("Autre")).toBeInTheDocument();
   });
 
-  it('marks the Monsieur button as checked when gender is set to Monsieur', () => {
+  it("marks the Monsieur button as checked when gender is set to Monsieur", () => {
     render(<UserGender gender="Monsieur" setGender={setGenderMock} />);
-    expect(screen.getByLabelText('Monsieur')).toBeChecked();
-    expect(screen.getByLabelText('Madame')).not.toBeChecked();
-    expect(screen.getByLabelText('Autre')).not.toBeChecked();
+    expect(screen.getByLabelText("Monsieur")).toBeChecked();
+    expect(screen.getByLabelText("Madame")).not.toBeChecked();
+    expect(screen.getByLabelText("Autre")).not.toBeChecked();
   });
 
-  it('marks the Madame button as checked when gender is set to Madame', () => {
+  it("marks the Madame button as checked when gender is set to Madame", () => {
     render(<UserGender gender="Madame" setGender={setGenderMock} />);
-    expect(screen.getByLabelText('Monsieur')).not.toBeChecked();
-    expect(screen.getByLabelText('Madame')).toBeChecked();
-    expect(screen.getByLabelText('Autre')).not.toBeChecked();
+    expect(screen.getByLabelText("Monsieur")).not.toBeChecked();
+    expect(screen.getByLabelText("Madame")).toBeChecked();
+    expect(screen.getByLabelText("Autre")).not.toBeChecked();
   });
 
-  it('calls setGender when a gender is selected', () => {
+  it("calls setGender when a gender is selected", () => {
     render(<UserGender gender="" setGender={setGenderMock} />);
-    fireEvent.click(screen.getByLabelText('Monsieur'));
-    expect(setGenderMock).toHaveBeenCalledWith('Monsieur');
+    fireEvent.click(screen.getByLabelText("Monsieur"));
+    expect(setGenderMock).toHaveBeenCalledWith("Monsieur");
   });
 
-  it('marks the Autre button as checked when gender is set to Autre', () => {
+  it("marks the Autre button as checked when gender is set to Autre", () => {
     render(<UserGender gender="Autre" setGender={setGenderMock} />);
-    expect(screen.getByLabelText('Monsieur')).not.toBeChecked();
-    expect(screen.getByLabelText('Madame')).not.toBeChecked();
-    expect(screen.getByLabelText('Autre')).toBeChecked();
+    expect(screen.getByLabelText("Monsieur")).not.toBeChecked();
+    expect(screen.getByLabelText("Madame")).not.toBeChecked();
+    expect(screen.getByLabelText("Autre")).toBeChecked();
   });
 });

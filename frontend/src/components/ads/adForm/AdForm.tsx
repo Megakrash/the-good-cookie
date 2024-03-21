@@ -1,19 +1,19 @@
-import React, { FormEvent, useEffect, useState } from 'react';
-import { API_URL, PATH_IMAGE } from '@/api/configApi';
-import axios from 'axios';
-import { AdFormData, AdTypes, AdTags } from '@/types/AdTypes';
-import { CategoriesTypes } from '@/types/CategoryTypes';
-import { TagsTypes } from '@/types/TagTypes';
-import toast, { Toaster } from 'react-hot-toast';
-import { queryAllCatAndSub } from '@/components/graphql/Categories';
+import React, { FormEvent, useEffect, useState } from "react";
+import { API_URL, PATH_IMAGE } from "@/api/configApi";
+import axios from "axios";
+import { AdFormData, AdTypes, AdTags } from "@/types/AdTypes";
+import { CategoriesTypes } from "@/types/CategoryTypes";
+import { TagsTypes } from "@/types/TagTypes";
+import toast, { Toaster } from "react-hot-toast";
+import { queryAllCatAndSub } from "@/components/graphql/Categories";
 import {
   queryAllAds,
   queryAdById,
   mutationCreateAd,
   mutationUpdateAd,
-} from '@/components/graphql/Ads';
-import { useMutation, useQuery } from '@apollo/client';
-import { useRouter } from 'next/router';
+} from "@/components/graphql/Ads";
+import { useMutation, useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
 import {
   FormControl,
   InputLabel,
@@ -24,14 +24,14 @@ import {
   Box,
   Button,
   CardMedia,
-} from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { DownloadInput } from '@/styles/MuiStyled';
-import UserZipCity from '@/components/users/components/UserZipCity';
-import AdTitle from './components/AdTitle';
-import AdDescription from './components/AdDescription';
-import AdPrice from './components/AdPrice';
-import { queryAllTags } from '../../graphql/Tags';
+} from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { DownloadInput } from "@/styles/MuiStyled";
+import UserZipCity from "@/components/users/components/UserZipCity";
+import AdTitle from "./components/AdTitle";
+import AdDescription from "./components/AdDescription";
+import AdPrice from "./components/AdPrice";
+import { queryAllTags } from "../../graphql/Tags";
 
 type AdFormProps = {
   ad?: AdTypes;
@@ -49,22 +49,22 @@ function AdForm(props: AdFormProps): React.ReactNode {
   const tags = dataTags ? dataTags.items : [];
 
   // Form
-  const [title, setTitle] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [curentPicture, setCurentPicture] = useState<string>('');
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [curentPicture, setCurentPicture] = useState<string>("");
   const [newPicture, setNewPicture] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   function handleFileSelection(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
       setNewPicture(file);
-      setCurentPicture('');
+      setCurentPicture("");
       setPreviewUrl(URL.createObjectURL(file));
     }
   }
   const [price, setPrice] = useState<number>(0);
-  const [zipCode, setZipCode] = useState<string>('');
-  const [city, setCity] = useState<string>('');
+  const [zipCode, setZipCode] = useState<string>("");
+  const [city, setCity] = useState<string>("");
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
   const [subCategoryId, setSubCategoryId] = useState<null | number>();
   const [selectedTags, setSelectedTags] = useState<AdTags>([]);
@@ -88,15 +88,15 @@ function AdForm(props: AdFormProps): React.ReactNode {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const dataFile = new FormData();
-    dataFile.append('title', title);
-    dataFile.append('file', newPicture);
+    dataFile.append("title", title);
+    dataFile.append("file", newPicture);
 
     try {
       let pictureId: number | null = null;
       if (newPicture) {
         const uploadResponse = await axios.post(`${API_URL}picture`, dataFile, {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
         });
         pictureId = uploadResponse.data.id;
@@ -120,10 +120,10 @@ function AdForm(props: AdFormProps): React.ReactNode {
             data,
           },
         });
-        if ('id' in result.data?.item) {
+        if ("id" in result.data?.item) {
           router.replace(`/annonces/${result.data.item.id}`);
         } else {
-          toast('Erreur pendant la création de votre annonce');
+          toast("Erreur pendant la création de votre annonce");
         }
       } else {
         const result = await doUpdate({
@@ -133,13 +133,13 @@ function AdForm(props: AdFormProps): React.ReactNode {
           },
         });
         if (!result.errors?.length) {
-          toast('Annonce mise à jour');
+          toast("Annonce mise à jour");
         } else {
-          toast('Erreur pendant la mise à jour de votre annonce');
+          toast("Erreur pendant la mise à jour de votre annonce");
         }
       }
     } catch (error) {
-      console.error('error', error);
+      console.error("error", error);
     }
   }
   // If update Ad
@@ -161,15 +161,15 @@ function AdForm(props: AdFormProps): React.ReactNode {
     <Box
       className="adForm"
       sx={{
-        width: props.ad ? '50%' : '98%',
-        margin: 'auto',
+        width: props.ad ? "50%" : "98%",
+        margin: "auto",
       }}
     >
       <Toaster
         toastOptions={{
           style: {
-            background: '#ff8a00',
-            color: '#fff',
+            background: "#ff8a00",
+            color: "#fff",
           },
         }}
       />
@@ -178,13 +178,13 @@ function AdForm(props: AdFormProps): React.ReactNode {
           className="adForm_boxForm"
           component="form"
           sx={{
-            '& > :not(style)': { m: 2, width: '50ch' },
+            "& > :not(style)": { m: 2, width: "50ch" },
           }}
           autoComplete="off"
           onSubmit={onSubmit}
         >
           <h2>
-            {!props.ad ? 'Création de votre annonce' : 'Modifier votre annonce'}
+            {!props.ad ? "Création de votre annonce" : "Modifier votre annonce"}
           </h2>
           <AdTitle title={title} setTitle={setTitle} />
           <AdDescription
@@ -204,10 +204,10 @@ function AdForm(props: AdFormProps): React.ReactNode {
               className="adForm_boxForm_input"
               labelId="subcategory-select-label"
               id="subcategory-select"
-              value={subCategoryId || ''}
+              value={subCategoryId || ""}
               onChange={(e) =>
                 setSubCategoryId(
-                  e.target.value === '' ? undefined : Number(e.target.value),
+                  e.target.value === "" ? undefined : Number(e.target.value),
                 )
               }
               label="Sélectionnez une sous-catégorie"
@@ -224,7 +224,7 @@ function AdForm(props: AdFormProps): React.ReactNode {
                   <MenuItem
                     key={`subcategory-${category.id}-${subCategory.id}`}
                     value={subCategory.id}
-                    style={{ marginLeft: '20px' }}
+                    style={{ marginLeft: "20px" }}
                   >
                     {subCategory.name}
                   </MenuItem>
@@ -244,8 +244,8 @@ function AdForm(props: AdFormProps): React.ReactNode {
               input={<OutlinedInput label="Tag" />}
               renderValue={(selected) =>
                 selected
-                  .map((id) => tags.find((tag) => tag.id === id)?.name || '')
-                  .join(', ')
+                  .map((id) => tags.find((tag) => tag.id === id)?.name || "")
+                  .join(", ")
               }
             >
               {tags.map((tag) => (
@@ -256,22 +256,22 @@ function AdForm(props: AdFormProps): React.ReactNode {
             </Select>
           </FormControl>
 
-          {curentPicture === '' ? (
+          {curentPicture === "" ? (
             <Box
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '15px',
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "15px",
               }}
             >
               {previewUrl && (
                 <CardMedia
                   sx={{
-                    width: '100%',
+                    width: "100%",
                     height: 200,
-                    margin: 'auto',
-                    objectFit: 'contain',
+                    margin: "auto",
+                    objectFit: "contain",
                   }}
                   image={previewUrl}
                 />
@@ -293,18 +293,18 @@ function AdForm(props: AdFormProps): React.ReactNode {
           ) : (
             <Box
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '15px',
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "15px",
               }}
             >
               <CardMedia
                 sx={{
-                  width: '100%',
+                  width: "100%",
                   height: 200,
-                  margin: 'auto',
-                  objectFit: 'contain',
+                  margin: "auto",
+                  objectFit: "contain",
                 }}
                 image={`${PATH_IMAGE}/pictures/${props.ad.picture.filename}`}
               />
@@ -329,7 +329,7 @@ function AdForm(props: AdFormProps): React.ReactNode {
             type="submit"
             disabled={loading}
           >
-            {props.ad ? 'Modifer mon annonce' : 'Créer mon annonce'}
+            {props.ad ? "Modifer mon annonce" : "Créer mon annonce"}
           </Button>
         </Box>
       )}

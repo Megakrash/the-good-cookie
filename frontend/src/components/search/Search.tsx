@@ -1,8 +1,8 @@
-import React, { FormEvent, useState } from 'react';
-import { CategoriesTypes } from '@/types/CategoryTypes';
-import { AdsTypes } from '@/types/AdTypes';
-import { TagsTypes } from '@/types/TagTypes';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import React, { FormEvent, useState } from "react";
+import { CategoriesTypes } from "@/types/CategoryTypes";
+import { AdsTypes } from "@/types/AdTypes";
+import { TagsTypes } from "@/types/TagTypes";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import {
   FormControl,
   InputLabel,
@@ -13,14 +13,14 @@ import {
   TextField,
   Box,
   Button,
-} from '@mui/material';
-import { FilterAlt, FilterAltOff } from '@mui/icons-material';
-import { PATH_IMAGE } from '@/api/configApi';
-import { queryAllTags } from '../graphql/Tags';
-import { queryAllAds } from '../graphql/Ads';
-import { queryAllCatAndSub } from '../graphql/Categories';
-import GpsAndRadius from './components/GpsAndRadius';
-import AdCard from '../ads/AdCard';
+} from "@mui/material";
+import { FilterAlt, FilterAltOff } from "@mui/icons-material";
+import { PATH_IMAGE } from "@/api/configApi";
+import { queryAllTags } from "../graphql/Tags";
+import { queryAllAds } from "../graphql/Ads";
+import { queryAllCatAndSub } from "../graphql/Categories";
+import GpsAndRadius from "./components/GpsAndRadius";
+import AdCard from "../ads/AdCard";
 
 function Search(): React.ReactNode {
   // Get Categories&SubCategories & Tags
@@ -110,8 +110,8 @@ function Search(): React.ReactNode {
         className="search"
         sx={{
           backgroundImage: `url(${PATH_IMAGE}/general/search.png)`,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
         }}
       >
         {categories && tags && (
@@ -132,7 +132,7 @@ function Search(): React.ReactNode {
                     labelId="subcategory-select-label"
                     id="subcategory-select"
                     size="small"
-                    value={selectedSubCategory || ''}
+                    value={selectedSubCategory || ""}
                     onChange={handleChangeCategory}
                     label="Sélectionnez une sous-catégorie"
                     required
@@ -148,7 +148,7 @@ function Search(): React.ReactNode {
                         <MenuItem
                           key={`subcategory-${category.id}-${subCategory.id}`}
                           value={subCategory.id}
-                          style={{ marginLeft: '20px' }}
+                          style={{ marginLeft: "20px" }}
                         >
                           {subCategory.name}
                         </MenuItem>
@@ -173,10 +173,10 @@ function Search(): React.ReactNode {
                       size="small"
                       label="Prix minimum €"
                       variant="outlined"
-                      value={minPrice || ''}
+                      value={minPrice || ""}
                       onChange={(e) =>
                         setMinPrice(
-                          e.target.value === ''
+                          e.target.value === ""
                             ? undefined
                             : Number(e.target.value),
                         )
@@ -188,7 +188,7 @@ function Search(): React.ReactNode {
                       size="small"
                       label="Quoi ?"
                       variant="outlined"
-                      value={title || ''}
+                      value={title || ""}
                       onChange={(e) => setTitle(e.target.value)}
                     />
                   </Box>
@@ -200,10 +200,10 @@ function Search(): React.ReactNode {
                       size="small"
                       label="Prix maximum €"
                       variant="outlined"
-                      value={maxPrice || ''}
+                      value={maxPrice || ""}
                       onChange={(e) =>
                         setMaxPrice(
-                          e.target.value === ''
+                          e.target.value === ""
                             ? undefined
                             : Number(e.target.value),
                         )
@@ -227,9 +227,9 @@ function Search(): React.ReactNode {
                             .map(
                               (id) =>
                                 tags.find((tag) => tag.id.toString() === id)
-                                  ?.name || '',
+                                  ?.name || "",
                             )
-                            .join(', ')
+                            .join(", ")
                         }
                       >
                         {tags.map((tag) => (

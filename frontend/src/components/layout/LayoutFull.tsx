@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
-import Head from 'next/head';
-import Navbar from '../navbar/Navbar';
+import { ReactNode } from "react";
+import Head from "next/head";
+import Navbar from "../navbar/Navbar";
 
 type LayoutProps = {
   title: string;

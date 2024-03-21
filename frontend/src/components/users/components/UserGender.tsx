@@ -1,6 +1,6 @@
-import React from 'react';
-import { CustomRadioButton } from '@/styles/MuiRadio';
-import { Box } from '@mui/material';
+import React from "react";
+import { CustomRadioButton } from "@/styles/MuiRadio";
+import { Box } from "@mui/material";
 
 type UserGenderProps = {
   gender: string;
@@ -15,31 +15,31 @@ const UserGender = (props: UserGenderProps): React.ReactNode => {
   return (
     <Box
       sx={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '1rem',
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "1rem",
       }}
     >
       <CustomRadioButton
         icon="man"
         label="Monsieur"
-        checked={props.gender === 'Monsieur'}
+        checked={props.gender === "Monsieur"}
         onChange={handleChange}
         value="Monsieur"
       />
       <CustomRadioButton
         icon="woman"
         label="Madame"
-        checked={props.gender === 'Madame'}
+        checked={props.gender === "Madame"}
         onChange={handleChange}
         value="Madame"
       />
       <CustomRadioButton
         icon="alien"
         label="Autre"
-        checked={props.gender === 'Autre'}
+        checked={props.gender === "Autre"}
         onChange={handleChange}
         value="Autre"
       />

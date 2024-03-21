@@ -1,8 +1,8 @@
-import Link from 'next/link';
-import IconButton from '@mui/material/IconButton';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import { useMutation, useQuery } from '@apollo/client';
-import { UserContextTypes } from '@/types/UserTypes';
+import Link from "next/link";
+import IconButton from "@mui/material/IconButton";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import { useMutation, useQuery } from "@apollo/client";
+import { UserContextTypes } from "@/types/UserTypes";
 import {
   AppBar,
   Avatar,
@@ -14,23 +14,23 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-} from '@mui/material';
-import CookieIcon from '@mui/icons-material/Cookie';
-import EditNoteIcon from '@mui/icons-material/EditNote';
-import SearchIcon from '@mui/icons-material/Search';
-import ContactSupportIcon from '@mui/icons-material/ContactSupport';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LoginIcon from '@mui/icons-material/Login';
-import MenuIcon from '@mui/icons-material/Menu';
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { PATH_IMAGE } from '@/api/configApi';
-import { mutationSignOut, queryMeContext } from '../graphql/Users';
+} from "@mui/material";
+import CookieIcon from "@mui/icons-material/Cookie";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import SearchIcon from "@mui/icons-material/Search";
+import ContactSupportIcon from "@mui/icons-material/ContactSupport";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LoginIcon from "@mui/icons-material/Login";
+import MenuIcon from "@mui/icons-material/Menu";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { PATH_IMAGE } from "@/api/configApi";
+import { mutationSignOut, queryMeContext } from "../graphql/Users";
 
 const buttonStyles = {
-  color: 'white',
-  '& .MuiButton-startIcon': {
-    marginRight: '-4px',
+  color: "white",
+  "& .MuiButton-startIcon": {
+    marginRight: "-4px",
   },
 };
 
@@ -89,13 +89,13 @@ export default function Header(): React.ReactNode {
     setAnchorElUser(null);
   };
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#343a40' }}>
+    <AppBar position="static" sx={{ backgroundColor: "#343a40" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters className="header">
           <Box
             className="header_title"
             sx={{
-              display: { xs: 'none', md: 'flex' },
+              display: { xs: "none", md: "flex" },
             }}
           >
             <Link href="/">
@@ -105,7 +105,7 @@ export default function Header(): React.ReactNode {
               THE GOOD COOKIE
             </Link>
           </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -113,7 +113,7 @@ export default function Header(): React.ReactNode {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               sx={{
-                color: '#e89116',
+                color: "#e89116",
               }}
             >
               <MenuIcon />
@@ -122,18 +122,18 @@ export default function Header(): React.ReactNode {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: "bottom",
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                vertical: "top",
+                horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: "block", md: "none" },
               }}
             >
               <MenuItem
@@ -172,9 +172,9 @@ export default function Header(): React.ReactNode {
           </Box>
           <CookieIcon
             sx={{
-              display: { xs: 'flex', md: 'none' },
+              display: { xs: "flex", md: "none" },
               mr: 1,
-              color: '#e89116',
+              color: "#e89116",
             }}
           />
           <Typography
@@ -184,17 +184,17 @@ export default function Header(): React.ReactNode {
             href="/"
             sx={{
               mr: 2,
-              display: { xs: 'flex', md: 'none' },
+              display: { xs: "flex", md: "none" },
               flexGrow: 1,
               fontWeight: 700,
-              letterSpacing: '.2rem',
-              color: '#e89116',
-              textDecoration: 'none',
+              letterSpacing: ".2rem",
+              color: "#e89116",
+              textDecoration: "none",
             }}
           >
             TGC
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Button
               className="header_link_button"
               startIcon={<EditNoteIcon fontSize="large" />}
@@ -256,17 +256,17 @@ export default function Header(): React.ReactNode {
             </Tooltip>
 
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}

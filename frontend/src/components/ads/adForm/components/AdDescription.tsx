@@ -1,5 +1,5 @@
-import React from 'react';
-import { TextField } from '@mui/material';
+import React from "react";
+import { TextField } from "@mui/material";
 
 type AdDescriptionProps = {
   description: string;
@@ -17,7 +17,7 @@ function AdDescription(props: AdDescriptionProps): React.ReactNode {
       maxRows={24}
       label="Détail de votre annonce"
       variant="outlined"
-      value={props.description || ''}
+      value={props.description || ""}
       onChange={(e) => props.setDescription(e.target.value)}
       required
     />

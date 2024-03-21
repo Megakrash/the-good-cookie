@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import TextField from '@mui/material/TextField';
+import React, { useState } from "react";
+import axios from "axios";
+import TextField from "@mui/material/TextField";
 import {
   ListItemButton,
   List,
@@ -8,9 +8,9 @@ import {
   FormGroup,
   FormControlLabel,
   Radio,
-} from '@mui/material';
-import { API_URL } from '@/api/configApi';
-import { FeatureType, SuggestionType } from '@/types/GpsTypes';
+} from "@mui/material";
+import { API_URL } from "@/api/configApi";
+import { FeatureType, SuggestionType } from "@/types/GpsTypes";
 
 type GpsAndRadiusProps = {
   setLat: (lat: number) => void;
@@ -20,7 +20,7 @@ type GpsAndRadiusProps = {
 };
 
 function GpsAndRadius(props: GpsAndRadiusProps): React.ReactNode {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +42,7 @@ function GpsAndRadius(props: GpsAndRadiusProps): React.ReactNode {
           }
         })
         .catch((error) => {
-          console.error('Erreur lors de la récupération des adresses:', error);
+          console.error("Erreur lors de la récupération des adresses:", error);
         });
     } else {
       setSuggestions([]);
@@ -63,7 +63,7 @@ function GpsAndRadius(props: GpsAndRadiusProps): React.ReactNode {
   return (
     <Box
       sx={{
-        width: '100%',
+        width: "100%",
       }}
     >
       <TextField
@@ -102,8 +102,8 @@ function GpsAndRadius(props: GpsAndRadiusProps): React.ReactNode {
           label="30Km"
           labelPlacement="bottom"
           sx={{
-            '& .MuiFormControlLabel-label': {
-              fontSize: '12px',
+            "& .MuiFormControlLabel-label": {
+              fontSize: "12px",
             },
           }}
         />
@@ -120,8 +120,8 @@ function GpsAndRadius(props: GpsAndRadiusProps): React.ReactNode {
           label="150Km"
           labelPlacement="bottom"
           sx={{
-            '& .MuiFormControlLabel-label': {
-              fontSize: '12px',
+            "& .MuiFormControlLabel-label": {
+              fontSize: "12px",
             },
           }}
         />
@@ -138,8 +138,8 @@ function GpsAndRadius(props: GpsAndRadiusProps): React.ReactNode {
           label="France"
           labelPlacement="bottom"
           sx={{
-            '& .MuiFormControlLabel-label': {
-              fontSize: '12px',
+            "& .MuiFormControlLabel-label": {
+              fontSize: "12px",
             },
           }}
         />

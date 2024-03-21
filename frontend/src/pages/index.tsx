@@ -1,6 +1,6 @@
-import LayoutFull from '@/components/layout/LayoutFull';
-import RecentAds from '@/components/ads/RecentAds';
-import Search from '@/components/search/Search';
+import LayoutFull from "@/components/layout/LayoutFull";
+import RecentAds from "@/components/ads/RecentAds";
+import Search from "@/components/search/Search";
 
 function Home(): React.ReactNode {
   return (

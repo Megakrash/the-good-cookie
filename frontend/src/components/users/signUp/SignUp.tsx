@@ -1,17 +1,17 @@
-import React, { useRef, useState } from 'react';
-import axios from 'axios';
-import toast, { Toaster } from 'react-hot-toast';
-import { Box, Button, Divider, Grid, Typography } from '@mui/material';
-import ReCAPTCHA from 'react-google-recaptcha';
-import { mutationCreateUser } from '@/components/graphql/Users';
-import { UserFormData } from '@/types/UserTypes';
-import { API_URL, RECAPTCHA_SITE_KEY } from '@/api/configApi';
-import { useMutation } from '@apollo/client';
-import router from 'next/router';
-import StepForm from './StepForm';
-import { VariablesColors } from '@/styles/Variables.colors';
-import StepWelcome from './StepWelcome';
-import StepSubmit from './StepSubmit';
+import React, { useRef, useState } from "react";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+import { Box, Button, Divider, Grid, Typography } from "@mui/material";
+import ReCAPTCHA from "react-google-recaptcha";
+import { mutationCreateUser } from "@/components/graphql/Users";
+import { UserFormData } from "@/types/UserTypes";
+import { API_URL, RECAPTCHA_SITE_KEY } from "@/api/configApi";
+import { useMutation } from "@apollo/client";
+import router from "next/router";
+import StepForm from "./StepForm";
+import { VariablesColors } from "@/styles/Variables.colors";
+import StepWelcome from "./StepWelcome";
+import StepSubmit from "./StepSubmit";
 
 const colors = new VariablesColors();
 const { color5 } = colors;
@@ -25,22 +25,22 @@ function SignUp(): React.ReactNode {
   };
 
   // Form
-  const [email, setEmail] = useState<string>('');
-  const [profil, setProfil] = useState<string>('');
-  const [gender, setGender] = useState<string>('');
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
-  const [nickName, setNickName] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [profil, setProfil] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [nickName, setNickName] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const hidenPassword = (): string => {
     const length = password.length;
-    const hidenPassword = '*'.repeat(length);
+    const hidenPassword = "*".repeat(length);
     return hidenPassword;
   };
-  const [zipCode, setZipCode] = useState<string>('');
-  const [city, setCity] = useState<string>('');
+  const [zipCode, setZipCode] = useState<string>("");
+  const [city, setCity] = useState<string>("");
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [picture, setPicture] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   function handleFileSelection(event: React.ChangeEvent<HTMLInputElement>) {
@@ -52,38 +52,38 @@ function SignUp(): React.ReactNode {
   }
 
   // FORM STEPS
-  const [currentStep, setCurrentStep] = useState<string>('email');
+  const [currentStep, setCurrentStep] = useState<string>("email");
   const formSteps = [
     {
-      step: 'email',
-      title: 'Votre adresse email',
+      step: "email",
+      title: "Votre adresse email",
       data: email,
     },
-    { step: 'profil', title: 'Votre profil', data: profil },
-    { step: 'gender', title: 'Votre civilité', data: gender },
-    { step: 'firstName', title: 'Votre prénom', data: firstName },
-    { step: 'lastName', title: 'Votre nom', data: lastName },
+    { step: "profil", title: "Votre profil", data: profil },
+    { step: "gender", title: "Votre civilité", data: gender },
+    { step: "firstName", title: "Votre prénom", data: firstName },
+    { step: "lastName", title: "Votre nom", data: lastName },
     {
-      step: 'phoneNumber',
-      title: 'Votre numéro de téléphone',
+      step: "phoneNumber",
+      title: "Votre numéro de téléphone",
       data: phoneNumber,
     },
-    { step: 'password', title: 'Votre mot de passe', data: password },
+    { step: "password", title: "Votre mot de passe", data: password },
   ];
 
   // SUBMIT
   const [doCreate, loading] = useMutation(mutationCreateUser);
   async function onSubmit() {
     const dataFile = new FormData();
-    dataFile.append('title', nickName);
-    dataFile.append('file', picture);
+    dataFile.append("title", nickName);
+    dataFile.append("file", picture);
 
     try {
       let pictureId: number | null = null;
       if (picture) {
         const uploadResponse = await axios.post(`${API_URL}picture`, dataFile, {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
         });
         pictureId = uploadResponse.data.id;
@@ -100,8 +100,8 @@ function SignUp(): React.ReactNode {
         city,
         coordinates,
         isVerified: false,
-        role: 'USER',
-        ...(phoneNumber !== '' && { phoneNumber }),
+        role: "USER",
+        ...(phoneNumber !== "" && { phoneNumber }),
       };
 
       const result = await doCreate({
@@ -109,7 +109,7 @@ function SignUp(): React.ReactNode {
           data,
         },
       });
-      if ('id' in result.data?.item) {
+      if ("id" in result.data?.item) {
         toast(
           `Bienvenue ${result.data?.item.nickName} ! Un email de confirmation vous a été envoyé.`,
         );
@@ -117,16 +117,16 @@ function SignUp(): React.ReactNode {
           router.replace(`/`);
         }, 2000);
       } else {
-        toast('Erreur pendant la création de votre compte');
+        toast("Erreur pendant la création de votre compte");
       }
     } catch (error) {
-      toast('Erreur pendant la création de votre compte');
-      console.error('error', error);
+      toast("Erreur pendant la création de votre compte");
+      console.error("error", error);
     }
   }
   return (
     <>
-      {currentStep === 'welcome' ? (
+      {currentStep === "welcome" ? (
         <StepWelcome email={email} />
       ) : (
         <Grid
@@ -134,8 +134,8 @@ function SignUp(): React.ReactNode {
           item
           xs={12}
           sx={{
-            display: 'flex',
-            flexDirection: 'row',
+            display: "flex",
+            flexDirection: "row",
           }}
         >
           <Toaster />
@@ -146,41 +146,41 @@ function SignUp(): React.ReactNode {
             md={3.5}
             lg={3}
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
+              display: "flex",
+              flexDirection: "column",
               backgroundColor: color5,
-              height: '89vh',
-              padding: '1%',
+              height: "89vh",
+              padding: "1%",
             }}
           >
             <Typography
               variant="h5"
               fontWeight={600}
-              marginBottom={'25px'}
+              marginBottom={"25px"}
               gutterBottom
             >
               Vos informations
             </Typography>
             {formSteps.map((el) => (
-              <Box key={el.step} sx={{ marginBottom: '5px' }}>
+              <Box key={el.step} sx={{ marginBottom: "5px" }}>
                 <Typography variant="subtitle2" gutterBottom>
                   {el.title}
                 </Typography>
                 <Box
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                   }}
                 >
-                  {el.step === 'password' ? (
+                  {el.step === "password" ? (
                     <Typography
                       variant="subtitle2"
                       fontWeight={600}
                       gutterBottom
                     >
-                      {!el.data ? '-' : hidenPassword()}
+                      {!el.data ? "-" : hidenPassword()}
                     </Typography>
                   ) : (
                     <Typography
@@ -188,7 +188,7 @@ function SignUp(): React.ReactNode {
                       fontWeight={600}
                       gutterBottom
                     >
-                      {el.data ? el.data : '-'}
+                      {el.data ? el.data : "-"}
                     </Typography>
                   )}
                   {el.data && el.step !== currentStep && (
@@ -202,7 +202,7 @@ function SignUp(): React.ReactNode {
             ))}
           </Grid>
           <Grid item xs={6} sm={6} md={8.5}>
-            {currentStep === 'submit' ? (
+            {currentStep === "submit" ? (
               <StepSubmit onSubmit={onSubmit} loading={loading.loading} />
             ) : (
               <StepForm

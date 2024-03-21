@@ -1,26 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
 
 // Variables
-@import './variables.colors.scss';
+@import "./variables.colors.scss";
 
 // Components
-@import '../components/appBar/appBar.scss';
-@import '../components/users/signUp/userForm.scss';
-@import '../components/users/userVerifyEmail/emailVerify.scss';
-@import '../components/ads/adForm/adForm.scss';
-@import '../components/search/search.scss';
+@import "../components/appBar/appBar.scss";
+@import "../components/users/signUp/userForm.scss";
+@import "../components/users/userVerifyEmail/emailVerify.scss";
+@import "../components/ads/adForm/adForm.scss";
+@import "../components/search/search.scss";
 
 /* fonts */
 /* for body */
 @font-face {
-  font-family: 'Poppins';
-  src: url('../../public/fonts/Poppins-Regular.ttf') format('truetype');
+  font-family: "Poppins";
+  src: url("../../public/fonts/Poppins-Regular.ttf") format("truetype");
   font-weight: 400;
 }
 
 /* for titles */
 @font-face {
-  font-family: 'Poppins-Medium';
-  src: url('../../public/fonts/Poppins-Medium.ttf') format('truetype');
+  font-family: "Poppins-Medium";
+  src: url("../../public/fonts/Poppins-Medium.ttf") format("truetype");
   font-weight: 700;
 }
