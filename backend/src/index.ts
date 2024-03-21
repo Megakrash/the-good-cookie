@@ -22,12 +22,6 @@ import { expressMiddleware } from '@apollo/server/express4'
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
 
 //-----------------------------------------
-// -----------------TYPES------------------
-//-----------------------------------------
-
-import { Role } from './entities/User'
-
-//-----------------------------------------
 // -----------------EXPRESS----------------
 //-----------------------------------------
 
@@ -43,18 +37,6 @@ import { sendContactEmail } from './utils/mailServices/contactEmail'
 //-----------------------------------------
 // -----------------APOLLO SERVER-----------
 //-----------------------------------------
-export type UserContext = {
-  id: number
-  nickName: string
-  picture: string
-  role: Role
-}
-
-export interface MyContext {
-  req: Request
-  res: Response
-  user?: UserContext
-}
 
 const app = express()
 const corsOptions = {
