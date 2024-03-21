@@ -33,7 +33,9 @@ RUN npm run build
 # this step launch the app in a prod mode, with only js files and useful deps
 FROM node:18.18.2-alpine3.18 AS prod
 WORKDIR /app
+COPY --from=deps /app/node_modules node_modules
+COPY --from=build /app/.next ./.next
 COPY package.json package.json
-RUN npm i --omit=dev
-COPY --from=build /app/.next .next 
+COPY public public
+RUN npm install --omit=dev
 CMD npm start
