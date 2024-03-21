@@ -24,7 +24,7 @@ jobs:
       - name: Create Pull Request and Assign to User
         if: env.OPEN_PRS == '0'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_PAT }}
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           REPO=$(basename $PWD)
@@ -36,19 +36,17 @@ jobs:
           URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls"
           DATA="{\"title\":\"$TITLE\",\"body\":\"$BODY\",\"base\":\"dev\",\"head\":\"$BRANCH_NAME\",\"assignees\":[\"$ASSIGN_TO\"]}"
 
-          curl -X POST \
-               -H "Authorization: ${{ secrets.MY_GITHUB_PAT }}" \
-               -H "Content-Type: application/json" \
-               -d "$DATA" \
-               "$URL"
-
           echo "Payload to create PR : ${DATA}"
-          RESPONSE=$(curl -X POST -H "Authorization: token $GITHUB_TOKEN" -d "$DATA" "$URL" -v)
+          RESPONSE=$(curl -X POST -H "Authorization: token ${{ secrets.MY_GITHUB_PAT }}" \
+          -H "Content-Type: application/json" -d "$DATA" "$URL")
+
+          echo "Response : ${RESPONSE}"
 
           # Extracting PR number from the response
-          PR_NUMBER=$(echo "$RESPONSE" | jq -r '.number' -v)
+          PR_NUMBER=$(echo "$RESPONSE" | jq -r '.number')
 
           # Assigning the PR to its author
           ASSIGN_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/assignees"
           ASSIGN_DATA="{\"assignees\":[\"$ASSIGN_TO\"]}"
-          curl -X POST -H "Authorization: token $GITHUB_TOKEN" -d "$ASSIGN_DATA" "$ASSIGN_URL -v"
+          curl -X POST -H "Authorization: token ${{ secrets.MY_GITHUB_PAT }}" \
+          -H "Content-Type: application/json" -d "$ASSIGN_DATA" "$ASSIGN_URL"
