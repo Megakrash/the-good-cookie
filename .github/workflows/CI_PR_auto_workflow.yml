@@ -13,16 +13,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Get branch name
-        id: branch-name
+      - name: Check if branch has open pull requests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          OPEN_PRS=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls?state=open&head=${GITHUB_REPOSITORY}:${BRANCH_NAME}" | jq length)
+          echo "OPEN_PRS=$OPEN_PRS" >> $GITHUB_ENV
 
-      - name: Create Pull Request
-        uses: repo-sync/pull-request@v2
-        with:
-          source_branch: "${{ steps.branch-name.outputs.branch }}"
-          destination_branch: "dev"
-          pr_title: "PR: WIP ${{ steps.branch-name.outputs.branch }}"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Pull Request and Assign to User
+        if: env.OPEN_PRS == '0'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          REPO=$(basename $PWD)
+          ASSIGN_TO="${GITHUB_ACTOR}"
+
+          TITLE="PR: WIP ${GITHUB_REF_NAME}"
+          BODY="This is a work in progress pull request for branch ${GITHUB_REF_NAME}."
+
+          URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls"
+          DATA="{\"title\":\"$TITLE\",\"body\":\"$BODY\",\"base\":\"dev\",\"head\":\"$BRANCH_NAME\",\"assignees\":[\"$ASSIGN_TO\"],\"auto_assign\":true}"
+
+          echo "Payload to create PR : ${DATA}"
+          RESPONSE=$(curl -X POST -H "Authorization: token $GITHUB_TOKEN" -d "$DATA" "$URL")
+
+          # Extracting PR number from the response
+          PR_NUMBER=$(echo "$RESPONSE" | jq -r '.number')
+
+          # Assigning the PR to its author
+          ASSIGN_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/assignees"
+          ASSIGN_DATA="{\"assignees\":[\"$ASSIGN_TO\"]}"
+          curl -X POST -H "Authorization: token $GITHUB_TOKEN" -d "$ASSIGN_DATA" "$ASSIGN_URL"
