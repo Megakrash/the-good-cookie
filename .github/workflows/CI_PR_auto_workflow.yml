@@ -1,0 +1,26 @@
+name: Auto PR to Dev
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - dev
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get branch name
+        id: branch-name
+        run: echo ::set-output name=branch::${GITHUB_REF#refs/heads/}
+
+      - name: Create Pull Request
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: "${{ steps.branch-name.outputs.branch }}"
+          destination_branch: "dev"
+          pr_title: "PR: WIP ${{ steps.branch-name.outputs.branch }}"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
