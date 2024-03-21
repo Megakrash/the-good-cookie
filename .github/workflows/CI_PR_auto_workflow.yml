@@ -15,7 +15,9 @@ jobs:
 
       - name: Get branch name
         id: branch-name
-        run: echo "{name}={value}" >> ${GITHUB_REF#refs/heads/}
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
         uses: repo-sync/pull-request@v2
