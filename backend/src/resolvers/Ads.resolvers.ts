@@ -14,7 +14,7 @@ import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from '../entities/Ad'
 import { currentDate } from '../utils/date'
 import { deletePicture } from '../utils/pictureServices/pictureServices'
 import { merge } from '../utils/utils'
-import { MyContext } from '../index'
+import { MyContext } from '../types/userContext'
 import { Picture } from '../entities/Picture'
 import { getDistanceFromLatLonInKm } from '../utils/gpsDistance'
 

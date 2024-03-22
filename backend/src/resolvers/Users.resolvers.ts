@@ -11,7 +11,7 @@ import { validate } from 'class-validator'
 import * as argon2 from 'argon2'
 import jwt from 'jsonwebtoken'
 import Cookies from 'cookies'
-import { MyContext } from '../index'
+import { MyContext } from '../types/userContext'
 import { currentDate } from '../utils/date'
 import {
   User,
