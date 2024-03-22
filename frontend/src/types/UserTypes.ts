@@ -4,7 +4,7 @@ export type UserFormData = {
   nickName: string;
   email: string;
   password: string;
-  pictureId: number;
+  pictureId?: number;
   adress?: string;
   zipCode: string;
   city: string;

@@ -41,15 +41,6 @@ function SignUp(): React.ReactNode {
   const [city, setCity] = useState<string>("");
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
   const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [picture, setPicture] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  function handleFileSelection(event: React.ChangeEvent<HTMLInputElement>) {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      setPicture(file);
-      setPreviewUrl(URL.createObjectURL(file));
-    }
-  }
 
   // FORM STEPS
   const [currentStep, setCurrentStep] = useState<string>("email");
@@ -63,6 +54,7 @@ function SignUp(): React.ReactNode {
     { step: "gender", title: "Votre civilité", data: gender },
     { step: "firstName", title: "Votre prénom", data: firstName },
     { step: "lastName", title: "Votre nom", data: lastName },
+    { step: "nickName", title: "Votre pseudo", data: nickName },
     {
       step: "phoneNumber",
       title: "Votre numéro de téléphone",
@@ -74,28 +66,13 @@ function SignUp(): React.ReactNode {
   // SUBMIT
   const [doCreate, loading] = useMutation(mutationCreateUser);
   async function onSubmit() {
-    const dataFile = new FormData();
-    dataFile.append("title", nickName);
-    dataFile.append("file", picture);
-
     try {
-      let pictureId: number | null = null;
-      if (picture) {
-        const uploadResponse = await axios.post(`${API_URL}picture`, dataFile, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        pictureId = uploadResponse.data.id;
-      }
-
       const data: UserFormData = {
         firstName,
         lastName,
         nickName,
         email,
         password,
-        pictureId,
         zipCode,
         city,
         coordinates,
@@ -216,6 +193,8 @@ function SignUp(): React.ReactNode {
                 setFirstName={setFirstName}
                 lastName={lastName}
                 setLastName={setLastName}
+                nickName={nickName}
+                setNickName={setNickName}
                 phoneNumber={phoneNumber}
                 setPhoneNumber={setPhoneNumber}
                 password={password}

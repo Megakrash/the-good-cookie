@@ -16,6 +16,7 @@ import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
+import FaceRetouchingOffIcon from "@mui/icons-material/FaceRetouchingOff";
 import LockIcon from "@mui/icons-material/Lock";
 import UserProfil from "../components/UserProfil";
 import UserGender from "../components/UserGender";
@@ -34,6 +35,8 @@ type StepSignUpFormProps = {
   setFirstName: (firstName: string) => void;
   lastName: string;
   setLastName: (lastName: string) => void;
+  nickName: string;
+  setNickName: (nickName: string) => void;
   phoneNumber: string;
   setPhoneNumber: (phoneNumber: string) => void;
   password: string;
@@ -103,6 +106,20 @@ const StepForm = (props: StepSignUpFormProps): React.ReactNode => {
         userName: props.lastName,
         setUserName: props.setLastName,
         type: "lastName",
+      },
+      isDisabled: () =>
+        props.lastName === "" || !isValidNameRegex(props.lastName),
+      nextStep: "nickName",
+    },
+    nickName: {
+      title: "Votre  pseudo ?",
+      subtitle: `Pour rester anonyme.`,
+      icon: FaceRetouchingOffIcon,
+      Component: UserName,
+      componentProps: {
+        userName: props.nickName,
+        setUserName: props.setNickName,
+        type: "nickName",
       },
       isDisabled: () =>
         props.lastName === "" || !isValidNameRegex(props.lastName),
