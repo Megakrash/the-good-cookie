@@ -6,9 +6,9 @@ export type UserFormData = {
   password: string;
   pictureId?: number;
   adress?: string;
-  zipCode: string;
-  city: string;
-  coordinates: [number, number];
+  zipCode?: string;
+  city?: string;
+  coordinates?: [number, number];
   phoneNumber?: string;
   isVerified: boolean;
   role: string;

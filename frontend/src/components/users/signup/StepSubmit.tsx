@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useRef, useState } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
+import { RECAPTCHA_SITE_KEY } from "@/api/configApi";
 import { Grid, Typography } from "@mui/material";
 import { StepFormButton } from "@/styles/MuiButtons";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -14,6 +16,12 @@ type StepSubmitProps = {
 };
 
 const StepSubmit = (props: StepSubmitProps): React.ReactNode => {
+  // ReCaptcha
+  const [recaptcha, setRecaptcha] = useState(false);
+  const captchaRef = useRef(null);
+  const handleCaptchaChange = (value: string | null) => {
+    setRecaptcha(!!value);
+  };
   return (
     <Grid
       container
@@ -39,8 +47,14 @@ const StepSubmit = (props: StepSubmitProps): React.ReactNode => {
       <Typography variant="subtitle2" gutterBottom>
         {`Si c'est bon pour vous, c'est bon pour nous !`}
       </Typography>
+      <ReCAPTCHA
+        sitekey={RECAPTCHA_SITE_KEY}
+        ref={captchaRef}
+        onChange={handleCaptchaChange}
+      />
       <StepFormButton
         sx={{ width: "100% ", marginTop: "10px" }}
+        disabled={!recaptcha || props.loading}
         onClick={props.onSubmit}
       >
         {props.loading ? (
