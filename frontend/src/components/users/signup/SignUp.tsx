@@ -1,29 +1,18 @@
-import React, { useRef, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
-import ReCAPTCHA from "react-google-recaptcha";
 import { mutationCreateUser } from "@/components/graphql/Users";
 import { UserFormData } from "@/types/UserTypes";
-import { API_URL, RECAPTCHA_SITE_KEY } from "@/api/configApi";
 import { useMutation } from "@apollo/client";
-import router from "next/router";
 import StepForm from "./StepForm";
 import { VariablesColors } from "@/styles/Variables.colors";
 import StepWelcome from "./StepWelcome";
 import StepSubmit from "./StepSubmit";
 
 const colors = new VariablesColors();
-const { color5 } = colors;
+const { color1, color5, errorColor } = colors;
 
 function SignUp(): React.ReactNode {
-  // ReCaptcha
-  const [recaptcha, setRecaptcha] = useState(false);
-  const captchaRef = useRef(null);
-  const handleCaptchaChange = (value: string | null) => {
-    setRecaptcha(!!value);
-  };
-
   // Form
   const [email, setEmail] = useState<string>("");
   const [profil, setProfil] = useState<string>("");
@@ -31,25 +20,13 @@ function SignUp(): React.ReactNode {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [nickName, setNickName] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const hidenPassword = (): string => {
     const length = password.length;
     const hidenPassword = "*".repeat(length);
     return hidenPassword;
   };
-  const [zipCode, setZipCode] = useState<string>("");
-  const [city, setCity] = useState<string>("");
-  const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [picture, setPicture] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  function handleFileSelection(event: React.ChangeEvent<HTMLInputElement>) {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      setPicture(file);
-      setPreviewUrl(URL.createObjectURL(file));
-    }
-  }
 
   // FORM STEPS
   const [currentStep, setCurrentStep] = useState<string>("email");
@@ -63,6 +40,7 @@ function SignUp(): React.ReactNode {
     { step: "gender", title: "Votre civilité", data: gender },
     { step: "firstName", title: "Votre prénom", data: firstName },
     { step: "lastName", title: "Votre nom", data: lastName },
+    { step: "nickName", title: "Votre pseudo", data: nickName },
     {
       step: "phoneNumber",
       title: "Votre numéro de téléphone",
@@ -74,34 +52,16 @@ function SignUp(): React.ReactNode {
   // SUBMIT
   const [doCreate, loading] = useMutation(mutationCreateUser);
   async function onSubmit() {
-    const dataFile = new FormData();
-    dataFile.append("title", nickName);
-    dataFile.append("file", picture);
-
     try {
-      let pictureId: number | null = null;
-      if (picture) {
-        const uploadResponse = await axios.post(`${API_URL}picture`, dataFile, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        pictureId = uploadResponse.data.id;
-      }
-
       const data: UserFormData = {
         firstName,
         lastName,
         nickName,
         email,
         password,
-        pictureId,
-        zipCode,
-        city,
-        coordinates,
+        phoneNumber,
         isVerified: false,
         role: "USER",
-        ...(phoneNumber !== "" && { phoneNumber }),
       };
 
       const result = await doCreate({
@@ -110,18 +70,19 @@ function SignUp(): React.ReactNode {
         },
       });
       if ("id" in result.data?.item) {
-        toast(
-          `Bienvenue ${result.data?.item.nickName} ! Un email de confirmation vous a été envoyé.`,
-        );
-        setTimeout(() => {
-          router.replace(`/`);
-        }, 2000);
+        setCurrentStep("welcome");
       } else {
-        toast("Erreur pendant la création de votre compte");
+        toast("Erreur pendant la création de votre compte", {
+          style: { background: errorColor, color: color1 },
+        });
+        setCurrentStep("email");
       }
     } catch (error) {
-      toast("Erreur pendant la création de votre compte");
+      toast("Erreur pendant la création de votre compte", {
+        style: { background: errorColor, color: color1 },
+      });
       console.error("error", error);
+      setCurrentStep("email");
     }
   }
   return (
@@ -216,6 +177,8 @@ function SignUp(): React.ReactNode {
                 setFirstName={setFirstName}
                 lastName={lastName}
                 setLastName={setLastName}
+                nickName={nickName}
+                setNickName={setNickName}
                 phoneNumber={phoneNumber}
                 setPhoneNumber={setPhoneNumber}
                 password={password}

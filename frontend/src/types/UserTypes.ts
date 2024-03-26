@@ -4,11 +4,11 @@ export type UserFormData = {
   nickName: string;
   email: string;
   password: string;
-  pictureId: number;
+  pictureId?: number;
   adress?: string;
-  zipCode: string;
-  city: string;
-  coordinates: [number, number];
+  zipCode?: string;
+  city?: string;
+  coordinates?: [number, number];
   phoneNumber?: string;
   isVerified: boolean;
   role: string;

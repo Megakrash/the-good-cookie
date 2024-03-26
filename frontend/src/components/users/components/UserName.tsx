@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { TextField } from "@mui/material";
 import { isValidNameRegex } from "../components/UserRegex";
 
+type UserNameType = "firstName" | "lastName" | "nickName";
+
 type UserNameProps = {
   userName: string;
   setUserName: (firstName: string) => void;
-  type: string;
+  type: UserNameType;
 };
 
 const UserName = (props: UserNameProps): React.ReactNode => {
@@ -24,9 +26,15 @@ const UserName = (props: UserNameProps): React.ReactNode => {
   return (
     <TextField
       fullWidth
-      id={props.type === "firstName" ? "firstName" : "lastName"}
+      id={props.type}
       size="small"
-      label={props.type === "firstName" ? "Prénom" : "Nom"}
+      label={
+        props.type === "firstName"
+          ? "Prénom"
+          : props.type === "lastName"
+            ? "Nom"
+            : "Pseudo"
+      }
       variant="outlined"
       value={props.userName}
       onChange={handleFirstNameChange}
