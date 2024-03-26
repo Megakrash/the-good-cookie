@@ -3,7 +3,7 @@ import { sendEmail, EmailOptions } from './nodeMailer'
 
 export const sendContactEmail = (req: Request, res: Response) => {
   const { formDetails } = req.body
-
+  console.log('formDetails', formDetails)
   const mailOptions1: EmailOptions = {
     from: process.env.MAIL_USER || 'contact@tgc.megakrash.com',
     to: formDetails.email,
@@ -107,7 +107,8 @@ export const sendContactEmail = (req: Request, res: Response) => {
     .then(() => {
       res.status(200).send('Emails envoyés avec succès')
     })
-    .catch(() => {
+    .catch((error) => {
+      console.error("Erreur lors de l'envoi des emails:", error)
       res.status(500).send("Une erreur s'est produite")
     })
 }
