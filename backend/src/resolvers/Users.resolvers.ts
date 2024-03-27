@@ -101,6 +101,9 @@ export class UsersResolver {
         if (!user) {
           return { success: false, message: 'Utilisateur non trouvé' }
         }
+        if (user.isVerified === true) {
+          return { success: true, message: 'Email déjà vérifié' }
+        }
 
         user.isVerified = true
         await user.save()

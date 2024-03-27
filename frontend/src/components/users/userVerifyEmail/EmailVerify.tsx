@@ -1,9 +1,17 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
-import { Button, Card, CircularProgress, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CircularProgress,
+  Grid,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
 import { mutationVerifyEmail } from "@/components/graphql/Users";
+import { GreyBtnOrangeHover } from "@/styles/MuiButtons";
 
 type UserEmailVerify = {
   success: boolean;
@@ -11,6 +19,7 @@ type UserEmailVerify = {
 };
 
 const EmailVerify = () => {
+  const theme = useTheme();
   const router = useRouter();
   const { token } = router.query;
   const [requestSend, setRequestSend] = useState(false);
@@ -39,30 +48,56 @@ const EmailVerify = () => {
   }, [token]);
 
   return (
-    <Card className="userForm emailVerify">
-      <Toaster />
+    <Grid
+      container
+      item
+      xs={12}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        marginTop: "1%",
+        gap: "1rem",
+      }}
+    >
       <Typography variant="h4">{`Vérification de l'Email`}</Typography>
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <Typography>
-          {verified
-            ? "Votre email a été vérifié avec succès. Vous pouvez maintenant vous connecter."
-            : "Vérification en cours..."}
-        </Typography>
-      )}
-      {error && (
-        <Typography color="error">{`Une erreur s'est produite.`}</Typography>
-      )}
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => router.push("/connexion")}
-        sx={{ marginTop: "1rem" }}
+      <Card
+        sx={{
+          minWidth: "350px",
+          padding: "3%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          gap: "1.5rem",
+        }}
       >
-        Page de connexion
-      </Button>
-    </Card>
+        <Toaster />
+
+        {loading ? (
+          <CircularProgress size={60} />
+        ) : (
+          <Typography>
+            {verified
+              ? "Votre email a été vérifié avec succès. Vous pouvez maintenant vous connecter."
+              : "Vérification en cours..."}
+          </Typography>
+        )}
+        {error && (
+          <Typography color="error">{`Une erreur s'est produite.`}</Typography>
+        )}
+        <GreyBtnOrangeHover
+          onClick={() => router.push("/connexion")}
+          disabled={!verified}
+          sx={{ marginTop: "1rem" }}
+        >
+          Connexion
+        </GreyBtnOrangeHover>
+      </Card>
+    </Grid>
   );
 };
 
