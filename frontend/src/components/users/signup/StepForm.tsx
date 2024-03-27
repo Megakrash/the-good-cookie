@@ -123,8 +123,7 @@ const StepForm = (props: StepSignUpFormProps): React.ReactNode => {
     },
     phoneNumber: {
       title: "Votre numéro de téléphone ?",
-      subtitle:
-        "Si on doit vous appeler pour la préparation de votre matériel.",
+      subtitle: "Si on doit vous appeler.",
       icon: PhoneIphoneIcon,
       Component: UserPhone,
       componentProps: {
