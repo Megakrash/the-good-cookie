@@ -31,7 +31,6 @@ function SignUp(): React.ReactNode {
     const hidenPassword = "*".repeat(length);
     return hidenPassword;
   };
-
   // FORM STEPS
   const [currentStep, setCurrentStep] = useState<string>("email");
   const formSteps = [

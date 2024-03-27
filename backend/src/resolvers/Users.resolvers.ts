@@ -12,7 +12,6 @@ import * as argon2 from 'argon2'
 import jwt from 'jsonwebtoken'
 import Cookies from 'cookies'
 import { MyContext } from '../types/userContext'
-import { currentDate } from '../utils/date'
 import {
   User,
   UserContext,
@@ -51,9 +50,8 @@ export class UsersResolver {
       throw new Error('User already exists')
     }
 
-    const registrationDate = currentDate()
     const newUser = new User()
-    Object.assign(newUser, data, { registrationDate })
+    Object.assign(newUser, data)
 
     if (data.pictureId) {
       const picture = await Picture.findOne({ where: { id: data.pictureId } })

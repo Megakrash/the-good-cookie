@@ -10,7 +10,7 @@ type UserEmailVerify = {
   message: string;
 };
 
-function EmailVerify() {
+const EmailVerify = () => {
   const router = useRouter();
   const { token } = router.query;
   const [requestSend, setRequestSend] = useState(false);
@@ -64,6 +64,6 @@ function EmailVerify() {
       </Button>
     </Card>
   );
-}
+};
 
 export default EmailVerify;

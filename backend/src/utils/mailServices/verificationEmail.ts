@@ -68,9 +68,9 @@ export const sendConfirmationEmail = async (
   const emailHtml = createEmailTemplate(emailParams)
 
   const emailOptions: EmailOptions = {
-    from: process.env.MAIL_USER || 'contact@renthub.shop',
+    from: process.env.MAIL_USER || 'contact@tgc.megakrash.com',
     to: userEmail || '',
-    subject: 'Bienvenue sur RentHub !',
+    subject: 'Bienvenue sur The Good Corner !',
     html: emailHtml,
   }
 
