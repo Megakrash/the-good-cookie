@@ -6,6 +6,9 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
+  CreateDateColumn,
+  ManyToOne,
+  UpdateDateColumn,
 } from 'typeorm'
 import {
   IsEmail,
@@ -25,23 +28,55 @@ import { Ad } from './Ad'
 import { ObjectId } from './ObjectId'
 import { IsCoordinates } from './Coordinates'
 import { Picture } from './Picture'
+import { Gender, Profil, Role } from '../types/userEntity'
 
-export enum Role {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
-}
-
+// Enums type-graphql
 registerEnumType(Role, {
   name: 'Role',
 })
+registerEnumType(Profil, {
+  name: 'Profil',
+})
+registerEnumType(Gender, {
+  name: 'Gender',
+})
 
+// Entities
 @Entity()
 @ObjectType()
 export class User extends BaseEntity {
+  //-------------------------------
+  //------------ FIELDS -----------
+  //-------------------------------
+
+  // ID
   @PrimaryGeneratedColumn()
   @Field(() => ID)
   id!: number
 
+  // Email
+  @Column({ length: 255, unique: true })
+  @Field()
+  @IsEmail()
+  email!: string
+
+  // Profil
+  @Column({
+    type: 'enum',
+    enum: Profil,
+  })
+  @Field(() => Profil)
+  profil!: Profil
+
+  // Gender
+  @Column({
+    type: 'enum',
+    enum: Gender,
+  })
+  @Field(() => Gender)
+  gender!: Gender
+
+  // First name
   @Column({ length: 50 })
   @Length(2, 50, { message: 'Entre 2 et 50 caractères' })
   @Matches(/^[a-zA-ZÀ-ÿ-]+$/, {
@@ -50,6 +85,7 @@ export class User extends BaseEntity {
   @Field()
   firstName!: string
 
+  // Last name
   @Column({ length: 50 })
   @Length(2, 50, { message: 'Entre 2 et 50 caractères' })
   @Matches(/^[a-zA-ZÀ-ÿ-]+$/, {
@@ -58,57 +94,48 @@ export class User extends BaseEntity {
   @Field()
   lastName!: string
 
+  // Nickname
   @Column({ length: 50, nullable: true })
   @Length(2, 50, { message: 'Entre 2 et 50 caractères' })
   @Field({ nullable: true })
   nickName!: string
 
-  @OneToOne(() => Picture, { nullable: true })
-  @JoinColumn()
-  @Field({ nullable: true })
-  picture?: Picture
-
-  @Column({ length: 255, unique: true })
-  @Field()
-  @IsEmail()
-  email!: string
-
-  @Column({ length: 250 })
-  hashedPassword!: string
-
-  @Column()
-  @Length(8, 12, { message: 'Entre 8 et 12 caractères' })
-  @Field()
-  registrationDate!: string
-
+  // Adress
   @Column({ length: 100, nullable: true })
   @IsOptional()
   @Length(5, 100, { message: 'Entre 5 et 100 caractères' })
   @Field({ nullable: true })
   adress!: string
 
+  // Zip code
   @Column({ length: 5, nullable: true })
+  @IsOptional()
   @IsNumberString(
     {},
     { message: 'Le code postal doit être une chaîne de chiffres' }
   )
   @Length(5, 5, { message: 'Le code postal doit avoir exactement 5 chiffres' })
-  @Field()
+  @Field({ nullable: true })
   zipCode!: string
 
+  // City
   @Column({ length: 50, nullable: true })
+  @IsOptional()
   @Length(3, 50, { message: 'Entre 3 et 50 caractères' })
-  @Field()
+  @Field({ nullable: true })
   city!: string
 
-  @Column('simple-array')
+  // Coordinates
+  @Column('simple-array', { nullable: true })
+  @IsOptional()
   @IsCoordinates({
     message:
       'Les coordonnées doivent être un tableau de deux éléments : latitude et longitude',
   })
-  @Field(() => [Number])
+  @Field(() => [Number], { nullable: true })
   coordinates!: number[]
 
+  // Phone number
   @Column({ length: 10, nullable: true })
   @IsOptional()
   @IsNumberString(
@@ -121,24 +148,74 @@ export class User extends BaseEntity {
   @Field({ nullable: true })
   phoneNumber!: string
 
+  // Role
   @Column({
     type: 'enum',
     enum: Role,
     default: Role.USER,
   })
-  @Field(() => Role)
+  @Field(() => Role, { nullable: true })
   role!: Role
 
+  // Password
+  @Column({ length: 250 })
+  hashedPassword!: string
+
+  // Is verified
+  @Column({ default: false })
+  isVerified!: boolean
+
+  // -------------------------------
+  // ---------- RELATIONS ----------
+  // -------------------------------
+
+  // Picture avatar
+  @OneToOne(() => Picture, { nullable: true })
+  @JoinColumn()
+  @Field({ nullable: true })
+  picture?: Picture
+
+  // Ads
   @OneToMany(() => Ad, (ad) => ad.user)
   @Field(() => [Ad])
   ads!: Ad[]
 
-  @Column({ default: false })
-  isVerified!: boolean
+  // -------------------------------
+  // ---------- INFOS FIELDS -------
+  // -------------------------------
+
+  // Created at
+  @CreateDateColumn({ type: 'timestamp' })
+  @Field(() => Date)
+  createdAt!: Date
+
+  // Created by
+  @ManyToOne(() => User, (user) => user.createdBy)
+  @Field(() => User, { nullable: true })
+  createdBy!: User
+
+  // Updated at
+  @UpdateDateColumn()
+  @Field(() => Date)
+  updatedAt!: Date
+
+  // Updated by
+  @ManyToOne(() => User, (user) => user.updatedBy, { nullable: true })
+  @Field(() => User, { nullable: true })
+  updatedBy!: User
 }
 
 @InputType()
 export class UserCreateInput {
+  @Field()
+  email!: string
+
+  @Field(() => Profil)
+  profil!: Profil
+
+  @Field(() => Gender)
+  gender!: Gender
+
   @Field()
   firstName!: string
 
@@ -152,32 +229,32 @@ export class UserCreateInput {
   pictureId?: number
 
   @Field()
-  email!: string
-
-  @Field()
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+]{8,}$/, {
+    message:
+      'Password is not valid. At least 8 characters, 1 uppercase, 1 lowercase, 1 special characters and 1 number required!',
+  })
   password!: string
 
   @Field({ nullable: true })
   adress?: string
 
-  @Field()
-  zipCode!: string
-
-  @Field()
-  city!: string
-
-  @Field(() => [Number])
-  coordinates!: number[]
+  @Field({ nullable: true })
+  zipCode?: string
 
   @Field({ nullable: true })
-  phoneNumber?: string
+  city?: string
 
-  @Field(() => Role)
-  role!: Role
+  @Field(() => [Number], { nullable: true })
+  coordinates?: number[]
 
-  @Field()
-  isVerified!: boolean
+  @Field({ nullable: true })
+  phoneNumber!: string
+
+  @Field(() => Role, { nullable: true })
+  role?: Role
+
+  @Field({ nullable: true })
+  isVerified?: boolean
 }
 
 @InputType()
@@ -209,7 +286,7 @@ export class UserUpdateInput {
   @Field({ nullable: true })
   phoneNumber!: string
 
-  @Field({ nullable: true })
+  @Field(() => Role, { nullable: true })
   role!: Role
 
   @Field(() => [ObjectId], { nullable: true })

@@ -25,23 +25,23 @@ const UserGender = (props: UserGenderProps): React.ReactNode => {
       <CustomRadioButton
         icon="man"
         label="Monsieur"
-        checked={props.gender === "Monsieur"}
+        checked={props.gender === "MAN"}
         onChange={handleChange}
-        value="Monsieur"
+        value="MAN"
       />
       <CustomRadioButton
         icon="woman"
         label="Madame"
-        checked={props.gender === "Madame"}
+        checked={props.gender === "WOMAN"}
         onChange={handleChange}
-        value="Madame"
+        value="WOMAN"
       />
       <CustomRadioButton
         icon="alien"
         label="Autre"
-        checked={props.gender === "Autre"}
+        checked={props.gender === "OTHER"}
         onChange={handleChange}
-        value="Autre"
+        value="OTHER"
       />
     </Box>
   );

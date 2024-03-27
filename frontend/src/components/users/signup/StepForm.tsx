@@ -3,6 +3,9 @@ import UserEmail from "../components/UserEmail";
 import UserName from "../components/UserName";
 import UserPhone from "../components/UserPhone";
 import UserPassword from "../components/UserPassword";
+import UserProfil from "../components/UserProfil";
+import UserGender from "../components/UserGender";
+import UserAvatar from "../components/UserAvatar";
 import { StepFormButton } from "@/styles/MuiButtons";
 import { VariablesColors } from "@/styles/Variables.colors";
 import { Box, Grid, Typography } from "@mui/material";
@@ -17,33 +20,12 @@ import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import FaceRetouchingOffIcon from "@mui/icons-material/FaceRetouchingOff";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LockIcon from "@mui/icons-material/Lock";
-import UserProfil from "../components/UserProfil";
-import UserGender from "../components/UserGender";
+import { StepSignUpFormProps } from "@/types/UserTypes";
 
 const colors = new VariablesColors();
 const { color4 } = colors;
-
-type StepSignUpFormProps = {
-  email: string;
-  setEmail: (email: string) => void;
-  profil: string;
-  setProfil: (profil: string) => void;
-  gender: string;
-  setGender: (gender: string) => void;
-  firstName: string;
-  setFirstName: (firstName: string) => void;
-  lastName: string;
-  setLastName: (lastName: string) => void;
-  nickName: string;
-  setNickName: (nickName: string) => void;
-  phoneNumber: string;
-  setPhoneNumber: (phoneNumber: string) => void;
-  password: string;
-  setPassword: (password: string) => void;
-  currentStep: string;
-  setCurrentStep: (currentStep: string) => void;
-};
 
 const StepForm = (props: StepSignUpFormProps): React.ReactNode => {
   const stepConfig = {
@@ -123,12 +105,25 @@ const StepForm = (props: StepSignUpFormProps): React.ReactNode => {
       },
       isDisabled: () =>
         props.lastName === "" || !isValidNameRegex(props.lastName),
+      nextStep: "avatar",
+    },
+    avatar: {
+      title: "Votre  avatar ?",
+      subtitle: `Pour vous montrer comme vous le souhaitez.`,
+      icon: AccountCircleIcon,
+      Component: UserAvatar,
+      componentProps: {
+        picture: props.picture,
+        setPicture: props.setPicture,
+        previewUrl: props.previewUrl,
+        setPreviewUrl: props.setPreviewUrl,
+      },
+      isDisabled: () => props.picture === null,
       nextStep: "phoneNumber",
     },
     phoneNumber: {
       title: "Votre numéro de téléphone ?",
-      subtitle:
-        "Si on doit vous appeler pour la préparation de votre matériel.",
+      subtitle: "Si on doit vous appeler.",
       icon: PhoneIphoneIcon,
       Component: UserPhone,
       componentProps: {
@@ -153,7 +148,6 @@ const StepForm = (props: StepSignUpFormProps): React.ReactNode => {
       nextStep: "submit",
     },
   };
-
   const currentConfig = stepConfig[props.currentStep];
   const isButtonDisabled = currentConfig.isDisabled();
   const StepComponent = currentConfig.Component;
@@ -164,8 +158,8 @@ const StepForm = (props: StepSignUpFormProps): React.ReactNode => {
       item
       xs={11}
       sm={10}
-      md={5}
-      lg={3.5}
+      md={5.9}
+      lg={4.5}
       sx={{
         display: "flex",
         margin: "auto",

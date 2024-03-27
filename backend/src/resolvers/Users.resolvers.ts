@@ -12,7 +12,6 @@ import * as argon2 from 'argon2'
 import jwt from 'jsonwebtoken'
 import Cookies from 'cookies'
 import { MyContext } from '../types/userContext'
-import { currentDate } from '../utils/date'
 import {
   User,
   UserContext,
@@ -51,9 +50,8 @@ export class UsersResolver {
       throw new Error('User already exists')
     }
 
-    const registrationDate = currentDate()
     const newUser = new User()
-    Object.assign(newUser, data, { registrationDate })
+    Object.assign(newUser, data)
 
     if (data.pictureId) {
       const picture = await Picture.findOne({ where: { id: data.pictureId } })
@@ -102,6 +100,9 @@ export class UsersResolver {
         const user = await User.findOneBy({ email: payload.email })
         if (!user) {
           return { success: false, message: 'Utilisateur non trouvé' }
+        }
+        if (user.isVerified === true) {
+          return { success: true, message: 'Email déjà vérifié' }
         }
 
         user.isVerified = true

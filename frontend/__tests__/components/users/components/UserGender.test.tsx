@@ -13,14 +13,14 @@ describe("UserGender", () => {
   });
 
   it("marks the Monsieur button as checked when gender is set to Monsieur", () => {
-    render(<UserGender gender="Monsieur" setGender={setGenderMock} />);
+    render(<UserGender gender="MAN" setGender={setGenderMock} />);
     expect(screen.getByLabelText("Monsieur")).toBeChecked();
     expect(screen.getByLabelText("Madame")).not.toBeChecked();
     expect(screen.getByLabelText("Autre")).not.toBeChecked();
   });
 
   it("marks the Madame button as checked when gender is set to Madame", () => {
-    render(<UserGender gender="Madame" setGender={setGenderMock} />);
+    render(<UserGender gender="WOMAN" setGender={setGenderMock} />);
     expect(screen.getByLabelText("Monsieur")).not.toBeChecked();
     expect(screen.getByLabelText("Madame")).toBeChecked();
     expect(screen.getByLabelText("Autre")).not.toBeChecked();
@@ -29,11 +29,11 @@ describe("UserGender", () => {
   it("calls setGender when a gender is selected", () => {
     render(<UserGender gender="" setGender={setGenderMock} />);
     fireEvent.click(screen.getByLabelText("Monsieur"));
-    expect(setGenderMock).toHaveBeenCalledWith("Monsieur");
+    expect(setGenderMock).toHaveBeenCalledWith("MAN");
   });
 
   it("marks the Autre button as checked when gender is set to Autre", () => {
-    render(<UserGender gender="Autre" setGender={setGenderMock} />);
+    render(<UserGender gender="OTHER" setGender={setGenderMock} />);
     expect(screen.getByLabelText("Monsieur")).not.toBeChecked();
     expect(screen.getByLabelText("Madame")).not.toBeChecked();
     expect(screen.getByLabelText("Autre")).toBeChecked();
