@@ -1,4 +1,4 @@
-import { Role } from '../entities/User'
+import { Role } from './userEntity'
 import { Request, Response } from 'express'
 
 export type UserContext = {

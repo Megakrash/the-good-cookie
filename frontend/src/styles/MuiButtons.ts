@@ -32,7 +32,7 @@ export const GreyBtnOrangeHover = styled("button")<ButtonsHoverProps>(() => ({
   },
   "&:disabled": {
     cursor: "not-allowed",
-    backgroundColor: color3,
+    backgroundColor: color2,
     color: color1,
   },
 }));
