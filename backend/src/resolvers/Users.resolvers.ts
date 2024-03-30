@@ -11,7 +11,7 @@ import { validate } from 'class-validator'
 import * as argon2 from 'argon2'
 import jwt from 'jsonwebtoken'
 import Cookies from 'cookies'
-import { MyContext } from '../types/userContext'
+import { MyContext } from '../types/Users.types'
 import {
   User,
   UserContext,
@@ -29,18 +29,7 @@ import {
 
 @Resolver(User)
 export class UsersResolver {
-  @Authorized('ADMIN')
-  @Query(() => [User])
-  async usersGetAll(@Ctx() context: MyContext): Promise<User[]> {
-    if (context.user?.role === 'ADMIN') {
-      const users = await User.find({
-        relations: { ads: true, picture: true },
-      })
-      return users
-    }
-    throw new Error('Not authorized')
-  }
-
+  // CREATE
   @Mutation(() => User)
   async userCreate(
     @Arg('data', () => UserCreateInput) data: UserCreateInput
@@ -76,6 +65,76 @@ export class UsersResolver {
     throw new Error(`Error occured: ${JSON.stringify(errors)}`)
   }
 
+  // UPDATE
+  @Authorized('ADMIN', 'USER')
+  @Mutation(() => User, { nullable: true })
+  async userUpdate(
+    @Arg('data') data: UserUpdateInput,
+    @Arg('id', () => ID) id: number,
+    @Ctx() context: MyContext
+  ): Promise<User | null> {
+    const user = await User.findOne({
+      where: { id },
+      relations: { ads: true, picture: true },
+    })
+
+    if (
+      user &&
+      (user.id === context.user?.id || context.user?.role === 'ADMIN')
+    ) {
+      let oldPictureId: number | null = null
+      if (data.ads) {
+        data.ads = data.ads.map((entry) => {
+          const existingRelation = user.ads.find(
+            (ad) => ad.id === Number(entry.id)
+          )
+          return existingRelation || entry
+        })
+      }
+      if (data.pictureId && user.picture?.id) {
+        oldPictureId = user.picture.id
+        const newPicture = await Picture.findOne({
+          where: { id: data.pictureId },
+        })
+        if (!newPicture) {
+          throw new Error('New picture not found')
+        }
+        user.picture = newPicture
+      }
+
+      Object.assign(user, data)
+      user.updatedBy = context.user
+      const errors = await validate(user)
+      if (errors.length === 0) {
+        await User.save(user)
+        if (oldPictureId) {
+          await deletePicture(oldPictureId)
+        }
+
+        return await User.findOne({
+          where: { id: user.id },
+          relations: {
+            ads: true,
+            updatedBy: true,
+          },
+        })
+      }
+      throw new Error(`Error occured: ${JSON.stringify(errors)}`)
+    }
+    return user
+  }
+
+  // READ ALL
+  @Authorized('ADMIN')
+  @Query(() => [User])
+  async usersGetAll(): Promise<User[]> {
+    const users = await User.find({
+      relations: { ads: true, picture: true },
+    })
+    return users
+  }
+
+  // VERIFY EMAIL
   @Mutation(() => VerifyEmailResponse)
   async verifyEmail(@Arg('token') token: string): Promise<VerifyEmailResponse> {
     let userEmail: string | null = null
@@ -120,10 +179,11 @@ export class UsersResolver {
             'Le lien a expiré, un nouveau lien de vérification a été envoyé à votre adresse email.',
         }
       }
-      return { success: false, message: 'Error verifying email.' }
+      return { success: false, message: `Erreur de la vérification de l'email` }
     }
   }
 
+  // SIGNIN
   @Mutation(() => User)
   async userLogin(
     @Ctx() context: MyContext,
@@ -161,16 +221,7 @@ export class UsersResolver {
     return user
   }
 
-  @Authorized('ADMIN', 'USER')
-  @Query(() => UserContext)
-  async meContext(@Ctx() context: MyContext): Promise<UserContext> {
-    if (!context.user) {
-      throw new Error('User not found')
-    }
-    const user = context.user as UserContext
-    return user
-  }
-
+  // ME
   @Authorized('ADMIN', 'USER')
   @Query(() => User)
   async me(@Ctx() context: MyContext): Promise<User> {
@@ -185,6 +236,24 @@ export class UsersResolver {
     return user as User
   }
 
+  // ME CONTEXT FOR FRONTEND
+  @Authorized('ADMIN', 'USER')
+  @Query(() => UserContext)
+  async meContext(@Ctx() context: MyContext): Promise<UserContext> {
+    if (!context.user) {
+      throw new Error('User not found')
+    }
+
+    const { id, nickName, picture } = context.user
+
+    return {
+      id,
+      nickName,
+      picture: picture as Picture,
+    }
+  }
+
+  // SIGNOUT
   @Mutation(() => Boolean)
   async userSignOut(@Ctx() context: MyContext): Promise<boolean> {
     const cookie = new Cookies(context.req, context.res)
@@ -196,64 +265,7 @@ export class UsersResolver {
     return true
   }
 
-  @Authorized('ADMIN', 'USER')
-  @Mutation(() => User, { nullable: true })
-  async userUpdate(
-    @Ctx() context: MyContext,
-    @Arg('data') data: UserUpdateInput
-  ): Promise<User | null> {
-    const userId = context.user?.id
-
-    const user = await User.findOne({
-      where: { id: userId },
-      relations: { ads: true, picture: true },
-    })
-
-    if (
-      user &&
-      (user.id === context.user?.id || context.user?.role === 'ADMIN')
-    ) {
-      let oldPictureId: number | null = null
-      if (data.ads) {
-        data.ads = data.ads.map((entry) => {
-          const existingRelation = user.ads.find(
-            (ad) => ad.id === Number(entry.id)
-          )
-          return existingRelation || entry
-        })
-      }
-      if (data.pictureId && user.picture?.id) {
-        oldPictureId = user.picture.id
-        const newPicture = await Picture.findOne({
-          where: { id: data.pictureId },
-        })
-        if (!newPicture) {
-          throw new Error('New picture not found')
-        }
-        user.picture = newPicture
-      }
-
-      Object.assign(user, data)
-
-      const errors = await validate(user)
-      if (errors.length === 0) {
-        await User.save(user)
-        if (oldPictureId) {
-          await deletePicture(oldPictureId)
-        }
-
-        return await User.findOne({
-          where: { id: userId },
-          relations: {
-            ads: true,
-          },
-        })
-      }
-      throw new Error(`Error occured: ${JSON.stringify(errors)}`)
-    }
-    return user
-  }
-
+  // DELETE
   @Authorized('ADMIN', 'USER')
   @Mutation(() => User, { nullable: true })
   async userDelete(

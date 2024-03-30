@@ -24,12 +24,7 @@ export const customAuthChecker: AuthChecker<MyContext> = async (
         relations: { picture: true },
       })
       if (user) {
-        context.user = {
-          id: user.id,
-          nickName: user.nickName,
-          role: user.role,
-          picture: user.picture?.filename || '',
-        }
+        context.user = user
         return roles.length === 0 || roles.includes(user.role)
       }
       console.error('User not found')

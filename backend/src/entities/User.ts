@@ -28,7 +28,7 @@ import { Ad } from './Ad'
 import { ObjectId } from './ObjectId'
 import { IsCoordinates } from '../utils/Coordinates'
 import { Picture } from './Picture'
-import { Gender, Profil, Role } from '../types/userEntity'
+import { Gender, Profil, Role } from '../types/Users.types'
 
 // Enums type-graphql
 registerEnumType(Role, {
@@ -293,7 +293,7 @@ export class UserUpdateInput {
   @Field(() => [ObjectId], { nullable: true })
   ads!: ObjectId[]
 
-  @Field()
+  @Field({ nullable: true })
   isVerified!: boolean
 
   @Field({ nullable: true })
@@ -323,11 +323,8 @@ export class UserContext {
   @Field()
   nickName!: string
 
-  @Field()
-  picture!: string
-
-  @Field(() => Role)
-  role!: Role
+  @Field(() => Picture, { nullable: true })
+  picture!: Picture
 }
 
 //-------------------------------

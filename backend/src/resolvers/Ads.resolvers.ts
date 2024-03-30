@@ -14,7 +14,7 @@ import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from '../entities/Ad'
 import { currentDate } from '../utils/date'
 import { deletePicture } from '../utils/pictureServices/pictureServices'
 import { merge } from '../utils/utils'
-import { MyContext } from '../types/userContext'
+import { MyContext } from '../types/Users.types'
 import { Picture } from '../entities/Picture'
 import { getDistanceFromLatLonInKm } from '../utils/gpsDistance'
 
@@ -69,7 +69,7 @@ export class AdsResolver {
           picture: true,
         },
         order: {
-          updateDate: 'DESC',
+          updatedAt: 'DESC',
         },
       })
 
