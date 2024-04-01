@@ -7,12 +7,14 @@ import {
   Index,
   ManyToOne,
   JoinColumn,
+  OneToOne,
 } from 'typeorm'
 import { Length } from 'class-validator'
 import { Field, ID, InputType, ObjectType } from 'type-graphql'
 import { Ad } from './Ad'
 import { Category } from './Category'
 import { ObjectId } from './ObjectId'
+import { Picture } from './Picture'
 
 //-------------------------------
 //------ SubCategory Entity -----
@@ -38,10 +40,9 @@ export class SubCategory extends PrimaryEntity {
   // ---------- RELATIONS ----------
 
   // Picture
-  @Column({ length: 100 })
-  @Length(10, 100, { message: 'Entre 10 et 100 caractères' })
-  @Field()
-  picture!: string
+  @OneToOne(() => Picture, { cascade: true, nullable: true })
+  @JoinColumn()
+  picture!: Picture
 
   // Ads
   @OneToMany(() => Ad, (ad) => ad.subCategory)
@@ -66,8 +67,8 @@ export class SubCategoryCreateInput {
   @Field()
   name!: string
 
-  @Field()
-  picture!: string
+  @Field({ nullable: true })
+  pictureId?: number
 
   @Field(() => ObjectId)
   category!: ObjectId
@@ -83,7 +84,7 @@ export class SubCategoryUpdateInput {
   name!: string
 
   @Field({ nullable: true })
-  picture!: string
+  pictureId?: number
 
   @Field(() => ObjectId, { nullable: true })
   category!: ObjectId
