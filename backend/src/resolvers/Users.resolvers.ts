@@ -73,6 +73,12 @@ export class UsersResolver {
     @Arg('id', () => ID) id: number,
     @Ctx() context: MyContext
   ): Promise<User | null> {
+    // Check if user is authenticated
+    if (!context.user) {
+      throw new Error('User context is missing or user is not authenticated')
+    }
+
+    // Find user by id
     const user = await User.findOne({
       where: { id },
       relations: { ads: true, picture: true },
@@ -102,8 +108,10 @@ export class UsersResolver {
         user.picture = newPicture
       }
 
+      // Update user with new data
       Object.assign(user, data)
       user.updatedBy = context.user
+      // Validate and save updated user
       const errors = await validate(user)
       if (errors.length === 0) {
         await User.save(user)

@@ -11,7 +11,6 @@ import {
 import { In, MoreThanOrEqual, LessThanOrEqual, Between, ILike } from 'typeorm'
 import { validate } from 'class-validator'
 import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from '../entities/Ad'
-import { currentDate } from '../utils/date'
 import { deletePicture } from '../utils/pictureServices/pictureServices'
 import { merge } from '../utils/utils'
 import { MyContext } from '../types/Users.types'
@@ -61,6 +60,11 @@ export class AdsResolver {
     @Arg('id', () => ID) id: number,
     @Arg('data') data: AdUpdateInput
   ): Promise<Ad | null> {
+    // Check if user is authenticated
+    if (!context.user) {
+      throw new Error('User context is missing or user is not authenticated')
+    }
+    // Get ad by id
     const ad = await Ad.findOne({
       where: { id },
       relations: { tags: true, user: true, picture: true },
@@ -81,9 +85,7 @@ export class AdsResolver {
         ad.picture = newPicture
       }
 
-      const updateDate = currentDate()
-      const dataWithUpdateDate = { ...data, updateDate }
-      merge(ad, dataWithUpdateDate)
+      merge(ad, data)
 
       const errors = await validate(ad)
       if (errors.length === 0) {
