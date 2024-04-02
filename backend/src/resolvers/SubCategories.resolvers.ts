@@ -18,9 +18,7 @@ import { Picture } from '../entities/Picture'
 
 @Resolver(SubCategory)
 export class SubCategoriesResolver {
-  // -----------------
   // CREATE
-  // -----------------
   @Authorized('ADMIN')
   @Mutation(() => SubCategory)
   async subCategoryCreate(
@@ -65,9 +63,8 @@ export class SubCategoriesResolver {
       throw new Error(`Error occured: ${JSON.stringify(errors)}`)
     }
   }
-  // -----------------
+
   // UPDATE
-  // -----------------
   @Authorized('ADMIN')
   @Mutation(() => SubCategory, { nullable: true })
   async subCategoryUpdate(
@@ -109,9 +106,7 @@ export class SubCategoriesResolver {
     return updatedSubCategory
   }
 
-  // -----------------
-  // READ ALL
-  // -----------------
+  // GET ALL
   @Query(() => [SubCategory])
   async subCategoriesGetAll(): Promise<SubCategory[]> {
     const subCategories = await SubCategory.find({
@@ -126,9 +121,8 @@ export class SubCategoriesResolver {
     })
     return subCategories
   }
-  // -----------------
-  // READ BY ID
-  // -----------------
+
+  // GET BY ID
   @Query(() => SubCategory)
   async subCategoryById(@Arg('id', () => ID) id: number): Promise<SubCategory> {
     const subCategory = await SubCategory.findOne({
@@ -152,9 +146,8 @@ export class SubCategoriesResolver {
 
     return subCategory
   }
-  // -----------------
+
   // DELETE
-  // -----------------
   @Authorized('ADMIN')
   @Mutation(() => SubCategory, { nullable: true })
   async subCategoryDelete(

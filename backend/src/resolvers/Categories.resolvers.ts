@@ -17,9 +17,7 @@ import { MyContext } from '../types/Users.types'
 
 @Resolver(Category)
 export class CategoriesResolver {
-  // -----------------
   // CREATE
-  // -----------------
   @Authorized('ADMIN')
   @Mutation(() => Category)
   async categoryCreate(
@@ -57,9 +55,7 @@ export class CategoriesResolver {
     throw new Error(`Error occured: ${JSON.stringify(errors)}`)
   }
 
-  // -----------------
   // UPDATE
-  // -----------------
   @Authorized('ADMIN')
   @Mutation(() => Category, { nullable: true })
   async categoryUpdate(
@@ -98,9 +94,7 @@ export class CategoriesResolver {
     return category
   }
 
-  // -----------------
   // GET ALL
-  // -----------------
   @Query(() => [Category])
   async categoriesGetAll(): Promise<Category[]> {
     const categories = await Category.find({
@@ -114,9 +108,7 @@ export class CategoriesResolver {
     return categories
   }
 
-  // -----------------
   // GET BY ID
-  // -----------------
   @Query(() => Category)
   async categoryById(@Arg('id', () => ID) id: number): Promise<Category> {
     const category = await Category.findOne({
@@ -133,9 +125,7 @@ export class CategoriesResolver {
     return category
   }
 
-  // -----------------
   // DELETE
-  // -----------------
   @Authorized('ADMIN')
   @Mutation(() => Category, { nullable: true })
   async categoryDelete(

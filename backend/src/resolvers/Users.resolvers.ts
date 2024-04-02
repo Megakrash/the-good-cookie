@@ -135,6 +135,24 @@ export class UsersResolver {
     return users
   }
 
+  // GET BY ID
+  @Query(() => User)
+  async userById(@Arg('id', () => ID) id: number): Promise<User> {
+    const user = await User.findOne({
+      where: { id },
+      relations: {
+        ads: true,
+        picture: true,
+        createdBy: true,
+        updatedBy: true,
+      },
+    })
+    if (!user) {
+      throw new Error('User not found')
+    }
+    return user
+  }
+
   // VERIFY EMAIL
   @Mutation(() => VerifyEmailResponse)
   async verifyEmail(@Arg('token') token: string): Promise<VerifyEmailResponse> {
@@ -272,7 +290,7 @@ export class UsersResolver {
   async userDelete(
     @Ctx() context: MyContext,
     @Arg('id', () => ID) id: number
-  ): Promise<User | null> {
+  ): Promise<string> {
     const user = await User.findOne({
       where: { id },
       relations: { ads: true, picture: true },
@@ -286,10 +304,9 @@ export class UsersResolver {
       if (pictureId) {
         await deletePicture(pictureId)
       }
-      user
+      return `User with id: ${id} deleted`
     } else {
       throw new Error(`Error delete user`)
     }
-    return user
   }
 }
