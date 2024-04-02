@@ -52,6 +52,63 @@ export class AdsResolver {
     }
     throw new Error(`Error occurred: ${JSON.stringify(errors)}`)
   }
+
+  // UPDATE
+  @Authorized('ADMIN', 'USER')
+  @Mutation(() => Ad, { nullable: true })
+  async AdUpdate(
+    @Ctx() context: MyContext,
+    @Arg('id', () => ID) id: number,
+    @Arg('data') data: AdUpdateInput
+  ): Promise<Ad | null> {
+    const ad = await Ad.findOne({
+      where: { id },
+      relations: { tags: true, user: true, picture: true },
+    })
+    if (
+      ad &&
+      (ad.user.id === context.user?.id || context.user?.role === 'ADMIN')
+    ) {
+      let oldPictureId = null
+      if (data.pictureId && ad.picture?.id) {
+        oldPictureId = ad.picture.id
+        const newPicture = await Picture.findOne({
+          where: { id: data.pictureId },
+        })
+        if (!newPicture) {
+          throw new Error('New picture not found')
+        }
+        ad.picture = newPicture
+      }
+
+      const updateDate = currentDate()
+      const dataWithUpdateDate = { ...data, updateDate }
+      merge(ad, dataWithUpdateDate)
+
+      const errors = await validate(ad)
+      if (errors.length === 0) {
+        await Ad.save(ad)
+        if (oldPictureId) {
+          await deletePicture(oldPictureId)
+        }
+
+        return await Ad.findOne({
+          where: { id },
+          relations: {
+            subCategory: true,
+            tags: true,
+            picture: true,
+            user: { picture: true },
+          },
+        })
+      }
+    } else {
+      throw new Error(`Error occured: ${JSON.stringify(Error)}`)
+    }
+    return ad
+  }
+
+  // GET ALL
   @Query(() => [Ad], { nullable: true })
   async adsGetAll(
     @Arg('where', { nullable: true }) where?: AdsWhere,
@@ -129,6 +186,7 @@ export class AdsResolver {
     }
   }
 
+  // GET BY ID
   @Query(() => Ad)
   async adById(@Arg('id', () => ID) id: number): Promise<Ad> {
     const ad = await Ad.findOne({
@@ -146,6 +204,7 @@ export class AdsResolver {
     return ad
   }
 
+  // GET BY USER
   @Query(() => [Ad])
   async adsByUser(@Arg('id', () => ID) id: number): Promise<Ad[]> {
     const ads = await Ad.find({
@@ -160,60 +219,7 @@ export class AdsResolver {
     return ads
   }
 
-  @Authorized('ADMIN', 'USER')
-  @Mutation(() => Ad, { nullable: true })
-  async AdUpdate(
-    @Ctx() context: MyContext,
-    @Arg('id', () => ID) id: number,
-    @Arg('data') data: AdUpdateInput
-  ): Promise<Ad | null> {
-    const ad = await Ad.findOne({
-      where: { id },
-      relations: { tags: true, user: true, picture: true },
-    })
-    if (
-      ad &&
-      (ad.user.id === context.user?.id || context.user?.role === 'ADMIN')
-    ) {
-      let oldPictureId = null
-      if (data.pictureId && ad.picture?.id) {
-        oldPictureId = ad.picture.id
-        const newPicture = await Picture.findOne({
-          where: { id: data.pictureId },
-        })
-        if (!newPicture) {
-          throw new Error('New picture not found')
-        }
-        ad.picture = newPicture
-      }
-
-      const updateDate = currentDate()
-      const dataWithUpdateDate = { ...data, updateDate }
-      merge(ad, dataWithUpdateDate)
-
-      const errors = await validate(ad)
-      if (errors.length === 0) {
-        await Ad.save(ad)
-        if (oldPictureId) {
-          await deletePicture(oldPictureId)
-        }
-
-        return await Ad.findOne({
-          where: { id },
-          relations: {
-            subCategory: true,
-            tags: true,
-            picture: true,
-            user: { picture: true },
-          },
-        })
-      }
-    } else {
-      throw new Error(`Error occured: ${JSON.stringify(Error)}`)
-    }
-    return ad
-  }
-
+  // DELETE
   @Authorized('ADMIN', 'USER')
   @Mutation(() => Ad, { nullable: true })
   async adDelete(

@@ -116,6 +116,7 @@ export class UsersResolver {
           relations: {
             ads: true,
             updatedBy: true,
+            picture: true,
           },
         })
       }
@@ -124,7 +125,7 @@ export class UsersResolver {
     return user
   }
 
-  // READ ALL
+  // GET ALL
   @Authorized('ADMIN')
   @Query(() => [User])
   async usersGetAll(): Promise<User[]> {

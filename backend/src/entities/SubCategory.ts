@@ -42,6 +42,7 @@ export class SubCategory extends PrimaryEntity {
   // Picture
   @OneToOne(() => Picture, { cascade: true, nullable: true })
   @JoinColumn()
+  @Field(() => Picture, { nullable: true })
   picture!: Picture
 
   // Ads

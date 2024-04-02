@@ -162,6 +162,7 @@ export class User extends BaseEntity {
 
   // Is verified
   @Column({ default: false })
+  @Field()
   isVerified!: boolean
 
   // ---------- INFOS ----------
@@ -188,11 +189,11 @@ export class User extends BaseEntity {
 
   // ---------- RELATIONS ----------
 
-  // Picture avatar
-  @OneToOne(() => Picture, { nullable: true })
+  // Picture
+  @OneToOne(() => Picture, { cascade: true, nullable: true })
   @JoinColumn()
-  @Field({ nullable: true })
-  picture?: Picture
+  @Field(() => Picture, { nullable: true })
+  picture!: Picture
 
   // Ads
   @OneToMany(() => Ad, (ad) => ad.user)
