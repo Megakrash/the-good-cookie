@@ -4,7 +4,7 @@ import {
   createImage,
   deletePicture,
 } from '../utils/pictureServices/pictureServices'
-import { MyContext } from '../types/userContext'
+import { MyContext } from '../types/Users.types'
 
 @Resolver(Picture)
 export class PictureResolver {

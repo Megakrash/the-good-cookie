@@ -291,7 +291,7 @@ export default function Header(): React.ReactNode {
                 <MenuItem
                   onClick={() => {
                     handleCloseUserMenu();
-                    router.replace(`/connexion`);
+                    router.replace(`/signin`);
                   }}
                 >
                   <LoginIcon />

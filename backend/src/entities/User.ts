@@ -1,5 +1,4 @@
 import {
-  BaseEntity,
   OneToMany,
   Column,
   Entity,
@@ -9,6 +8,7 @@ import {
   CreateDateColumn,
   ManyToOne,
   UpdateDateColumn,
+  BaseEntity,
 } from 'typeorm'
 import {
   IsEmail,
@@ -26,9 +26,9 @@ import {
 } from 'type-graphql'
 import { Ad } from './Ad'
 import { ObjectId } from './ObjectId'
-import { IsCoordinates } from './Coordinates'
+import { IsCoordinates } from '../utils/Coordinates'
 import { Picture } from './Picture'
-import { Gender, Profil, Role } from '../types/userEntity'
+import { Gender, Profil, Role } from '../types/Users.types'
 
 // Enums type-graphql
 registerEnumType(Role, {
@@ -40,14 +40,13 @@ registerEnumType(Profil, {
 registerEnumType(Gender, {
   name: 'Gender',
 })
-
-// Entities
+//-------------------------------
+//--------- User Entity ---------
+//-------------------------------
 @Entity()
 @ObjectType()
 export class User extends BaseEntity {
-  //-------------------------------
   //------------ FIELDS -----------
-  //-------------------------------
 
   // ID
   @PrimaryGeneratedColumn()
@@ -163,48 +162,48 @@ export class User extends BaseEntity {
 
   // Is verified
   @Column({ default: false })
+  @Field()
   isVerified!: boolean
 
-  // -------------------------------
-  // ---------- RELATIONS ----------
-  // -------------------------------
+  // ---------- INFOS ----------
 
-  // Picture avatar
-  @OneToOne(() => Picture, { nullable: true })
+  @CreateDateColumn({ type: 'timestamp' })
+  @Field(() => Date)
+  createdAt!: Date
+
+  @ManyToOne(() => User, (user) => user.createdBy)
+  @Field(() => User, { nullable: true })
+  createdBy!: User
+
+  @UpdateDateColumn()
+  @Field(() => Date)
+  updatedAt!: Date
+
+  @ManyToOne(() => User, (user) => user.updatedBy, { nullable: true })
+  @Field(() => User, { nullable: true })
+  updatedBy!: User
+
+  @Column({ type: 'timestamp', nullable: true })
+  @Field(() => Date, { nullable: true })
+  lastConnectionDate!: Date
+
+  // ---------- RELATIONS ----------
+
+  // Picture
+  @OneToOne(() => Picture, { cascade: true, nullable: true })
   @JoinColumn()
-  @Field({ nullable: true })
-  picture?: Picture
+  @Field(() => Picture, { nullable: true })
+  picture!: Picture
 
   // Ads
   @OneToMany(() => Ad, (ad) => ad.user)
   @Field(() => [Ad])
   ads!: Ad[]
-
-  // -------------------------------
-  // ---------- INFOS FIELDS -------
-  // -------------------------------
-
-  // Created at
-  @CreateDateColumn({ type: 'timestamp' })
-  @Field(() => Date)
-  createdAt!: Date
-
-  // Created by
-  @ManyToOne(() => User, (user) => user.createdBy)
-  @Field(() => User, { nullable: true })
-  createdBy!: User
-
-  // Updated at
-  @UpdateDateColumn()
-  @Field(() => Date)
-  updatedAt!: Date
-
-  // Updated by
-  @ManyToOne(() => User, (user) => user.updatedBy, { nullable: true })
-  @Field(() => User, { nullable: true })
-  updatedBy!: User
 }
 
+//-------------------------------
+//--------- User Input ----------
+//-------------------------------
 @InputType()
 export class UserCreateInput {
   @Field()
@@ -257,6 +256,9 @@ export class UserCreateInput {
   isVerified?: boolean
 }
 
+//-------------------------------
+//--------- User Update ---------
+//-------------------------------
 @InputType()
 export class UserUpdateInput {
   @Field({ nullable: true })
@@ -292,10 +294,16 @@ export class UserUpdateInput {
   @Field(() => [ObjectId], { nullable: true })
   ads!: ObjectId[]
 
-  @Field()
+  @Field({ nullable: true })
   isVerified!: boolean
+
+  @Field({ nullable: true })
+  lastConnectionDate!: Date
 }
 
+//-------------------------------
+//--------- User SignIn ---------
+//-------------------------------
 @InputType()
 export class UserLoginInput {
   @Field()
@@ -305,6 +313,9 @@ export class UserLoginInput {
   password!: string
 }
 
+//-------------------------------
+//--------- User Context --------
+//-------------------------------
 @ObjectType()
 export class UserContext {
   @Field()
@@ -313,13 +324,13 @@ export class UserContext {
   @Field()
   nickName!: string
 
-  @Field()
-  picture!: string
-
-  @Field(() => Role)
-  role!: Role
+  @Field(() => Picture, { nullable: true })
+  picture!: Picture
 }
 
+//-------------------------------
+//--------- User verify ---------
+//-------------------------------
 @ObjectType()
 export class VerifyEmailResponse {
   @Field()

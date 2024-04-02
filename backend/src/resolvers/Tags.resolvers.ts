@@ -4,29 +4,7 @@ import { Tag, TagCreateInput, TagUpdateInput } from '../entities/Tag'
 
 @Resolver(Tag)
 export class TagsResolver {
-  @Query(() => [Tag])
-  async tagsGetAll(): Promise<Tag[]> {
-    const tags = await Tag.find({
-      relations: { ads: true },
-      order: {
-        id: 'ASC',
-      },
-    })
-    return tags
-  }
-
-  @Query(() => Tag)
-  async tagById(@Arg('id') id: number): Promise<Tag> {
-    const tag = await Tag.findOne({
-      where: { id },
-      relations: { ads: true },
-    })
-    if (!tag) {
-      throw new Error('Tag not found')
-    }
-    return tag
-  }
-
+  // CREATE
   @Authorized('ADMIN')
   @Mutation(() => Tag)
   async tagCreate(
@@ -51,6 +29,7 @@ export class TagsResolver {
     }
   }
 
+  // UPDATE
   @Authorized('ADMIN')
   @Mutation(() => Tag, { nullable: true })
   async tagUpdate(
@@ -73,6 +52,32 @@ export class TagsResolver {
     return updatedTag
   }
 
+  // GET ALL
+  @Query(() => [Tag])
+  async tagsGetAll(): Promise<Tag[]> {
+    const tags = await Tag.find({
+      relations: { ads: true },
+      order: {
+        id: 'ASC',
+      },
+    })
+    return tags
+  }
+
+  // GET BY ID
+  @Query(() => Tag)
+  async tagById(@Arg('id') id: number): Promise<Tag> {
+    const tag = await Tag.findOne({
+      where: { id },
+      relations: { ads: true },
+    })
+    if (!tag) {
+      throw new Error('Tag not found')
+    }
+    return tag
+  }
+
+  // DELETE
   @Authorized('ADMIN')
   @Mutation(() => Tag, { nullable: true })
   async tagDelete(@Arg('id', () => ID) id: number): Promise<Tag | null> {

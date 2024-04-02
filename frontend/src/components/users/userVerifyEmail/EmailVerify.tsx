@@ -90,7 +90,7 @@ const EmailVerify = () => {
           <Typography color="error">{`Une erreur s'est produite.`}</Typography>
         )}
         <GreyBtnOrangeHover
-          onClick={() => router.push("/connexion")}
+          onClick={() => router.push("/signin")}
           disabled={!verified}
           sx={{ marginTop: "1rem" }}
         >

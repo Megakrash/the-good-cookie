@@ -1,5 +1,5 @@
+import { PrimaryEntity } from './PrimaryEntity'
 import {
-  BaseEntity,
   ManyToOne,
   JoinColumn,
   Column,
@@ -12,50 +12,45 @@ import {
 } from 'typeorm'
 import { Length, IsInt, IsNumberString } from 'class-validator'
 import { Field, ID, InputType, ObjectType, Int, Float } from 'type-graphql'
-import { IsCoordinates } from './Coordinates'
+import { IsCoordinates } from '../utils/Coordinates'
 import { SubCategory } from './SubCategory'
 import { Tag } from './Tag'
 import { User } from './User'
 import { Picture } from './Picture'
 import { ObjectId } from './ObjectId'
 
+//-------------------------------
+//--------- Ad Entity -----------
+//-------------------------------
 @Entity()
 @ObjectType()
-export class Ad extends BaseEntity {
+export class Ad extends PrimaryEntity {
+  //------------ FIELDS -----------
+
+  // ID
   @PrimaryGeneratedColumn()
   @Field(() => ID)
   id!: number
 
+  // Title
   @Column({ length: 100 })
   @Length(10, 100, { message: 'Entre 10 et 100 caractères' })
   @Index()
   @Field()
   title!: string
 
+  // Description
   @Column()
   @Field()
   description!: string
 
+  // Price
   @Column()
   @IsInt()
   @Field()
   price!: number
 
-  @Column()
-  @Length(8, 12, { message: 'Entre 8 et 12 caractères' })
-  @Field()
-  createdDate!: string
-
-  @Column()
-  @Length(8, 12, { message: 'Entre 8 et 12 caractères' })
-  @Field()
-  updateDate!: string
-
-  @OneToOne(() => Picture, { nullable: true })
-  @JoinColumn()
-  @Field(() => Picture)
-  picture!: Picture
-
+  // ZipCode
   @Column({ length: 5, nullable: true })
   @IsNumberString(
     {},
@@ -65,11 +60,13 @@ export class Ad extends BaseEntity {
   @Field()
   zipCode!: string
 
+  // City
   @Column({ length: 50, nullable: true })
   @Length(3, 50, { message: 'Entre 3 et 50 caractères' })
   @Field()
   city!: string
 
+  // Coordinates
   @Column('simple-array')
   @IsCoordinates({
     message:
@@ -78,6 +75,15 @@ export class Ad extends BaseEntity {
   @Field(() => [Number])
   coordinates!: number[]
 
+  // ---------- RELATIONS ----------
+
+  // Picture
+  @OneToOne(() => Picture, { nullable: true })
+  @JoinColumn()
+  @Field(() => Picture)
+  picture!: Picture
+
+  // SubCategory
   @ManyToOne(() => SubCategory, (subCategory) => subCategory.ads, {
     onDelete: 'CASCADE',
   })
@@ -85,6 +91,7 @@ export class Ad extends BaseEntity {
   @Field(() => SubCategory)
   subCategory!: SubCategory
 
+  // User
   @ManyToOne(() => User, (user) => user.ads, {
     onDelete: 'CASCADE',
   })
@@ -92,11 +99,16 @@ export class Ad extends BaseEntity {
   @Field(() => User)
   user!: User
 
+  // Tags
   @ManyToMany(() => Tag, (tag) => tag.ads)
   @JoinTable()
   @Field(() => [Tag])
   tags!: Tag[]
 }
+
+//-------------------------------
+//--------- Ad Input ------------
+//-------------------------------
 
 @InputType()
 export class AdCreateInput {
@@ -128,6 +140,10 @@ export class AdCreateInput {
   tags!: ObjectId[]
 }
 
+//-------------------------------
+//--------- Ad Update -----------
+//-------------------------------
+
 @InputType()
 export class AdUpdateInput {
   @Field({ nullable: true })
@@ -157,6 +173,11 @@ export class AdUpdateInput {
   @Field(() => [ObjectId], { nullable: true })
   tags!: ObjectId[]
 }
+
+//-------------------------------
+//--------- Ad Location ---------
+//-------------------------------
+
 @InputType()
 export class LocationInput {
   @Field(() => Float)
@@ -165,6 +186,10 @@ export class LocationInput {
   @Field(() => Float)
   longitude!: number
 }
+
+//-------------------------------
+//--------- Ad Search -----------
+//-------------------------------
 
 @InputType()
 export class AdsWhere {
