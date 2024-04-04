@@ -247,8 +247,8 @@ export default function Header(): React.ReactNode {
                 <Avatar
                   alt="User avatar"
                   src={
-                    userConnected && userContext.picture
-                      ? `${PATH_IMAGE}/pictures/${userContext.picture}`
+                    userConnected && userContext.picture.path
+                      ? `${userContext.picture.path}`
                       : `${PATH_IMAGE}/default/avatar.webp`
                   }
                 />
