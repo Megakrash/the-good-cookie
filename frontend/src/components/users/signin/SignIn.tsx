@@ -22,7 +22,7 @@ import {
 } from "../components/UserRegex";
 
 const colors = new VariablesColors();
-const { color1, successColor, errorColor } = colors;
+const { colorWhite, successColor, errorColor } = colors;
 
 const SignIn = (): React.ReactNode => {
   const theme = useTheme();
@@ -48,7 +48,7 @@ const SignIn = (): React.ReactNode => {
       });
       if ("id" in data.item) {
         toast(`Connexion réussie, bienvenue ${data.item.firstName}`, {
-          style: { background: successColor, color: color1 },
+          style: { background: successColor, color: colorWhite },
         });
         setTimeout(() => {
           router.replace(`/compte`);
@@ -56,7 +56,7 @@ const SignIn = (): React.ReactNode => {
       }
     } catch (error) {
       toast(error.message, {
-        style: { background: errorColor, color: color1 },
+        style: { background: errorColor, color: colorWhite },
       });
       setEmail("");
       setPassword("");
