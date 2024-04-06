@@ -25,7 +25,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import { StepSignUpFormProps } from "@/types/UserTypes";
 
 const colors = new VariablesColors();
-const { color4 } = colors;
+const { colorOrange } = colors;
 
 const StepForm = (props: StepSignUpFormProps): React.ReactNode => {
   const stepConfig = {
@@ -169,7 +169,7 @@ const StepForm = (props: StepSignUpFormProps): React.ReactNode => {
         alignItems: "center",
       }}
     >
-      <StepIcon sx={{ fontSize: 50, color: color4 }} />
+      <StepIcon sx={{ fontSize: 50, color: colorOrange }} />
       <Typography variant="h5" fontWeight={700} marginTop={3} gutterBottom>
         {currentConfig.title}
       </Typography>

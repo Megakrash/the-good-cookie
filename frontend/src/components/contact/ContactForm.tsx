@@ -21,7 +21,7 @@ import { VariablesColors } from "@/styles/Variables.colors";
 import { GreyBtnOrangeHover } from "@/styles/MuiButtons";
 
 const colors = new VariablesColors();
-const { color1, successColor, errorColor } = colors;
+const { colorWhite, successColor, errorColor } = colors;
 
 function ContactForm(): React.ReactNode {
   const theme = useTheme();
@@ -73,7 +73,7 @@ function ContactForm(): React.ReactNode {
         toast("Votre formulaire a été soumis avec succès.", {
           style: {
             background: successColor,
-            color: color1,
+            color: colorWhite,
           },
         });
         setFirstName("");
@@ -93,7 +93,7 @@ function ContactForm(): React.ReactNode {
           {
             style: {
               background: errorColor,
-              color: color1,
+              color: colorWhite,
             },
           },
         );

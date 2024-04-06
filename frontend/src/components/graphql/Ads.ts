@@ -7,8 +7,8 @@ export const queryAllAds = gql`
       title
       description
       price
-      createdDate
-      updateDate
+      createdAt
+      updatedAt
       picture {
         id
         filename
@@ -44,8 +44,8 @@ export const queryAdById = gql`
       title
       description
       price
-      createdDate
-      updateDate
+      createdAt
+      updatedAt
       picture {
         id
         filename

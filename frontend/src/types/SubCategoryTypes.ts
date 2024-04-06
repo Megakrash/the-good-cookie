@@ -7,8 +7,8 @@ export type SubCategoryTypes = {
     title: string;
     description: string;
     price: number;
-    createdDate: string;
-    updateDate: string;
+    createdAt: string;
+    updatedAt: string;
     picture: string;
     location: string;
     tags?: {

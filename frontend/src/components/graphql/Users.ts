@@ -55,7 +55,10 @@ export const queryMeContext = gql`
     item: meContext {
       id
       nickName
-      picture
+      picture {
+        id
+        path
+      }
     }
   }
 `;

@@ -3,8 +3,8 @@ export type AdTypes = {
   title: string;
   description: string;
   price: number;
-  createdDate: string;
-  updateDate: string;
+  createdAt: string;
+  updatedAt: string;
   picture: {
     id: number;
     filename: string;

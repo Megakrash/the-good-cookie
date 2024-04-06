@@ -211,9 +211,6 @@ export class AdsWhere {
   @Field(() => Int, { nullable: true })
   radius?: number
 
-  @Field(() => String, { nullable: true })
-  createdDate?: string
-
   @Field(() => [String], { nullable: true })
   tags?: string[]
 }

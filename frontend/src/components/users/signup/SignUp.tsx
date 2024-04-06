@@ -12,7 +12,7 @@ import axios from "axios";
 import { API_URL } from "@/api/configApi";
 
 const colors = new VariablesColors();
-const { color1, color5, errorColor } = colors;
+const { colorWhite, colorLightGrey, errorColor } = colors;
 
 function SignUp(): React.ReactNode {
   // Form
@@ -86,13 +86,13 @@ function SignUp(): React.ReactNode {
         setCurrentStep("welcome");
       } else {
         toast("Erreur pendant la création de votre compte", {
-          style: { background: errorColor, color: color1 },
+          style: { background: errorColor, color: colorWhite },
         });
         setCurrentStep("email");
       }
     } catch (error) {
       toast("Erreur pendant la création de votre compte", {
-        style: { background: errorColor, color: color1 },
+        style: { background: errorColor, color: colorWhite },
       });
       console.error("error", error);
       setCurrentStep("email");
@@ -123,7 +123,7 @@ function SignUp(): React.ReactNode {
             sx={{
               display: "flex",
               flexDirection: "column",
-              backgroundColor: color5,
+              backgroundColor: colorLightGrey,
               height: "89vh",
               padding: "1%",
             }}
