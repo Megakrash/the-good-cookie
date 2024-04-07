@@ -13,6 +13,7 @@ import {
   TextField,
   Box,
   Button,
+  Grid,
 } from "@mui/material";
 import { FilterAlt, FilterAltOff } from "@mui/icons-material";
 import { PATH_IMAGE } from "@/api/configApi";
@@ -78,8 +79,11 @@ function Search(): React.ReactNode {
       variables: {
         where: {
           subCategory: selectedSubCategory,
-          location: { latitude: lat, longitude: long },
-          radius,
+          location: {
+            type: "Point",
+            coordinates: [long, lat],
+          },
+          radius: radius,
           minPrice,
           maxPrice,
           title,
@@ -282,11 +286,20 @@ function Search(): React.ReactNode {
               ? `${searchResult.length} annonce correspond à votre recherche :`
               : `${searchResult.length} annonces correspondent à votre recherche :`}
           </h2>
-          <section className="recent-ads">
+          <Grid
+            container
+            xs={12}
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              gap: "15px",
+            }}
+          >
             {searchResult.map((ads) => (
               <AdCard key={ads.id} ad={ads} />
             ))}
-          </section>
+          </Grid>
         </>
       )}
     </>

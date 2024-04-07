@@ -108,7 +108,7 @@ function AdForm(props: AdFormProps): React.ReactNode {
         price,
         city,
         zipCode,
-        coordinates,
+        location: { type: "Point", coordinates: coordinates },
         subCategory: subCategoryId ? { id: Number(subCategoryId) } : null,
         tags: selectedTags,
         ...(pictureId !== null && { pictureId }),
@@ -151,7 +151,7 @@ function AdForm(props: AdFormProps): React.ReactNode {
       setCoordinates(props.ad.coordinates);
       setCity(props.ad.city);
       setPrice(props.ad.price);
-      setCurentPicture(props.ad.picture.filename);
+      setCurentPicture(props.ad.picture.path);
       setSubCategoryId(props.ad.subCategory ? props.ad.subCategory.id : null);
       const transformedTags = props.ad.tags.map((tag) => ({ id: tag.id }));
       setSelectedTags(transformedTags);
@@ -306,7 +306,7 @@ function AdForm(props: AdFormProps): React.ReactNode {
                   margin: "auto",
                   objectFit: "contain",
                 }}
-                image={`${PATH_IMAGE}/pictures/${props.ad.picture.filename}`}
+                image={`${props.ad.picture.path}`}
               />
               <Button
                 component="label"

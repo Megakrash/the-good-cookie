@@ -8,15 +8,12 @@ import {
   Ctx,
   Authorized,
 } from 'type-graphql'
-import { In, MoreThanOrEqual, LessThanOrEqual, Between, ILike } from 'typeorm'
 import { validate } from 'class-validator'
 import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from '../entities/Ad'
 import { deletePicture } from '../utils/pictureServices/pictureServices'
 import { merge } from '../utils/utils'
 import { MyContext } from '../types/Users.types'
 import { Picture } from '../entities/Picture'
-import { getDistanceFromLatLonInKm } from '../utils/gpsDistance'
-import { AdsQueryWhere } from '../types/Ads.types'
 
 @Resolver(Ad)
 export class AdsResolver {
@@ -113,74 +110,71 @@ export class AdsResolver {
   // GET ALL
   @Query(() => [Ad], { nullable: true })
   async adsGetAll(
-    @Arg('where', { nullable: true }) where?: AdsWhere,
+    @Arg('where', () => AdsWhere, { nullable: true }) where?: AdsWhere,
     @Arg('take', () => Int, { nullable: true }) take?: number,
     @Arg('skip', () => Int, { nullable: true }) skip?: number
   ): Promise<Ad[] | null> {
     try {
-      const queryWhere: AdsQueryWhere = {}
+      // Create a query builder
+      const query = Ad.createQueryBuilder('ad')
 
+      // Join relations
+      query.leftJoinAndSelect('ad.picture', 'picture')
+      query.leftJoinAndSelect('ad.subCategory', 'subCategory')
+      query.leftJoinAndSelect('subCategory.category', 'category')
+      query.leftJoinAndSelect('ad.user', 'user')
+      query.leftJoinAndSelect('user.picture', 'userPicture')
+      query.leftJoinAndSelect('ad.tags', 'tags')
+
+      // Filter by subCategory
       if (where?.subCategory) {
-        queryWhere.subCategory = In(where.subCategory)
-      }
-
-      if (where?.title) {
-        queryWhere.title = ILike(`%${where.title}%`)
-      }
-
-      if (where?.minPrice && where?.maxPrice) {
-        queryWhere.price = Between(
-          Number(where.minPrice),
-          Number(where.maxPrice)
-        )
-      } else {
-        if (where?.minPrice) {
-          queryWhere.price = MoreThanOrEqual(Number(where.minPrice))
-        }
-
-        if (where?.maxPrice) {
-          queryWhere.price = LessThanOrEqual(Number(where.maxPrice))
-        }
-      }
-
-      let ads = await Ad.find({
-        take: take ?? 50,
-        skip,
-        where: queryWhere,
-        relations: {
-          subCategory: {
-            category: true,
-          },
-          tags: true,
-          user: { picture: true },
-          picture: true,
-        },
-        order: {
-          updatedAt: 'DESC',
-        },
-      })
-      if (where?.tags) {
-        const tagIds = where.tags.map((tag) => Number(tag))
-        ads = ads.filter((ad) => ad.tags.some((tag) => tagIds.includes(tag.id)))
-      }
-      if (where?.location && where.radius !== undefined) {
-        const { latitude, longitude } = where.location
-        const { radius } = where
-        ads = ads.filter((ad) => {
-          if (!ad.coordinates || ad.coordinates.length !== 2) {
-            return false
-          }
-
-          const [adLat, adLon] = ad.coordinates
-          const distance = getDistanceFromLatLonInKm(
-            latitude,
-            longitude,
-            adLat,
-            adLon
-          )
-          return distance <= radius
+        query.andWhere('ad.subCategory IN (:...subCategory)', {
+          subCategory: where.subCategory,
         })
       }
+
+      //  Filter by title
+      if (where?.title) {
+        query.andWhere('ad.title ILIKE :title', { title: `%${where.title}%` })
+      }
+
+      // Filter by price
+      if (where?.minPrice && where?.maxPrice) {
+        query.andWhere('ad.price BETWEEN :minPrice AND :maxPrice', {
+          minPrice: where.minPrice,
+          maxPrice: where.maxPrice,
+        })
+      } else {
+        if (where?.minPrice) {
+          query.andWhere('ad.price >= :minPrice', { minPrice: where.minPrice })
+        }
+        if (where?.maxPrice) {
+          query.andWhere('ad.price <= :maxPrice', { maxPrice: where.maxPrice })
+        }
+      }
+
+      // Filter by location
+      if (where?.location && where.radius !== undefined) {
+        query.andWhere(
+          `ST_DWithin(
+            geography(ad.location),
+            geography(ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)),
+            :radius
+        )`,
+          {
+            longitude: where.location.coordinates[0],
+            latitude: where.location.coordinates[1],
+            radius: where.radius * 1000,
+          }
+        )
+      }
+
+      // Pagination & order
+      query.take(take ?? 50).skip(skip ?? 0)
+      query.orderBy('ad.updatedAt', 'DESC')
+
+      // Execute the query
+      const ads = await query.getMany()
 
       return ads
     } catch (errors) {

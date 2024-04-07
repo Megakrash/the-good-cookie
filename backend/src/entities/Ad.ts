@@ -11,13 +11,13 @@ import {
   OneToOne,
 } from 'typeorm'
 import { Length, IsInt, IsNumberString } from 'class-validator'
-import { Field, ID, InputType, ObjectType, Int, Float } from 'type-graphql'
-import { IsCoordinates } from '../utils/Coordinates'
+import { Field, ID, InputType, ObjectType, Int } from 'type-graphql'
 import { SubCategory } from './SubCategory'
 import { Tag } from './Tag'
 import { User } from './User'
 import { Picture } from './Picture'
 import { ObjectId } from './ObjectId'
+import { PointInput, PointType } from './Geolocation'
 
 //-------------------------------
 //--------- Ad Entity -----------
@@ -66,14 +66,17 @@ export class Ad extends PrimaryEntity {
   @Field()
   city!: string
 
-  // Coordinates
-  @Column('simple-array')
-  @IsCoordinates({
-    message:
-      'Les coordonnées doivent être un tableau de deux éléments : latitude et longitude',
+  // Location
+  @Column({
+    type: 'geometry',
+    spatialFeatureType: 'Point',
+    srid: 4326,
   })
-  @Field(() => [Number])
-  coordinates!: number[]
+  @Field(() => PointType)
+  location!: {
+    type: 'Point'
+    coordinates: [number, number]
+  }
 
   // ---------- RELATIONS ----------
 
@@ -121,17 +124,17 @@ export class AdCreateInput {
   @Field()
   price!: number
 
-  @Field({ nullable: true })
-  pictureId?: number
-
   @Field()
   zipCode!: string
 
   @Field()
   city!: string
 
-  @Field(() => [Number])
-  coordinates!: number[]
+  @Field(() => PointInput)
+  location!: PointInput
+
+  @Field({ nullable: true })
+  pictureId?: number
 
   @Field()
   subCategory!: ObjectId
@@ -156,35 +159,22 @@ export class AdUpdateInput {
   price!: number
 
   @Field({ nullable: true })
-  pictureId?: number
-
-  @Field({ nullable: true })
   zipCode!: string
 
   @Field({ nullable: true })
   city!: string
 
-  @Field(() => [Number], { nullable: true })
-  coordinates!: number[]
+  @Field(() => PointInput, { nullable: true })
+  location?: PointInput
+
+  @Field({ nullable: true })
+  pictureId?: number
 
   @Field({ nullable: true })
   subCategory!: ObjectId
 
   @Field(() => [ObjectId], { nullable: true })
   tags!: ObjectId[]
-}
-
-//-------------------------------
-//--------- Ad Location ---------
-//-------------------------------
-
-@InputType()
-export class LocationInput {
-  @Field(() => Float)
-  latitude!: number
-
-  @Field(() => Float)
-  longitude!: number
 }
 
 //-------------------------------
@@ -205,8 +195,8 @@ export class AdsWhere {
   @Field(() => Int, { nullable: true })
   maxPrice?: number
 
-  @Field(() => LocationInput, { nullable: true })
-  location?: LocationInput
+  @Field(() => PointInput, { nullable: true })
+  location?: PointInput
 
   @Field(() => Int, { nullable: true })
   radius?: number

@@ -51,8 +51,8 @@ function GpsAndRadius(props: GpsAndRadiusProps): React.ReactNode {
 
   const handleSuggestionClick = (suggestion: SuggestionType) => {
     setInputValue(suggestion.label);
-    props.setLat(suggestion.coordinates[0]);
-    props.setLong(suggestion.coordinates[1]);
+    props.setLong(suggestion.coordinates[0]);
+    props.setLat(suggestion.coordinates[1]);
     setSuggestions([]);
   };
 

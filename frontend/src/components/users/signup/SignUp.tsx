@@ -36,7 +36,16 @@ function SignUp(): React.ReactNode {
   const formSteps = [
     { step: "email", title: "Votre email", data: email },
     { step: "profil", title: "Votre profil", data: profil },
-    { step: "gender", title: "Votre civilité", data: gender },
+    {
+      step: "gender",
+      title: "Votre civilité",
+      data:
+        gender === "MAN"
+          ? "Monsieur"
+          : gender === "WOMAN"
+            ? "Madame"
+            : "Indéterminée",
+    },
     { step: "firstName", title: "Votre prénom", data: firstName },
     { step: "lastName", title: "Votre nom", data: lastName },
     { step: "nickName", title: "Votre pseudo", data: nickName },
