@@ -103,7 +103,7 @@ export class CategoriesResolver {
         createdBy: true,
         updatedBy: true,
       },
-      order: { name: 'ASC' },
+      order: { id: 'ASC' },
     })
     return categories
   }

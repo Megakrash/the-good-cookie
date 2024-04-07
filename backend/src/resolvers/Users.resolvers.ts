@@ -34,14 +34,18 @@ export class UsersResolver {
   async userCreate(
     @Arg('data', () => UserCreateInput) data: UserCreateInput
   ): Promise<User> {
+    // Check if user already exists
     const existingUser = await User.findOne({ where: { email: data.email } })
     if (existingUser) {
       throw new Error('User already exists')
     }
 
+    // Create new user
     const newUser = new User()
+    // Assign data to new user
     Object.assign(newUser, data)
 
+    // Check if pictureId exists & assign picture to user
     if (data.pictureId) {
       const picture = await Picture.findOne({ where: { id: data.pictureId } })
       if (!picture) {
@@ -50,12 +54,14 @@ export class UsersResolver {
       newUser.picture = picture
     }
 
+    // Hash password
     try {
       newUser.hashedPassword = await argon2.hash(data.password)
     } catch (error) {
       throw new Error(`Error hashing password: ${error}`)
     }
 
+    // Validate and save new user
     const errors = await validate(newUser)
     if (errors.length === 0) {
       await newUser.save()
