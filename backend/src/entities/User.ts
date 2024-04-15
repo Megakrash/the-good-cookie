@@ -26,11 +26,13 @@ import {
 } from 'type-graphql'
 import { Ad } from './Ad'
 import { ObjectId } from './ObjectId'
-import { IsCoordinates } from '../utils/Coordinates'
 import { Picture } from './Picture'
 import { Gender, Profil, Role } from '../types/Users.types'
+import { PointInput, PointType } from './Geolocation'
 
-// Enums type-graphql
+//-------------------------------
+//----- Enums type-graphql ------
+//-------------------------------
 registerEnumType(Role, {
   name: 'Role',
 })
@@ -124,15 +126,18 @@ export class User extends BaseEntity {
   @Field({ nullable: true })
   city!: string
 
-  // Coordinates
-  @Column('simple-array', { nullable: true })
-  @IsOptional()
-  @IsCoordinates({
-    message:
-      'Les coordonnées doivent être un tableau de deux éléments : latitude et longitude',
+  // Location
+  @Column({
+    type: 'geometry',
+    spatialFeatureType: 'Point',
+    srid: 4326,
+    nullable: true,
   })
-  @Field(() => [Number], { nullable: true })
-  coordinates!: number[]
+  @Field(() => PointType, { nullable: true })
+  location?: {
+    type: 'Point'
+    coordinates: [number, number]
+  }
 
   // Phone number
   @Column({ length: 10, nullable: true })
@@ -243,8 +248,8 @@ export class UserCreateInput {
   @Field({ nullable: true })
   city?: string
 
-  @Field(() => [Number], { nullable: true })
-  coordinates?: number[]
+  @Field(() => PointInput, { nullable: true })
+  location?: PointInput
 
   @Field({ nullable: true })
   phoneNumber!: string
@@ -282,8 +287,8 @@ export class UserUpdateInput {
   @Field({ nullable: true })
   city!: string
 
-  @Field(() => [Number], { nullable: true })
-  coordinates!: number[]
+  @Field(() => PointInput)
+  location?: PointInput
 
   @Field({ nullable: true })
   phoneNumber!: string
