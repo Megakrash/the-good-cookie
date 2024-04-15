@@ -31,7 +31,7 @@ jobs:
   build-push-frontend:
     runs-on: ubuntu-latest
     needs: paths
-    if: needs.paths.outputs.frontend == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: needs.paths.outputs.frontend == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/dev'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -60,7 +60,7 @@ jobs:
   build-push-backend:
     runs-on: ubuntu-latest
     needs: paths
-    if: needs.paths.outputs.backend == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: needs.paths.outputs.backend == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/dev'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
