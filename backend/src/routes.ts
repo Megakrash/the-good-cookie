@@ -29,8 +29,8 @@ export function expressMiddlewares(app: Express) {
       )
       res.json(response.data)
     } catch (error) {
-      console.error("Erreur lors de la requête à l'API:", error)
-      res.status(500).send('Erreur interne du serveur')
+      console.error('Error API request:', error)
+      res.status(500).send('Server error.')
     }
   })
 

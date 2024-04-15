@@ -30,7 +30,9 @@ import { Picture } from './Picture'
 import { Gender, Profil, Role } from '../types/Users.types'
 import { PointInput, PointType } from './Geolocation'
 
-// Enums type-graphql
+//-------------------------------
+//----- Enums type-graphql ------
+//-------------------------------
 registerEnumType(Role, {
   name: 'Role',
 })

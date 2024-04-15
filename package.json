@@ -1,6 +1,6 @@
 {
   "name": "the-good-cookie",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Solo project carried out as part of the training at the Wild Code School for the preparation of the title \"Application developer designer\".",
   "scripts": {
     "lint": "npm --prefix ./frontend run lint && npm --prefix ./backend run lint",
