@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import Cookies from 'cookies'
 import { AuthChecker } from 'type-graphql'
-import { MyContext } from './types/userContext'
+import { MyContext } from './types/Users.types'
 import { User } from './entities/User'
 
 export const customAuthChecker: AuthChecker<MyContext> = async (
