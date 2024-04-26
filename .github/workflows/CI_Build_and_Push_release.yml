@@ -17,9 +17,12 @@ jobs:
         run: |
           # Get the latest tag that matches 'v*'
           LATEST_TAG=$(git tag --list 'v*' --sort=-v:refname | head -n 1)
+          if [[ -z "$LATEST_TAG" ]]; then
+            LATEST_TAG="v0.0.0"
+          fi
           echo "Latest tag is $LATEST_TAG"
           # Increment the patch version. Assumes tags are in 'v0.0.0' format
-          NEW_TAG=$(echo $LATEST_TAG | awk -F. '{print $1 "." $2 "." $3+1}')
+          NEW_TAG=$(echo $LATEST_TAG | awk -F. '{OFS="."; $3+=1; print}')
           echo "New tag will be $NEW_TAG"
           echo "::set-output name=new-tag::$NEW_TAG"
 
