@@ -3,6 +3,10 @@ name: Build and Push Docker Images
 on:
   create:
 
+permissions:
+  contents: write
+  issues: write
+
 jobs:
   setup-version:
     runs-on: ubuntu-latest
