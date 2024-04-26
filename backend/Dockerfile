@@ -27,7 +27,8 @@ RUN npm run build
 # this step launch the app in a prod mode, with only js files and useful deps
 FROM node:18.18.2-alpine3.18 AS prod
 WORKDIR /app
-COPY package.json package.json
-RUN npm i --omit=dev
-COPY --from=build /app/dist dist 
-CMD cd dist && node index.js
+COPY --from=deps /app/node_modules node_modules
+COPY --from=build /app/dist .
+COPY public public
+RUN npm install --only=production
+CMD node index.js
