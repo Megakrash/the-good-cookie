@@ -52,7 +52,9 @@ jobs:
           file: ./frontend/Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_RELEASE_FRONTEND_REPO }}:${{ needs.setup-version.outputs.new-tag }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_RELEASE_FRONTEND_REPO }}:${{ needs.setup-version.outputs.new-tag }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_RELEASE_FRONTEND_REPO }}:latest
       - name: Build and push Docker image for backend
         uses: docker/build-push-action@v5
         with:
@@ -60,7 +62,9 @@ jobs:
           file: ./backend/Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_RELEASE_BACKEND_REPO }}:${{ needs.setup-version.outputs.new-tag }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_RELEASE_BACKEND_REPO }}:${{ needs.setup-version.outputs.new-tag }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_RELEASE_BACKEND_REPO }}:latest
       - name: Push new Git tag
         run: |
           git config --global user.email ${{ secrets.MY_GITHUB_EMAIL }}
