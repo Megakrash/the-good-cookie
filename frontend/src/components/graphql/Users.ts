@@ -5,7 +5,6 @@ export const mutationCreateUser = gql`
     item: userCreate(data: $data) {
       id
       nickName
-      registrationDate
     }
   }
 `;
@@ -56,7 +55,10 @@ export const queryMeContext = gql`
     item: meContext {
       id
       nickName
-      picture
+      picture {
+        id
+        path
+      }
     }
   }
 `;

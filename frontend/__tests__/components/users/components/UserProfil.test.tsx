@@ -19,12 +19,12 @@ describe("UserProfil", () => {
   it("sets the profile to Pro when the corresponding button is clicked", () => {
     const proButton = screen.getByLabelText("Je suis un professionnel");
     fireEvent.click(proButton);
-    expect(setProfilMock).toHaveBeenCalledWith("Pro");
+    expect(setProfilMock).toHaveBeenCalledWith("PRO");
   });
 
   it("sets the profile to Particulier when the corresponding button is clicked", () => {
     const particularButton = screen.getByLabelText("Je suis un particulier");
     fireEvent.click(particularButton);
-    expect(setProfilMock).toHaveBeenCalledWith("Particulier");
+    expect(setProfilMock).toHaveBeenCalledWith("INDIVIDUAL");
   });
 });

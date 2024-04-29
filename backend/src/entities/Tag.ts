@@ -1,5 +1,5 @@
+import { PrimaryEntity } from './PrimaryEntity'
 import {
-  BaseEntity,
   Column,
   Entity,
   PrimaryGeneratedColumn,
@@ -12,7 +12,7 @@ import { Ad } from './Ad'
 
 @Entity()
 @ObjectType()
-export class Tag extends BaseEntity {
+export class Tag extends PrimaryEntity {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
   id!: number

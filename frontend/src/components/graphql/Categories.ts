@@ -21,7 +21,10 @@ export const queryCatByIdAndSub = gql`
       subCategories {
         id
         name
-        picture
+        picture {
+          id
+          path
+        }
       }
     }
   }

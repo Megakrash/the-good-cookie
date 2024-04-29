@@ -6,13 +6,6 @@ import 'reflect-metadata'
 import { dataSource } from './datasource'
 
 //-----------------------------------------
-// -----------------PICTURES---------------
-//-----------------------------------------
-
-import { uploadPicture } from './utils/pictureServices/multer'
-import { createImage } from './utils/pictureServices/pictureServices'
-
-//-----------------------------------------
 // ----------GRAPHQL / APOLLO SERVER-------
 //-----------------------------------------
 
@@ -25,14 +18,11 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 // -----------------EXPRESS----------------
 //-----------------------------------------
 
-import express, { Request, Response } from 'express'
+import { expressMiddlewares } from './routes'
+import express from 'express'
 import http from 'http'
 import cors from 'cors'
 import path from 'path'
-import axios from 'axios'
-// Send contact email
-import { verifyRecaptchaToken } from './utils/reCaptcha'
-import { sendContactEmail } from './utils/mailServices/contactEmail'
 
 //-----------------------------------------
 // -----------------APOLLO SERVER-----------
@@ -40,7 +30,7 @@ import { sendContactEmail } from './utils/mailServices/contactEmail'
 
 const app = express()
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true,
   optionsSuccessStatus: 200,
 }
@@ -60,6 +50,7 @@ async function start() {
 
   await dataSource.initialize()
   await server.start()
+  expressMiddlewares(app)
   app.use(
     '/',
     express.json({ limit: '50mb' }),
@@ -78,36 +69,3 @@ async function start() {
 }
 
 start()
-
-//-----------------------------------------
-// -----------EXPRESS MIDDLEWARES-----------
-//-----------------------------------------
-
-// Upload picture
-app.post('/picture', uploadPicture.single('file'), async (req, res) => {
-  if (req.file) {
-    try {
-      const picture = await createImage(req.file.filename)
-      res.json(picture)
-    } catch (error) {
-      res.status(500).send('Error saving picture')
-    }
-  } else {
-    res.status(400).send('No file was uploaded.')
-  }
-})
-
-// Api search adress.gouv
-app.get('/search-address', async (req: Request, res: Response) => {
-  try {
-    const query = req.query.q
-    const response = await axios.get(
-      `https://api-adresse.data.gouv.fr/search/?q=city=${query}&limit=5`
-    )
-    res.json(response.data)
-  } catch (error) {
-    console.error("Erreur lors de la requête à l'API:", error)
-    res.status(500).send('Erreur interne du serveur')
-  }
-})
-app.post('/sendcontactemail', verifyRecaptchaToken, sendContactEmail)

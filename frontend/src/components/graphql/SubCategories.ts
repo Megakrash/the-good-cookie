@@ -10,8 +10,8 @@ export const querySubCatAndAds = gql`
         title
         description
         price
-        createdDate
-        updateDate
+        createdAt
+        updatedAt
         picture {
           id
           filename
