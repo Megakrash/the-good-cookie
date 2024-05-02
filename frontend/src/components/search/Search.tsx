@@ -14,29 +14,31 @@ import {
   Box,
   Button,
   Grid,
+  useTheme,
 } from "@mui/material";
 import { FilterAlt, FilterAltOff } from "@mui/icons-material";
+import toast, { Toaster } from "react-hot-toast";
 import { PATH_IMAGE } from "@/api/configApi";
 import { queryAllTags } from "../graphql/Tags";
 import { queryAllAds } from "../graphql/Ads";
 import { queryAllCatAndSub } from "../graphql/Categories";
 import GpsAndRadius from "./components/GpsAndRadius";
-import AdCard from "../ads/AdCard";
+import { VariablesColors } from "@/styles/Variables.colors";
 
-function Search(): React.ReactNode {
+const colors = new VariablesColors();
+const { colorLightGrey, errorColor, colorWhite } = colors;
+
+const Search = (): React.ReactNode => {
+  const theme = useTheme();
+  //-------------------------------------
   // Get Categories&SubCategories & Tags
-  const {
-    data: dataCategories,
-    error: errorCategories,
-    loading: loadindCategories,
-  } = useQuery<{ items: CategoriesTypes }>(queryAllCatAndSub);
+  //-------------------------------------
+  const { data: dataCategories } = useQuery<{ items: CategoriesTypes }>(
+    queryAllCatAndSub,
+  );
   const categories = dataCategories ? dataCategories.items : [];
 
-  const {
-    data: dataTags,
-    error: errorTags,
-    loading: loadingTags,
-  } = useQuery<{ items: TagsTypes }>(queryAllTags);
+  const { data: dataTags } = useQuery<{ items: TagsTypes }>(queryAllTags);
   const tags = dataTags ? dataTags.items : [];
 
   //-----------------
@@ -66,15 +68,26 @@ function Search(): React.ReactNode {
   // Title
   const [title, setTitle] = useState<string>();
 
-  //-----------------
+  //------------------
   // ----- Search-----
-  //-----------------
+  //------------------
 
   const [doSearch, { data: dataSearch, loading: loadingSearch }] =
     useLazyQuery<{ items: AdsTypes }>(queryAllAds);
-  const searchResult = dataSearch ? dataSearch.items : [];
-  const handleSearchClick = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  // const searchResult = dataSearch ? dataSearch.items : [];
+  const handleSearchClick = () => {
+    if (!selectedSubCategory && !lat && !long) {
+      toast(
+        `Veuillez indiquer une catégorie et une localisation pour effectuer une recherche.`,
+        {
+          style: {
+            background: errorColor,
+            color: colorWhite,
+          },
+        },
+      );
+      return;
+    }
     doSearch({
       variables: {
         where: {
@@ -109,201 +122,227 @@ function Search(): React.ReactNode {
   };
 
   return (
-    <>
-      <Box
-        className="search"
+    <Grid
+      container
+      xs={12}
+      sx={{
+        display: "flex",
+        flexDirection: !showQueries ? "row" : "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "20px",
+        minHeight: "270px",
+        padding: "1%",
+        backgroundImage: `url(${PATH_IMAGE}/general/search.png)`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        [theme.breakpoints.down("sm")]: {
+          flexDirection: "column",
+        },
+      }}
+    >
+      <Toaster />
+      <Grid
+        container
+        xs={10}
+        sm={!showQueries ? 5 : 11}
+        md={!showQueries ? 4 : 10}
+        lg={!showQueries ? 4 : 8}
         sx={{
-          backgroundImage: `url(${PATH_IMAGE}/general/search.png)`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: !showQueries ? "right" : "center",
+          alignItems: "center",
+          gap: "20px",
+          [theme.breakpoints.down("sm")]: {
+            flexDirection: "column",
+          },
         }}
       >
-        {categories && tags && (
-          <Box
-            className="search_box"
-            component="form"
-            autoComplete="off"
-            onSubmit={handleSearchClick}
-          >
-            <Box className="search_box_form">
-              <Box className="search_box_form_miniBox">
-                <FormControl fullWidth>
-                  <InputLabel size="small" id="subcategory-select-label">
-                    Catégorie*
-                  </InputLabel>
-                  <Select
-                    className="search_input"
-                    labelId="subcategory-select-label"
-                    id="subcategory-select"
-                    size="small"
-                    value={selectedSubCategory || ""}
-                    onChange={handleChangeCategory}
-                    label="Sélectionnez une sous-catégorie"
-                    required
+        <Grid
+          container
+          xs={12}
+          sm={!showQueries ? 10 : 5}
+          md={!showQueries ? 10 : 5}
+          lg={showQueries ? 5 : 11}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "15px",
+          }}
+        >
+          <FormControl fullWidth>
+            <InputLabel size="small" id="subcategory-select-label">
+              Catégorie*
+            </InputLabel>
+            <Select
+              labelId="subcategory-select-label"
+              id="subcategory-select"
+              size="small"
+              sx={{ backgroundColor: colorLightGrey }}
+              value={selectedSubCategory || ""}
+              onChange={handleChangeCategory}
+              label="Sélectionnez une sous-catégorie"
+              required
+            >
+              <MenuItem value="" disabled>
+                Sélectionnez une catégorie
+              </MenuItem>
+              {categories.map((category) => [
+                <MenuItem key={category.id} value="" disabled>
+                  {category.name}
+                </MenuItem>,
+                ...category.subCategories.map((subCategory) => (
+                  <MenuItem
+                    key={`subcategory-${category.id}-${subCategory.id}`}
+                    value={subCategory.id}
+                    style={{ marginLeft: "20px" }}
                   >
-                    <MenuItem value="" disabled>
-                      Sélectionnez une catégorie
-                    </MenuItem>
-                    {categories.map((category) => [
-                      <MenuItem key={category.id} value="" disabled>
-                        {category.name}
-                      </MenuItem>,
-                      ...category.subCategories.map((subCategory) => (
-                        <MenuItem
-                          key={`subcategory-${category.id}-${subCategory.id}`}
-                          value={subCategory.id}
-                          style={{ marginLeft: "20px" }}
-                        >
-                          {subCategory.name}
-                        </MenuItem>
-                      )),
-                    ])}
-                  </Select>
-                </FormControl>
-                <GpsAndRadius
-                  setLat={setLat}
-                  setLong={setLong}
-                  setRadius={setRadius}
-                  radius={radius}
-                />
-              </Box>
-              {showQueries && (
-                <>
-                  <Box className="search_box_form_miniBox">
-                    <TextField
-                      className="search_input"
-                      type="number"
-                      id="minPrice"
-                      size="small"
-                      label="Prix minimum €"
-                      variant="outlined"
-                      value={minPrice || ""}
-                      onChange={(e) =>
-                        setMinPrice(
-                          e.target.value === ""
-                            ? undefined
-                            : Number(e.target.value),
-                        )
-                      }
-                    />
-                    <TextField
-                      className="search_input"
-                      id="title"
-                      size="small"
-                      label="Quoi ?"
-                      variant="outlined"
-                      value={title || ""}
-                      onChange={(e) => setTitle(e.target.value)}
-                    />
-                  </Box>
-                  <Box className="search_box_form_miniBox">
-                    <TextField
-                      className="search_input"
-                      type="number"
-                      id="maxPrice"
-                      size="small"
-                      label="Prix maximum €"
-                      variant="outlined"
-                      value={maxPrice || ""}
-                      onChange={(e) =>
-                        setMaxPrice(
-                          e.target.value === ""
-                            ? undefined
-                            : Number(e.target.value),
-                        )
-                      }
-                    />
-                    <FormControl>
-                      <InputLabel size="small" id="tags">
-                        Tag(s)
-                      </InputLabel>
-                      <Select
-                        className="search_input"
-                        labelId="tags"
-                        id="select-tags"
-                        size="small"
-                        multiple
-                        value={selectedTags}
-                        onChange={handleChange}
-                        input={<OutlinedInput label="Tag" />}
-                        renderValue={(selected) =>
-                          selected
-                            .map(
-                              (id) =>
-                                tags.find((tag) => tag.id.toString() === id)
-                                  ?.name || "",
-                            )
-                            .join(", ")
-                        }
-                      >
-                        {tags.map((tag) => (
-                          <MenuItem key={tag.id} value={tag.id}>
-                            {tag.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Box>
-                </>
-              )}
-            </Box>
-            <Box className="search_box_buttons">
-              <Button
-                variant="contained"
-                size="large"
-                type="submit"
-                disabled={loadingSearch}
-              >
-                Rechercher
-              </Button>
-              <Box className="search_box_buttons_filter">
-                <Button
-                  variant="contained"
-                  size="small"
-                  startIcon={!showQueries ? <FilterAlt /> : <FilterAltOff />}
-                  type="button"
-                  onClick={() => setShowQueries(!showQueries)}
-                >
-                  Filtres
-                </Button>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  type="button"
-                  onClick={resetForm}
-                >
-                  Reset
-                </Button>
-              </Box>
-            </Box>
-          </Box>
-        )}
-      </Box>
-      {searchResult.length >= 1 && (
-        <>
-          <h2>
-            {searchResult.length === 1
-              ? `${searchResult.length} annonce correspond à votre recherche :`
-              : `${searchResult.length} annonces correspondent à votre recherche :`}
-          </h2>
+                    {subCategory.name}
+                  </MenuItem>
+                )),
+              ])}
+            </Select>
+          </FormControl>
+          <GpsAndRadius
+            setLat={setLat}
+            setLong={setLong}
+            setRadius={setRadius}
+            radius={radius}
+          />
+        </Grid>
+        {showQueries && (
           <Grid
             container
             xs={12}
+            sm={5}
+            md={5}
+            lg={5}
             sx={{
               display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
+              flexDirection: "column",
               gap: "15px",
             }}
           >
-            {searchResult.map((ads) => (
-              <AdCard key={ads.id} ad={ads} />
-            ))}
+            <TextField
+              fullWidth
+              type="number"
+              id="minPrice"
+              size="small"
+              label="Prix minimum €"
+              sx={{ backgroundColor: colorLightGrey, borderRadius: "5px" }}
+              variant="outlined"
+              value={minPrice || ""}
+              onChange={(e) =>
+                setMinPrice(
+                  e.target.value === "" ? undefined : Number(e.target.value),
+                )
+              }
+            />
+            <TextField
+              fullWidth
+              id="title"
+              size="small"
+              label="Quoi ?"
+              sx={{ backgroundColor: colorLightGrey, borderRadius: "5px" }}
+              variant="outlined"
+              value={title || ""}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <TextField
+              type="number"
+              id="maxPrice"
+              size="small"
+              label="Prix maximum €"
+              variant="outlined"
+              sx={{ backgroundColor: colorLightGrey, borderRadius: "5px" }}
+              value={maxPrice || ""}
+              onChange={(e) =>
+                setMaxPrice(
+                  e.target.value === "" ? undefined : Number(e.target.value),
+                )
+              }
+            />
+            <FormControl>
+              <InputLabel size="small" id="tags">
+                Tag(s)
+              </InputLabel>
+              <Select
+                labelId="tags"
+                id="select-tags"
+                size="small"
+                sx={{ backgroundColor: colorLightGrey }}
+                multiple
+                value={selectedTags}
+                onChange={handleChange}
+                input={<OutlinedInput label="Tag" />}
+                renderValue={(selected) =>
+                  selected
+                    .map(
+                      (id) =>
+                        tags.find((tag) => tag.id.toString() === id)?.name ||
+                        "",
+                    )
+                    .join(", ")
+                }
+              >
+                {tags.map((tag) => (
+                  <MenuItem key={tag.id} value={tag.id}>
+                    {tag.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
-        </>
-      )}
-    </>
+        )}
+      </Grid>
+      <Grid
+        container
+        xs={10}
+        sm={5}
+        md={4}
+        lg={3}
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: !showQueries ? "left" : "center",
+          gap: "20px",
+          [theme.breakpoints.down("sm")]: {
+            justifyContent: "center",
+          },
+        }}
+      >
+        <Button
+          variant="contained"
+          size="large"
+          type="button"
+          disabled={loadingSearch}
+          onClick={handleSearchClick}
+        >
+          Rechercher
+        </Button>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <Button
+            variant="contained"
+            size="small"
+            startIcon={!showQueries ? <FilterAlt /> : <FilterAltOff />}
+            type="button"
+            onClick={() => setShowQueries(!showQueries)}
+          >
+            Filtres
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            type="button"
+            onClick={resetForm}
+          >
+            Reset
+          </Button>
+        </Box>
+      </Grid>
+    </Grid>
   );
-}
+};
 
 export default Search;

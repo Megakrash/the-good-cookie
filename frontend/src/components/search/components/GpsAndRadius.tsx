@@ -11,6 +11,10 @@ import {
 } from "@mui/material";
 import { API_URL } from "@/api/configApi";
 import { FeatureType, SuggestionType } from "@/types/GpsTypes";
+import { VariablesColors } from "@/styles/Variables.colors";
+
+const colors = new VariablesColors();
+const { colorLightGrey } = colors;
 
 type GpsAndRadiusProps = {
   setLat: (lat: number) => void;
@@ -64,12 +68,16 @@ function GpsAndRadius(props: GpsAndRadiusProps): React.ReactNode {
     <Box
       sx={{
         width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
       <TextField
-        className="search_input"
+        fullWidth
         id="location"
         size="small"
+        sx={{ backgroundColor: colorLightGrey, borderRadius: "5px" }}
         label="Où ? (CP ou ville)"
         variant="outlined"
         value={inputValue}
