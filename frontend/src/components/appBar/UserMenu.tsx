@@ -66,7 +66,7 @@ const UserMenu = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 0 }}>
+    <Box>
       <Tooltip title="Ouvrir le menu du profil">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
           <Avatar
@@ -81,7 +81,7 @@ const UserMenu = () => {
       </Tooltip>
 
       <Menu
-        sx={{ mt: "45px" }}
+        sx={{ mt: "50px" }}
         id="menu-appbar"
         anchorEl={anchorElUser}
         anchorOrigin={{
