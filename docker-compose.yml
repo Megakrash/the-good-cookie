@@ -8,14 +8,14 @@ services:
       - 5000:5000
     volumes:
       - ./backend/src/:/app/src/
-      - assets:/app/public
+      - ./backend/public:/app/public
     env_file: ./backend/.env
     networks:
       - thegoodcookie-network
     depends_on:
       - postgres
   postgres:
-    image: postgres
+    image: postgis/postgis:latest
     env_file: ./backend/.env
     volumes:
       - postgres-data:/var/lib/postgresql/data

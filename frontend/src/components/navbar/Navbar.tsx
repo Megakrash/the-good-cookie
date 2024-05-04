@@ -1,11 +1,24 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { AppBar, Box, Button, ButtonGroup } from "@mui/material";
+import { AppBar, Box, Button, ButtonGroup, Grid } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import Link from "next/link";
 import { CategoriesTypes } from "@/types/CategoryTypes";
 import { useQuery } from "@apollo/client";
 import { queryAllCatAndSub } from "../graphql/Categories";
+import { VariablesColors } from "@/styles/Variables.colors";
+import { dark } from "@mui/material/styles/createPalette";
+import { DarkModeOutlined } from "@mui/icons-material";
+
+const colors = new VariablesColors();
+const {
+  colorOrange,
+  colorDarkOrange,
+  colorWhite,
+  colorGrey,
+  colorLightOrange,
+  colorDarkGrey,
+} = colors;
 
 function Navbar(): React.ReactNode {
   const { data } = useQuery<{ items: CategoriesTypes }>(queryAllCatAndSub);
@@ -32,15 +45,28 @@ function Navbar(): React.ReactNode {
     currentCategory && (isCategoryPage || isSubCategoryPage);
 
   return (
-    <Box sx={{ position: "sticky", top: -1, zIndex: 1100, marginTop: "-1%" }}>
-      <AppBar
+    <Box
+      sx={{
+        position: "sticky",
+        top: -1,
+        zIndex: 1100,
+        marginTop: "-1%",
+      }}
+    >
+      <Grid
+        container
+        item
+        xs={12}
         sx={{
-          height: "40px",
-          width: "100%",
-          marginTop: "5px",
+          display: "flex",
+          flexDirection: "row",
           alignItems: "center",
+          justifyContent: "center",
+          height: "40px",
+          marginTop: "5px",
+          backgroundColor: colorOrange,
         }}
-        position="sticky"
+        // position="sticky"
       >
         <ButtonGroup
           disableElevation
@@ -48,7 +74,7 @@ function Navbar(): React.ReactNode {
           aria-label="Disabled elevation buttons"
         >
           <Link href="/">
-            <Button sx={{ height: "40px" }}>
+            <Button sx={{ height: "40px", backgroundColor: colorOrange }}>
               <HomeIcon />
             </Button>
           </Link>
@@ -61,8 +87,9 @@ function Navbar(): React.ReactNode {
                       height: "40px",
                       backgroundColor:
                         currentCategory && currentCategory.id === category.id
-                          ? "primary.dark"
-                          : null,
+                          ? colorLightOrange
+                          : colorOrange,
+                      "&:hover": { fontWeight: "bold" },
                     }}
                   >
                     {category.name}
@@ -72,13 +99,14 @@ function Navbar(): React.ReactNode {
             </>
           )}
         </ButtonGroup>
-      </AppBar>
+      </Grid>
       {showSubCategories && currentCategory.subCategories && (
         <AppBar
           sx={{
             height: "40px",
             width: "100%",
             alignItems: "center",
+            backgroundColor: colorLightOrange,
           }}
           position="sticky"
           color="secondary"
@@ -98,13 +126,17 @@ function Navbar(): React.ReactNode {
                   variant="text"
                   sx={{
                     height: "40px",
-                    color: "white",
-                    backgroundColor:
+                    color: colorDarkGrey,
+                    fontWeight:
                       isSubCategoryPage && subCat.id.toString() === currentId
-                        ? "secondary.dark"
+                        ? "bold"
                         : null,
+                    // backgroundColor:
+                    //   isSubCategoryPage && subCat.id.toString() === currentId
+                    //     ? "secondary.dark"
+                    //     : null,
                     "&:hover": {
-                      backgroundColor: (theme) => theme.palette.secondary.light,
+                      backgroundColor: colorDarkOrange,
                     },
                   }}
                 >

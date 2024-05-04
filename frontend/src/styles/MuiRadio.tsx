@@ -18,7 +18,8 @@ import SelfImprovementIcon from "@mui/icons-material/SelfImprovement";
 import { VariablesColors } from "./Variables.colors";
 
 const colors = new VariablesColors();
-const { color5, color2, color1, color4, successColor } = colors;
+const { colorLightGrey, colorDarkGrey, colorWhite, colorOrange, successColor } =
+  colors;
 
 const iconList = {
   pro: EngineeringIcon,
@@ -38,13 +39,13 @@ interface CustomRadioButtonProps
 export const CustomRadioButton = (props: CustomRadioButtonProps) => {
   const CustomRadio = styled(Radio)<RadioProps>(() => ({
     "&.MuiRadio-root": {
-      color: color5,
+      color: colorLightGrey,
       "&:hover": {
         backgroundColor: "transparent",
       },
     },
     "&.Mui-checked": {
-      color: color4,
+      color: colorOrange,
     },
     "& .MuiSvgIcon-root": {
       boxShadow: "inset 1px 1px 2px rgba(0,0,0,0.3)",
@@ -68,8 +69,8 @@ export const CustomRadioButton = (props: CustomRadioButtonProps) => {
         alignItems: "center",
         width: "100%",
         borderRadius: "10px",
-        backgroundColor: color5,
-        color: color2,
+        backgroundColor: colorLightGrey,
+        color: colorDarkGrey,
         fontWeight: "600",
         maxWidth: "fit-content",
         minWidth: "160px",
@@ -83,7 +84,7 @@ export const CustomRadioButton = (props: CustomRadioButtonProps) => {
       <StepIcon
         sx={{
           fontSize: 40,
-          color: color4,
+          color: colorOrange,
         }}
       />
       <FormControlLabel

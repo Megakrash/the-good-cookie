@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useRef, useState } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
+import { RECAPTCHA_SITE_KEY } from "@/api/configApi";
 import { Grid, Typography } from "@mui/material";
 import { StepFormButton } from "@/styles/MuiButtons";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -6,7 +8,7 @@ import { VariablesColors } from "@/styles/Variables.colors";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const colors = new VariablesColors();
-const { color3 } = colors;
+const { colorOrange } = colors;
 
 type StepSubmitProps = {
   onSubmit: () => void;
@@ -14,6 +16,12 @@ type StepSubmitProps = {
 };
 
 const StepSubmit = (props: StepSubmitProps): React.ReactNode => {
+  // ReCaptcha
+  const [recaptcha, setRecaptcha] = useState(false);
+  const captchaRef = useRef(null);
+  const handleCaptchaChange = (value: string | null) => {
+    setRecaptcha(!!value);
+  };
   return (
     <Grid
       container
@@ -32,15 +40,21 @@ const StepSubmit = (props: StepSubmitProps): React.ReactNode => {
         gap: "1rem",
       }}
     >
-      <CheckCircleIcon sx={{ fontSize: 50, color: color3 }} />
+      <CheckCircleIcon sx={{ fontSize: 50, color: colorOrange }} />
       <Typography variant="h5" fontWeight={700} gutterBottom>
         Tout est ok ?
       </Typography>
       <Typography variant="subtitle2" gutterBottom>
         {`Si c'est bon pour vous, c'est bon pour nous !`}
       </Typography>
+      <ReCAPTCHA
+        sitekey={RECAPTCHA_SITE_KEY}
+        ref={captchaRef}
+        onChange={handleCaptchaChange}
+      />
       <StepFormButton
         sx={{ width: "100% ", marginTop: "10px" }}
+        disabled={!recaptcha || props.loading}
         onClick={props.onSubmit}
       >
         {props.loading ? (

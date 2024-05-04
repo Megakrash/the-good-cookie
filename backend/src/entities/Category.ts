@@ -1,17 +1,16 @@
-import {
-  BaseEntity,
-  OneToMany,
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm'
+import { PrimaryEntity } from './PrimaryEntity'
+import { OneToMany, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 import { Field, ID, InputType, ObjectType } from 'type-graphql'
 import { SubCategory } from './SubCategory'
 import { ObjectId } from './ObjectId'
 
+//-------------------------------
+//------ Category Entity --------
+//-------------------------------
+
 @Entity()
 @ObjectType()
-export class Category extends BaseEntity {
+export class Category extends PrimaryEntity {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
   id!: number
@@ -25,11 +24,19 @@ export class Category extends BaseEntity {
   subCategories!: SubCategory[]
 }
 
+//-------------------------------
+//------ Category Input ---------
+//-------------------------------
+
 @InputType()
 export class CategoryCreateInput {
   @Field()
   name!: string
 }
+
+//-------------------------------
+//------ Category Update --------
+//-------------------------------
 
 @InputType()
 export class CategoryUpdateInput {

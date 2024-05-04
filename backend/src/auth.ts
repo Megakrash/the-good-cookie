@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import Cookies from 'cookies'
 import { AuthChecker } from 'type-graphql'
-import { MyContext } from './types/userContext'
+import { MyContext } from './types/Users.types'
 import { User } from './entities/User'
 
 export const customAuthChecker: AuthChecker<MyContext> = async (
@@ -24,12 +24,7 @@ export const customAuthChecker: AuthChecker<MyContext> = async (
         relations: { picture: true },
       })
       if (user) {
-        context.user = {
-          id: user.id,
-          nickName: user.nickName,
-          role: user.role,
-          picture: user.picture?.filename || '',
-        }
+        context.user = user
         return roles.length === 0 || roles.includes(user.role)
       }
       console.error('User not found')
