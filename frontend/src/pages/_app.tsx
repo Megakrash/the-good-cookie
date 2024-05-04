@@ -11,11 +11,15 @@ import dynamic from "next/dynamic";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Box, CircularProgress, CssBaseline, Typography } from "@mui/material";
 import { queryMeContext } from "@/components/graphql/Users";
-import { Suspense, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { UserContextTypes } from "@/types/UserTypes";
 import Header from "@/components/appBar/AppBar";
 import { API_URL } from "@/api/configApi";
+import { VariablesColors } from "@/styles/Variables.colors";
+
+const colors = new VariablesColors();
+const { colorWhite, colorOrange, colorLightOrange, colorDarkOrange } = colors;
 
 const theme = createTheme({
   typography: {
@@ -40,12 +44,12 @@ const theme = createTheme({
   palette: {
     mode: "light",
     background: {
-      default: "FFFFFF",
+      default: colorWhite,
     },
     primary: {
-      main: "#FF8E3C",
-      light: "#FFB648",
-      dark: "#e89116",
+      main: colorOrange,
+      light: colorLightOrange,
+      dark: colorDarkOrange,
     },
     secondary: {
       main: "#343a40",
