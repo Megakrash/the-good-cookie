@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import {
   Avatar,
   Box,
+  Divider,
   IconButton,
   Menu,
   MenuItem,
@@ -16,6 +17,10 @@ import { PATH_IMAGE } from "@/api/configApi";
 import { useMutation, useQuery } from "@apollo/client";
 import { mutationSignOut, queryMeContext } from "../graphql/Users";
 import { UserContextTypes } from "@/types/UserTypes";
+import { VariablesColors } from "@/styles/Variables.colors";
+
+const colors = new VariablesColors();
+const { colorOrange } = colors;
 
 const UserMenu = () => {
   const router = useRouter();
@@ -48,6 +53,8 @@ const UserMenu = () => {
   async function logout() {
     doSignout();
   }
+
+  // User menu open/close
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
@@ -87,22 +94,30 @@ const UserMenu = () => {
           horizontal: "right",
         }}
         open={Boolean(anchorElUser)}
+        onClick={handleCloseUserMenu}
         onClose={handleCloseUserMenu}
       >
         {userConnected ? (
-          <Box>
+          <Box sx={{ width: "210px" }}>
             <MenuItem
               onClick={() => {
                 handleCloseUserMenu();
                 router.replace(`/compte`);
               }}
             >
-              <AccountCircleIcon />
-              <Typography textAlign="center">Mon compte</Typography>
+              <AccountCircleIcon
+                sx={{ width: "35px", height: "auto", color: colorOrange }}
+              />
+              <Typography sx={{ marginLeft: "10px" }}>Mon compte</Typography>
             </MenuItem>
+            <Divider />
             <MenuItem onClick={logout}>
-              <ExitToAppIcon />
-              <Typography textAlign="center">Se déconnecter</Typography>
+              <ExitToAppIcon
+                sx={{ width: "35px", height: "auto", color: colorOrange }}
+              />
+              <Typography sx={{ marginLeft: "10px" }}>
+                Se déconnecter
+              </Typography>
             </MenuItem>
           </Box>
         ) : (
