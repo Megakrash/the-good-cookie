@@ -26,7 +26,7 @@ import {
   CardMedia,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { DownloadInput } from "@/styles/MuiStyled";
+import { DownloadInput } from "@/styles/MuiInput";
 import UserZipCity from "@/components/users/components/UserZipCity";
 import AdTitle from "./components/AdTitle";
 import AdDescription from "./components/AdDescription";
