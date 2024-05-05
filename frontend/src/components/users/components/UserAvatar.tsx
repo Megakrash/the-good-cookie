@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, CardMedia } from "@mui/material";
-import { DownloadInput } from "@/styles/MuiStyled";
+import { DownloadInput } from "@/styles/MuiInput";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 type UserAvatarProps = {

@@ -51,7 +51,7 @@ const SignIn = (): React.ReactNode => {
           style: { background: successColor, color: colorWhite },
         });
         setTimeout(() => {
-          router.replace(`/compte`);
+          router.replace(`/account`);
         }, 1500);
       }
     } catch (error) {

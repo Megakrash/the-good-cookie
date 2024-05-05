@@ -102,7 +102,7 @@ const UserMenu = () => {
             <MenuItem
               onClick={() => {
                 handleCloseUserMenu();
-                router.replace(`/compte`);
+                router.replace(`/account`);
               }}
             >
               <AccountCircleIcon
