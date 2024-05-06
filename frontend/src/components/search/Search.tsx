@@ -26,7 +26,7 @@ import GpsAndRadius from "./components/GpsAndRadius";
 import { VariablesColors } from "@/styles/Variables.colors";
 
 const colors = new VariablesColors();
-const { colorLightGrey, errorColor, colorWhite } = colors;
+const { colorLightGrey, errorColor, colorWhite, colorLightOrange } = colors;
 
 const Search = (): React.ReactNode => {
   const theme = useTheme();
@@ -124,6 +124,7 @@ const Search = (): React.ReactNode => {
   return (
     <Grid
       container
+      item
       xs={12}
       sx={{
         display: "flex",
@@ -144,6 +145,7 @@ const Search = (): React.ReactNode => {
       <Toaster />
       <Grid
         container
+        item
         xs={10}
         sm={!showQueries ? 5 : 11}
         md={!showQueries ? 4 : 10}
@@ -161,6 +163,7 @@ const Search = (): React.ReactNode => {
       >
         <Grid
           container
+          item
           xs={12}
           sm={!showQueries ? 10 : 5}
           md={!showQueries ? 10 : 5}
@@ -214,6 +217,7 @@ const Search = (): React.ReactNode => {
         {showQueries && (
           <Grid
             container
+            item
             xs={12}
             sm={5}
             md={5}
@@ -298,6 +302,7 @@ const Search = (): React.ReactNode => {
       </Grid>
       <Grid
         container
+        item
         xs={10}
         sm={5}
         md={4}
@@ -316,6 +321,7 @@ const Search = (): React.ReactNode => {
           variant="contained"
           size="large"
           type="button"
+          sx={{ backgroundColor: colorLightOrange, fontWeight: 550 }}
           disabled={loadingSearch}
           onClick={handleSearchClick}
         >

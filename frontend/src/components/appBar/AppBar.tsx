@@ -42,7 +42,7 @@ export default function Header(): React.ReactNode {
       <Toolbar
         sx={{
           width: "100%",
-          height: "90px",
+          height: "70px",
           margin: "auto",
           display: "flex",
           flexDirection: "row",
