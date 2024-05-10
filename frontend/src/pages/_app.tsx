@@ -6,7 +6,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { client } from "@/config/apollo-client";
 import { useAuth } from "@/config/userAuth";
 import { CssBaseline } from "@mui/material";
-import Header from "@/components/appBar/AppBar";
+
 import { LoadingApp } from "@/styles/LoadingApp";
 import { VariablesColors } from "@/styles/Variables.colors";
 
@@ -60,7 +60,6 @@ function App({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={theme}>
         <AuthProvider>
           <CssBaseline />
-          <Header />
           <Component {...pageProps} />
         </AuthProvider>
       </ThemeProvider>
