@@ -1,7 +1,10 @@
 export const API_URL =
-  process.env.NODE_ENV === "development" && "http://localhost:5000/";
+  process.env.NODE_ENV === "development" ? "http://localhost:5000/" : "/api";
 export const PATH_IMAGE =
-  process.env.NODE_ENV === "development" &&
-  "http://localhost:5000/assets/images";
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:5000/assets/images"
+    : "/api/assets/images";
 export const RECAPTCHA_SITE_KEY: string =
-  "6LctKSQpAAAAAOdHh-YB8K9XDvf93Qeko1r5nfRl";
+  process.env.NODE_ENV === "development"
+    ? "6LctKSQpAAAAAOdHh-YB8K9XDvf93Qeko1r5nfRl"
+    : "6Lc2CdgpAAAAAGy9G-CAQeVrOr65wXWRw6sP54JE";
