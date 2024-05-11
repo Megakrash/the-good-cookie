@@ -29,16 +29,15 @@ import path from 'path'
 //-----------------------------------------
 
 const app = express()
-const corsOptions = {
-  origin: function (
-    origin: string | undefined,
-    callback: (err: Error | null, allow?: boolean) => void
-  ) {
+const corsOptions: cors.CorsOptions = {
+  origin: function (origin, callback) {
+    console.log('Origin of request received: ' + origin)
     const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:3000']
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true)
     } else {
-      callback(new Error('Not allowed by CORS'))
+      console.error('CORS error for origin: ' + origin)
+      callback(new Error('Not allowed by CORS'), false)
     }
   },
   credentials: true,
@@ -49,6 +48,8 @@ const corsOptions = {
     'Authorization',
     'X-Requested-With',
     'Accept',
+    'x-apollo-operation-name',
+    'apollo-require-preflight',
   ],
 }
 app.use(cors(corsOptions))

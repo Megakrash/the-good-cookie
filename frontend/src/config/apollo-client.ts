@@ -5,6 +5,9 @@ export const client = new ApolloClient({
   link: new HttpLink({
     uri: API_URL || "/api",
     credentials: "include",
+    headers: {
+      "apollo-require-preflight": "true",
+    },
   }),
   cache: new InMemoryCache(),
 });
