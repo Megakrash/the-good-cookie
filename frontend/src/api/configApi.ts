@@ -2,7 +2,7 @@ export const API_URL =
   process.env.NODE_ENV === "development" ? "http://localhost:5000/" : "/api";
 export const PATH_IMAGE =
   process.env.NODE_ENV === "development"
-    ? "http://localhost:5000/assets/images"
+    ? "http://localhost:5000/api/assets/images"
     : "/api/assets/images";
 export const RECAPTCHA_SITE_KEY: string =
   process.env.NODE_ENV === "development"
