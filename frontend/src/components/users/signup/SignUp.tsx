@@ -44,7 +44,7 @@ function SignUp(): React.ReactNode {
           ? "Monsieur"
           : gender === "WOMAN"
             ? "Madame"
-            : "Indéterminée",
+            : gender === "OTHER" && "Indéterminée",
     },
     { step: "firstName", title: "Votre prénom", data: firstName },
     { step: "lastName", title: "Votre nom", data: lastName },
