@@ -19,9 +19,9 @@ import {
 import { FilterAlt, FilterAltOff } from "@mui/icons-material";
 import toast, { Toaster } from "react-hot-toast";
 import { PATH_IMAGE } from "@/api/configApi";
-import { queryAllTags } from "../graphql/Tags";
-import { queryAllAds } from "../graphql/Ads";
-import { queryAllCatAndSub } from "../graphql/Categories";
+import { queryAllTags } from "../../graphql/Tags";
+import { queryAllAds } from "../../graphql/Ads";
+import { queryAllCatAndSub } from "../../graphql/Categories";
 import GpsAndRadius from "./components/GpsAndRadius";
 import { VariablesColors } from "@/styles/Variables.colors";
 

@@ -8,7 +8,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { mutationUserLogin, queryMeContext } from "@/components/graphql/Users";
+import { mutationUserLogin, queryMeContext } from "@/graphql/Users";
 import { useMutation } from "@apollo/client";
 import toast, { Toaster } from "react-hot-toast";
 import router from "next/router";

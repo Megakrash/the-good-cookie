@@ -2,7 +2,7 @@ import LayoutFull from "@/components/layout/LayoutFull";
 import { useRouter } from "next/router";
 import { AdTypes } from "@/types/AdTypes";
 import AdCard from "@/components/ads/AdCard";
-import { queryAdById } from "@/components/graphql/Ads";
+import { queryAdById } from "@/graphql/Ads";
 import { useQuery } from "@apollo/client";
 import IconBreadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 

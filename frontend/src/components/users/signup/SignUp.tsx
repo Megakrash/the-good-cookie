@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Avatar, Box, Button, Divider, Grid, Typography } from "@mui/material";
-import { mutationCreateUser } from "@/components/graphql/Users";
+import { mutationCreateUser } from "@/graphql/Users";
 import { UserFormData } from "@/types/UserTypes";
 import { useMutation } from "@apollo/client";
 import StepForm from "./StepForm";

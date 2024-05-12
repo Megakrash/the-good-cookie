@@ -32,7 +32,7 @@ export const queryCatByIdAndSub = gql`
         name
         picture {
           id
-          path
+          filename
         }
       }
     }

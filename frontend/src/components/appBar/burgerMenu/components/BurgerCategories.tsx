@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Box, Divider, MenuItem, Typography } from "@mui/material";
 import { useQuery } from "@apollo/client";
 import { CategoriesTypes } from "@/types/CategoryTypes";
-import { queryAllCat } from "@/components/graphql/Categories";
+import { queryAllCat } from "@/graphql/Categories";
 
 type BurgerCategoriesProps = {
   handleCloseNavMenu: () => void;
