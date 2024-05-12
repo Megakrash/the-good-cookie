@@ -29,27 +29,6 @@ import path from 'path'
 //-----------------------------------------
 
 const app = express()
-// const corsOptions: cors.CorsOptions = {
-//   origin: function (origin, callback) {
-//     const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:3000']
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true)
-//     } else {
-//       callback(new Error('Not allowed by CORS'), false)
-//     }
-//   },
-//   credentials: true,
-//   optionsSuccessStatus: 200,
-//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//   allowedHeaders: [
-//     'Content-Type',
-//     'Authorization',
-//     'X-Requested-With',
-//     'Accept',
-//     'x-apollo-operation-name',
-//     'apollo-require-preflight',
-//   ],
-// }
 const corsOptions = {
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true,
