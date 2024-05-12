@@ -69,7 +69,7 @@ export const queryAdById = gql`
         nickName
         picture {
           id
-          path
+          filename
         }
       }
     }
