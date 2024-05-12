@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { mutationDeleteAd, queryAllAds } from "../graphql/Ads";
+import { mutationDeleteAd, queryAllAds } from "../../graphql/Ads";
 
 type DeleteAdProps = {
   id: number;

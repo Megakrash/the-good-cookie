@@ -4,7 +4,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import Link from "next/link";
 import { CategoriesTypes } from "@/types/CategoryTypes";
 import { useQuery } from "@apollo/client";
-import { queryAllCatAndSub } from "../graphql/Categories";
+import { queryAllCatAndSub } from "../../graphql/Categories";
 import { VariablesColors } from "@/styles/Variables.colors";
 
 const colors = new VariablesColors();

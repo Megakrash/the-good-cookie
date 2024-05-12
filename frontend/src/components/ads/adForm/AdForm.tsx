@@ -5,13 +5,13 @@ import { AdFormData, AdTypes, AdTags } from "@/types/AdTypes";
 import { CategoriesTypes } from "@/types/CategoryTypes";
 import { TagsTypes } from "@/types/TagTypes";
 import toast, { Toaster } from "react-hot-toast";
-import { queryAllCatAndSub } from "@/components/graphql/Categories";
+import { queryAllCatAndSub } from "@/graphql/Categories";
 import {
   queryAllAds,
   queryAdById,
   mutationCreateAd,
   mutationUpdateAd,
-} from "@/components/graphql/Ads";
+} from "@/graphql/Ads";
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import {
@@ -31,7 +31,7 @@ import UserZipCity from "@/components/users/components/UserZipCity";
 import AdTitle from "./components/AdTitle";
 import AdDescription from "./components/AdDescription";
 import AdPrice from "./components/AdPrice";
-import { queryAllTags } from "../../graphql/Tags";
+import { queryAllTags } from "../../../graphql/Tags";
 
 type AdFormProps = {
   ad?: AdTypes;

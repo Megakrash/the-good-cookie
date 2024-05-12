@@ -9,7 +9,7 @@ import {
   useTheme,
 } from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
-import { mutationVerifyEmail } from "@/components/graphql/Users";
+import { mutationVerifyEmail } from "@/graphql/Users";
 import { GreyBtnOrangeHover } from "@/styles/MuiButtons";
 
 type UserEmailVerify = {

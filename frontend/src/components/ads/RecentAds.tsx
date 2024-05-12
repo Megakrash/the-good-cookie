@@ -3,7 +3,7 @@ import { AdsTypes } from "@/types/AdTypes";
 import { useQuery } from "@apollo/client";
 import { Box, Typography } from "@mui/material";
 import Link from "next/link";
-import { queryAllAds } from "../graphql/Ads";
+import { queryAllAds } from "../../graphql/Ads";
 import AdCard from "./AdCard";
 
 function RecentAds(): React.ReactNode {

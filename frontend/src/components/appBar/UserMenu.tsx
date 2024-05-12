@@ -15,7 +15,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import LoginIcon from "@mui/icons-material/Login";
 import { PATH_IMAGE } from "@/api/configApi";
 import { useMutation, useQuery } from "@apollo/client";
-import { mutationSignOut, queryMeContext } from "../graphql/Users";
+import { mutationSignOut, queryMeContext } from "../../graphql/Users";
 import { UserContextTypes } from "@/types/UserTypes";
 import { VariablesColors } from "@/styles/Variables.colors";
 
