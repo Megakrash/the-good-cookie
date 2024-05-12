@@ -64,6 +64,6 @@ export type UserContextTypes = {
   nickName: string;
   picture: {
     id: number;
-    path: string;
+    filename: string;
   };
 };

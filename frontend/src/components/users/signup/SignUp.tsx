@@ -14,7 +14,7 @@ import { API_URL } from "@/api/configApi";
 const colors = new VariablesColors();
 const { colorWhite, colorLightGrey, errorColor } = colors;
 
-function SignUp(): React.ReactNode {
+const SignUp = (): React.ReactNode => {
   // Form
   const [email, setEmail] = useState<string>("");
   const [profil, setProfil] = useState<string>("");
@@ -232,6 +232,6 @@ function SignUp(): React.ReactNode {
       )}
     </>
   );
-}
+};
 
 export default SignUp;

@@ -72,8 +72,8 @@ const UserMenu = () => {
           <Avatar
             alt="User avatar"
             src={
-              userConnected && userContext.picture.path
-                ? `${userContext.picture.path}`
+              userConnected && userContext.picture.filename
+                ? `${PATH_IMAGE}/pictures/${userContext.picture.filename}`
                 : `${PATH_IMAGE}/default/avatar.webp`
             }
           />
@@ -127,8 +127,15 @@ const UserMenu = () => {
               router.replace(`/signin`);
             }}
           >
-            <LoginIcon />
-            <Typography textAlign="center">Connexion</Typography>
+            <LoginIcon
+              sx={{
+                width: "30px",
+                marginRight: "8px",
+                height: "auto",
+                color: colorOrange,
+              }}
+            />
+            <Typography textAlign="center">Se connecter</Typography>
           </MenuItem>
         )}
       </Menu>

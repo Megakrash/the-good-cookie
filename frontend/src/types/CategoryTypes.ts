@@ -1,7 +1,7 @@
 export type CategoryTypes = {
   id: number;
   name: string;
-  subCategories: [
+  subCategories?: [
     {
       id: number;
       name: string;

@@ -7,7 +7,7 @@ export type AdTypes = {
   updatedAt: string;
   picture: {
     id: number;
-    path: string;
+    filename: string;
   };
   zipCode: string;
   city: string;
@@ -29,7 +29,7 @@ export type AdTypes = {
     nickName: string;
     picture: {
       id: number;
-      path: string;
+      filename: string;
     };
   };
 };

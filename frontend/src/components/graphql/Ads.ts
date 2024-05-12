@@ -11,7 +11,7 @@ export const queryAllAds = gql`
       updatedAt
       picture {
         id
-        path
+        filename
       }
       city
       subCategory {
@@ -31,7 +31,7 @@ export const queryAllAds = gql`
         nickName
         picture {
           id
-          path
+          filename
         }
       }
     }
@@ -48,7 +48,7 @@ export const queryAdById = gql`
       updatedAt
       picture {
         id
-        path
+        filename
       }
       city
       zipCode

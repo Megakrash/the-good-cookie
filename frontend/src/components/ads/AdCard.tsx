@@ -15,12 +15,12 @@ type AdCardProps = {
 function AdCard(props: AdCardProps): React.ReactNode {
   // Path images
   const adImageUrl =
-    props.ad.picture.path && props.ad.picture.path !== ""
-      ? `${props.ad.picture.path}`
+    props.ad.picture.filename !== ""
+      ? `${PATH_IMAGE}/pictures/${props.ad.picture.filename}`
       : `${PATH_IMAGE}/default/default.png`;
   const userImageUrl =
-    props.ad.user.picture.path && props.ad.user.picture.path !== ""
-      ? `${props.ad.user.picture.path}`
+    props.ad.user.picture.filename !== ""
+      ? `${PATH_IMAGE}/pictures/${props.ad.user.picture.filename}`
       : `${PATH_IMAGE}/default/avatar.webp`;
 
   function capitalizeFirstLetter(text: string): string {
