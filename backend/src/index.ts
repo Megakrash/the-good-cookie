@@ -1,12 +1,12 @@
 //-----------------------------------------
-// -----------------TYPE ORM----------------
+// ------------ TYPE ORM ------------------
 //-----------------------------------------
 
 import 'reflect-metadata'
 import { dataSource } from './datasource'
 
 //-----------------------------------------
-// ----------GRAPHQL / APOLLO SERVER-------
+// --------- GRAPHQL / APOLLO SERVER ------
 //-----------------------------------------
 
 import { getSchema } from './schema'
@@ -15,7 +15,7 @@ import { expressMiddleware } from '@apollo/server/express4'
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
 
 //-----------------------------------------
-// -----------------EXPRESS----------------
+// ------------ EXPRESS -------------------
 //-----------------------------------------
 
 import { expressMiddlewares } from './routes'
@@ -25,32 +25,35 @@ import cors from 'cors'
 import path from 'path'
 
 //-----------------------------------------
-// -----------------APOLLO SERVER-----------
+// ----------- APOLLO SERVER --------------
 //-----------------------------------------
 
 const app = express()
-const corsOptions: cors.CorsOptions = {
-  origin: function (origin, callback) {
-    console.log('Origin of request received: ' + origin)
-    const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:3000']
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true)
-    } else {
-      console.error('CORS error for origin: ' + origin)
-      callback(new Error('Not allowed by CORS'), false)
-    }
-  },
+// const corsOptions: cors.CorsOptions = {
+//   origin: function (origin, callback) {
+//     const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:3000']
+//     if (!origin || allowedOrigins.includes(origin)) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS'), false)
+//     }
+//   },
+//   credentials: true,
+//   optionsSuccessStatus: 200,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   allowedHeaders: [
+//     'Content-Type',
+//     'Authorization',
+//     'X-Requested-With',
+//     'Accept',
+//     'x-apollo-operation-name',
+//     'apollo-require-preflight',
+//   ],
+// }
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true,
   optionsSuccessStatus: 200,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: [
-    'Content-Type',
-    'Authorization',
-    'X-Requested-With',
-    'Accept',
-    'x-apollo-operation-name',
-    'apollo-require-preflight',
-  ],
 }
 app.use(cors(corsOptions))
 app.use(express.json({ limit: '50mb' }))

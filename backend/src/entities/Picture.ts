@@ -21,17 +21,10 @@ export class Picture extends BaseEntity {
   @Column()
   @Field()
   filename!: string
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  path!: string
 }
 
 @InputType()
 export class PictureCreateInput {
   @Field()
   filename!: string
-
-  @Field({ nullable: true })
-  path!: string
 }
