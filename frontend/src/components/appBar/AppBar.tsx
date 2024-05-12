@@ -5,17 +5,17 @@ import {
   Box,
   Button,
   Toolbar,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import Link from "@mui/material/Link";
 import CookieIcon from "@mui/icons-material/Cookie";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import SearchIcon from "@mui/icons-material/Search";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 import MessageIcon from "@mui/icons-material/Message";
-import BurgerMenu from "./BurgerMenu";
+import BurgerMenu from "./burgerMenu/BurgerMenu";
 import UserMenu from "./UserMenu";
 import { VariablesColors } from "@/styles/Variables.colors";
 
@@ -32,7 +32,7 @@ const buttonStyles = {
   alignItems: "center",
 };
 
-export default function Header(): React.ReactNode {
+const Header = (): React.ReactNode => {
   const router = useRouter();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("lg"));
@@ -53,19 +53,22 @@ export default function Header(): React.ReactNode {
         {/* Mobile Menu */}
         <BurgerMenu />
         {/* Mobile Title */}
-        <Box
-          sx={{
-            display: { xs: "flex", md: "none" },
-            flexGrow: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "10px",
-          }}
-        >
-          <Link href="/">
+        <Tooltip title="Revenir sur la page d'accueil">
+          <Box
+            sx={{
+              display: { xs: "flex", md: "none" },
+              flexGrow: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: "10px",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              router.replace(`/`);
+            }}
+          >
             <CookieIcon sx={{ color: colorOrange }} />
-          </Link>
-          <Link href="/" underline="none">
+
             <Typography
               component="div"
               sx={{
@@ -77,21 +80,24 @@ export default function Header(): React.ReactNode {
             >
               TGC
             </Typography>
-          </Link>
-        </Box>
+          </Box>
+        </Tooltip>
         {/* Desktop Title */}
-        <Box
-          sx={{
-            display: { xs: "none", md: "flex" },
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "10px",
-          }}
-        >
-          <Link href="/">
+        <Tooltip title="Revenir sur la page d'accueil">
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex" },
+              flexDirection: "row",
+              alignItems: "center",
+              gap: "10px",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              router.replace(`/`);
+            }}
+          >
             <CookieIcon sx={{ color: colorOrange }} />
-          </Link>
-          <Link href="/" underline="none">
+
             <Typography
               sx={{
                 color: colorOrange,
@@ -101,8 +107,8 @@ export default function Header(): React.ReactNode {
             >
               THE GOOD COOKIE
             </Typography>
-          </Link>
-        </Box>
+          </Box>
+        </Tooltip>
         {/* Big Buttons */}
         <Box
           sx={{
@@ -153,7 +159,7 @@ export default function Header(): React.ReactNode {
             }}
             sx={buttonStyles}
           >
-            Messagerie
+            Messages
           </Button>
           <Button
             startIcon={<ContactSupportIcon />}
@@ -170,4 +176,5 @@ export default function Header(): React.ReactNode {
       </Toolbar>
     </AppBar>
   );
-}
+};
+export default Header;

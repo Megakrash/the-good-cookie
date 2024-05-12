@@ -57,7 +57,7 @@ export const queryMeContext = gql`
       nickName
       picture {
         id
-        path
+        filename
       }
     }
   }

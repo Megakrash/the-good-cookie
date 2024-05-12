@@ -31,7 +31,6 @@ const Navbar = (): React.ReactNode => {
           overflowX: "auto",
           overflowY: "hidden",
           display: "flex",
-          justifyContent: "center",
           width: "100%",
           boxSizing: "border-box",
         }}

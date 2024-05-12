@@ -1,5 +1,14 @@
 import { gql } from "@apollo/client";
 
+export const queryAllCat = gql`
+  query CategoriesGetAll {
+    items: categoriesGetAll {
+      id
+      name
+    }
+  }
+`;
+
 export const queryAllCatAndSub = gql`
   query getAllCategoriesAndSub {
     items: categoriesGetAll {
