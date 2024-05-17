@@ -39,7 +39,7 @@ export class UsersResolver {
       await UserServices.validateUser(newUser)
 
       // Save new user
-      await UserServices.saveUser(newUser)
+      await newUser.save()
 
       // Send verification email
       await UserServices.sendVerification(newUser.email, newUser.nickName)

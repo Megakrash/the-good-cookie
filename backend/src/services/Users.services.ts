@@ -53,10 +53,6 @@ export class UserServices {
       throw new Error(`Validation failed: ${JSON.stringify(errors)}`)
     }
   }
-  // Save new user
-  static async saveUser(user: User): Promise<void> {
-    await user.save()
-  }
   // Send verification email
   static async sendVerification(
     email: string,
@@ -108,7 +104,7 @@ export class UserServices {
 
     // Validate and save updated user
     await UserServices.validateUser(user)
-    await UserServices.saveUser(user)
+    await user.save()
     if (oldPictureId) {
       await deletePicture(oldPictureId)
     }
