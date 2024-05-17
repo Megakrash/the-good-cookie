@@ -19,7 +19,7 @@ import {
   UserUpdateInput,
   VerifyEmailResponse,
 } from '../entities/User'
-import { UserSchema } from '../schemas/Users.schema'
+import { UserServices } from '../services/Users.services'
 
 @Resolver(User)
 export class UsersResolver {
@@ -30,19 +30,19 @@ export class UsersResolver {
   ): Promise<User> {
     try {
       // Check if user already exists
-      await UserSchema.checkUserExists(data.email)
+      await UserServices.checkUserExists(data.email)
 
       // Create new user entity with picture & hash password
-      const newUser = await UserSchema.createUserEntity(data)
+      const newUser = await UserServices.createUserEntity(data)
 
       // Validate user
-      await UserSchema.validateUser(newUser)
+      await UserServices.validateUser(newUser)
 
       // Save new user
-      await UserSchema.saveUser(newUser)
+      await UserServices.saveUser(newUser)
 
       // Send verification email
-      await UserSchema.sendVerification(newUser.email, newUser.nickName)
+      await UserServices.sendVerification(newUser.email, newUser.nickName)
 
       return newUser
     } catch (error) {
@@ -64,11 +64,11 @@ export class UsersResolver {
   ): Promise<User | null> {
     try {
       // Find user by id
-      const user = await UserSchema.findUserById(id)
+      const user = await UserServices.findUserById(id)
 
       if (user.id === context.user?.id || context.user?.role === 'ADMIN') {
         // Update user with new data
-        const updatedUser = await UserSchema.updateUser(data, user, context)
+        const updatedUser = await UserServices.updateUser(data, user, context)
         return updatedUser
       }
       return user
@@ -112,21 +112,21 @@ export class UsersResolver {
     let userNickName: string | null = null
 
     try {
-      const decoded = UserSchema.decodeToken(token)
+      const decoded = UserServices.decodeToken(token)
       if (decoded) {
         userEmail = decoded.email
         userNickName = decoded.nickName
       }
 
-      const payload = UserSchema.verifyToken(token)
+      const payload = UserServices.verifyToken(token)
       if (payload) {
-        return await UserSchema.markUserAsVerified(payload.email)
+        return await UserServices.markUserAsVerified(payload.email)
       }
 
       return { success: false, message: 'Invalid Token' }
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError && userEmail && userNickName) {
-        return await UserSchema.handleExpiredToken(userEmail, userNickName)
+        return await UserServices.handleExpiredToken(userEmail, userNickName)
       }
       return { success: false, message: `Erreur de la vérification de l'email` }
     }
@@ -140,16 +140,16 @@ export class UsersResolver {
   ): Promise<User> {
     try {
       // Authenticate user
-      const user = await UserSchema.authenticateUser(data)
+      const user = await UserServices.authenticateUser(data)
 
       // Generate token
-      const token = UserSchema.generateToken(user)
+      const token = UserServices.generateToken(user)
 
       // Set cookie
-      UserSchema.setCookie(context, token)
+      UserServices.setCookie(context, token)
 
       // Update last connection date
-      await UserSchema.updateLastConnection(user)
+      await UserServices.updateLastConnection(user)
 
       return user
     } catch (error) {
@@ -231,8 +231,8 @@ export class UsersResolver {
     @Arg('id', () => ID) id: number
   ): Promise<string> {
     try {
-      const user = await UserSchema.findUserById(id)
-      return await UserSchema.deleteUser(user, context)
+      const user = await UserServices.findUserById(id)
+      return await UserServices.deleteUser(user, context)
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message)

@@ -17,7 +17,7 @@ import { deletePicture } from '../utils/pictureServices/pictureServices'
 import jwt from 'jsonwebtoken'
 import Cookies from 'cookies'
 
-export class UserSchema {
+export class UserServices {
   // Check if user already exists
   static async checkUserExists(email: string): Promise<void> {
     const existingUser = await User.findOne({ where: { email } })
@@ -93,7 +93,7 @@ export class UserSchema {
     }
     if (data.pictureId && user.picture?.id) {
       oldPictureId = user.picture.id
-      const newPicture = await UserSchema.findPictureById(data.pictureId)
+      const newPicture = await UserServices.findPictureById(data.pictureId)
       if (!newPicture) {
         throw new Error('New picture not found')
       }
@@ -107,8 +107,8 @@ export class UserSchema {
     }
 
     // Validate and save updated user
-    await UserSchema.validateUser(user)
-    await UserSchema.saveUser(user)
+    await UserServices.validateUser(user)
+    await UserServices.saveUser(user)
     if (oldPictureId) {
       await deletePicture(oldPictureId)
     }
