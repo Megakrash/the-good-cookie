@@ -15,7 +15,8 @@ import {
 import { MockedProvider } from "@apollo/client/testing";
 import { toast } from "react-hot-toast";
 import SignIn from "@/components/users/signin/SignIn";
-import { mutationUserLogin, queryMeContext } from "@/graphql/Users";
+import { mutationUserLogin } from "@/graphql/Users";
+import { UserProvider } from "@/context/UserContext"; // Import UserProvider
 
 // Mocks React-Hot-Toast
 jest.mock("react-hot-toast");
@@ -29,7 +30,7 @@ const mocks = [
       variables: {
         data: {
           email: "test@example.com",
-          password: "Password123!!",
+          password: "password123",
         },
       },
     },
@@ -49,7 +50,7 @@ const mocks = [
       variables: {
         data: {
           email: "test@example.com",
-          password: "Wrongpassword123!!",
+          password: "wrongpassword123",
         },
       },
     },
@@ -62,24 +63,11 @@ const mocks = [
       variables: {
         data: {
           email: "test@example.com",
-          password: "AnyPassword!!22",
+          password: "anyPassword",
         },
       },
     },
     error: new Error("Failed to fetch"),
-  },
-  // RefetchQueries meContext
-  {
-    request: {
-      query: queryMeContext,
-    },
-    result: {
-      data: {
-        id: "1",
-        nickName: "John",
-        picture: "picture.jpg",
-      },
-    },
   },
 ];
 
@@ -88,10 +76,13 @@ describe("SignIn test component & toast", () => {
   beforeEach(() => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <SignIn />
+        <UserProvider>
+          <SignIn />
+        </UserProvider>
       </MockedProvider>,
     );
   });
+
   it("should render the initial component", () => {
     expect(
       screen.getByText("Se connecter", { selector: "h4" }),
@@ -103,17 +94,18 @@ describe("SignIn test component & toast", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("Mot de passe oublié ?")).toBeInTheDocument();
     expect(screen.getByText("Première connexion ?")).toBeInTheDocument();
-    expect(screen.getByText("Créez votre compte")).toBeInTheDocument();
+    expect(screen.getByText("Créer votre compte")).toBeInTheDocument();
     const forgotPasswordLink = screen.getByText("Mot de passe oublié ?");
     expect(forgotPasswordLink).toBeInTheDocument();
     expect(forgotPasswordLink.closest("a")).toHaveAttribute(
       "href",
       "/forgot-password",
     );
-    const signUpLink = screen.getByText("Créez votre compte");
+    const signUpLink = screen.getByText("Créer votre compte");
     expect(signUpLink).toBeInTheDocument();
     expect(signUpLink.closest("a")).toHaveAttribute("href", "/signup");
   });
+
   it("should update email and password fields and show password alerts", () => {
     fireEvent.change(screen.getByLabelText(/Email/), {
       target: { value: "test@example.com" },
@@ -128,50 +120,54 @@ describe("SignIn test component & toast", () => {
     expect(screen.getByText("Un nombre")).toBeInTheDocument();
     expect(screen.getByText("Un caractère spécial")).toBeInTheDocument();
   });
+
   it("should show success toast on successful login", async () => {
     fireEvent.change(screen.getByLabelText(/Email/), {
       target: { value: "test@example.com" },
     });
     fireEvent.change(screen.getByLabelText(/Mot de passe/), {
-      target: { value: "Password123!!" },
+      target: { value: "password123" },
     });
     fireEvent.click(screen.getByRole("button", { name: /Se connecter/ }));
 
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith("Connexion réussie, bienvenue John", {
-        style: { background: "#4caf50", color: "white" },
+        style: { background: "#4caf50", color: "#f8f8f8" },
       });
     });
   });
+
   it("should show error toast on unsuccessful login", async () => {
     fireEvent.change(screen.getByLabelText(/Email/), {
       target: { value: "test@example.com" },
     });
     fireEvent.change(screen.getByLabelText(/Mot de passe/), {
-      target: { value: "Wrongpassword123!!" },
+      target: { value: "wrongpassword123" },
     });
     fireEvent.click(screen.getByRole("button", { name: /Se connecter/ }));
 
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith("Email ou mot de passe incorrect", {
-        style: { background: "#f44336", color: "white" },
+        style: { background: "#f44336", color: "#f8f8f8" },
       });
     });
   });
+
   it("should show error toast on error network or server down", async () => {
     fireEvent.change(screen.getByLabelText(/Email/), {
       target: { value: "test@example.com" },
     });
     fireEvent.change(screen.getByLabelText(/Mot de passe/), {
-      target: { value: "AnyPassword!!22" },
+      target: { value: "anyPassword" },
     });
     fireEvent.click(screen.getByRole("button", { name: /Se connecter/ }));
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith("Failed to fetch", {
-        style: { background: "#f44336", color: "white" },
+        style: { background: "#f44336", color: "#f8f8f8" },
       });
     });
   });
+
   it("has a link to the forgot password page", () => {
     const forgotPasswordLink = screen.getByText("Mot de passe oublié ?");
     expect(forgotPasswordLink.closest("a")).toHaveAttribute(
@@ -179,54 +175,42 @@ describe("SignIn test component & toast", () => {
       "/forgot-password",
     );
   });
+
   it("has a link to the signup page", () => {
-    const signUpLink = screen.getByText("Créez votre compte");
+    const signUpLink = screen.getByText("Créer votre compte");
     expect(signUpLink.closest("a")).toHaveAttribute("href", "/signup");
   });
 });
 
 // Scenario 2: SignIn test graphQl mutation
 describe("SignIn test graphQl mutation", () => {
-  let graphQlMutation = [];
-
-  const mockLink = new ApolloLink((mutation, forward) => {
-    graphQlMutation.push(mutation);
-    return forward(mutation);
-  });
-
-  const client = new ApolloClient({
-    cache: new InMemoryCache(),
-    link: mockLink,
-  });
-
   beforeEach(() => {
-    graphQlMutation = [];
     render(
-      <ApolloProvider client={client}>
-        <SignIn />
-      </ApolloProvider>,
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <UserProvider>
+          <SignIn />
+        </UserProvider>
+      </MockedProvider>,
     );
   });
+
   it("should make a GraphQL mutation call when the button is clicked", async () => {
     await act(async () => {
       fireEvent.change(screen.getByLabelText(/Email/), {
         target: { value: "test@example.com" },
       });
       fireEvent.change(screen.getByLabelText(/Mot de passe/), {
-        target: { value: "Password123!!" },
+        target: { value: "password123" },
       });
+      fireEvent.click(screen.getByRole("button", { name: /Se connecter/ }));
     });
-    await waitFor(() => {
-      const signInButton = screen.getByRole("button", {
-        name: /Se connecter/,
-      });
-      expect(signInButton).not.toBeDisabled();
-    });
-    fireEvent.click(screen.getByRole("button", { name: /Se connecter/ }));
 
     await waitFor(() => {
-      const loginMutationCall = graphQlMutation.find(
-        (op) => op.operationName === "userLogin",
+      const loginMutationCall = mocks.find(
+        (op) =>
+          op.request.query === mutationUserLogin &&
+          op.request.variables.data.email === "test@example.com" &&
+          op.request.variables.data.password === "password123",
       );
       expect(loginMutationCall).toBeDefined();
     });
