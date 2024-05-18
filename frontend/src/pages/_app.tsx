@@ -49,8 +49,8 @@ const theme = createTheme({
 const privatePages = ["/account", "/annonces/new"];
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { loading, error } = useAuth(privatePages);
-  if (loading) return <LoadingApp />;
+  const { user } = useAuth(privatePages);
+  if (user === null) return <LoadingApp />;
   return children;
 };
 

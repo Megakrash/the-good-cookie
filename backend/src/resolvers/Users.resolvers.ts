@@ -194,23 +194,47 @@ export class UsersResolver {
   }
 
   // ME CONTEXT FOR FRONTEND
-  @Authorized('ADMIN', 'USER')
-  @Query(() => UserContext)
-  async meContext(@Ctx() context: MyContext): Promise<UserContext> {
-    if (!context.user) {
-      throw new Error('User not found')
+  @Query(() => UserContext, { nullable: true })
+  async meContext(@Ctx() context: MyContext): Promise<UserContext | null> {
+    // Get if cookie is present in context
+    const cookies = new Cookies(context.req, context.res)
+    const renthub_token = cookies.get('TGCookie')
+
+    if (!renthub_token) {
+      return null
     }
 
-    const userContext = {
-      id: context.user.id,
-      nickName: context.user.nickName,
-      picture: context.user.picture,
-      role: context.user.role,
+    try {
+      // Verify token
+      const payload = jwt.verify(
+        renthub_token,
+        process.env.JWT_SECRET_KEY || ''
+      )
+      // Get user from payload
+      if (typeof payload === 'object' && 'userId' in payload) {
+        const user = await User.findOne({
+          where: { id: payload.userId },
+        })
+        // if user is found, return user context
+        if (user) {
+          const userContext = {
+            id: user.id,
+            nickName: user.nickName,
+            picture: user.picture,
+            role: user.role,
+          }
+          return userContext
+        } else {
+          return null
+        }
+      }
+    } catch (err) {
+      console.error('Error verifying token:', err)
+      return null
     }
 
-    return userContext
+    return null
   }
-
   // SIGNOUT
   @Mutation(() => Boolean)
   async userSignOut(@Ctx() context: MyContext): Promise<boolean> {

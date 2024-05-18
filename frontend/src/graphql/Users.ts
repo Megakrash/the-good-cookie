@@ -55,6 +55,7 @@ export const queryMeContext = gql`
     item: meContext {
       id
       nickName
+      role
       picture {
         id
         filename

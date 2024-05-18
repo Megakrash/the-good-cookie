@@ -62,6 +62,7 @@ export type UserTypes = {
 export type UserContextTypes = {
   id: string;
   nickName: string;
+  role: string;
   picture: {
     id: number;
     filename: string;
