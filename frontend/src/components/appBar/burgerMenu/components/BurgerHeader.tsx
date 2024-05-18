@@ -31,6 +31,7 @@ const BurgerHeader = (props: BurgerHeaderProps): React.ReactNode => {
       <Button
         endIcon={<CloseIcon />}
         size="small"
+        sx={{ borderRadius: "50%", width: "25px", height: "25px" }}
         onClick={props.handleCloseNavMenu}
       ></Button>
     </Box>

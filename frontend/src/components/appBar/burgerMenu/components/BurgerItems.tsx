@@ -38,7 +38,7 @@ const MenuItemComponent = ({ icon, text, route, handleCloseNavMenu }) => {
           color: colorOrange,
         },
       })}
-      <Typography textAlign="center">{text}</Typography>
+      <Typography>{text}</Typography>
     </MenuItem>
   );
 };
