@@ -1,28 +1,31 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useUserContext } from "@/context/UserContext";
+import { useQuery } from "@apollo/client";
+import { queryMeContext } from "@/graphql/Users";
+import { UserContextTypes } from "@/types/UserTypes";
 
 export function useAuth(privatePages: string[]) {
+  const { loading, error, refetch } = useQuery<{ item: UserContextTypes }>(
+    queryMeContext,
+  );
   const router = useRouter();
-  // Get user from context
-  const { user, refetchUserContext } = useUserContext();
-  // Refetch user context is the user is on a private page
+
   useEffect(() => {
     const handleRouteChange = () => {
       if (privatePages.includes(router.pathname)) {
-        refetchUserContext();
+        refetch();
       }
     };
-    // Add event listener to handle route change
+
     router.events.on("routeChangeComplete", handleRouteChange);
     return () => router.events.off("routeChangeComplete", handleRouteChange);
-  }, [router, refetchUserContext]);
-  // Redirect to signin page if user is not logged in
+  }, [router, refetch]);
+
   useEffect(() => {
-    if (privatePages.includes(router.pathname) && user === null) {
+    if (privatePages.includes(router.pathname) && error) {
       router.replace("/signin");
     }
-  }, [router, user]);
-  // Return user to _app.tsx
-  return { user };
+  }, [router, error]);
+
+  return { loading };
 }

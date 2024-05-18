@@ -20,12 +20,14 @@ import {
   isValidEmailRegex,
   isValidPasswordRegex,
 } from "../components/UserRegex";
+import { useUserContext } from "@/context/UserContext";
 
 const colors = new VariablesColors();
 const { colorWhite, successColor, errorColor } = colors;
 
 const SignIn = (): React.ReactNode => {
   const theme = useTheme();
+  const { refetchUserContext } = useUserContext();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
@@ -50,6 +52,7 @@ const SignIn = (): React.ReactNode => {
         toast(`Connexion réussie, bienvenue ${data.item.firstName}`, {
           style: { background: successColor, color: colorWhite },
         });
+        refetchUserContext();
         setTimeout(() => {
           router.replace(`/account`);
         }, 1500);

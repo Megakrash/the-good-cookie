@@ -9,6 +9,7 @@ import { CssBaseline } from "@mui/material";
 
 import { LoadingApp } from "@/styles/LoadingApp";
 import { VariablesColors } from "@/styles/Variables.colors";
+import { UserProvider } from "@/context/UserContext";
 
 const colors = new VariablesColors();
 const { colorWhite, colorOrange, colorLightOrange, colorDarkOrange } = colors;
@@ -49,8 +50,8 @@ const theme = createTheme({
 const privatePages = ["/account", "/annonces/new"];
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth(privatePages);
-  if (user === null) return <LoadingApp />;
+  const { loading } = useAuth(privatePages);
+  if (loading) return <LoadingApp />;
   return children;
 };
 
@@ -58,10 +59,12 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
       <ThemeProvider theme={theme}>
-        <AuthProvider>
-          <CssBaseline />
-          <Component {...pageProps} />
-        </AuthProvider>
+        <UserProvider>
+          <AuthProvider>
+            <CssBaseline />
+            <Component {...pageProps} />
+          </AuthProvider>
+        </UserProvider>
       </ThemeProvider>
     </ApolloProvider>
   );

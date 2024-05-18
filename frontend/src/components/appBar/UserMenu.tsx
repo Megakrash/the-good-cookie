@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useRouter } from "next/router";
 import {
   Avatar,
@@ -14,45 +14,30 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import LoginIcon from "@mui/icons-material/Login";
 import { PATH_IMAGE } from "@/api/configApi";
-import { useMutation, useQuery } from "@apollo/client";
-import { mutationSignOut, queryMeContext } from "../../graphql/Users";
-import { UserContextTypes } from "@/types/UserTypes";
+import { useMutation } from "@apollo/client";
+import { mutationSignOut } from "../../graphql/Users";
 import { VariablesColors } from "@/styles/Variables.colors";
+import { useUserContext } from "@/context/UserContext";
 
 const colors = new VariablesColors();
 const { colorOrange } = colors;
 
 const UserMenu = () => {
   const router = useRouter();
-  // User connected ?
-  const { data, error } = useQuery<{ item: UserContextTypes }>(queryMeContext);
-  const [userContext, setUserContext] = useState<UserContextTypes>(null);
-  const [userConnected, setUserConnected] = useState<Boolean>(false);
-
-  useEffect(() => {
-    if (error) {
-      setUserContext(null);
-      setUserConnected(false);
-    }
-    if (data?.item) {
-      setUserContext(data.item);
-      setUserConnected(true);
-    }
-  }, [data, error]);
+  // Get user from context
+  const { user, refetchUserContext } = useUserContext();
 
   // Signout
   const [doSignout] = useMutation(mutationSignOut, {
     onCompleted: () => {
-      setUserContext(null);
+      refetchUserContext();
       setAnchorElUser(null);
-      setUserConnected(false);
       router.replace(`/signin`);
     },
-    refetchQueries: [{ query: queryMeContext }],
   });
-  async function logout() {
+  const logout = () => {
     doSignout();
-  }
+  };
 
   // User menu open/close
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -72,8 +57,8 @@ const UserMenu = () => {
           <Avatar
             alt="User avatar"
             src={
-              userConnected && userContext.picture.filename
-                ? `${PATH_IMAGE}/pictures/${userContext.picture.filename}`
+              user && user.picture.filename
+                ? `${PATH_IMAGE}/pictures/${user.picture.filename}`
                 : `${PATH_IMAGE}/default/avatar.webp`
             }
           />
@@ -97,7 +82,7 @@ const UserMenu = () => {
         onClick={handleCloseUserMenu}
         onClose={handleCloseUserMenu}
       >
-        {userConnected ? (
+        {user ? (
           <Box sx={{ width: "210px" }}>
             <MenuItem
               onClick={() => {
@@ -113,7 +98,7 @@ const UserMenu = () => {
             <Divider />
             <MenuItem onClick={logout}>
               <ExitToAppIcon
-                sx={{ width: "35px", height: "auto", color: colorOrange }}
+                sx={{ width: "30px", height: "auto", color: colorOrange }}
               />
               <Typography sx={{ marginLeft: "10px" }}>
                 Se déconnecter
