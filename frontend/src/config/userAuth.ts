@@ -27,5 +27,5 @@ export function useAuth(privatePages: string[]) {
     }
   }, [router, error]);
 
-  return { loading, error };
+  return { loading };
 }

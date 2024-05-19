@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import Head from "next/head";
 import AppBar from "@/components/appBar/AppBar";
-import Navbar from "../navbar/Navbar";
+import Navbar from "../appBar/navbar/Navbar";
 
 type LayoutProps = {
   title: string;
@@ -18,7 +18,6 @@ function LayoutFull(props: LayoutProps): ReactNode {
         <link rel="icon" href="/cookicon.ico" />
       </Head>
       <AppBar />
-      <Navbar />
       <main>{props.children}</main>
     </>
   );

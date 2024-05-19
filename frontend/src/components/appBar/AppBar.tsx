@@ -18,6 +18,7 @@ import MessageIcon from "@mui/icons-material/Message";
 import BurgerMenu from "./burgerMenu/BurgerMenu";
 import UserMenu from "./UserMenu";
 import { VariablesColors } from "@/styles/Variables.colors";
+import Navbar from "./navbar/Navbar";
 
 const colors = new VariablesColors();
 const { colorDarkGrey, colorOrange, colorLightOrange } = colors;
@@ -38,7 +39,7 @@ const Header = (): React.ReactNode => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("lg"));
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: colorDarkGrey }}>
+    <AppBar position="sticky" sx={{ backgroundColor: colorDarkGrey }}>
       <Toolbar
         sx={{
           width: "100%",
@@ -174,6 +175,7 @@ const Header = (): React.ReactNode => {
         {/* User menu */}
         <UserMenu />
       </Toolbar>
+      <Navbar />
     </AppBar>
   );
 };
