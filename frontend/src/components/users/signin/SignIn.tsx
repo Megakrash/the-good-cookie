@@ -8,7 +8,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { mutationUserLogin, queryMeContext } from "@/graphql/Users";
+import { mutationUserLogin } from "@/graphql/Users";
 import { useMutation } from "@apollo/client";
 import toast, { Toaster } from "react-hot-toast";
 import router from "next/router";
@@ -25,7 +25,7 @@ import { useUserContext } from "@/context/UserContext";
 const colors = new VariablesColors();
 const { colorWhite, successColor, errorColor } = colors;
 
-const SignIn = (): React.ReactNode => {
+const SignIn = (): React.ReactElement => {
   const theme = useTheme();
   const { refetchUserContext } = useUserContext();
   const [email, setEmail] = useState<string>("");
@@ -38,9 +38,7 @@ const SignIn = (): React.ReactNode => {
     setIsFormValid(isEmailValid && isPasswordValid);
   }, [email, password]);
 
-  const [doLogin] = useMutation(mutationUserLogin, {
-    refetchQueries: [queryMeContext],
-  });
+  const [doLogin] = useMutation(mutationUserLogin);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -58,9 +56,15 @@ const SignIn = (): React.ReactNode => {
         }, 1500);
       }
     } catch (error) {
-      toast(error.message, {
-        style: { background: errorColor, color: colorWhite },
-      });
+      if (error.message === "Failed to fetch") {
+        toast("Erreur de connexion, veuillez réessayer", {
+          style: { background: errorColor, color: colorWhite },
+        });
+      } else {
+        toast(error.message, {
+          style: { background: errorColor, color: colorWhite },
+        });
+      }
       setEmail("");
       setPassword("");
     }
