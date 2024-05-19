@@ -20,6 +20,11 @@ import {
   VerifyEmailResponse,
 } from '../entities/User'
 import { UserServices } from '../services/Users.services'
+import { UserToken } from '../entities/UserToken'
+import { addDays } from 'date-fns'
+import { v4 as uuidv4 } from 'uuid'
+import { resetPasswordEmail } from '../utils/mailServices/resetPasswordEmail'
+import { sendVerificationEmail } from '../utils/mailServices/verificationEmail'
 
 @Resolver(User)
 export class UsersResolver {
@@ -42,7 +47,7 @@ export class UsersResolver {
       await newUser.save()
 
       // Send verification email
-      await UserServices.sendVerification(newUser.email, newUser.nickName)
+      await sendVerificationEmail(newUser.email, newUser.nickName)
 
       return newUser
     } catch (error) {
@@ -112,13 +117,15 @@ export class UsersResolver {
     let userNickName: string | null = null
 
     try {
+      // Decode token
       const decoded = UserServices.decodeToken(token)
       if (decoded) {
         userEmail = decoded.email
         userNickName = decoded.nickName
       }
-
+      // Verify token
       const payload = UserServices.verifyToken(token)
+      // Found user by email & Mark user as verified
       if (payload) {
         return await UserServices.markUserAsVerified(payload.email)
       }
@@ -234,6 +241,39 @@ export class UsersResolver {
     }
 
     return null
+  }
+
+  // FORGOT PASSWORD
+  @Mutation(() => Boolean)
+  async resetPassword(
+    @Arg('email') email: string,
+    @Ctx() context: MyContext
+  ): Promise<boolean> {
+    const cookies = new Cookies(context.req, context.res)
+    const renthub_token = cookies.get('TGCookie')
+    // If token is present, throw error
+    if (renthub_token) {
+      throw new Error('already connected')
+    }
+    // Find user by email
+    const user = await User.findOne({ where: { email } })
+    if (!user) {
+      return true
+    }
+
+    // Generate & save token
+    const token = new UserToken()
+    token.user = user
+    token.createdAt = new Date()
+    token.expiresAt = addDays(new Date(), 1)
+    token.token = uuidv4()
+
+    await token.save()
+
+    // Send email
+    await resetPasswordEmail(user.email, user.nickName, token)
+
+    return true
   }
   // SIGNOUT
   @Mutation(() => Boolean)

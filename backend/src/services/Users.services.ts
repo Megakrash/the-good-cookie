@@ -53,13 +53,6 @@ export class UserServices {
       throw new Error(`Validation failed: ${JSON.stringify(errors)}`)
     }
   }
-  // Send verification email
-  static async sendVerification(
-    email: string,
-    nickName: string
-  ): Promise<void> {
-    await sendVerificationEmail(email, nickName)
-  }
   // Find user by id
   static async findUserById(id: number): Promise<User> {
     const user = await User.findOne({ where: { id } })
