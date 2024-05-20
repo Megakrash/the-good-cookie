@@ -121,7 +121,7 @@ function AdForm(props: AdFormProps): React.ReactNode {
           },
         });
         if ("id" in result.data?.item) {
-          router.replace(`/annonces/${result.data.item.id}`);
+          router.push(`/annonces/${result.data.item.id}`);
         } else {
           toast("Erreur pendant la création de votre annonce");
         }

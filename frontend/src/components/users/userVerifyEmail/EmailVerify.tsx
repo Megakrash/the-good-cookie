@@ -18,7 +18,6 @@ type UserEmailVerify = {
 };
 
 const EmailVerify = () => {
-  const theme = useTheme();
   const router = useRouter();
   const { token } = router.query;
   const [requestSend, setRequestSend] = useState(false);

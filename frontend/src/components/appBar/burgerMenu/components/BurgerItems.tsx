@@ -27,7 +27,7 @@ const MenuItemComponent = ({ icon, text, route, handleCloseNavMenu }) => {
     <MenuItem
       onClick={() => {
         handleCloseNavMenu();
-        router.replace(route);
+        router.push(route);
       }}
     >
       {React.cloneElement(icon, {

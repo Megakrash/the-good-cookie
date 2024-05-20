@@ -65,7 +65,7 @@ const Header = (): React.ReactNode => {
               cursor: "pointer",
             }}
             onClick={() => {
-              router.replace(`/`);
+              router.push(`/`);
             }}
           >
             <CookieIcon sx={{ color: colorOrange }} />
@@ -94,7 +94,7 @@ const Header = (): React.ReactNode => {
               cursor: "pointer",
             }}
             onClick={() => {
-              router.replace(`/`);
+              router.push(`/`);
             }}
           >
             <CookieIcon sx={{ color: colorOrange }} />
@@ -129,7 +129,7 @@ const Header = (): React.ReactNode => {
             }}
             startIcon={isSmallScreen ? null : <EditNoteIcon />}
             onClick={() => {
-              router.replace(`/annonces/new`);
+              router.push(`/annonces/new`);
             }}
           >
             Déposer une annonce
@@ -145,7 +145,7 @@ const Header = (): React.ReactNode => {
             }}
             startIcon={isSmallScreen ? null : <SearchIcon />}
             onClick={() => {
-              router.replace(`/search`);
+              router.push(`/search`);
             }}
           >
             {isSmallScreen ? "Rechercher" : "Rechercher une annonce"}
@@ -156,7 +156,7 @@ const Header = (): React.ReactNode => {
           <Button
             startIcon={<MessageIcon />}
             onClick={() => {
-              router.replace(`/messages`);
+              router.push(`/messages`);
             }}
             sx={buttonStyles}
           >
@@ -165,7 +165,7 @@ const Header = (): React.ReactNode => {
           <Button
             startIcon={<ContactSupportIcon />}
             onClick={() => {
-              router.replace(`/contact`);
+              router.push(`/contact`);
             }}
             sx={buttonStyles}
           >
