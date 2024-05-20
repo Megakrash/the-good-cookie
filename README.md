@@ -19,5 +19,5 @@ Solo project carried out as part of the training at the Wild Code School for the
 
 ### See in prod mode
 
-- Release : "https://release-tgc.megakrash.fr/"
-- Prod : "https://tgc.megakrash.fr/"
+- Release : https://release-tgc.megakrash.fr/
+- Prod : https://tgc.megakrash.fr/
