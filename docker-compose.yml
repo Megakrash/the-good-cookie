@@ -28,12 +28,3 @@ volumes:
   postgres-data:
 networks:
   thegoodcookie-network:
-    # frontend:
-  #   build:
-  #     context: ./frontend
-  #     target: dev
-  #   ports:
-  #     - 3001:3000 # local:container
-  #   volumes:
-  #     - ./frontend/src:/app/src
-  #   env_file: ./frontend/.env
