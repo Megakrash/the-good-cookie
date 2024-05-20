@@ -1,58 +1,82 @@
 import React, { useEffect, useState } from "react";
 import { Card, FormControl, Grid, Typography } from "@mui/material";
-import { mutationResetPassword } from "@/graphql/Users";
+import { mutationSetPassword } from "@/graphql/Users";
 import { useMutation } from "@apollo/client";
 import toast, { Toaster } from "react-hot-toast";
-import router from "next/router";
-import UserEmail from "../components/UserEmail";
+import { useRouter } from "next/router";
 import LockIcon from "@mui/icons-material/Lock";
 import { VariablesColors } from "@/styles/Variables.colors";
 import { StepFormButton } from "@/styles/MuiButtons";
-import { isValidEmailRegex } from "../components/UserRegex";
+import { isValidPasswordRegex } from "../components/UserRegex";
+import UserPassword from "../components/UserPassword";
 
 const colors = new VariablesColors();
 const { colorWhite, successColor, errorColor, colorOrange } = colors;
 
-const ForgotPassword = (): React.ReactElement => {
+const ResetPassword = (): React.ReactElement => {
+  // Use the router to get the token
+  const router = useRouter();
+  const { token } = router.query;
   // Set the email state
-  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [isSamePassword, setIsSamePassword] = useState<boolean>(false);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
   useEffect(() => {
-    const isEmailValid = isValidEmailRegex(email);
-    setIsFormValid(isEmailValid);
-  }, [email]);
+    // Check if the email is valid with the regex
+    const isPasswordValid = isValidPasswordRegex(password);
+    const isConfirmPasswordValid = isValidPasswordRegex(confirmPassword);
+    // Check if the email and confirm email are the same
+    setIsSamePassword(password === confirmPassword);
+    // Set the form valid if the email and confirm email are valid and the same
+    setIsFormValid(isPasswordValid && isConfirmPasswordValid && isSamePassword);
+  }, [password, confirmPassword, isSamePassword]);
 
-  const [doForgotPassword] = useMutation(mutationResetPassword);
+  const [resetPassword] = useMutation(mutationSetPassword);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const { data } = await doForgotPassword({
-        variables: { email: email },
+      const { data } = await resetPassword({
+        variables: { password: password, token: token },
       });
-      if (data.resetPassword) {
-        toast(
-          `Un email vous a été envoyé pour réinitialiser votre mot de passe`,
-          {
-            style: { background: successColor, color: colorWhite },
-          },
-        );
+      if (data.setPassword) {
+        toast(`Votre mot de passe a été réinitialisé avec succès`, {
+          style: { background: successColor, color: colorWhite },
+        });
         setTimeout(() => {
-          router.push(`/`);
+          router.push(`/signin`);
         }, 2000);
       }
     } catch (error) {
+      // If the error is "Failed to fetch" (error network), display a toast with a message
       if (error.message === "Failed to fetch") {
         toast("Erreur de connexion, veuillez réessayer", {
           style: { background: errorColor, color: colorWhite },
         });
+      }
+      // If token is invalid or expired, display a toast with a message and redirect to the forgot password page
+      if (
+        error.message === "invalid token" ||
+        error.message === "expired token"
+      ) {
+        toast(
+          "Votre lien de réinitialisation est invalide ou expiré, veuillez retenter de réinitialiser votre mot de passe",
+          {
+            style: { background: errorColor, color: colorWhite },
+          },
+        );
+        setTimeout(() => {
+          router.push(`/forgot-password`);
+        }, 2000);
       } else {
         toast(error.message, {
           style: { background: errorColor, color: colorWhite },
         });
       }
-      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
     }
   };
 
@@ -102,11 +126,10 @@ const ForgotPassword = (): React.ReactElement => {
               textAlign={"center"}
               gutterBottom
             >
-              Mot de passe oublié ?
+              Réinitialisation de votre mot de passe
             </Typography>
             <Typography variant="subtitle2" textAlign={"center"} gutterBottom>
-              Nous allons vous envoyer un lien par email sur votre adresse pour
-              réinitialiser votre mot de passe.
+              Veuillez renseigner votre nouveau mot de passe
             </Typography>
             <Grid
               container
@@ -121,7 +144,11 @@ const ForgotPassword = (): React.ReactElement => {
                 gap: 3,
               }}
             >
-              <UserEmail email={email} setEmail={setEmail} />
+              <UserPassword password={password} setPassword={setPassword} />
+              <UserPassword
+                password={confirmPassword}
+                setPassword={setConfirmPassword}
+              />
             </Grid>
 
             <Grid
@@ -134,7 +161,7 @@ const ForgotPassword = (): React.ReactElement => {
               }}
             >
               <StepFormButton sx={{ width: "100%" }} disabled={!isFormValid}>
-                Réinitialiser mon mot de passe
+                Envoyer
               </StepFormButton>
             </Grid>
           </Card>
@@ -144,4 +171,4 @@ const ForgotPassword = (): React.ReactElement => {
   );
 };
 
-export default ForgotPassword;
+export default ResetPassword;

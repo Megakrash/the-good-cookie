@@ -27,9 +27,15 @@ export const mutationUserLogin = gql`
   }
 `;
 
-export const mutationForgotPassword = gql`
+export const mutationResetPassword = gql`
   mutation resetPassword($email: String!) {
     resetPassword(email: $email)
+  }
+`;
+
+export const mutationSetPassword = gql`
+  mutation setPassword($password: String!, $token: String!) {
+    setPassword(password: $password, token: $token)
   }
 `;
 
