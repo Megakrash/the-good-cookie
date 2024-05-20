@@ -51,9 +51,6 @@ const SignIn = (): React.ReactElement => {
           style: { background: successColor, color: colorWhite },
         });
         refetchUserContext();
-        setTimeout(() => {
-          router.push(`/account`);
-        }, 1500);
       }
     } catch (error) {
       if (error.message === "Failed to fetch") {
@@ -91,7 +88,7 @@ const SignIn = (): React.ReactElement => {
       <Toaster />
       <FormControl
         component="form"
-        autoComplete="off"
+        autoComplete="on"
         onSubmit={onSubmit}
         sx={{
           width: "100%",
