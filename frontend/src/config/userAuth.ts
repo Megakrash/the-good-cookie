@@ -5,7 +5,7 @@ import { queryMeContext } from "@/graphql/Users";
 import { UserContextTypes } from "@/types/UserTypes";
 
 export function useAuth(privatePages: string[]) {
-  const { loading, error, refetch } = useQuery<{ item: UserContextTypes }>(
+  const { loading, data, refetch } = useQuery<{ item: UserContextTypes }>(
     queryMeContext,
   );
   const router = useRouter();
@@ -22,10 +22,10 @@ export function useAuth(privatePages: string[]) {
   }, [router, refetch]);
 
   useEffect(() => {
-    if (privatePages.includes(router.pathname) && error) {
+    if (privatePages.includes(router.pathname) && data?.item === null) {
       router.replace("/signin");
     }
-  }, [router, error]);
+  }, [router, data]);
 
   return { loading };
 }

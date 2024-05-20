@@ -32,7 +32,7 @@ const UserMenu = () => {
     onCompleted: () => {
       refetchUserContext();
       setAnchorElUser(null);
-      router.replace(`/signin`);
+      router.push(`/signin`);
     },
   });
   const logout = () => {
@@ -87,7 +87,7 @@ const UserMenu = () => {
             <MenuItem
               onClick={() => {
                 handleCloseUserMenu();
-                router.replace(`/account`);
+                router.push(`/account`);
               }}
             >
               <AccountCircleIcon
@@ -109,7 +109,7 @@ const UserMenu = () => {
           <MenuItem
             onClick={() => {
               handleCloseUserMenu();
-              router.replace(`/signin`);
+              router.push(`/signin`);
             }}
           >
             <LoginIcon

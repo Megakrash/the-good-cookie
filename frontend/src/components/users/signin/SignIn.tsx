@@ -52,7 +52,7 @@ const SignIn = (): React.ReactElement => {
         });
         refetchUserContext();
         setTimeout(() => {
-          router.replace(`/account`);
+          router.push(`/account`);
         }, 1500);
       }
     } catch (error) {

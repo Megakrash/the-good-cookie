@@ -20,6 +20,11 @@ import {
   VerifyEmailResponse,
 } from '../entities/User'
 import { UserServices } from '../services/Users.services'
+import { UserToken } from '../entities/UserToken'
+import { addDays, isBefore } from 'date-fns'
+import { v4 as uuidv4 } from 'uuid'
+import { resetPasswordEmail } from '../utils/mailServices/resetPasswordEmail'
+import { sendVerificationEmail } from '../utils/mailServices/verificationEmail'
 
 @Resolver(User)
 export class UsersResolver {
@@ -30,7 +35,10 @@ export class UsersResolver {
   ): Promise<User> {
     try {
       // Check if user already exists
-      await UserServices.checkUserExists(data.email)
+      const userAlreadyExist = await UserServices.findUserByEmail(data.email)
+      if (userAlreadyExist) {
+        throw new Error('User already exists')
+      }
 
       // Create new user entity with picture & hash password
       const newUser = await UserServices.createUserEntity(data)
@@ -42,7 +50,7 @@ export class UsersResolver {
       await newUser.save()
 
       // Send verification email
-      await UserServices.sendVerification(newUser.email, newUser.nickName)
+      await sendVerificationEmail(newUser.email, newUser.nickName)
 
       return newUser
     } catch (error) {
@@ -112,13 +120,15 @@ export class UsersResolver {
     let userNickName: string | null = null
 
     try {
+      // Decode token
       const decoded = UserServices.decodeToken(token)
       if (decoded) {
         userEmail = decoded.email
         userNickName = decoded.nickName
       }
-
+      // Verify token
       const payload = UserServices.verifyToken(token)
+      // Found user by email & Mark user as verified
       if (payload) {
         return await UserServices.markUserAsVerified(payload.email)
       }
@@ -212,9 +222,7 @@ export class UsersResolver {
       )
       // Get user from payload
       if (typeof payload === 'object' && 'userId' in payload) {
-        const user = await User.findOne({
-          where: { id: payload.userId },
-        })
+        const user = await UserServices.findUserById(payload.userId)
         // if user is found, return user context
         if (user) {
           const userContext = {
@@ -235,6 +243,76 @@ export class UsersResolver {
 
     return null
   }
+
+  // FORGOT PASSWORD
+  @Mutation(() => Boolean)
+  async resetPassword(
+    @Arg('email') email: string,
+    @Ctx() context: MyContext
+  ): Promise<boolean> {
+    const cookies = new Cookies(context.req, context.res)
+    const renthub_token = cookies.get('TGCookie')
+    // If token is present, throw error
+    if (renthub_token) {
+      throw new Error('already connected')
+    }
+    // Find user by email
+    const user = await User.findOne({ where: { email } })
+    if (!user) {
+      return true
+    }
+
+    // Generate & save token
+    const token = new UserToken()
+    token.user = user
+    token.createdAt = new Date()
+    token.expiresAt = addDays(new Date(), 1)
+    token.token = uuidv4()
+
+    await token.save()
+
+    // Send email
+    await resetPasswordEmail(user.email, user.nickName, token)
+
+    return true
+  }
+
+  // RESET PASSWORD
+  @Mutation(() => Boolean)
+  async setPassword(
+    @Arg('token') token: string,
+    @Arg('password') password: string
+  ): Promise<boolean> {
+    // Find token + user
+    const userToken = await UserToken.findOne({
+      where: { token },
+      relations: { user: true },
+    })
+
+    if (!userToken) {
+      throw new Error('invalid token')
+    }
+
+    // check token validity
+    if (isBefore(new Date(userToken.expiresAt), new Date())) {
+      throw new Error('expired token')
+    }
+
+    // Check new password validity
+    await UserServices.validatePassword(password)
+
+    // Hash password
+    userToken.user.hashedPassword = await UserServices.hashPassword(password)
+
+    // Save user
+    await userToken.user.save()
+
+    // Remove token
+    await userToken.remove()
+
+    return true
+  }
+
   // SIGNOUT
   @Mutation(() => Boolean)
   async userSignOut(@Ctx() context: MyContext): Promise<boolean> {

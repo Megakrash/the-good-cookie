@@ -77,7 +77,7 @@ const BurgerMenu = () => {
         <MenuItem
           onClick={() => {
             handleCloseNavMenu();
-            router.replace(`/signin`);
+            router.push(`/signin`);
           }}
         >
           <LoginIcon
