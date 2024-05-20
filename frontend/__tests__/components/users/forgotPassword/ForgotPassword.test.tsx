@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import ForgotPassword from "@/components/users/forgotPassword/ForgotPassword";
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
-import { mutationSetPassword } from "@/graphql/Users";
+import { mutationResetPassword } from "@/graphql/Users";
 import toast from "react-hot-toast";
 
 // Mocks React-Hot-Toast
@@ -11,7 +11,7 @@ jest.mock("react-hot-toast");
 const mocks: MockedResponse[] = [
   {
     request: {
-      query: mutationSetPassword,
+      query: mutationResetPassword,
       variables: { email: "test@example.com" },
     },
     result: {
@@ -22,7 +22,7 @@ const mocks: MockedResponse[] = [
   },
   {
     request: {
-      query: mutationSetPassword,
+      query: mutationResetPassword,
       variables: { email: "nonexistent@example.com" },
     },
     result: {
@@ -36,7 +36,7 @@ const mocks: MockedResponse[] = [
 const networkErrorMock: MockedResponse[] = [
   {
     request: {
-      query: mutationSetPassword,
+      query: mutationResetPassword,
       variables: { email: "test@example.com" },
     },
     error: new Error("Failed to fetch"),
