@@ -144,8 +144,13 @@ const ResetPassword = (): React.ReactElement => {
                 gap: 3,
               }}
             >
-              <UserPassword password={password} setPassword={setPassword} />
               <UserPassword
+                label="nouveau mot de passe"
+                password={password}
+                setPassword={setPassword}
+              />
+              <UserPassword
+                label="confirmer le mot de passe"
                 password={confirmPassword}
                 setPassword={setConfirmPassword}
               />

@@ -17,6 +17,7 @@ import {
 type UserPasswordProps = {
   password: string;
   setPassword: (email: string) => void;
+  label?: string;
 };
 
 function UserPassword(props: UserPasswordProps): React.ReactNode {
@@ -65,7 +66,7 @@ function UserPassword(props: UserPasswordProps): React.ReactNode {
   return (
     <>
       <TextField
-        id="outlined-adornment-password"
+        id={props.label ? props.label : "outlined-adornment-password"}
         type={showPassword ? "text" : "password"}
         size="small"
         label="Mot de passe"
