@@ -21,7 +21,7 @@ import {
 } from '../entities/User'
 import { UserServices } from '../services/Users.services'
 import { UserToken } from '../entities/UserToken'
-import { addDays } from 'date-fns'
+import { addDays, isBefore } from 'date-fns'
 import { v4 as uuidv4 } from 'uuid'
 import { resetPasswordEmail } from '../utils/mailServices/resetPasswordEmail'
 import { sendVerificationEmail } from '../utils/mailServices/verificationEmail'
@@ -35,7 +35,10 @@ export class UsersResolver {
   ): Promise<User> {
     try {
       // Check if user already exists
-      await UserServices.checkUserExists(data.email)
+      const userAlreadyExist = await UserServices.findUserByEmail(data.email)
+      if (userAlreadyExist) {
+        throw new Error('User already exists')
+      }
 
       // Create new user entity with picture & hash password
       const newUser = await UserServices.createUserEntity(data)
@@ -219,9 +222,7 @@ export class UsersResolver {
       )
       // Get user from payload
       if (typeof payload === 'object' && 'userId' in payload) {
-        const user = await User.findOne({
-          where: { id: payload.userId },
-        })
+        const user = await UserServices.findUserById(payload.userId)
         // if user is found, return user context
         if (user) {
           const userContext = {
@@ -275,6 +276,43 @@ export class UsersResolver {
 
     return true
   }
+
+  // RESET PASSWORD
+  @Mutation(() => Boolean)
+  async setPassword(
+    @Arg('token') token: string,
+    @Arg('password') password: string
+  ): Promise<boolean> {
+    // Find token + user
+    const userToken = await UserToken.findOne({
+      where: { token },
+      relations: { user: true },
+    })
+
+    if (!userToken) {
+      throw new Error('invalid token')
+    }
+
+    // check token validity
+    if (isBefore(new Date(userToken.expiresAt), new Date())) {
+      throw new Error('expired token')
+    }
+
+    // Check new password validity
+    await UserServices.validatePassword(password)
+
+    // Hash password
+    userToken.user.hashedPassword = await UserServices.hashPassword(password)
+
+    // Save user
+    await userToken.user.save()
+
+    // Remove token
+    await userToken.remove()
+
+    return true
+  }
+
   // SIGNOUT
   @Mutation(() => Boolean)
   async userSignOut(@Ctx() context: MyContext): Promise<boolean> {
