@@ -8,8 +8,7 @@ import StepForm from "./StepForm";
 import { VariablesColors } from "@/styles/Variables.colors";
 import StepWelcome from "./StepWelcome";
 import StepSubmit from "./StepSubmit";
-import axios from "axios";
-import { API_URL } from "@/api/configApi";
+import { uploadPicture } from "@/components/utils/uploadPicture";
 
 const colors = new VariablesColors();
 const { colorWhite, colorLightGrey, errorColor } = colors;
@@ -61,19 +60,9 @@ const SignUp = (): React.ReactNode => {
   // SUBMIT
   const [doCreate, loading] = useMutation(mutationCreateUser);
   async function onSubmit() {
-    const dataFile = new FormData();
-    dataFile.append("title", nickName);
-    dataFile.append("file", picture);
     try {
-      let pictureId: number | null = null;
-      if (picture) {
-        const uploadResponse = await axios.post(`${API_URL}picture`, dataFile, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        pictureId = uploadResponse.data.id;
-      }
+      const pictureId = await uploadPicture(nickName, picture);
+
       const data: UserFormData = {
         email,
         profil,
