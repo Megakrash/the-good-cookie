@@ -37,3 +37,11 @@ export const querySubCatAndAds = gql`
     }
   }
 `;
+
+export const mutationCreateSubCategory = gql`
+  mutation subCreate($data: SubCategoryCreateInput!) {
+    item: subCategoryCreate(data: $data) {
+      id
+    }
+  }
+`;
