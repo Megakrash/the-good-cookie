@@ -79,7 +79,6 @@ const CreateSubCategories = (): React.ReactNode => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        // m: "auto",
         width: 450,
         gap: 3,
       }}
