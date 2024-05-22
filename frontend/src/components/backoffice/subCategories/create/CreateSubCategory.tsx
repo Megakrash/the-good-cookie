@@ -79,7 +79,7 @@ const CreateSubCategories = (): React.ReactNode => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        m: "auto",
+        // m: "auto",
         width: 450,
         gap: 3,
       }}
@@ -87,18 +87,15 @@ const CreateSubCategories = (): React.ReactNode => {
     >
       <Toaster />
       <Typography
-        variant="h4"
+        variant="h5"
         textAlign={"center"}
         fontWeight={600}
         gutterBottom
+        mt={2}
       >
         Ajouter une sous-catégorie
       </Typography>
-      <BackOfficeInput
-        data={name}
-        setData={setName}
-        label="Nom de la sous-catégorie"
-      />
+      <BackOfficeInput data={name} setData={setName} label="Nom" />
       <FormControl fullWidth>
         <InputLabel id="subcategory-select-label">Catégorie*</InputLabel>
         <Select
