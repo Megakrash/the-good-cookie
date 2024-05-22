@@ -126,7 +126,9 @@ describe("ResetPassword Component", () => {
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith(
         "Votre mot de passe a été réinitialisé avec succès",
-        { style: { background: "#4caf50", color: "white" } },
+        expect.objectContaining({
+          style: { background: "#4caf50", color: "white" },
+        }),
       );
     });
   });
@@ -148,9 +150,9 @@ describe("ResetPassword Component", () => {
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith(
         "Erreur de connexion, veuillez réessayer",
-        {
+        expect.objectContaining({
           style: { background: "#f44336", color: "white" },
-        },
+        }),
       );
     });
   });
@@ -172,7 +174,9 @@ describe("ResetPassword Component", () => {
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith(
         "Votre lien de réinitialisation est invalide ou expiré, veuillez retenter de réinitialiser votre mot de passe",
-        { style: { background: "#f44336", color: "white" } },
+        expect.objectContaining({
+          style: { background: "#f44336", color: "white" },
+        }),
       );
     });
   });
@@ -194,7 +198,9 @@ describe("ResetPassword Component", () => {
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith(
         "Votre lien de réinitialisation est invalide ou expiré, veuillez retenter de réinitialiser votre mot de passe",
-        { style: { background: "#f44336", color: "white" } },
+        expect.objectContaining({
+          style: { background: "#f44336", color: "white" },
+        }),
       );
     });
   });

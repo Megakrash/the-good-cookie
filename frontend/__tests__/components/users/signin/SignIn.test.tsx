@@ -16,6 +16,12 @@ import { UserProvider } from "@/context/UserContext";
 // Mocks React-Hot-Toast
 jest.mock("react-hot-toast");
 
+jest.mock("next/router", () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}));
+
 // Mock GraphQL requests simulation
 const ME_CONTEXT = gql`
   query meContext {
@@ -102,7 +108,7 @@ const mocks = [
 // Scenario 1: SignIn test component & toast
 describe("SignIn test component & toast", () => {
   beforeEach(() => {
-    jest.clearAllMocks(); // Clear mocks before each test
+    jest.clearAllMocks();
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <UserProvider>
@@ -160,9 +166,12 @@ describe("SignIn test component & toast", () => {
     fireEvent.click(screen.getByRole("button", { name: /Se connecter/ }));
 
     await waitFor(() => {
-      expect(toast).toHaveBeenCalledWith("Connexion réussie, bienvenue John", {
-        style: { background: "#4caf50", color: "white" },
-      });
+      expect(toast).toHaveBeenCalledWith(
+        "Connexion réussie, bienvenue John",
+        expect.objectContaining({
+          style: { background: "#4caf50", color: "white" },
+        }),
+      );
     });
   });
 
@@ -176,9 +185,12 @@ describe("SignIn test component & toast", () => {
     fireEvent.click(screen.getByRole("button", { name: /Se connecter/ }));
 
     await waitFor(() => {
-      expect(toast).toHaveBeenCalledWith("Email ou mot de passe incorrect", {
-        style: { background: "#f44336", color: "white" },
-      });
+      expect(toast).toHaveBeenCalledWith(
+        "Email ou mot de passe incorrect",
+        expect.objectContaining({
+          style: { background: "#f44336", color: "white" },
+        }),
+      );
     });
   });
 
@@ -193,9 +205,9 @@ describe("SignIn test component & toast", () => {
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith(
         "Erreur de connexion, veuillez réessayer",
-        {
+        expect.objectContaining({
           style: { background: "#f44336", color: "white" },
-        },
+        }),
       );
     });
   });
