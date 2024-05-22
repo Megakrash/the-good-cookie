@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { Avatar, Box, Button, Divider, Grid, Typography } from "@mui/material";
 import { mutationCreateUser } from "@/graphql/Users";
 import { UserFormData } from "@/types/UserTypes";
@@ -9,9 +9,10 @@ import { VariablesColors } from "@/styles/Variables.colors";
 import StepWelcome from "./StepWelcome";
 import StepSubmit from "./StepSubmit";
 import { uploadPicture } from "@/components/utils/uploadPicture";
+import { showToast } from "@/components/utils/toastHelper";
 
 const colors = new VariablesColors();
-const { colorWhite, colorLightGrey, errorColor } = colors;
+const { colorLightGrey } = colors;
 
 const SignUp = (): React.ReactNode => {
   // Form
@@ -83,16 +84,12 @@ const SignUp = (): React.ReactNode => {
       if ("id" in result.data?.item) {
         setCurrentStep("welcome");
       } else {
-        toast("Erreur pendant la création de votre compte", {
-          style: { background: errorColor, color: colorWhite },
-        });
+        showToast("error", "Erreur pendant la création de votre compte");
         setCurrentStep("email");
       }
     } catch (error) {
-      toast("Erreur pendant la création de votre compte", {
-        style: { background: errorColor, color: colorWhite },
-      });
       console.error("error", error);
+      showToast("error", "Erreur pendant la création de votre compte");
       setCurrentStep("email");
     }
   }

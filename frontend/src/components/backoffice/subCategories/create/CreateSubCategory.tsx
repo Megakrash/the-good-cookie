@@ -17,7 +17,8 @@ import { StepFormButton } from "@/styles/MuiButtons";
 import { uploadPicture } from "@/components/utils/uploadPicture";
 import { SubCategoryFormData } from "@/types/SubCategoryTypes";
 import { mutationCreateSubCategory } from "@/graphql/SubCategories";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
+import { showToast } from "@/components/utils/toastHelper";
 
 const CreateSubCategories = (): React.ReactNode => {
   // Get all categories
@@ -61,14 +62,14 @@ const CreateSubCategories = (): React.ReactNode => {
         },
       });
       if ("id" in result.data?.item) {
-        toast.success(`Sous-catégorie ${name} créée avec succès`);
+        showToast("success", `Sous-catégorie ${name} créée avec succès`);
         setName("");
         setCategoryId(undefined);
         setPicture(null);
         setPreviewUrl(null);
       }
     } catch (error) {
-      toast("Erreur pendant la création de la sous-catégorie");
+      showToast("error", "Erreur pendant la création de la sous-catégorie");
     }
   }
   return (

@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { useState } from "react";
 import { CategoriesTypes } from "@/types/CategoryTypes";
 import { AdsTypes } from "@/types/AdTypes";
 import { TagsTypes } from "@/types/TagTypes";
@@ -17,16 +17,17 @@ import {
   useTheme,
 } from "@mui/material";
 import { FilterAlt, FilterAltOff } from "@mui/icons-material";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { PATH_IMAGE } from "@/api/configApi";
 import { queryAllTags } from "../../graphql/Tags";
 import { queryAllAds } from "../../graphql/Ads";
 import { queryAllCatAndSub } from "../../graphql/Categories";
 import GpsAndRadius from "./components/GpsAndRadius";
 import { VariablesColors } from "@/styles/Variables.colors";
+import { showToast } from "../utils/toastHelper";
 
 const colors = new VariablesColors();
-const { colorLightGrey, errorColor, colorWhite, colorLightOrange } = colors;
+const { colorLightGrey, colorLightOrange } = colors;
 
 const Search = (): React.ReactNode => {
   const theme = useTheme();
@@ -77,14 +78,9 @@ const Search = (): React.ReactNode => {
   // const searchResult = dataSearch ? dataSearch.items : [];
   const handleSearchClick = () => {
     if (!selectedSubCategory && !lat && !long) {
-      toast(
+      showToast(
+        "error",
         `Veuillez indiquer une catégorie et une localisation pour effectuer une recherche.`,
-        {
-          style: {
-            background: errorColor,
-            color: colorWhite,
-          },
-        },
       );
       return;
     }

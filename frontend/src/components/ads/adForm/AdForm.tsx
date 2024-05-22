@@ -3,7 +3,7 @@ import { PATH_IMAGE } from "@/api/configApi";
 import { AdFormData, AdTypes, AdTags } from "@/types/AdTypes";
 import { CategoriesTypes } from "@/types/CategoryTypes";
 import { TagsTypes } from "@/types/TagTypes";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { queryAllCatAndSub } from "@/graphql/Categories";
 import {
   queryAllAds,
@@ -32,6 +32,7 @@ import AdDescription from "./components/AdDescription";
 import AdPrice from "./components/AdPrice";
 import { queryAllTags } from "../../../graphql/Tags";
 import { uploadPicture } from "@/components/utils/uploadPicture";
+import { showToast } from "@/components/utils/toastHelper";
 
 type AdFormProps = {
   ad?: AdTypes;
@@ -112,7 +113,7 @@ function AdForm(props: AdFormProps): React.ReactNode {
         if ("id" in result.data?.item) {
           router.push(`/annonces/${result.data.item.id}`);
         } else {
-          toast("Erreur pendant la création de votre annonce");
+          showToast("error", "Erreur pendant la création de votre annonce");
         }
       } else {
         const result = await doUpdate({
@@ -122,9 +123,9 @@ function AdForm(props: AdFormProps): React.ReactNode {
           },
         });
         if (!result.errors?.length) {
-          toast("Annonce mise à jour");
+          showToast("success", "Annonce mise à jour");
         } else {
-          toast("Erreur pendant la mise à jour de votre annonce");
+          showToast("error", "Erreur pendant la mise à jour de votre annonce");
         }
       }
     } catch (error) {
