@@ -69,7 +69,15 @@ const CreateSubCategories = (): React.ReactNode => {
         setPreviewUrl(null);
       }
     } catch (error) {
-      showToast("error", "Erreur pendant la création de la sous-catégorie");
+      if (error.message === "SubCategory name already in use") {
+        showToast("error", `La sous-catégorie ${name} existe déjà`);
+        setName("");
+      }
+      if (error.message === "Failed to fetch") {
+        showToast("error", "Erreur de connexion, veuillez réessayer");
+      } else {
+        showToast("error", "Erreur pendant la création de la catégorie");
+      }
     }
   }
   return (

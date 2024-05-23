@@ -51,7 +51,7 @@ export class SubCategoriesResolver {
       where: { name: subCategoryName },
     })
     if (existingSubCategory) {
-      throw new Error(`SubCategory name "${subCategoryName}" already in use`)
+      throw new Error(`SubCategory name already in use`)
     }
 
     // Validate and save new SubCategory

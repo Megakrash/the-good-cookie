@@ -44,7 +44,15 @@ const CreateCategories = (): React.ReactNode => {
         setName("");
       }
     } catch (error) {
-      showToast("error", "Erreur pendant la création de la catégorie");
+      if (error.message === "Category name already in use") {
+        showToast("error", `La catégorie ${name} existe déjà`);
+        setName("");
+      }
+      if (error.message === "Failed to fetch") {
+        showToast("error", "Erreur de connexion, veuillez réessayer");
+      } else {
+        showToast("error", "Erreur pendant la création de la catégorie");
+      }
     }
   }
   return (
