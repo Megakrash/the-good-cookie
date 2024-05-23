@@ -27,3 +27,9 @@ export type SubCategoryTypes = {
 };
 
 export type SubCategoriesTypes = SubCategoryTypes[];
+
+export type SubCategoryFormData = {
+  name: string;
+  category: { id: number };
+  pictureId: number;
+};

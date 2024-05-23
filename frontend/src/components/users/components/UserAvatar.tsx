@@ -39,7 +39,7 @@ const UserAvatar = (props: UserAvatarProps): React.ReactNode => {
         fullWidth
         startIcon={<CloudUploadIcon />}
       >
-        {`Télécharger`}
+        {`Télécharger une image (JPG, PNG, WEBP)`}
         <DownloadInput
           type="file"
           accept=".jpg, .png, .webp"

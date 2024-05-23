@@ -2,18 +2,20 @@ import React, { useEffect, useState } from "react";
 import { Card, FormControl, Grid, Typography } from "@mui/material";
 import { mutationResetPassword } from "@/graphql/Users";
 import { useMutation } from "@apollo/client";
-import toast, { Toaster } from "react-hot-toast";
-import router from "next/router";
+import { Toaster } from "react-hot-toast";
+import { useRouter } from "next/router";
 import UserEmail from "../components/UserEmail";
 import LockIcon from "@mui/icons-material/Lock";
 import { VariablesColors } from "@/styles/Variables.colors";
 import { StepFormButton } from "@/styles/MuiButtons";
 import { isValidEmailRegex } from "../components/UserRegex";
+import { showToast } from "@/components/utils/toastHelper";
 
 const colors = new VariablesColors();
-const { colorWhite, successColor, errorColor, colorOrange } = colors;
+const { colorOrange } = colors;
 
 const ForgotPassword = (): React.ReactElement => {
+  const router = useRouter();
   // Set the email state
   const [email, setEmail] = useState<string>("");
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
@@ -32,11 +34,9 @@ const ForgotPassword = (): React.ReactElement => {
         variables: { email: email },
       });
       if (data.resetPassword) {
-        toast(
+        showToast(
+          "success",
           `Un email vous a été envoyé pour réinitialiser votre mot de passe`,
-          {
-            style: { background: successColor, color: colorWhite },
-          },
         );
         setTimeout(() => {
           router.push(`/`);
@@ -44,13 +44,9 @@ const ForgotPassword = (): React.ReactElement => {
       }
     } catch (error) {
       if (error.message === "Failed to fetch") {
-        toast("Erreur de connexion, veuillez réessayer", {
-          style: { background: errorColor, color: colorWhite },
-        });
+        showToast("error", "Erreur de connexion, veuillez réessayer");
       } else {
-        toast(error.message, {
-          style: { background: errorColor, color: colorWhite },
-        });
+        showToast("error", error.message);
       }
       setEmail("");
     }

@@ -5,6 +5,12 @@ import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import { mutationResetPassword } from "@/graphql/Users";
 import toast from "react-hot-toast";
 
+jest.mock("next/router", () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}));
+
 // Mocks React-Hot-Toast
 jest.mock("react-hot-toast");
 
@@ -54,6 +60,7 @@ describe("ForgotPassword Component", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
   it("renders correctly", () => {
     renderComponent();
     expect(screen.getByText(/Mot de passe oublié \?/i)).toBeInTheDocument();
@@ -89,7 +96,9 @@ describe("ForgotPassword Component", () => {
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith(
         `Un email vous a été envoyé pour réinitialiser votre mot de passe`,
-        { style: { background: "#4caf50", color: "white" } },
+        expect.objectContaining({
+          style: { background: "#4caf50", color: "white" },
+        }),
       );
     });
   });
@@ -109,7 +118,9 @@ describe("ForgotPassword Component", () => {
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith(
         `Un email vous a été envoyé pour réinitialiser votre mot de passe`,
-        { style: { background: "#4caf50", color: "white" } },
+        expect.objectContaining({
+          style: { background: "#4caf50", color: "white" },
+        }),
       );
     });
   });
@@ -127,9 +138,9 @@ describe("ForgotPassword Component", () => {
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith(
         "Erreur de connexion, veuillez réessayer",
-        {
+        expect.objectContaining({
           style: { background: "#f44336", color: "white" },
-        },
+        }),
       );
     });
   });

@@ -43,7 +43,7 @@ export class CategoriesResolver {
       where: { name: categoryName },
     })
     if (existingCategory) {
-      throw new Error(`Category name "${categoryName}" already in use`)
+      throw new Error(`Category name already in use`)
     }
 
     // Validate and save new Category

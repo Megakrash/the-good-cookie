@@ -10,20 +10,16 @@ import {
 } from "@mui/material";
 import { mutationUserLogin } from "@/graphql/Users";
 import { useMutation } from "@apollo/client";
-import toast, { Toaster } from "react-hot-toast";
-import router from "next/router";
+import { Toaster } from "react-hot-toast";
 import UserPassword from "../components/UserPassword";
 import UserEmail from "../components/UserEmail";
-import { VariablesColors } from "@/styles/Variables.colors";
 import { GreyBtnOrangeHover } from "@/styles/MuiButtons";
 import {
   isValidEmailRegex,
   isValidPasswordRegex,
 } from "../components/UserRegex";
 import { useUserContext } from "@/context/UserContext";
-
-const colors = new VariablesColors();
-const { colorWhite, successColor, errorColor } = colors;
+import { showToast } from "@/components/utils/toastHelper";
 
 const SignIn = (): React.ReactElement => {
   const theme = useTheme();
@@ -47,20 +43,19 @@ const SignIn = (): React.ReactElement => {
         variables: { data: { email, password } },
       });
       if ("id" in data.item) {
-        toast(`Connexion réussie, bienvenue ${data.item.firstName}`, {
-          style: { background: successColor, color: colorWhite },
-        });
+        showToast(
+          "success",
+          `Connexion réussie, bienvenue ${data.item.firstName}`,
+        );
         refetchUserContext();
+        setEmail("");
+        setPassword("");
       }
     } catch (error) {
       if (error.message === "Failed to fetch") {
-        toast("Erreur de connexion, veuillez réessayer", {
-          style: { background: errorColor, color: colorWhite },
-        });
+        showToast("error", "Erreur de connexion, veuillez réessayer");
       } else {
-        toast(error.message, {
-          style: { background: errorColor, color: colorWhite },
-        });
+        showToast("error", error.message);
       }
       setEmail("");
       setPassword("");

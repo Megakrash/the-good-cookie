@@ -2,16 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Card, FormControl, Grid, Typography } from "@mui/material";
 import { mutationSetPassword } from "@/graphql/Users";
 import { useMutation } from "@apollo/client";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import LockIcon from "@mui/icons-material/Lock";
 import { VariablesColors } from "@/styles/Variables.colors";
 import { StepFormButton } from "@/styles/MuiButtons";
 import { isValidPasswordRegex } from "../components/UserRegex";
 import UserPassword from "../components/UserPassword";
+import { showToast } from "@/components/utils/toastHelper";
 
 const colors = new VariablesColors();
-const { colorWhite, successColor, errorColor, colorOrange } = colors;
+const { colorOrange } = colors;
 
 const ResetPassword = (): React.ReactElement => {
   // Use the router to get the token
@@ -42,9 +43,10 @@ const ResetPassword = (): React.ReactElement => {
         variables: { password: password, token: token },
       });
       if (data.setPassword) {
-        toast(`Votre mot de passe a été réinitialisé avec succès`, {
-          style: { background: successColor, color: colorWhite },
-        });
+        showToast(
+          "success",
+          `Votre mot de passe a été réinitialisé avec succès`,
+        );
         setTimeout(() => {
           router.push(`/signin`);
         }, 2000);
@@ -52,28 +54,22 @@ const ResetPassword = (): React.ReactElement => {
     } catch (error) {
       // If the error is "Failed to fetch" (error network), display a toast with a message
       if (error.message === "Failed to fetch") {
-        toast("Erreur de connexion, veuillez réessayer", {
-          style: { background: errorColor, color: colorWhite },
-        });
+        showToast("error", "Erreur de connexion, veuillez réessayer");
       }
       // If token is invalid or expired, display a toast with a message and redirect to the forgot password page
       if (
         error.message === "invalid token" ||
         error.message === "expired token"
       ) {
-        toast(
+        showToast(
+          "error",
           "Votre lien de réinitialisation est invalide ou expiré, veuillez retenter de réinitialiser votre mot de passe",
-          {
-            style: { background: errorColor, color: colorWhite },
-          },
         );
         setTimeout(() => {
           router.push(`/forgot-password`);
         }, 2000);
       } else {
-        toast(error.message, {
-          style: { background: errorColor, color: colorWhite },
-        });
+        showToast("error", error.message);
       }
       setPassword("");
       setConfirmPassword("");
