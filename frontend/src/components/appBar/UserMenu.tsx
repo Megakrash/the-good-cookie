@@ -11,13 +11,10 @@ import {
   Typography,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import LoginIcon from "@mui/icons-material/Login";
 import { PATH_IMAGE } from "@/api/configApi";
-import { useMutation } from "@apollo/client";
-import { mutationSignOut } from "../../graphql/Users";
 import { VariablesColors } from "@/styles/Variables.colors";
 import { useUserContext } from "@/context/UserContext";
+import UserSignInAndOut from "../users/components/UserSignInAndOut";
 
 const colors = new VariablesColors();
 const { colorOrange } = colors;
@@ -25,19 +22,7 @@ const { colorOrange } = colors;
 const UserMenu = () => {
   const router = useRouter();
   // Get user from context
-  const { user, refetchUserContext } = useUserContext();
-
-  // Signout
-  const [doSignout] = useMutation(mutationSignOut, {
-    onCompleted: () => {
-      refetchUserContext();
-      setAnchorElUser(null);
-      router.push(`/signin`);
-    },
-  });
-  const logout = () => {
-    doSignout();
-  };
+  const { user } = useUserContext();
 
   // User menu open/close
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -82,7 +67,7 @@ const UserMenu = () => {
         onClick={handleCloseUserMenu}
         onClose={handleCloseUserMenu}
       >
-        {user ? (
+        {user && (
           <Box sx={{ width: "210px" }}>
             <MenuItem
               onClick={() => {
@@ -96,33 +81,9 @@ const UserMenu = () => {
               <Typography sx={{ marginLeft: "10px" }}>Mon compte</Typography>
             </MenuItem>
             <Divider />
-            <MenuItem onClick={logout}>
-              <ExitToAppIcon
-                sx={{ width: "30px", height: "auto", color: colorOrange }}
-              />
-              <Typography sx={{ marginLeft: "10px" }}>
-                Se déconnecter
-              </Typography>
-            </MenuItem>
           </Box>
-        ) : (
-          <MenuItem
-            onClick={() => {
-              handleCloseUserMenu();
-              router.push(`/signin`);
-            }}
-          >
-            <LoginIcon
-              sx={{
-                width: "30px",
-                marginRight: "8px",
-                height: "auto",
-                color: colorOrange,
-              }}
-            />
-            <Typography textAlign="center">Se connecter</Typography>
-          </MenuItem>
         )}
+        <UserSignInAndOut handleClose={handleCloseUserMenu} />
       </Menu>
     </Box>
   );

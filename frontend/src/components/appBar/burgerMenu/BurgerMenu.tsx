@@ -1,27 +1,16 @@
 import React from "react";
-import { useRouter } from "next/router";
-import {
-  Box,
-  Divider,
-  IconButton,
-  Menu,
-  MenuItem,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, IconButton, Menu, Tooltip } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import LoginIcon from "@mui/icons-material/Login";
 import { VariablesColors } from "@/styles/Variables.colors";
 import BurgerItems from "./components/BurgerItems";
 import BurgerCategories from "./components/BurgerCategories";
 import BurgerHeader from "./components/BurgerHeader";
+import UserSignInAndOut from "@/components/users/components/UserSignInAndOut";
 
 const colors = new VariablesColors();
-const { colorOrange, colorDarkOrange } = colors;
+const { colorDarkOrange } = colors;
 
 const BurgerMenu = () => {
-  const router = useRouter();
-
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
   );
@@ -74,22 +63,7 @@ const BurgerMenu = () => {
         <BurgerItems handleCloseNavMenu={handleCloseNavMenu} />
         <Divider />
         <BurgerCategories handleCloseNavMenu={handleCloseNavMenu} />
-        <MenuItem
-          onClick={() => {
-            handleCloseNavMenu();
-            router.push(`/signin`);
-          }}
-        >
-          <LoginIcon
-            sx={{
-              width: "30px",
-              marginRight: "8px",
-              height: "auto",
-              color: colorOrange,
-            }}
-          />
-          <Typography textAlign="center"> Se connecter</Typography>
-        </MenuItem>
+        <UserSignInAndOut handleClose={handleCloseNavMenu} />
       </Menu>
     </Box>
   );
