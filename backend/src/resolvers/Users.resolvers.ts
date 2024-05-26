@@ -24,7 +24,12 @@ import { UserToken } from '../entities/UserToken'
 import { addDays, isBefore } from 'date-fns'
 import { v4 as uuidv4 } from 'uuid'
 import { resetPasswordEmail } from '../utils/mailServices/resetPasswordEmail'
-import { sendVerificationEmail } from '../utils/mailServices/verificationEmail'
+import {
+  sendConfirmationEmail,
+  sendVerificationEmail,
+} from '../utils/mailServices/verificationEmail'
+import { PicturesServices } from '../services/Pictures.services'
+import { deletePicture } from '../utils/pictureServices/pictureServices'
 
 @Resolver(User)
 export class UsersResolver {
@@ -41,7 +46,19 @@ export class UsersResolver {
       }
 
       // Create new user entity with picture & hash password
-      const newUser = await UserServices.createUserEntity(data)
+      const newUser = new User()
+      Object.assign(newUser, data)
+
+      // Add picture to user
+      if (data.pictureId) {
+        const picture = await PicturesServices.findPictureById(data.pictureId)
+        if (picture) {
+          newUser.picture = picture
+        }
+      }
+
+      // Hash password
+      newUser.hashedPassword = await UserServices.hashPassword(data.password)
 
       // Validate user
       await UserServices.validateUser(newUser)
@@ -74,12 +91,52 @@ export class UsersResolver {
       // Find user by id
       const user = await UserServices.findUserById(id)
 
-      if (user.id === context.user?.id || context.user?.role === 'ADMIN') {
-        // Update user with new data
-        const updatedUser = await UserServices.updateUser(data, user, context)
-        return updatedUser
+      // Check if user is authorized to update
+      if (user.id !== context.user?.id || context.user?.role !== 'ADMIN') {
+        throw new Error('Unauthorized')
       }
-      return user
+
+      // Update user with his ads
+      if (data.ads) {
+        data.ads = data.ads.map((entry) => {
+          const existingRelation = user.ads.find(
+            (ad) => ad.id === Number(entry.id)
+          )
+          return existingRelation || entry
+        })
+      }
+
+      // Update user with his picture
+      let oldPictureId: number | null = null
+      if (data.pictureId && user.picture?.id) {
+        oldPictureId = user.picture.id
+        const newPicture = await PicturesServices.findPictureById(
+          data.pictureId
+        )
+        if (newPicture) {
+          user.picture = newPicture
+        }
+      }
+
+      // Update user with new data
+      Object.assign(user, data)
+      if (context.user) {
+        user.updatedBy = context.user
+      }
+      // Validate user
+      await UserServices.validateUser(user)
+      // Save user
+      await user.save()
+
+      // Delete old picture
+      if (oldPictureId) {
+        await deletePicture(oldPictureId)
+      }
+
+      // Return updated user
+      const userUpdated = await UserServices.findUserById(id)
+
+      return userUpdated
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message)
@@ -128,12 +185,24 @@ export class UsersResolver {
       }
       // Verify token
       const payload = UserServices.verifyToken(token)
-      // Found user by email & Mark user as verified
-      if (payload) {
-        return await UserServices.markUserAsVerified(payload.email)
+      if (!payload) {
+        return { success: false, message: 'Invalid Token' }
       }
-
-      return { success: false, message: 'Invalid Token' }
+      // Find user by email
+      const user = await UserServices.findUserByEmail(payload.email)
+      if (!user) {
+        return { success: false, message: 'User not found' }
+      }
+      if (user.isVerified === true) {
+        return { success: true, message: 'Email already verified' }
+      }
+      // Mark user as verified
+      user.isVerified = true
+      // Save user
+      await user.save()
+      // Send confirmation email
+      await sendConfirmationEmail(user.email, user.nickName)
+      return { success: true, message: 'Email verified successfully!' }
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError && userEmail && userNickName) {
         return await UserServices.handleExpiredToken(userEmail, userNickName)
@@ -159,7 +228,10 @@ export class UsersResolver {
       UserServices.setCookie(context, token)
 
       // Update last connection date
-      await UserServices.updateLastConnection(user)
+      user.lastConnectionDate = new Date()
+
+      // Save user
+      await user.save()
 
       return user
     } catch (error) {

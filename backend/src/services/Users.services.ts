@@ -2,20 +2,15 @@ import {
   User,
   UserCreateInput,
   UserLoginInput,
-  UserUpdateInput,
   VerifyEmailResponse,
 } from '../entities/User'
 import { validate } from 'class-validator'
 import * as argon2 from 'argon2'
-import {
-  sendConfirmationEmail,
-  sendVerificationEmail,
-} from '../utils/mailServices/verificationEmail'
+import { sendVerificationEmail } from '../utils/mailServices/verificationEmail'
 import { MyContext } from '../types/Users.types'
 import { deletePicture } from '../utils/pictureServices/pictureServices'
 import jwt from 'jsonwebtoken'
 import Cookies from 'cookies'
-import { PicturesServices } from './Pictures.services'
 
 export class UserServices {
   // ------------------------------
@@ -64,67 +59,6 @@ export class UserServices {
     const hashedPassword = await argon2.hash(password)
     return hashedPassword
   }
-
-  // Create new user entity with picture & hash password
-  static async createUserEntity(data: UserCreateInput): Promise<User> {
-    const newUser = new User()
-    Object.assign(newUser, data)
-
-    if (data.pictureId) {
-      const picture = await PicturesServices.findPictureById(data.pictureId)
-      if (picture) {
-        newUser.picture = picture
-      }
-    }
-    // Hash password
-    newUser.hashedPassword = await UserServices.hashPassword(data.password)
-
-    return newUser
-  }
-
-  // Update user with new data
-  static async updateUser(
-    data: UserUpdateInput,
-    user: User,
-    context: MyContext
-  ): Promise<User> {
-    let oldPictureId: number | null = null
-    if (data.ads) {
-      data.ads = data.ads.map((entry) => {
-        const existingRelation = user.ads.find(
-          (ad) => ad.id === Number(entry.id)
-        )
-        return existingRelation || entry
-      })
-    }
-    if (data.pictureId && user.picture?.id) {
-      oldPictureId = user.picture.id
-      const newPicture = await PicturesServices.findPictureById(data.pictureId)
-      if (newPicture) {
-        user.picture = newPicture
-      }
-    }
-
-    // Update user with new data
-    Object.assign(user, data)
-    if (context.user) {
-      user.updatedBy = context.user
-    }
-
-    // Validate and save updated user
-    await UserServices.validateUser(user)
-    await user.save()
-    if (oldPictureId) {
-      await deletePicture(oldPictureId)
-    }
-
-    return (await User.findOne({
-      where: { id: user.id },
-      relations: {
-        updatedBy: true,
-      },
-    })) as User
-  }
   // Check if email exist & if user is verified & if password is correct
   static async authenticateUser(data: UserLoginInput): Promise<User> {
     const user = await User.findOne({ where: { email: data.email } })
@@ -161,11 +95,6 @@ export class UserServices {
       expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
     })
   }
-  // Update last connection
-  static async updateLastConnection(user: User): Promise<void> {
-    user.lastConnectionDate = new Date()
-    await user.save()
-  }
   // Decode token verifyEmail to get email & nickname
   static decodeToken(
     token: string
@@ -195,21 +124,6 @@ export class UserServices {
       return null
     }
     return null
-  }
-  // Mark user as verified
-  static async markUserAsVerified(email: string): Promise<VerifyEmailResponse> {
-    const user = await User.findOneBy({ email })
-    if (!user) {
-      return { success: false, message: 'Utilisateur non trouvé' }
-    }
-    if (user.isVerified === true) {
-      return { success: true, message: 'Email déjà vérifié' }
-    }
-
-    user.isVerified = true
-    await user.save()
-    await sendConfirmationEmail(user.email, user.nickName)
-    return { success: true, message: 'Email vérifié avec succès !' }
   }
   // Handle expired token
   static async handleExpiredToken(
