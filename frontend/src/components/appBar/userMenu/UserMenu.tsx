@@ -14,7 +14,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { PATH_IMAGE } from "@/api/configApi";
 import { VariablesColors } from "@/styles/Variables.colors";
 import { useUserContext } from "@/context/UserContext";
-import UserSignInAndOut from "../users/components/UserSignInAndOut";
+import UserSignInAndOut from "@/components/users/components/UserSignInAndOut";
 
 const colors = new VariablesColors();
 const { colorOrange } = colors;

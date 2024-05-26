@@ -16,7 +16,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 import MessageIcon from "@mui/icons-material/Message";
 import BurgerMenu from "./burgerMenu/BurgerMenu";
-import UserMenu from "./UserMenu";
+import UserMenu from "./userMenu/UserMenu";
 import { VariablesColors } from "@/styles/Variables.colors";
 import Navbar from "./navbar/Navbar";
 

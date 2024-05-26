@@ -5,7 +5,10 @@ export type CategoryTypes = {
     {
       id: number;
       name: string;
-      picture: string;
+      picture: {
+        id: number;
+        filename: string;
+      };
     },
   ];
 };
