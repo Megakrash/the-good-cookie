@@ -114,7 +114,7 @@ export class CategoriesResolver {
     const category = await Category.findOne({
       where: { id },
       relations: {
-        subCategories: { ads: true },
+        subCategories: { ads: true, picture: true },
         createdBy: true,
         updatedBy: true,
       },

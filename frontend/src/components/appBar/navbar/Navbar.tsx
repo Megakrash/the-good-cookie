@@ -1,18 +1,73 @@
-import React from "react";
-import { Box, Button, ButtonGroup } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Popover,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import Link from "next/link";
 import { CategoriesTypes } from "@/types/CategoryTypes";
 import { useQuery } from "@apollo/client";
-import { queryAllCatAndSub } from "../../../graphql/Categories";
+import { queryAllCat } from "../../../graphql/Categories";
 import { VariablesColors } from "@/styles/Variables.colors";
+import CategoriesMenu from "../categoriesMenu/CategoriesMenu";
 
 const colors = new VariablesColors();
 const { colorOrange } = colors;
 
 const Navbar = (): React.ReactNode => {
-  const { data } = useQuery<{ items: CategoriesTypes }>(queryAllCatAndSub);
+  // Get all categories
+  const { data } = useQuery<{ items: CategoriesTypes }>(queryAllCat);
   const categories = data ? data.items : [];
+
+  const [anchorElMenu, setAnchorElMenu] = useState<HTMLButtonElement | null>(
+    null,
+  );
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    null,
+  );
+
+  // Open menu
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    categoryId: number,
+  ) => {
+    setAnchorElMenu(event.currentTarget);
+    setSelectedCategoryId(categoryId);
+  };
+
+  // Handle hover
+  const handleMouseEnter = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    categoryId: number,
+  ) => {
+    setAnchorElMenu(event.currentTarget);
+    setSelectedCategoryId(categoryId);
+  };
+
+  // Close menu
+  const handleCloseMenu = () => {
+    setAnchorElMenu(null);
+    setSelectedCategoryId(null);
+  };
+
+  const open = Boolean(anchorElMenu);
+
+  // Responsive design popovers
+  const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down("xs"));
+  const isLg = useMediaQuery(theme.breakpoints.down("lg"));
+  let leftPosition = 0;
+  if (isXs) {
+    leftPosition = window.innerWidth * 0;
+  } else if (isLg) {
+    leftPosition = window.innerWidth * 0;
+  } else {
+    leftPosition = window.innerWidth * 0.15;
+  }
 
   return (
     <Box
@@ -51,21 +106,44 @@ const Navbar = (): React.ReactNode => {
           {categories && (
             <>
               {categories.map((category) => (
-                <Button
-                  key={category.id}
-                  sx={{
-                    height: "40px",
-                    backgroundColor: colorOrange,
-                  }}
-                >
-                  {category.name}
-                </Button>
+                <React.Fragment key={category.id}>
+                  <Button
+                    sx={{
+                      height: "40px",
+                      backgroundColor: colorOrange,
+                    }}
+                    onClick={(event) => handleClick(event, category.id)}
+                    onMouseEnter={(event) =>
+                      handleMouseEnter(event, category.id)
+                    }
+                  >
+                    {category.name}
+                  </Button>
+                </React.Fragment>
               ))}
             </>
           )}
         </ButtonGroup>
+        <Popover
+          open={open}
+          anchorEl={anchorElMenu}
+          onClose={handleCloseMenu}
+          anchorReference="anchorPosition"
+          anchorPosition={{ top: 110, left: leftPosition }}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          // onMouseLeave: handleCloseMenu()
+          sx={{ display: { xs: "none", sm: "block" } }}
+        >
+          {selectedCategoryId && (
+            <CategoriesMenu categoryId={selectedCategoryId} />
+          )}
+        </Popover>
       </Box>
     </Box>
   );
 };
+
 export default Navbar;
