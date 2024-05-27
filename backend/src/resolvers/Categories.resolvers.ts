@@ -14,6 +14,7 @@ import {
   CategoryUpdateInput,
 } from '../entities/Category'
 import { MyContext } from '../types/Users.types'
+import { Picture } from '../entities/Picture'
 
 @Resolver(Category)
 export class CategoriesResolver {
@@ -29,6 +30,15 @@ export class CategoriesResolver {
       throw new Error('User context is missing or user is not authenticated')
     }
 
+    // Check if Category name is already in use
+    const categoryName: string = data.name
+    const existingCategory = await Category.findOne({
+      where: { name: categoryName },
+    })
+    if (existingCategory) {
+      throw new Error(`Category name already in use`)
+    }
+
     // Create new Category
     const newCategory = new Category()
 
@@ -37,13 +47,12 @@ export class CategoriesResolver {
     newCategory.createdBy = context.user
     newCategory.updatedBy = context.user
 
-    // Check if Category name is already in use
-    const categoryName: string = data.name
-    const existingCategory = await Category.findOne({
-      where: { name: categoryName },
-    })
-    if (existingCategory) {
-      throw new Error(`Category name already in use`)
+    if (data.pictureId) {
+      const picture = await Picture.findOne({ where: { id: data.pictureId } })
+      if (!picture) {
+        throw new Error('Picture not found')
+      }
+      newCategory.picture = picture
     }
 
     // Validate and save new Category
@@ -71,7 +80,7 @@ export class CategoriesResolver {
     // Find Category by ID
     const category = await Category.findOne({
       where: { id },
-      relations: { subCategories: true, createdBy: true },
+      relations: { childCategories: true, createdBy: true },
     })
 
     // If Category not found, throw error
@@ -99,7 +108,8 @@ export class CategoriesResolver {
   async categoriesGetAll(): Promise<Category[]> {
     const categories = await Category.find({
       relations: {
-        subCategories: { ads: true },
+        ads: true,
+        childCategories: { ads: true },
         createdBy: true,
         updatedBy: true,
       },
@@ -114,7 +124,9 @@ export class CategoriesResolver {
     const category = await Category.findOne({
       where: { id },
       relations: {
-        subCategories: { ads: true, picture: true },
+        ads: true,
+        parentCategory: true,
+        childCategories: { ads: true, picture: true, childCategories: true },
         createdBy: true,
         updatedBy: true,
       },
@@ -133,7 +145,7 @@ export class CategoriesResolver {
   ): Promise<Category | null> {
     const category = await Category.findOne({
       where: { id },
-      relations: { subCategories: true },
+      relations: { childCategories: true },
     })
     if (category) {
       await category.remove()

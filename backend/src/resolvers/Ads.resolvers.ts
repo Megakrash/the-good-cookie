@@ -94,7 +94,7 @@ export class AdsResolver {
         return await Ad.findOne({
           where: { id },
           relations: {
-            subCategory: true,
+            category: true,
             tags: true,
             picture: true,
             user: { picture: true },
@@ -120,16 +120,16 @@ export class AdsResolver {
 
       // Join relations
       query.leftJoinAndSelect('ad.picture', 'picture')
-      query.leftJoinAndSelect('ad.subCategory', 'subCategory')
-      query.leftJoinAndSelect('subCategory.category', 'category')
+      query.leftJoinAndSelect('ad.category', 'category')
+      query.leftJoinAndSelect('category.parentCategory', 'category')
       query.leftJoinAndSelect('ad.user', 'user')
       query.leftJoinAndSelect('user.picture', 'userPicture')
       query.leftJoinAndSelect('ad.tags', 'tags')
 
       // Filter by subCategory
-      if (where?.subCategory) {
+      if (where?.category) {
         query.andWhere('ad.subCategory IN (:...subCategory)', {
-          subCategory: where.subCategory,
+          subCategory: where.category,
         })
       }
 
@@ -188,7 +188,7 @@ export class AdsResolver {
     const ad = await Ad.findOne({
       where: { id },
       relations: {
-        subCategory: { category: true },
+        category: { parentCategory: true },
         tags: true,
         user: { picture: true },
         picture: true,
@@ -205,7 +205,7 @@ export class AdsResolver {
   async adsByUser(@Arg('id', () => ID) id: number): Promise<Ad[]> {
     const ads = await Ad.find({
       where: { user: { id } },
-      relations: { user: true, subCategory: true, tags: true, picture: true },
+      relations: { user: true, category: true, tags: true, picture: true },
     })
 
     if (ads.length === 0) {

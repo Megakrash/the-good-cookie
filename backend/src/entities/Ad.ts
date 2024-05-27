@@ -12,12 +12,12 @@ import {
 } from 'typeorm'
 import { Length, IsInt, IsNumberString } from 'class-validator'
 import { Field, ID, InputType, ObjectType, Int } from 'type-graphql'
-import { SubCategory } from './SubCategory'
 import { Tag } from './Tag'
 import { User } from './User'
 import { Picture } from './Picture'
 import { ObjectId } from './ObjectId'
 import { PointInput, PointType } from './Geolocation'
+import { Category } from './Category'
 
 //-------------------------------
 //--------- Ad Entity -----------
@@ -86,13 +86,13 @@ export class Ad extends PrimaryEntity {
   @Field(() => Picture)
   picture!: Picture
 
-  // SubCategory
-  @ManyToOne(() => SubCategory, (subCategory) => subCategory.ads, {
+  // Category
+  @ManyToOne(() => Category, (Category) => Category.ads, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'subCategory' })
-  @Field(() => SubCategory)
-  subCategory!: SubCategory
+  @JoinColumn({ name: 'category' })
+  @Field(() => Category)
+  category!: Category
 
   // User
   @ManyToOne(() => User, (user) => user.ads, {
@@ -137,7 +137,7 @@ export class AdCreateInput {
   pictureId?: number
 
   @Field()
-  subCategory!: ObjectId
+  category!: ObjectId
 
   @Field(() => [ObjectId])
   tags!: ObjectId[]
@@ -171,7 +171,7 @@ export class AdUpdateInput {
   pictureId?: number
 
   @Field({ nullable: true })
-  subCategory!: ObjectId
+  category!: ObjectId
 
   @Field(() => [ObjectId], { nullable: true })
   tags!: ObjectId[]
@@ -184,7 +184,7 @@ export class AdUpdateInput {
 @InputType()
 export class AdsWhere {
   @Field(() => [ID], { nullable: true })
-  subCategory?: number[]
+  category?: number[]
 
   @Field(() => String, { nullable: true })
   title?: string
