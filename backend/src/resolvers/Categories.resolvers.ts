@@ -15,6 +15,7 @@ import {
 } from '../entities/Category'
 import { MyContext } from '../types/Users.types'
 import { Picture } from '../entities/Picture'
+import { CategoriesServices } from '../services/Categories.services'
 
 @Resolver(Category)
 export class CategoriesResolver {
@@ -30,14 +31,11 @@ export class CategoriesResolver {
       throw new Error('User context is missing or user is not authenticated')
     }
 
-    // Check if Category name is already in use
-    const categoryName: string = data.name
-    const existingCategory = await Category.findOne({
-      where: { name: categoryName },
-    })
-    if (existingCategory) {
-      throw new Error(`Category name already in use`)
-    }
+    // Check if Category name is already used in parent Category or among root categories
+    await CategoriesServices.existingCategory(
+      data.name,
+      data.parentCategory?.id
+    )
 
     // Create new Category
     const newCategory = new Category()
