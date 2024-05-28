@@ -5,7 +5,7 @@ import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import CategoryIcon from "@mui/icons-material/Category";
 import AddIcon from "@mui/icons-material/Add";
-import DirectionsSubwayFilledIcon from "@mui/icons-material/DirectionsSubwayFilled";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 
 export interface SubMenu {
   id: string;
@@ -50,31 +50,15 @@ export const menuItems: MenuItem[] = [
     subMenus: [
       {
         id: "categories-list",
-        text: "Catégories",
-        icon: CategoryIcon,
+        text: "Toutes les catégories",
+        icon: FormatListBulletedIcon,
         href: "/tgc-backoffice/categories",
-        subMenus: [
-          {
-            id: "categories-create",
-            text: "Créer",
-            icon: AddIcon,
-            href: "/tgc-backoffice/categories/new",
-          },
-        ],
       },
       {
-        id: "subcategories",
-        text: "Sous-catégories",
-        icon: DirectionsSubwayFilledIcon,
-        href: "/tgc-backoffice/subcategories",
-        subMenus: [
-          {
-            id: "subcategories-create",
-            text: "Créer",
-            icon: AddIcon,
-            href: "/tgc-backoffice/subcategories/new",
-          },
-        ],
+        id: "categories-create",
+        text: "Créer une catégorie",
+        icon: AddIcon,
+        href: "/tgc-backoffice/categories/new",
       },
     ],
   },
