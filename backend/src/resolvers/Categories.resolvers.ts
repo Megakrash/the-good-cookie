@@ -132,6 +132,25 @@ export class CategoriesResolver {
     return rootCategories
   }
 
+  // GET ALL WITH FULL HIERARCHY
+  @Query(() => [Category])
+  async categoriesGetAllWithHierarchy(): Promise<Category[]> {
+    const categories = await Category.find({
+      relations: {
+        childCategories: {
+          childCategories: {
+            ads: true,
+            picture: true,
+          },
+        },
+        createdBy: true,
+        updatedBy: true,
+      },
+      order: { id: 'ASC' },
+    })
+    return categories
+  }
+
   // GET BY ID
   @Query(() => Category)
   async categoryById(@Arg('id', () => ID) id: number): Promise<Category> {
