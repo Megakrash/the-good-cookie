@@ -17,4 +17,7 @@ export type CategoriesTypes = CategoryTypes[];
 
 export type CategoryFormData = {
   name: string;
+  parentCategory?: {
+    id: number;
+  };
 };

@@ -135,20 +135,18 @@ export class CategoriesResolver {
   // GET ALL WITH FULL HIERARCHY
   @Query(() => [Category])
   async categoriesGetAllWithHierarchy(): Promise<Category[]> {
-    const categories = await Category.find({
+    // Fetch all root categories with their full hierarchy
+    const rootCategories = await Category.find({
+      where: { parentCategory: IsNull() },
       relations: {
         childCategories: {
-          childCategories: {
-            ads: true,
-            picture: true,
-          },
+          childCategories: true,
         },
-        createdBy: true,
-        updatedBy: true,
       },
       order: { id: 'ASC' },
     })
-    return categories
+
+    return rootCategories
   }
 
   // GET BY ID

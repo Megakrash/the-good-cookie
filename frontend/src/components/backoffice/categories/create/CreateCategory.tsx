@@ -3,14 +3,19 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 import BackOfficeInput from "../../components/BackOfficeInput";
 import { useMutation } from "@apollo/client";
 import { CategoryFormData } from "@/types/CategoryTypes";
-import { mutationCreateCategory } from "@/graphql/Categories";
+import {
+  mutationCreateCategory,
+  queryAllCatWithHierarchy,
+} from "@/graphql/Categories";
 import { StepFormButton } from "@/styles/MuiButtons";
 import { Toaster } from "react-hot-toast";
 import { showToast } from "@/components/utils/toastHelper";
+import CategorySelect from "../../components/CategorySelect";
 
 const CreateCategories = (): React.ReactNode => {
   // State
   const [name, setName] = useState<string>("");
+  const [parentCategory, setParentCategory] = useState<number | null>(null);
   // Form validation
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
@@ -24,7 +29,9 @@ const CreateCategories = (): React.ReactNode => {
   }, [name]);
 
   // CREATE
-  const [doCreate, { loading }] = useMutation(mutationCreateCategory);
+  const [doCreate, { loading }] = useMutation(mutationCreateCategory, {
+    refetchQueries: [{ query: queryAllCatWithHierarchy }],
+  });
 
   // SUBMIT
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -32,6 +39,7 @@ const CreateCategories = (): React.ReactNode => {
     try {
       const data: CategoryFormData = {
         name: name,
+        parentCategory: parentCategory ? { id: parentCategory } : null,
       };
 
       const result = await doCreate({
@@ -42,11 +50,13 @@ const CreateCategories = (): React.ReactNode => {
       if ("id" in result.data?.item) {
         showToast("success", `Catégorie ${name} créée avec succès`);
         setName("");
+        setParentCategory(null);
       }
     } catch (error) {
       if (error.message === "Category name already in use") {
         showToast("error", `La catégorie ${name} existe déjà`);
         setName("");
+        setParentCategory(null);
       }
       if (error.message === "Failed to fetch") {
         showToast("error", "Erreur de connexion, veuillez réessayer");
@@ -78,6 +88,10 @@ const CreateCategories = (): React.ReactNode => {
         Ajouter une catégorie
       </Typography>
       <BackOfficeInput data={name} setData={setName} label="Nom" />
+      <CategorySelect
+        selectedCategory={parentCategory}
+        setSelectedCategory={setParentCategory}
+      />
       <StepFormButton disabled={!isFormValid}>
         {loading ? <CircularProgress size={24} /> : "Créer"}
       </StepFormButton>

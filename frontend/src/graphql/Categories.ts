@@ -26,14 +26,18 @@ export const queryAllRootCat = gql`
   }
 `;
 
-export const queryAllCatAndSub = gql`
-  query getAllCategoriesAndSub {
-    items: categoriesGetAll {
+export const queryAllCatWithHierarchy = gql`
+  query CategoriesGetAllWithHierarchy {
+    items: categoriesGetAllWithHierarchy {
       id
       name
-      subCategories {
+      childCategories {
         id
         name
+        childCategories {
+          id
+          name
+        }
       }
     }
   }
