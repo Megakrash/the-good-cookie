@@ -20,7 +20,6 @@ const CategoriesMenu = (props: CategoriesMenuProps) => {
     variables: { categoryByIdId: props.categoryId },
   });
   const categoryAndSub = data ? data.item : null;
-
   return (
     <Box
       sx={{
@@ -38,7 +37,7 @@ const CategoriesMenu = (props: CategoriesMenuProps) => {
               backgroundColor: colorLightGrey,
             }}
           >
-            <Typography variant="h6" textAlign={"center"} sx={{ p: 2 }}>
+            <Typography variant="h5" textAlign={"center"} sx={{ p: 2 }}>
               {categoryAndSub.name}
             </Typography>
           </Box>
@@ -50,20 +49,32 @@ const CategoriesMenu = (props: CategoriesMenuProps) => {
               backgroundColor: colorWhite,
             }}
           >
-            {categoryAndSub.subCategories.map((sub) => (
-              <React.Fragment key={sub.id}>
+            {categoryAndSub.childCategories.map((firstChild) => (
+              <React.Fragment key={firstChild.id}>
                 <Typography
-                  variant="subtitle2"
+                  variant="h6"
                   sx={{
                     p: 1,
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    router.push(`/sub/${sub.id}`);
                   }}
                 >
-                  {sub.name}
+                  {firstChild.name}
                 </Typography>
+                {firstChild.childCategories?.map((secondChild) => (
+                  <React.Fragment key={secondChild.id}>
+                    <Typography
+                      variant="subtitle1"
+                      sx={{
+                        ml: 2,
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        router.push(`/sub/${secondChild.id}`);
+                      }}
+                    >
+                      {secondChild.name}
+                    </Typography>
+                  </React.Fragment>
+                ))}
               </React.Fragment>
             ))}
           </Box>
