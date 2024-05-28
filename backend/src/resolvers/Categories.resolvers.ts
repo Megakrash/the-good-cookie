@@ -14,8 +14,9 @@ import {
   CategoryUpdateInput,
 } from '../entities/Category'
 import { MyContext } from '../types/Users.types'
-import { Picture } from '../entities/Picture'
 import { CategoriesServices } from '../services/Categories.services'
+import { PicturesServices } from '../services/Pictures.services'
+import { IsNull } from 'typeorm'
 
 @Resolver(Category)
 export class CategoriesResolver {
@@ -45,12 +46,12 @@ export class CategoriesResolver {
     newCategory.createdBy = context.user
     newCategory.updatedBy = context.user
 
+    // Assign picture to new Category
     if (data.pictureId) {
-      const picture = await Picture.findOne({ where: { id: data.pictureId } })
-      if (!picture) {
-        throw new Error('Picture not found')
+      const picture = await PicturesServices.findPictureById(data.pictureId)
+      if (picture) {
+        newCategory.picture = picture
       }
-      newCategory.picture = picture
     }
 
     // Validate and save new Category
@@ -114,6 +115,21 @@ export class CategoriesResolver {
       order: { id: 'ASC' },
     })
     return categories
+  }
+
+  // GET ALL ROOT
+  @Query(() => [Category])
+  async categoriesGetaLLRoot(): Promise<Category[]> {
+    const rootCategories = await Category.find({
+      where: { parentCategory: IsNull() },
+      relations: {
+        ads: true,
+        createdBy: true,
+        updatedBy: true,
+      },
+      order: { id: 'ASC' },
+    })
+    return rootCategories
   }
 
   // GET BY ID
