@@ -17,6 +17,15 @@ export const queryAllCat = gql`
   }
 `;
 
+export const queryAllRootCat = gql`
+  query CategoriesGetaLLRoot {
+    items: categoriesGetaLLRoot {
+      id
+      name
+    }
+  }
+`;
+
 export const queryAllCatAndSub = gql`
   query getAllCategoriesAndSub {
     items: categoriesGetAll {
@@ -35,13 +44,17 @@ export const queryCatByIdAndSub = gql`
     item: categoryById(id: $categoryByIdId) {
       id
       name
-      subCategories {
+      childCategories {
         id
         name
-        picture {
+        childCategories {
           id
-          filename
+          name
         }
+      }
+      ads {
+        id
+        title
       }
     }
   }
