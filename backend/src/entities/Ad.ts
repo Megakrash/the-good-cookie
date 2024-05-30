@@ -34,7 +34,7 @@ export class Ad extends PrimaryEntity {
 
   // Title
   @Column({ length: 100 })
-  @Length(10, 100, { message: 'Entre 10 et 100 caractères' })
+  @Length(4, 100, { message: 'Entre 4 et 100 caractères' })
   @Index()
   @Field()
   title!: string

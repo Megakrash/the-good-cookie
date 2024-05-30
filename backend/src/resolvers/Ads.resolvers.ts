@@ -46,7 +46,13 @@ export class AdsResolver {
       await newAd.save()
       return newAd
     }
-    throw new Error(`Error occurred: ${JSON.stringify(errors)}`)
+    // If there are validation errors delete the user info in the error message
+    const validationErrors = errors.map((err) => ({
+      property: err.property,
+      constraints: err.constraints,
+    }))
+
+    throw new Error(`Error occurred: ${JSON.stringify(validationErrors)}`)
   }
 
   // UPDATE
