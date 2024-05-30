@@ -4,10 +4,15 @@ import { useQuery } from "@apollo/client";
 import { CategoriesTypes, CategoryTypes } from "@/types/CategoryTypes";
 import { queryAllCatWithHierarchy } from "@/graphql/Categories";
 import { SelectChangeEvent } from "@mui/material/Select";
+import { VariablesColors } from "@/styles/Variables.colors";
+
+const colors = new VariablesColors();
+const { colorLightGrey, colorWhite } = colors;
 
 type CategorySelectProps = {
   selectedCategory: number;
   setSelectedCategory: (selectedCategory: number) => void;
+  type: "createCategory" | "createAd";
 };
 
 const CategorySelect: React.FC<CategorySelectProps> = (
@@ -33,11 +38,17 @@ const CategorySelect: React.FC<CategorySelectProps> = (
         fontWeight = "normal";
     }
 
+    const isDisabled =
+      props.type === "createAd" &&
+      category.childCategories &&
+      category.childCategories.length > 0;
+
     return [
       <MenuItem
         key={category.id}
         value={category.id}
         style={{ marginLeft: indent, fontWeight: fontWeight }}
+        disabled={isDisabled}
       >
         {category.name}
       </MenuItem>,
@@ -56,15 +67,20 @@ const CategorySelect: React.FC<CategorySelectProps> = (
   return (
     <FormControl fullWidth>
       <InputLabel size="small" id="category-select-label">
-        Catégorie
+        Catégorie*
       </InputLabel>
       <Select
         labelId="category-select-label"
         id="category-select"
         size="small"
+        sx={{
+          backgroundColor:
+            props.type === "createAd" ? colorLightGrey : colorWhite,
+        }}
         value={props.selectedCategory}
         onChange={handleChange}
         label="Catégorie"
+        required
         MenuProps={{
           PaperProps: {
             style: {

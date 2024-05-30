@@ -10,7 +10,7 @@ import {
 import { StepFormButton } from "@/styles/MuiButtons";
 import { Toaster } from "react-hot-toast";
 import { showToast } from "@/components/utils/toastHelper";
-import CategorySelect from "../../components/CategorySelect";
+import CategorySelect from "../../../utils/CategorySelect";
 
 const CreateCategories = (): React.ReactNode => {
   // State
@@ -89,6 +89,7 @@ const CreateCategories = (): React.ReactNode => {
       </Typography>
       <BackOfficeInput data={name} setData={setName} label="Nom" />
       <CategorySelect
+        type="createCategory"
         selectedCategory={parentCategory}
         setSelectedCategory={setParentCategory}
       />
