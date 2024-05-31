@@ -1,7 +1,5 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { PATH_IMAGE } from "@/api/configApi";
 import { AdFormData, AdTypes, AdTags } from "@/types/AdTypes";
-import { TagsTypes } from "@/types/TagTypes";
 import { Toaster } from "react-hot-toast";
 import {
   queryAllAds,
@@ -9,31 +7,26 @@ import {
   mutationCreateAd,
   mutationUpdateAd,
 } from "@/graphql/Ads";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import { Box, Button, CardMedia } from "@mui/material";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { DownloadInput } from "@/styles/MuiInput";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import UserZipCity from "@/components/users/components/UserZipCity";
 import AdTitle from "./components/AdTitle";
 import AdDescription from "./components/AdDescription";
 import AdPrice from "./components/AdPrice";
-import { queryAllTags } from "../../../graphql/Tags";
 import { uploadPicture } from "@/components/utils/uploadPicture";
 import { showToast } from "@/components/utils/toastHelper";
 import CategorySelect from "@/components/utils/CategorySelect";
 import TagSelect from "@/components/utils/TagSelect";
+import UserAvatar from "@/components/users/components/UserAvatar";
+import { StepFormButton } from "@/styles/MuiButtons";
 
 type AdFormProps = {
   ad?: AdTypes;
 };
 
-function AdForm(props: AdFormProps): React.ReactNode {
+const AdForm = (props: AdFormProps): React.ReactNode => {
   const router = useRouter();
-  // Get Tags
-
-  const { data: dataTags } = useQuery<{ items: TagsTypes }>(queryAllTags);
-  const tags = dataTags ? dataTags.items : [];
 
   // Form
   const [title, setTitle] = useState<string>("");
@@ -41,20 +34,28 @@ function AdForm(props: AdFormProps): React.ReactNode {
   const [curentPicture, setCurentPicture] = useState<string>("");
   const [newPicture, setNewPicture] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  function handleFileSelection(event: React.ChangeEvent<HTMLInputElement>) {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      setNewPicture(file);
-      setCurentPicture("");
-      setPreviewUrl(URL.createObjectURL(file));
-    }
-  }
   const [price, setPrice] = useState<number>(0);
   const [zipCode, setZipCode] = useState<string>("");
   const [city, setCity] = useState<string>("");
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
   const [selectedCategory, setSelectedCategory] = useState<null | number>();
   const [selectedTags, setSelectedTags] = useState<AdTags>([]);
+  // Form validation
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
+  useEffect(() => {
+    if (
+      title &&
+      description &&
+      price &&
+      zipCode &&
+      selectedCategory &&
+      (curentPicture || newPicture)
+    ) {
+      setIsFormValid(true);
+    } else {
+      setIsFormValid(false);
+    }
+  }, [title, description, price, zipCode, selectedCategory, newPicture]);
 
   // Submit & Update queries
 
@@ -131,127 +132,70 @@ function AdForm(props: AdFormProps): React.ReactNode {
   }, [props.ad]);
   return (
     <Box
-      className="adForm"
       sx={{
         width: props.ad ? "50%" : "98%",
         margin: "auto",
       }}
     >
       <Toaster />
-      {tags && (
-        <Box
-          className="adForm_boxForm"
-          component="form"
-          sx={{
-            "& > :not(style)": { m: 2, width: "50ch" },
-          }}
-          autoComplete="off"
-          onSubmit={onSubmit}
+
+      <Box
+        component="form"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          "& > :not(style)": { m: 2, width: "50ch" },
+        }}
+        autoComplete="off"
+        onSubmit={onSubmit}
+      >
+        <Typography variant="h4">
+          {!props.ad ? "Création de votre annonce" : "Modifier votre annonce"}
+        </Typography>
+        <AdTitle title={title} setTitle={setTitle} />
+        <AdDescription
+          description={description}
+          setDescription={setDescription}
+        />
+        <AdPrice price={price} setPrice={setPrice} />
+        <UserZipCity
+          zipCode={zipCode}
+          setCity={setCity}
+          setZipCode={setZipCode}
+          setCoordinates={setCoordinates}
+        />
+        <CategorySelect
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          type="createAd"
+        />
+        <TagSelect
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
+        />
+        <UserAvatar
+          picture={newPicture}
+          setPicture={setNewPicture}
+          previewUrl={previewUrl}
+          setPreviewUrl={setPreviewUrl}
+          curentPicture={curentPicture}
+          setCurentPicture={setCurentPicture}
+        />
+        <StepFormButton
+          sx={{ margin: "auto" }}
+          disabled={loading || !isFormValid}
         >
-          <h2>
-            {!props.ad ? "Création de votre annonce" : "Modifier votre annonce"}
-          </h2>
-          <AdTitle title={title} setTitle={setTitle} />
-          <AdDescription
-            description={description}
-            setDescription={setDescription}
-          />
-          <AdPrice price={price} setPrice={setPrice} />
-          <UserZipCity
-            zipCode={zipCode}
-            setCity={setCity}
-            setZipCode={setZipCode}
-            setCoordinates={setCoordinates}
-          />
-          <CategorySelect
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            type="createAd"
-          />
-          <TagSelect
-            selectedTags={selectedTags}
-            setSelectedTags={setSelectedTags}
-          />
-
-          {curentPicture === "" ? (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "15px",
-              }}
-            >
-              {previewUrl && (
-                <CardMedia
-                  sx={{
-                    width: "100%",
-                    height: 200,
-                    margin: "auto",
-                    objectFit: "contain",
-                  }}
-                  image={previewUrl}
-                />
-              )}
-              <Button
-                component="label"
-                variant="contained"
-                startIcon={<CloudUploadIcon />}
-              >
-                Image pour votre annonce
-                <DownloadInput
-                  type="file"
-                  accept=".jpg, .png, .webp"
-                  onChange={handleFileSelection}
-                  required={!props.ad}
-                />
-              </Button>
-            </Box>
+          {loading ? (
+            <CircularProgress size={24} />
+          ) : props.ad ? (
+            "Modifier mon annonce"
           ) : (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "15px",
-              }}
-            >
-              <CardMedia
-                sx={{
-                  width: "100%",
-                  height: 200,
-                  margin: "auto",
-                  objectFit: "contain",
-                }}
-                image={`${PATH_IMAGE}/pictures/${curentPicture}`}
-              />
-              <Button
-                component="label"
-                variant="contained"
-                startIcon={<CloudUploadIcon />}
-              >
-                {`Modifier l'image`}
-                <DownloadInput
-                  type="file"
-                  accept=".jpg, .png, .webp"
-                  onChange={handleFileSelection}
-                />
-              </Button>
-            </Box>
+            "Créer mon annonce"
           )}
-
-          <Button
-            variant="contained"
-            size="large"
-            type="submit"
-            disabled={loading}
-          >
-            {props.ad ? "Modifer mon annonce" : "Créer mon annonce"}
-          </Button>
-        </Box>
-      )}
+        </StepFormButton>
+      </Box>
     </Box>
   );
-}
+};
 
 export default AdForm;
