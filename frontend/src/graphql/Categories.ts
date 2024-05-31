@@ -17,14 +17,27 @@ export const queryAllCat = gql`
   }
 `;
 
-export const queryAllCatAndSub = gql`
-  query getAllCategoriesAndSub {
-    items: categoriesGetAll {
+export const queryAllRootCat = gql`
+  query CategoriesGetaLLRoot {
+    items: categoriesGetaLLRoot {
       id
       name
-      subCategories {
+    }
+  }
+`;
+
+export const queryAllCatWithHierarchy = gql`
+  query CategoriesGetAllWithHierarchy {
+    items: categoriesGetAllWithHierarchy {
+      id
+      name
+      childCategories {
         id
         name
+        childCategories {
+          id
+          name
+        }
       }
     }
   }
@@ -35,13 +48,17 @@ export const queryCatByIdAndSub = gql`
     item: categoryById(id: $categoryByIdId) {
       id
       name
-      subCategories {
+      childCategories {
         id
         name
-        picture {
+        childCategories {
           id
-          filename
+          name
         }
+      }
+      ads {
+        id
+        title
       }
     }
   }

@@ -1,10 +1,8 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { PATH_IMAGE } from "@/api/configApi";
 import { AdFormData, AdTypes, AdTags } from "@/types/AdTypes";
-import { CategoriesTypes } from "@/types/CategoryTypes";
 import { TagsTypes } from "@/types/TagTypes";
 import { Toaster } from "react-hot-toast";
-import { queryAllCatAndSub } from "@/graphql/Categories";
 import {
   queryAllAds,
   queryAdById,
@@ -33,6 +31,7 @@ import AdPrice from "./components/AdPrice";
 import { queryAllTags } from "../../../graphql/Tags";
 import { uploadPicture } from "@/components/utils/uploadPicture";
 import { showToast } from "@/components/utils/toastHelper";
+import CategorySelect from "@/components/utils/CategorySelect";
 
 type AdFormProps = {
   ad?: AdTypes;
@@ -40,11 +39,7 @@ type AdFormProps = {
 
 function AdForm(props: AdFormProps): React.ReactNode {
   const router = useRouter();
-  // Get Categories&SubCategories & Tags
-  const { data: dataCategories } = useQuery<{ items: CategoriesTypes }>(
-    queryAllCatAndSub,
-  );
-  const categories = dataCategories ? dataCategories.items : [];
+  // Get Tags
 
   const { data: dataTags } = useQuery<{ items: TagsTypes }>(queryAllTags);
   const tags = dataTags ? dataTags.items : [];
@@ -67,7 +62,7 @@ function AdForm(props: AdFormProps): React.ReactNode {
   const [zipCode, setZipCode] = useState<string>("");
   const [city, setCity] = useState<string>("");
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
-  const [subCategoryId, setSubCategoryId] = useState<null | number>();
+  const [selectedCategory, setSelectedCategory] = useState<null | number>();
   const [selectedTags, setSelectedTags] = useState<AdTags>([]);
   const handleChangeTag = (event: SelectChangeEvent<number[]>) => {
     const value: number[] = event.target.value as unknown as number[];
@@ -99,7 +94,7 @@ function AdForm(props: AdFormProps): React.ReactNode {
         city,
         zipCode,
         location: { type: "Point", coordinates: coordinates },
-        subCategory: subCategoryId ? { id: Number(subCategoryId) } : null,
+        category: selectedCategory ? { id: Number(selectedCategory) } : null,
         tags: selectedTags,
         ...(pictureId !== null && { pictureId }),
       };
@@ -130,6 +125,7 @@ function AdForm(props: AdFormProps): React.ReactNode {
       }
     } catch (error) {
       console.error("error", error);
+      showToast("error", "Erreur pendant la création de votre annonce");
     }
   }
   // If update Ad
@@ -142,7 +138,7 @@ function AdForm(props: AdFormProps): React.ReactNode {
       setCity(props.ad.city);
       setPrice(props.ad.price);
       setCurentPicture(props.ad.picture.filename);
-      setSubCategoryId(props.ad.subCategory ? props.ad.subCategory.id : null);
+      setSelectedCategory(props.ad.category ? props.ad.category.id : null);
       const transformedTags = props.ad.tags.map((tag) => ({ id: tag.id }));
       setSelectedTags(transformedTags);
     }
@@ -163,7 +159,7 @@ function AdForm(props: AdFormProps): React.ReactNode {
           },
         }}
       />
-      {categories && tags && (
+      {tags && (
         <Box
           className="adForm_boxForm"
           component="form"
@@ -188,40 +184,11 @@ function AdForm(props: AdFormProps): React.ReactNode {
             setZipCode={setZipCode}
             setCoordinates={setCoordinates}
           />
-          <FormControl fullWidth>
-            <InputLabel id="subcategory-select-label">Catégorie*</InputLabel>
-            <Select
-              className="adForm_boxForm_input"
-              labelId="subcategory-select-label"
-              id="subcategory-select"
-              value={subCategoryId || ""}
-              onChange={(e) =>
-                setSubCategoryId(
-                  e.target.value === "" ? undefined : Number(e.target.value),
-                )
-              }
-              label="Sélectionnez une sous-catégorie"
-              required
-            >
-              <MenuItem value="" disabled>
-                Sélectionnez une catégorie
-              </MenuItem>
-              {categories.map((category) => [
-                <MenuItem key={category.id} value="" disabled>
-                  {category.name}
-                </MenuItem>,
-                ...category.subCategories.map((subCategory) => (
-                  <MenuItem
-                    key={`subcategory-${category.id}-${subCategory.id}`}
-                    value={subCategory.id}
-                    style={{ marginLeft: "20px" }}
-                  >
-                    {subCategory.name}
-                  </MenuItem>
-                )),
-              ])}
-            </Select>
-          </FormControl>
+          <CategorySelect
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            type="createAd"
+          />
           <FormControl fullWidth>
             <InputLabel id="tags">Tag(s)</InputLabel>
             <Select

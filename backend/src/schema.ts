@@ -2,7 +2,6 @@ import { buildSchema } from 'type-graphql'
 import { AdsResolver } from './resolvers/Ads.resolvers'
 import { CategoriesResolver } from './resolvers/Categories.resolvers'
 import { PictureResolver } from './resolvers/Pictures.resolvers'
-import { SubCategoriesResolver } from './resolvers/SubCategories.resolvers'
 import { TagsResolver } from './resolvers/Tags.resolvers'
 import { UsersResolver } from './resolvers/Users.resolvers'
 import { customAuthChecker } from './auth'
@@ -14,7 +13,6 @@ export async function getSchema() {
       UsersResolver,
       PictureResolver,
       CategoriesResolver,
-      SubCategoriesResolver,
       TagsResolver,
     ],
     authChecker: customAuthChecker,

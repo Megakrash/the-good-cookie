@@ -14,6 +14,9 @@ import {
   CategoryUpdateInput,
 } from '../entities/Category'
 import { MyContext } from '../types/Users.types'
+import { CategoriesServices } from '../services/Categories.services'
+import { PicturesServices } from '../services/Pictures.services'
+import { IsNull } from 'typeorm'
 
 @Resolver(Category)
 export class CategoriesResolver {
@@ -29,6 +32,12 @@ export class CategoriesResolver {
       throw new Error('User context is missing or user is not authenticated')
     }
 
+    // Check if Category name is already used in parent Category or among root categories
+    await CategoriesServices.existingCategory(
+      data.name,
+      data.parentCategory?.id
+    )
+
     // Create new Category
     const newCategory = new Category()
 
@@ -37,13 +46,12 @@ export class CategoriesResolver {
     newCategory.createdBy = context.user
     newCategory.updatedBy = context.user
 
-    // Check if Category name is already in use
-    const categoryName: string = data.name
-    const existingCategory = await Category.findOne({
-      where: { name: categoryName },
-    })
-    if (existingCategory) {
-      throw new Error(`Category name already in use`)
+    // Assign picture to new Category
+    if (data.pictureId) {
+      const picture = await PicturesServices.findPictureById(data.pictureId)
+      if (picture) {
+        newCategory.picture = picture
+      }
     }
 
     // Validate and save new Category
@@ -71,7 +79,7 @@ export class CategoriesResolver {
     // Find Category by ID
     const category = await Category.findOne({
       where: { id },
-      relations: { subCategories: true, createdBy: true },
+      relations: { childCategories: true, createdBy: true },
     })
 
     // If Category not found, throw error
@@ -99,7 +107,8 @@ export class CategoriesResolver {
   async categoriesGetAll(): Promise<Category[]> {
     const categories = await Category.find({
       relations: {
-        subCategories: { ads: true },
+        ads: true,
+        childCategories: { ads: true },
         createdBy: true,
         updatedBy: true,
       },
@@ -108,13 +117,47 @@ export class CategoriesResolver {
     return categories
   }
 
+  // GET ALL ROOT
+  @Query(() => [Category])
+  async categoriesGetaLLRoot(): Promise<Category[]> {
+    const rootCategories = await Category.find({
+      where: { parentCategory: IsNull() },
+      relations: {
+        ads: true,
+        createdBy: true,
+        updatedBy: true,
+      },
+      order: { id: 'ASC' },
+    })
+    return rootCategories
+  }
+
+  // GET ALL WITH FULL HIERARCHY
+  @Query(() => [Category])
+  async categoriesGetAllWithHierarchy(): Promise<Category[]> {
+    // Fetch all root categories with their full hierarchy
+    const rootCategories = await Category.find({
+      where: { parentCategory: IsNull() },
+      relations: {
+        childCategories: {
+          childCategories: true,
+        },
+      },
+      order: { id: 'ASC' },
+    })
+
+    return rootCategories
+  }
+
   // GET BY ID
   @Query(() => Category)
   async categoryById(@Arg('id', () => ID) id: number): Promise<Category> {
     const category = await Category.findOne({
       where: { id },
       relations: {
-        subCategories: { ads: true, picture: true },
+        ads: true,
+        parentCategory: true,
+        childCategories: { ads: true, picture: true, childCategories: true },
         createdBy: true,
         updatedBy: true,
       },
@@ -133,7 +176,7 @@ export class CategoriesResolver {
   ): Promise<Category | null> {
     const category = await Category.findOne({
       where: { id },
-      relations: { subCategories: true },
+      relations: { childCategories: true },
     })
     if (category) {
       await category.remove()

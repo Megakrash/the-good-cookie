@@ -21,10 +21,10 @@ import { Toaster } from "react-hot-toast";
 import { PATH_IMAGE } from "@/api/configApi";
 import { queryAllTags } from "../../graphql/Tags";
 import { queryAllAds } from "../../graphql/Ads";
-import { queryAllCatAndSub } from "../../graphql/Categories";
 import GpsAndRadius from "./components/GpsAndRadius";
 import { VariablesColors } from "@/styles/Variables.colors";
 import { showToast } from "../utils/toastHelper";
+import CategorySelect from "../utils/CategorySelect";
 
 const colors = new VariablesColors();
 const { colorLightGrey, colorLightOrange } = colors;
@@ -32,12 +32,8 @@ const { colorLightGrey, colorLightOrange } = colors;
 const Search = (): React.ReactNode => {
   const theme = useTheme();
   //-------------------------------------
-  // Get Categories&SubCategories & Tags
+  // Get Tags
   //-------------------------------------
-  const { data: dataCategories } = useQuery<{ items: CategoriesTypes }>(
-    queryAllCatAndSub,
-  );
-  const categories = dataCategories ? dataCategories.items : [];
 
   const { data: dataTags } = useQuery<{ items: TagsTypes }>(queryAllTags);
   const tags = dataTags ? dataTags.items : [];
@@ -47,10 +43,7 @@ const Search = (): React.ReactNode => {
   //-----------------
   const [showQueries, setShowQueries] = useState<boolean>(false);
   // subCategories
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string>();
-  const handleChangeCategory = (event: SelectChangeEvent) => {
-    setSelectedSubCategory(event.target.value as string);
-  };
+  const [selectedCategory, setSelectedCategory] = useState<number>();
   // Tags
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const handleChange = (event: SelectChangeEvent<string[]>) => {
@@ -77,7 +70,7 @@ const Search = (): React.ReactNode => {
     useLazyQuery<{ items: AdsTypes }>(queryAllAds);
   // const searchResult = dataSearch ? dataSearch.items : [];
   const handleSearchClick = () => {
-    if (!selectedSubCategory && !lat && !long) {
+    if (!selectedCategory && !lat && !long) {
       showToast(
         "error",
         `Veuillez indiquer une catégorie et une localisation pour effectuer une recherche.`,
@@ -87,7 +80,7 @@ const Search = (): React.ReactNode => {
     doSearch({
       variables: {
         where: {
-          subCategory: selectedSubCategory,
+          category: selectedCategory,
           location: {
             type: "Point",
             coordinates: [long, lat],
@@ -107,7 +100,7 @@ const Search = (): React.ReactNode => {
   //-----------------
 
   const resetForm = (): void => {
-    setSelectedSubCategory(undefined);
+    setSelectedCategory(undefined);
     setSelectedTags([]);
     setLat(undefined);
     setLong(undefined);
@@ -170,39 +163,11 @@ const Search = (): React.ReactNode => {
             gap: "15px",
           }}
         >
-          <FormControl fullWidth>
-            <InputLabel size="small" id="subcategory-select-label">
-              Catégorie*
-            </InputLabel>
-            <Select
-              labelId="subcategory-select-label"
-              id="subcategory-select"
-              size="small"
-              sx={{ backgroundColor: colorLightGrey }}
-              value={selectedSubCategory || ""}
-              onChange={handleChangeCategory}
-              label="Sélectionnez une sous-catégorie"
-              required
-            >
-              <MenuItem value="" disabled>
-                Sélectionnez une catégorie
-              </MenuItem>
-              {categories.map((category) => [
-                <MenuItem key={category.id} value="" disabled>
-                  {category.name}
-                </MenuItem>,
-                ...category.subCategories.map((subCategory) => (
-                  <MenuItem
-                    key={`subcategory-${category.id}-${subCategory.id}`}
-                    value={subCategory.id}
-                    style={{ marginLeft: "20px" }}
-                  >
-                    {subCategory.name}
-                  </MenuItem>
-                )),
-              ])}
-            </Select>
-          </FormControl>
+          <CategorySelect
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            type="createAd"
+          />
           <GpsAndRadius
             setLat={setLat}
             setLong={setLong}

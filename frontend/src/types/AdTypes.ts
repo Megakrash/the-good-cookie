@@ -12,13 +12,9 @@ export type AdTypes = {
   zipCode: string;
   city: string;
   coordinates: [number, number];
-  subCategory: {
+  category: {
     id: number;
     name: string;
-    category: {
-      id: number;
-      name: string;
-    };
   };
   tags: {
     id: number;
@@ -50,6 +46,6 @@ export type AdFormData = {
   location: { type: string; coordinates: [number, number] };
   pictureId?: number;
   price: number;
-  subCategory: { id: number } | null;
+  category: { id: number } | null;
   tags?: AdTags | null;
 };
