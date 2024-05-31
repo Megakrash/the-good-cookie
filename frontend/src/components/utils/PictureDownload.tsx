@@ -4,7 +4,7 @@ import { DownloadInput } from "@/styles/MuiInput";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { PATH_IMAGE } from "@/api/configApi";
 
-type UserAvatarProps = {
+type PictureDownloadProps = {
   picture: File | null;
   setPicture: (picture: File) => void;
   previewUrl: string;
@@ -13,7 +13,7 @@ type UserAvatarProps = {
   setCurentPicture?: (curentPicture: string) => void;
 };
 
-const UserAvatar = (props: UserAvatarProps): React.ReactNode => {
+const PictureDownload = (props: PictureDownloadProps): React.ReactNode => {
   function handleFileSelection(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
@@ -58,4 +58,4 @@ const UserAvatar = (props: UserAvatarProps): React.ReactNode => {
   );
 };
 
-export default UserAvatar;
+export default PictureDownload;

@@ -5,7 +5,7 @@ import UserPhone from "../components/UserPhone";
 import UserPassword from "../components/UserPassword";
 import UserProfil from "../components/UserProfil";
 import UserGender from "../components/UserGender";
-import UserAvatar from "../components/UserAvatar";
+import PictureDownload from "../../utils/PictureDownload";
 import { StepFormButton } from "@/styles/MuiButtons";
 import { VariablesColors } from "@/styles/Variables.colors";
 import { Box, Grid, Typography, useTheme } from "@mui/material";
@@ -112,7 +112,7 @@ const StepForm = (props: StepSignUpFormProps): React.ReactNode => {
       title: "Votre  avatar ?",
       subtitle: `Pour vous montrer comme vous le souhaitez.`,
       icon: AccountCircleIcon,
-      Component: UserAvatar,
+      Component: PictureDownload,
       componentProps: {
         picture: props.picture,
         setPicture: props.setPicture,

@@ -18,7 +18,7 @@ import { uploadPicture } from "@/components/utils/uploadPicture";
 import { showToast } from "@/components/utils/toastHelper";
 import CategorySelect from "@/components/utils/CategorySelect";
 import TagSelect from "@/components/utils/TagSelect";
-import UserAvatar from "@/components/users/components/UserAvatar";
+import PictureDownload from "@/components/utils/PictureDownload";
 import { StepFormButton } from "@/styles/MuiButtons";
 
 type AdFormProps = {
@@ -173,7 +173,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
           selectedTags={selectedTags}
           setSelectedTags={setSelectedTags}
         />
-        <UserAvatar
+        <PictureDownload
           picture={newPicture}
           setPicture={setNewPicture}
           previewUrl={previewUrl}
