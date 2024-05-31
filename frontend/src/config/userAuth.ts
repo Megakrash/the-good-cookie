@@ -5,9 +5,9 @@ import { queryMeContext } from "@/graphql/Users";
 import { UserContextTypes } from "@/types/UserTypes";
 
 export function useAuth(privatePages: string[]) {
-  const { loading, data, refetch } = useQuery<{ item: UserContextTypes }>(
-    queryMeContext,
-  );
+  const { loading, data, refetch, error } = useQuery<{
+    item: UserContextTypes;
+  }>(queryMeContext);
   const router = useRouter();
 
   useEffect(() => {
@@ -22,10 +22,13 @@ export function useAuth(privatePages: string[]) {
   }, [router, refetch]);
 
   useEffect(() => {
-    if (privatePages.includes(router.pathname) && data?.item === null) {
+    if (
+      privatePages.includes(router.pathname) &&
+      (data?.item === null || error)
+    ) {
       router.replace("/signin");
     }
-  }, [router, data]);
+  }, [router, data, error]);
 
   return { loading };
 }
