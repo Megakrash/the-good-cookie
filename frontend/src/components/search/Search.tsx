@@ -1,43 +1,22 @@
 import React, { useState } from "react";
-import { CategoriesTypes } from "@/types/CategoryTypes";
-import { AdsTypes } from "@/types/AdTypes";
-import { TagsTypes } from "@/types/TagTypes";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  SelectChangeEvent,
-  TextField,
-  Box,
-  Button,
-  Grid,
-  useTheme,
-} from "@mui/material";
-import { FilterAlt, FilterAltOff } from "@mui/icons-material";
+import { AdTags, AdsTypes } from "@/types/AdTypes";
+import { useLazyQuery } from "@apollo/client";
+import { TextField, Box, Button, Grid, useTheme } from "@mui/material";
+import { FilterAlt, FilterAltOff, Tag } from "@mui/icons-material";
 import { Toaster } from "react-hot-toast";
 import { PATH_IMAGE } from "@/api/configApi";
-import { queryAllTags } from "../../graphql/Tags";
 import { queryAllAds } from "../../graphql/Ads";
 import GpsAndRadius from "./components/GpsAndRadius";
 import { VariablesColors } from "@/styles/Variables.colors";
 import { showToast } from "../utils/toastHelper";
 import CategorySelect from "../utils/CategorySelect";
+import TagSelect from "../utils/TagSelect";
 
 const colors = new VariablesColors();
 const { colorLightGrey, colorLightOrange } = colors;
 
 const Search = (): React.ReactNode => {
   const theme = useTheme();
-  //-------------------------------------
-  // Get Tags
-  //-------------------------------------
-
-  const { data: dataTags } = useQuery<{ items: TagsTypes }>(queryAllTags);
-  const tags = dataTags ? dataTags.items : [];
-
   //-----------------
   // Selected queries
   //-----------------
@@ -45,11 +24,7 @@ const Search = (): React.ReactNode => {
   // subCategories
   const [selectedCategory, setSelectedCategory] = useState<number>();
   // Tags
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const handleChange = (event: SelectChangeEvent<string[]>) => {
-    const value = event.target.value as string[];
-    setSelectedTags(value);
-  };
+  const [selectedTags, setSelectedTags] = useState<AdTags>([]);
 
   // Location
   const [lat, setLat] = useState<number>();
@@ -228,36 +203,10 @@ const Search = (): React.ReactNode => {
                 )
               }
             />
-            <FormControl>
-              <InputLabel size="small" id="tags">
-                Tag(s)
-              </InputLabel>
-              <Select
-                labelId="tags"
-                id="select-tags"
-                size="small"
-                sx={{ backgroundColor: colorLightGrey }}
-                multiple
-                value={selectedTags}
-                onChange={handleChange}
-                input={<OutlinedInput label="Tag" />}
-                renderValue={(selected) =>
-                  selected
-                    .map(
-                      (id) =>
-                        tags.find((tag) => tag.id.toString() === id)?.name ||
-                        "",
-                    )
-                    .join(", ")
-                }
-              >
-                {tags.map((tag) => (
-                  <MenuItem key={tag.id} value={tag.id}>
-                    {tag.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <TagSelect
+              selectedTags={selectedTags}
+              setSelectedTags={setSelectedTags}
+            />
           </Grid>
         )}
       </Grid>

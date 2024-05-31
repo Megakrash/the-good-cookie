@@ -11,17 +11,7 @@ import {
 } from "@/graphql/Ads";
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  SelectChangeEvent,
-  Box,
-  Button,
-  CardMedia,
-} from "@mui/material";
+import { Box, Button, CardMedia } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { DownloadInput } from "@/styles/MuiInput";
 import UserZipCity from "@/components/users/components/UserZipCity";
@@ -32,6 +22,7 @@ import { queryAllTags } from "../../../graphql/Tags";
 import { uploadPicture } from "@/components/utils/uploadPicture";
 import { showToast } from "@/components/utils/toastHelper";
 import CategorySelect from "@/components/utils/CategorySelect";
+import TagSelect from "@/components/utils/TagSelect";
 
 type AdFormProps = {
   ad?: AdTypes;
@@ -64,11 +55,6 @@ function AdForm(props: AdFormProps): React.ReactNode {
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
   const [selectedCategory, setSelectedCategory] = useState<null | number>();
   const [selectedTags, setSelectedTags] = useState<AdTags>([]);
-  const handleChangeTag = (event: SelectChangeEvent<number[]>) => {
-    const value: number[] = event.target.value as unknown as number[];
-    const selectedOptions: AdTags = value.map((id) => ({ id }));
-    setSelectedTags(selectedOptions);
-  };
 
   // Submit & Update queries
 
@@ -151,14 +137,7 @@ function AdForm(props: AdFormProps): React.ReactNode {
         margin: "auto",
       }}
     >
-      <Toaster
-        toastOptions={{
-          style: {
-            background: "#ff8a00",
-            color: "#fff",
-          },
-        }}
-      />
+      <Toaster />
       {tags && (
         <Box
           className="adForm_boxForm"
@@ -189,29 +168,10 @@ function AdForm(props: AdFormProps): React.ReactNode {
             setSelectedCategory={setSelectedCategory}
             type="createAd"
           />
-          <FormControl fullWidth>
-            <InputLabel id="tags">Tag(s)</InputLabel>
-            <Select
-              className="adForm_boxForm_input"
-              labelId="tags-label"
-              id="select-tags"
-              multiple
-              value={selectedTags.map((tag) => tag.id)}
-              onChange={handleChangeTag}
-              input={<OutlinedInput label="Tag" />}
-              renderValue={(selected) =>
-                selected
-                  .map((id) => tags.find((tag) => tag.id === id)?.name || "")
-                  .join(", ")
-              }
-            >
-              {tags.map((tag) => (
-                <MenuItem key={tag.id} value={tag.id}>
-                  {tag.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <TagSelect
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+          />
 
           {curentPicture === "" ? (
             <Box
