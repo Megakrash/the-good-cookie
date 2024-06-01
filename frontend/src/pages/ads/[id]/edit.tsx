@@ -5,7 +5,7 @@ import AdCard from "@/components/ads/AdCard";
 import { queryAdById } from "@/graphql/Ads";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 export default function EditAd() {
   const router = useRouter();
@@ -27,19 +27,21 @@ export default function EditAd() {
             width: "98%",
             marginTop: "50px",
             display: "flex",
-            flexDirection: "row",
+            flexDirection: { xs: "column-reverse", md: "row" },
             justifyContent: "center",
           }}
         >
           <AdForm ad={ad} />
           <Box
             sx={{
-              width: "40%",
+              width: { xs: "98%", md: "40%" },
               display: "flex",
               flexDirection: "column",
+              m: 2,
+              gap: 4,
             }}
           >
-            <h2>Votre annonce actuelle</h2>
+            <Typography variant="h4">Votre annonce actuelle</Typography>
             <AdCard key={ad.id} ad={ad} />
           </Box>
         </Box>

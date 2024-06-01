@@ -9,10 +9,10 @@ import { Box, CardActionArea } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
 
 type AdCardProps = {
-  ad?: AdTypes;
+  ad: AdTypes;
 };
 
-function AdCard(props: AdCardProps): React.ReactNode {
+const AdCard = (props: AdCardProps): React.ReactNode => {
   // Path images
   const adImageUrl =
     props.ad.picture.filename !== ""
@@ -23,10 +23,6 @@ function AdCard(props: AdCardProps): React.ReactNode {
       ? `${PATH_IMAGE}/pictures/${props.ad.user.picture.filename}`
       : `${PATH_IMAGE}/default/avatar.webp`;
 
-  function capitalizeFirstLetter(text: string): string {
-    return text.charAt(0).toUpperCase() + text.slice(1);
-  }
-
   return (
     <>
       {props.ad && (
@@ -34,7 +30,7 @@ function AdCard(props: AdCardProps): React.ReactNode {
           sx={{
             width: 332,
           }}
-          href={`/annonces/${props.ad.id}`}
+          href={`/ads/${props.ad.id}`}
         >
           <Card
             sx={{
@@ -69,8 +65,7 @@ function AdCard(props: AdCardProps): React.ReactNode {
                     alignItems: "center",
                   }}
                 >
-                  <PlaceIcon sx={{ marginRight: "4px" }} />{" "}
-                  {capitalizeFirstLetter(props.ad.city)}
+                  <PlaceIcon sx={{ marginRight: "4px" }} /> {`${props.ad.city}`}
                 </Box>
               </Typography>
               <Typography
@@ -114,6 +109,6 @@ function AdCard(props: AdCardProps): React.ReactNode {
       )}
     </>
   );
-}
+};
 
 export default AdCard;

@@ -12,18 +12,20 @@ const { colorLightGrey, colorWhite } = colors;
 type CategorySelectProps = {
   selectedCategory: number;
   setSelectedCategory: (selectedCategory: number) => void;
-  type: "createCategory" | "createAd";
+  type: "createCategory" | "createAd" | "updateAd";
 };
 
 const CategorySelect: React.FC<CategorySelectProps> = (
   props: CategorySelectProps,
 ) => {
+  // Get all categories
   const { data } = useQuery<{ items: CategoriesTypes }>(
     queryAllCatWithHierarchy,
   );
 
   const categories = data ? data.items : [];
 
+  // Render categories CSS
   const renderMenuItems = (category: CategoryTypes, level = 0) => {
     const indent = level * 20;
     let fontWeight: string;
@@ -38,6 +40,7 @@ const CategorySelect: React.FC<CategorySelectProps> = (
         fontWeight = "normal";
     }
 
+    // Disable categories with children if type is createAd or updateAd
     const isDisabled =
       props.type === "createAd" &&
       category.childCategories &&
@@ -67,7 +70,7 @@ const CategorySelect: React.FC<CategorySelectProps> = (
   return (
     <FormControl fullWidth>
       <InputLabel size="small" id="category-select-label">
-        Catégorie*
+        {props.type === "updateAd" ? "Catégorie" : "Catégorie*"}
       </InputLabel>
       <Select
         labelId="category-select-label"
@@ -77,10 +80,10 @@ const CategorySelect: React.FC<CategorySelectProps> = (
           backgroundColor:
             props.type === "createAd" ? colorLightGrey : colorWhite,
         }}
-        value={props.selectedCategory}
+        value={props.selectedCategory || ""}
         onChange={handleChange}
         label="Catégorie"
-        required
+        required={!(props.type === "updateAd")}
         MenuProps={{
           PaperProps: {
             style: {
