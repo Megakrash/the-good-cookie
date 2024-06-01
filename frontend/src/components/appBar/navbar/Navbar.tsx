@@ -39,15 +39,6 @@ const Navbar = (): React.ReactNode => {
     setSelectedCategoryId(categoryId);
   };
 
-  // Handle hover
-  const handleMouseEnter = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    categoryId: number,
-  ) => {
-    setAnchorElMenu(event.currentTarget);
-    setSelectedCategoryId(categoryId);
-  };
-
   // Close menu
   const handleCloseMenu = () => {
     setAnchorElMenu(null);
@@ -113,9 +104,6 @@ const Navbar = (): React.ReactNode => {
                       backgroundColor: colorOrange,
                     }}
                     onClick={(event) => handleClick(event, category.id)}
-                    onMouseEnter={(event) =>
-                      handleMouseEnter(event, category.id)
-                    }
                   >
                     {category.name}
                   </Button>
@@ -134,7 +122,6 @@ const Navbar = (): React.ReactNode => {
             vertical: "bottom",
             horizontal: "left",
           }}
-          // onMouseLeave: handleCloseMenu()
           sx={{ display: { xs: "none", sm: "block" } }}
         >
           {selectedCategoryId && (
