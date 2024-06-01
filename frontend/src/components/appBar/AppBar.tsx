@@ -129,7 +129,7 @@ const Header = (): React.ReactNode => {
             }}
             startIcon={isSmallScreen ? null : <EditNoteIcon />}
             onClick={() => {
-              router.push(`/annonces/new`);
+              router.push(`/ads/new`);
             }}
           >
             Déposer une annonce

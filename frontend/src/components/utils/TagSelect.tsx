@@ -11,6 +11,10 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
+import { VariablesColors } from "@/styles/Variables.colors";
+
+const colors = new VariablesColors();
+const { colorWhite } = colors;
 
 type TagSelectProps = {
   selectedTags: AdTags;
@@ -38,6 +42,7 @@ const TagSelect = (props: TagSelectProps) => {
         value={props.selectedTags.map((tag) => tag.id)}
         onChange={handleChangeTag}
         input={<OutlinedInput label="Tag" />}
+        sx={{ backgroundColor: colorWhite }}
         renderValue={(selected) =>
           selected
             .map((id) => tags.find((tag) => tag.id === id)?.name || "")

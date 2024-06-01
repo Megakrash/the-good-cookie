@@ -11,7 +11,9 @@ export type AdTypes = {
   };
   zipCode: string;
   city: string;
-  coordinates: [number, number];
+  location: {
+    coordinates: [number, number];
+  };
   category: {
     id: number;
     name: string;
@@ -38,14 +40,26 @@ export type Tag = {
 export type AdTag = { id: number };
 export type AdTags = AdTag[];
 
-export type AdFormData = {
+export type AdCreateFormData = {
   title: string;
   description: string;
   zipCode: string;
   city: string;
   location: { type: string; coordinates: [number, number] };
-  pictureId?: number;
+  pictureId: number;
   price: number;
   category: { id: number } | null;
+  tags?: AdTags | null;
+};
+
+export type AdUpdateFormData = {
+  title?: string;
+  description?: string;
+  zipCode?: string;
+  city?: string;
+  location?: { type: string; coordinates: [number, number] };
+  pictureId?: number;
+  price?: number;
+  category?: { id: number } | null;
   tags?: AdTags | null;
 };

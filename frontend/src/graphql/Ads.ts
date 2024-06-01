@@ -46,19 +46,18 @@ export const queryAdById = gql`
       price
       createdAt
       updatedAt
+      city
+      zipCode
+      location {
+        coordinates
+      }
       picture {
         id
         filename
       }
-      city
-      zipCode
-      subCategory {
+      category {
         id
         name
-        category {
-          id
-          name
-        }
       }
       tags {
         id

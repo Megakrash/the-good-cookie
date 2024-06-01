@@ -1,6 +1,11 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { AdFormData, AdTypes, AdTags } from "@/types/AdTypes";
 import { Toaster } from "react-hot-toast";
+import {
+  AdTypes,
+  AdTags,
+  AdCreateFormData,
+  AdUpdateFormData,
+} from "@/types/AdTypes";
 import {
   queryAllAds,
   queryAdById,
@@ -9,16 +14,16 @@ import {
 } from "@/graphql/Ads";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import { Box, CircularProgress, Typography } from "@mui/material";
 import UserZipCity from "@/components/users/components/UserZipCity";
 import AdTitle from "./components/AdTitle";
 import AdDescription from "./components/AdDescription";
 import AdPrice from "./components/AdPrice";
-import { uploadPicture } from "@/components/utils/uploadPicture";
 import { showToast } from "@/components/utils/toastHelper";
+import { uploadPicture } from "@/components/utils/uploadPicture";
 import CategorySelect from "@/components/utils/CategorySelect";
 import TagSelect from "@/components/utils/TagSelect";
 import PictureDownload from "@/components/utils/PictureDownload";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { StepFormButton } from "@/styles/MuiButtons";
 
 type AdFormProps = {
@@ -28,7 +33,7 @@ type AdFormProps = {
 const AdForm = (props: AdFormProps): React.ReactNode => {
   const router = useRouter();
 
-  // Form
+  // Form states
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [curentPicture, setCurentPicture] = useState<string>("");
@@ -40,6 +45,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
   const [selectedCategory, setSelectedCategory] = useState<null | number>();
   const [selectedTags, setSelectedTags] = useState<AdTags>([]);
+
   // Form validation
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   useEffect(() => {
@@ -58,7 +64,6 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   }, [title, description, price, zipCode, selectedCategory, newPicture]);
 
   // Submit & Update queries
-
   const [doCreate, { loading: createLoading }] = useMutation(mutationCreateAd, {
     refetchQueries: [queryAllAds],
   });
@@ -67,37 +72,84 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   });
   const loading = createLoading || updateLoading;
 
+  // Check for tag modifications
+  const tagsChanged = (newTags: AdTags, oldTags: AdTags) => {
+    if (newTags.length !== oldTags.length) return true;
+    const newTagIds = newTags.map((tag) => tag.id).sort();
+    const oldTagIds = oldTags.map((tag) => tag.id).sort();
+    return !newTagIds.every((id, index) => id === oldTagIds[index]);
+  };
+
   // SUBMIT
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    // If newAd
+    if (!props.ad) {
+      try {
+        const pictureId = await uploadPicture(title, newPicture);
 
-    try {
-      const pictureId = await uploadPicture(title, newPicture);
+        const data: AdCreateFormData = {
+          title,
+          description,
+          price,
+          city,
+          zipCode,
+          location: { type: "Point", coordinates: coordinates },
+          category: selectedCategory ? { id: Number(selectedCategory) } : null,
+          tags: selectedTags,
+          ...(pictureId !== null && { pictureId }),
+        };
 
-      const data: AdFormData = {
-        title,
-        description,
-        price,
-        city,
-        zipCode,
-        location: { type: "Point", coordinates: coordinates },
-        category: selectedCategory ? { id: Number(selectedCategory) } : null,
-        tags: selectedTags,
-        ...(pictureId !== null && { pictureId }),
-      };
-
-      if (!props.ad) {
         const result = await doCreate({
           variables: {
             data,
           },
         });
         if ("id" in result.data?.item) {
-          router.push(`/annonces/${result.data.item.id}`);
+          router.push(`/ads/${result.data.item.id}`);
         } else {
           showToast("error", "Erreur pendant la création de votre annonce");
         }
-      } else {
+      } catch (error) {
+        console.error("error", error);
+        showToast("error", "Erreur pendant la création de votre annonce");
+      }
+    }
+    // If update Ad
+    if (props.ad) {
+      try {
+        let pictureId = null;
+        if (newPicture) {
+          pictureId = await uploadPicture(title, newPicture);
+        }
+        const data: AdUpdateFormData = {};
+        if (title !== props.ad.title) {
+          data.title = title;
+        }
+        if (description !== props.ad.description) {
+          data.description = description;
+        }
+        if (price !== props.ad.price) {
+          data.price = price;
+        }
+        if (city !== props.ad.city) {
+          data.city = city;
+        }
+        if (zipCode !== props.ad.zipCode) {
+          data.zipCode = zipCode;
+        }
+        if (coordinates !== props.ad.location.coordinates) {
+          data.location = { type: "Point", coordinates: coordinates };
+        }
+        if (selectedCategory !== props.ad.category.id) {
+          data.category = { id: Number(selectedCategory) };
+        }
+        if (tagsChanged(selectedTags, props.ad.tags)) {
+          data.tags = selectedTags;
+        }
+        if (pictureId !== null) {
+          data.pictureId = pictureId;
+        }
         const result = await doUpdate({
           variables: {
             data,
@@ -109,24 +161,24 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         } else {
           showToast("error", "Erreur pendant la mise à jour de votre annonce");
         }
+      } catch (error) {
+        console.error("error", error);
+        showToast("error", "Erreur pendant la création de votre annonce");
       }
-    } catch (error) {
-      console.error("error", error);
-      showToast("error", "Erreur pendant la création de votre annonce");
     }
   }
   // If update Ad
   useEffect(() => {
     if (props.ad) {
+      const transformedTags = props.ad.tags.map((tag) => ({ id: tag.id }));
       setTitle(props.ad.title);
       setDescription(props.ad.description);
       setZipCode(props.ad.zipCode);
-      setCoordinates(props.ad.coordinates);
+      setCoordinates(props.ad.location.coordinates);
       setCity(props.ad.city);
       setPrice(props.ad.price);
       setCurentPicture(props.ad.picture.filename);
-      setSelectedCategory(props.ad.category ? props.ad.category.id : null);
-      const transformedTags = props.ad.tags.map((tag) => ({ id: tag.id }));
+      setSelectedCategory(props.ad.category.id);
       setSelectedTags(transformedTags);
     }
   }, [props.ad]);
@@ -134,7 +186,6 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
     <Box
       sx={{
         width: props.ad ? "50%" : "98%",
-        margin: "auto",
       }}
     >
       <Toaster />
@@ -144,12 +195,12 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          "& > :not(style)": { m: 2, width: "50ch" },
+          "& > :not(style)": { m: 2, width: "380px" },
         }}
         autoComplete="off"
         onSubmit={onSubmit}
       >
-        <Typography variant="h4">
+        <Typography textAlign={"center"} variant="h4">
           {!props.ad ? "Création de votre annonce" : "Modifier votre annonce"}
         </Typography>
         <AdTitle title={title} setTitle={setTitle} />
@@ -167,7 +218,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         <CategorySelect
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
-          type="createAd"
+          type={props.ad ? "updateAd" : "createAd"}
         />
         <TagSelect
           selectedTags={selectedTags}
@@ -181,10 +232,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
           curentPicture={curentPicture}
           setCurentPicture={setCurentPicture}
         />
-        <StepFormButton
-          sx={{ margin: "auto" }}
-          disabled={loading || !isFormValid}
-        >
+        <StepFormButton disabled={loading || !isFormValid}>
           {loading ? (
             <CircularProgress size={24} />
           ) : props.ad ? (
