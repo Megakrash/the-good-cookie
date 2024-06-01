@@ -195,12 +195,12 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          "& > :not(style)": { m: 2, width: "45ch" },
+          "& > :not(style)": { m: 2, width: "380px" },
         }}
         autoComplete="off"
         onSubmit={onSubmit}
       >
-        <Typography variant="h4">
+        <Typography textAlign={"center"} variant="h4">
           {!props.ad ? "Création de votre annonce" : "Modifier votre annonce"}
         </Typography>
         <AdTitle title={title} setTitle={setTitle} />

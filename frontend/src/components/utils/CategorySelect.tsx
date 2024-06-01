@@ -78,7 +78,9 @@ const CategorySelect: React.FC<CategorySelectProps> = (
         size="small"
         sx={{
           backgroundColor:
-            props.type === "createAd" ? colorLightGrey : colorWhite,
+            props.type === "createAd" || "updateAd"
+              ? colorWhite
+              : colorLightGrey,
         }}
         value={props.selectedCategory || ""}
         onChange={handleChange}
