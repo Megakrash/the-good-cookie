@@ -68,7 +68,7 @@ const CategoriesMenu = (props: CategoriesMenuProps) => {
                         cursor: "pointer",
                       }}
                       onClick={() => {
-                        router.push(`/sub/${secondChild.id}`);
+                        router.push(`/categories/${secondChild.id}`);
                       }}
                     >
                       {secondChild.name}

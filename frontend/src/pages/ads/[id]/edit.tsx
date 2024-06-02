@@ -7,7 +7,7 @@ import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { Box, Typography } from "@mui/material";
 
-export default function EditAd() {
+const EditAd = (): React.ReactNode => {
   const router = useRouter();
   const adId = router.query.id;
 
@@ -48,4 +48,6 @@ export default function EditAd() {
       )}
     </LayoutFull>
   );
-}
+};
+
+export default EditAd;

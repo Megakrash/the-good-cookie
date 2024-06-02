@@ -14,14 +14,7 @@ export const queryAllAds = gql`
         filename
       }
       city
-      subCategory {
-        id
-        name
-        category {
-          id
-          name
-        }
-      }
+      zipCode
       tags {
         id
         name

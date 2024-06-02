@@ -124,18 +124,18 @@ export class AdsResolver {
       // Create a query builder
       const query = Ad.createQueryBuilder('ad')
 
-      // Join relations
+      // Join relations with unique aliases
       query.leftJoinAndSelect('ad.picture', 'picture')
       query.leftJoinAndSelect('ad.category', 'category')
-      query.leftJoinAndSelect('category.parentCategory', 'category')
+      query.leftJoinAndSelect('category.parentCategory', 'parentCategory')
       query.leftJoinAndSelect('ad.user', 'user')
       query.leftJoinAndSelect('user.picture', 'userPicture')
       query.leftJoinAndSelect('ad.tags', 'tags')
 
       // Filter by subCategory
       if (where?.category) {
-        query.andWhere('ad.subCategory IN (:...subCategory)', {
-          subCategory: where.category,
+        query.andWhere('ad.category IN (:...category)', {
+          category: where.category,
         })
       }
 

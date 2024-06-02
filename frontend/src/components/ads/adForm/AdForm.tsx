@@ -25,8 +25,11 @@ import TagSelect from "@/components/utils/TagSelect";
 import PictureDownload from "@/components/utils/PictureDownload";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { StepFormButton } from "@/styles/MuiButtons";
+type AdFormProps = {
+  ad?: AdTypes;
+};
 
-const AdForm = (ad?: AdTypes): React.ReactNode => {
+const AdForm = ({ ad }): React.ReactNode => {
   const router = useRouter();
 
   // Form states

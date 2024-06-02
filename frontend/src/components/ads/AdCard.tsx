@@ -1,12 +1,11 @@
 import { AdTypes } from "@/types/AdTypes";
-import { PATH_IMAGE } from "@/api/configApi";
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import { Box, CardActionArea } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
+import { getAdImageUrl, getUserImageUrl } from "../utils/pictureUtils";
 
 type AdCardProps = {
   ad: AdTypes;
@@ -14,96 +13,97 @@ type AdCardProps = {
 
 const AdCard = (props: AdCardProps): React.ReactNode => {
   // Path images
-  const adImageUrl =
-    props.ad.picture.filename !== ""
-      ? `${PATH_IMAGE}/pictures/${props.ad.picture.filename}`
-      : `${PATH_IMAGE}/default/default.png`;
-  const userImageUrl =
-    props.ad.user.picture.filename !== ""
-      ? `${PATH_IMAGE}/pictures/${props.ad.user.picture.filename}`
-      : `${PATH_IMAGE}/default/avatar.webp`;
+  const adImageUrl = getAdImageUrl(props.ad.picture.filename);
+  const userImageUrl = getUserImageUrl(props.ad.user.picture.filename);
 
   return (
     <>
       {props.ad && (
         <CardActionArea
           sx={{
-            width: 332,
+            width: 270,
+            height: 380,
           }}
           href={`/ads/${props.ad.id}`}
         >
           <Card
             sx={{
-              width: 330,
+              width: 270,
               height: 380,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              padding: 1,
               "&:hover": {
                 border: (theme) => `2px solid ${theme.palette.primary.main}`,
               },
             }}
           >
+            {/* Picture */}
             <CardMedia
               component="img"
               sx={{
                 width: "100%",
                 height: 200,
-                margin: "auto",
                 objectFit: "contain",
               }}
               image={adImageUrl}
               title={props.ad.title}
             />
-            <CardContent>
-              <Typography
-                gutterBottom
-                variant="body1"
-                color="text.secondary"
-                component="div"
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <PlaceIcon sx={{ marginRight: "4px" }} /> {`${props.ad.city}`}
-                </Box>
-              </Typography>
-              <Typography
-                sx={{
-                  height: "75px",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  width: "100%",
-                }}
-                variant="h5"
-              >
-                {props.ad.title}
-              </Typography>
+            {/* Title */}
+            <Typography
+              sx={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                width: "100%",
+              }}
+              variant="h6"
+            >
+              {props.ad.title}
+            </Typography>
+            {/* Price */}
+            <Typography variant="body1" color="primary">
+              {props.ad.price}€
+            </Typography>
+            {/* Coordinates & User */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              {/* City and ZipCode */}
               <Box
                 sx={{
                   display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
+                  alignItems: "end",
                 }}
               >
-                <Typography variant="body1" color="primary">
-                  {props.ad.price}€
-                </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Avatar alt={props.ad.user.nickName} src={userImageUrl} />
-                  <Typography variant="body2" color="text.secondary">
-                    {props.ad.user.nickName}
-                  </Typography>
-                </Box>
+                <PlaceIcon sx={{ marginRight: "2px" }} />
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                >{`${props.ad.city} ${props.ad.zipCode}`}</Typography>
               </Box>
-            </CardContent>
+              {/* User */}
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Avatar
+                  alt={props.ad.user.nickName}
+                  sx={{ width: "35px", height: "35px" }}
+                  src={userImageUrl}
+                />
+                <Typography variant="body2" color="text.secondary">
+                  {props.ad.user.nickName}
+                </Typography>
+              </Box>
+            </Box>
           </Card>
         </CardActionArea>
       )}
