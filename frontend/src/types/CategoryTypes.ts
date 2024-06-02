@@ -23,4 +23,5 @@ export type CategoryFormData = {
   parentCategory?: {
     id: number;
   };
+  pictureId?: number;
 };

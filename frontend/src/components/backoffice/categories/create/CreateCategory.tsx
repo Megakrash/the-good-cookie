@@ -11,11 +11,15 @@ import { StepFormButton } from "@/styles/MuiButtons";
 import { Toaster } from "react-hot-toast";
 import { showToast } from "@/components/utils/toastHelper";
 import CategorySelect from "../../../utils/CategorySelect";
+import PictureDownload from "@/components/utils/PictureDownload";
+import { uploadPicture } from "@/components/utils/uploadPicture";
 
 const CreateCategories = (): React.ReactNode => {
   // State
   const [name, setName] = useState<string>("");
   const [parentCategory, setParentCategory] = useState<number | null>(null);
+  const [picture, setPicture] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   // Form validation
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
@@ -37,9 +41,14 @@ const CreateCategories = (): React.ReactNode => {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
+      let pictureId = null;
+      if (picture) {
+        pictureId = await uploadPicture(name, picture);
+      }
       const data: CategoryFormData = {
         name: name,
         parentCategory: parentCategory ? { id: parentCategory } : null,
+        pictureId,
       };
 
       const result = await doCreate({
@@ -92,6 +101,12 @@ const CreateCategories = (): React.ReactNode => {
         type="createCategory"
         selectedCategory={parentCategory}
         setSelectedCategory={setParentCategory}
+      />
+      <PictureDownload
+        picture={picture}
+        setPicture={setPicture}
+        previewUrl={previewUrl}
+        setPreviewUrl={setPreviewUrl}
       />
       <StepFormButton disabled={!isFormValid}>
         {loading ? <CircularProgress size={24} /> : "Créer"}

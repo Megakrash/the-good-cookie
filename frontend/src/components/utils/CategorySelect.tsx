@@ -70,7 +70,9 @@ const CategorySelect: React.FC<CategorySelectProps> = (
   return (
     <FormControl fullWidth>
       <InputLabel size="small" id="category-select-label">
-        {props.type === "updateAd" ? "Catégorie" : "Catégorie*"}
+        {props.type === "updateAd" || "createCategory"
+          ? "Catégorie"
+          : "Catégorie*"}
       </InputLabel>
       <Select
         labelId="category-select-label"
@@ -85,7 +87,7 @@ const CategorySelect: React.FC<CategorySelectProps> = (
         value={props.selectedCategory || ""}
         onChange={handleChange}
         label="Catégorie"
-        required={!(props.type === "updateAd")}
+        required={!(props.type === "updateAd" || "createCategory")}
         MenuProps={{
           PaperProps: {
             style: {

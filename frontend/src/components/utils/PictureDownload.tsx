@@ -19,7 +19,7 @@ const PictureDownload = (props: PictureDownloadProps): React.ReactNode => {
       const file = event.target.files[0];
       props.setPicture(file);
       props.setPreviewUrl(URL.createObjectURL(file));
-      props.setCurentPicture("");
+      props?.setCurentPicture("");
     }
   }
   return (
