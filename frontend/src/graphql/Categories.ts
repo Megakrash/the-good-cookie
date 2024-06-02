@@ -55,15 +55,11 @@ export const queryCatByIdAndSub = gql`
           name
         }
       }
-      ads {
-        id
-        title
-      }
     }
   }
 `;
 
-export const queryCatByIdWithAds = gql`
+export const queryCatByIdWithParents = gql`
   query categoryById($categoryByIdId: ID!) {
     item: categoryById(id: $categoryByIdId) {
       id
@@ -72,12 +68,12 @@ export const queryCatByIdWithAds = gql`
         id
         filename
       }
-      ads {
+      parentCategory {
         id
-        title
-        picture {
+        name
+        parentCategory {
           id
-          filename
+          name
         }
       }
     }
