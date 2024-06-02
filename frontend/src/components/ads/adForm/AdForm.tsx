@@ -26,11 +26,7 @@ import PictureDownload from "@/components/utils/PictureDownload";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { StepFormButton } from "@/styles/MuiButtons";
 
-type AdFormProps = {
-  ad?: AdTypes;
-};
-
-const AdForm = (props: AdFormProps): React.ReactNode => {
+const AdForm = (ad?: AdTypes): React.ReactNode => {
   const router = useRouter();
 
   // Form states
@@ -84,7 +80,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     // If newAd
-    if (!props.ad) {
+    if (!ad) {
       try {
         const pictureId = await uploadPicture(title, newPicture);
 
@@ -116,44 +112,38 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
       }
     }
     // If update Ad
-    if (props.ad) {
+    if (ad) {
       try {
         let pictureId = null;
         if (newPicture) {
           pictureId = await uploadPicture(title, newPicture);
         }
         const data: AdUpdateFormData = {};
-        if (title !== props.ad.title) {
-          data.title = title;
-        }
-        if (description !== props.ad.description) {
-          data.description = description;
-        }
-        if (price !== props.ad.price) {
-          data.price = price;
-        }
-        if (city !== props.ad.city) {
-          data.city = city;
-        }
-        if (zipCode !== props.ad.zipCode) {
-          data.zipCode = zipCode;
-        }
-        if (coordinates !== props.ad.location.coordinates) {
+        if (title !== ad.title) data.title = title;
+
+        if (description !== ad.description) data.description = description;
+
+        if (price !== ad.price) data.price = price;
+
+        if (city !== ad.city) data.city = city;
+
+        if (zipCode !== ad.zipCode) data.zipCode = zipCode;
+
+        if (coordinates !== ad.location.coordinates) {
           data.location = { type: "Point", coordinates: coordinates };
         }
-        if (selectedCategory !== props.ad.category.id) {
+        if (selectedCategory !== ad.category.id) {
           data.category = { id: Number(selectedCategory) };
         }
-        if (tagsChanged(selectedTags, props.ad.tags)) {
+        if (tagsChanged(selectedTags, ad.tags)) {
           data.tags = selectedTags;
         }
-        if (pictureId !== null) {
-          data.pictureId = pictureId;
-        }
+        if (pictureId !== null) data.pictureId = pictureId;
+
         const result = await doUpdate({
           variables: {
             data,
-            adUpdateId: props.ad?.id,
+            adUpdateId: ad?.id,
           },
         });
         if (!result.errors?.length) {
@@ -169,23 +159,23 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
   }
   // If update Ad
   useEffect(() => {
-    if (props.ad) {
-      const transformedTags = props.ad.tags.map((tag) => ({ id: tag.id }));
-      setTitle(props.ad.title);
-      setDescription(props.ad.description);
-      setZipCode(props.ad.zipCode);
-      setCoordinates(props.ad.location.coordinates);
-      setCity(props.ad.city);
-      setPrice(props.ad.price);
-      setCurentPicture(props.ad.picture.filename);
-      setSelectedCategory(props.ad.category.id);
+    if (ad) {
+      const transformedTags = ad.tags.map((tag) => ({ id: tag.id }));
+      setTitle(ad.title);
+      setDescription(ad.description);
+      setZipCode(ad.zipCode);
+      setCoordinates(ad.location.coordinates);
+      setCity(ad.city);
+      setPrice(ad.price);
+      setCurentPicture(ad.picture.filename);
+      setSelectedCategory(ad.category.id);
       setSelectedTags(transformedTags);
     }
-  }, [props.ad]);
+  }, [ad]);
   return (
     <Box
       sx={{
-        width: props.ad ? "50%" : "98%",
+        width: ad ? "50%" : "98%",
       }}
     >
       <Toaster />
@@ -201,7 +191,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         onSubmit={onSubmit}
       >
         <Typography textAlign={"center"} variant="h4">
-          {!props.ad ? "Création de votre annonce" : "Modifier votre annonce"}
+          {!ad ? "Création de votre annonce" : "Modifier votre annonce"}
         </Typography>
         <AdTitle title={title} setTitle={setTitle} />
         <AdDescription
@@ -218,7 +208,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         <CategorySelect
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
-          type={props.ad ? "updateAd" : "createAd"}
+          type={ad ? "updateAd" : "createAd"}
         />
         <TagSelect
           selectedTags={selectedTags}
@@ -235,7 +225,7 @@ const AdForm = (props: AdFormProps): React.ReactNode => {
         <StepFormButton disabled={loading || !isFormValid}>
           {loading ? (
             <CircularProgress size={24} />
-          ) : props.ad ? (
+          ) : ad ? (
             "Modifier mon annonce"
           ) : (
             "Créer mon annonce"
