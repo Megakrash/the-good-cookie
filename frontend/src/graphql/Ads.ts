@@ -14,6 +14,7 @@ export const queryAllAds = gql`
         filename
       }
       city
+      zipCode
       tags {
         id
         name
