@@ -12,6 +12,7 @@ export type CategoryTypes = {
   id: number;
   name: string;
   picture?: PictureType;
+  parentCategory?: CategoryTypes;
   ads?: AdTypes;
   childCategories?: ChildCategoryType[];
 };

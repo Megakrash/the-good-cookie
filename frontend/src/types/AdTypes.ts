@@ -1,3 +1,6 @@
+import { PictureType } from "./PictureTypes";
+import { UserTypes } from "./UserTypes";
+
 export type AdTypes = {
   id: number;
   title: string;
@@ -5,31 +8,17 @@ export type AdTypes = {
   price: number;
   createdAt: string;
   updatedAt: string;
-  picture: {
-    id: number;
-    filename: string;
-  };
+  picture: PictureType;
   zipCode: string;
   city: string;
   location: {
     coordinates: [number, number];
   };
-  category: {
-    id: number;
-    name: string;
-  };
   tags: {
     id: number;
     name: string;
   }[];
-  user: {
-    id: number;
-    nickName: string;
-    picture: {
-      id: number;
-      filename: string;
-    };
-  };
+  user: UserTypes;
 };
 
 export type AdsTypes = AdTypes[];
