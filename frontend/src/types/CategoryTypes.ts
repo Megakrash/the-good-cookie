@@ -1,3 +1,4 @@
+import { AdTypes } from "./AdTypes";
 import { PictureType } from "./PictureTypes";
 
 type ChildCategoryType = {
@@ -10,6 +11,8 @@ type ChildCategoryType = {
 export type CategoryTypes = {
   id: number;
   name: string;
+  picture?: PictureType;
+  ads?: AdTypes;
   childCategories?: ChildCategoryType[];
 };
 

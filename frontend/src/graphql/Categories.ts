@@ -42,7 +42,6 @@ export const queryAllCatWithHierarchy = gql`
     }
   }
 `;
-
 export const queryCatByIdAndSub = gql`
   query categoryById($categoryByIdId: ID!) {
     item: categoryById(id: $categoryByIdId) {
@@ -59,6 +58,27 @@ export const queryCatByIdAndSub = gql`
       ads {
         id
         title
+      }
+    }
+  }
+`;
+
+export const queryCatByIdWithAds = gql`
+  query categoryById($categoryByIdId: ID!) {
+    item: categoryById(id: $categoryByIdId) {
+      id
+      name
+      picture {
+        id
+        filename
+      }
+      ads {
+        id
+        title
+        picture {
+          id
+          filename
+        }
       }
     }
   }

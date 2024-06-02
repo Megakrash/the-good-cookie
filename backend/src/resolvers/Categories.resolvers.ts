@@ -156,6 +156,7 @@ export class CategoriesResolver {
       where: { id },
       relations: {
         ads: true,
+        picture: true,
         parentCategory: true,
         childCategories: { ads: true, picture: true, childCategories: true },
         createdBy: true,
