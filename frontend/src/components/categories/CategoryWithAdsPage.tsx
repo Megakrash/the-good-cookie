@@ -24,8 +24,7 @@ const CategoryWithAdsPage: React.FC<CategoryWithAdsPageProps> = ({
 
   return (
     <Box sx={{ padding: 2, margin: "auto" }}>
-      <Typography variant="h5">{`${category.parentCategory.parentCategory.name} - ${category.parentCategory.name} - ${category.name}`}</Typography>
-      <Typography variant="subtitle1">Les dernières annonces</Typography>
+      <Typography variant="h5">Les dernières annonces</Typography>
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
         {ads && ads.map((ad) => <AdCard key={ad.id} ad={ad} />)}
       </Box>

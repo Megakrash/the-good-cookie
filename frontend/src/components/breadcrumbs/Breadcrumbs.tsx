@@ -5,6 +5,7 @@ import Link from "@mui/material/Link";
 import HomeIcon from "@mui/icons-material/Home";
 import CategoryIcon from "@mui/icons-material/Category";
 import GrainIcon from "@mui/icons-material/Grain";
+import router from "next/router";
 
 type BreadcrumbItem = {
   url: string;
@@ -17,12 +18,15 @@ type IconBreadcrumbsProps = {
 
 function IconBreadcrumbs({ items }: IconBreadcrumbsProps): React.ReactNode {
   return (
-    <Breadcrumbs aria-label="breadcrumb" sx={{ marginTop: "1%" }}>
+    <Breadcrumbs
+      aria-label="breadcrumb"
+      sx={{ marginTop: "1%", marginLeft: "1%" }}
+    >
       <Link
         underline="hover"
-        sx={{ display: "flex", alignItems: "center" }}
+        sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
         color="inherit"
-        href="/"
+        onClick={() => router.push(`/`)}
       >
         <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
         HOME
@@ -42,9 +46,9 @@ function IconBreadcrumbs({ items }: IconBreadcrumbsProps): React.ReactNode {
           <Link
             key={index}
             underline="hover"
-            sx={{ display: "flex", alignItems: "center" }}
+            sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
             color="inherit"
-            href={item.url}
+            onClick={() => router.push(`${item.url}`)}
           >
             <CategoryIcon sx={{ mr: 0.5 }} fontSize="inherit" />
             {item.text}

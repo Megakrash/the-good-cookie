@@ -76,6 +76,14 @@ export const queryCatByIdWithParents = gql`
           name
         }
       }
+      childCategories {
+        id
+        name
+        picture {
+          id
+          filename
+        }
+      }
     }
   }
 `;
