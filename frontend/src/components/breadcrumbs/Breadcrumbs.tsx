@@ -17,7 +17,7 @@ type IconBreadcrumbsProps = {
 
 function IconBreadcrumbs({ items }: IconBreadcrumbsProps): React.ReactNode {
   return (
-    <Breadcrumbs aria-label="breadcrumb">
+    <Breadcrumbs aria-label="breadcrumb" sx={{ marginTop: "1%" }}>
       <Link
         underline="hover"
         sx={{ display: "flex", alignItems: "center" }}

@@ -51,6 +51,14 @@ export const queryAdById = gql`
       category {
         id
         name
+        parentCategory {
+          id
+          name
+          parentCategory {
+            id
+            name
+          }
+        }
       }
       tags {
         id
@@ -62,6 +70,9 @@ export const queryAdById = gql`
         picture {
           id
           filename
+        }
+        ads {
+          id
         }
       }
     }
