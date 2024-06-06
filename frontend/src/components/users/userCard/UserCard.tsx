@@ -14,13 +14,13 @@ const UserCard = (props: UserCardProps): React.ReactNode => {
   return (
     <CardActionArea
       sx={{
-        width: 310,
+        width: 350,
       }}
       href={`/user/${props.user.id}`}
     >
       <Card
         sx={{
-          width: 310,
+          width: 350,
           display: "flex",
           flexDirection: "row",
           alignItems: "center",

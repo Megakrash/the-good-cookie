@@ -4,8 +4,8 @@ import { AdTypes } from "@/types/AdTypes";
 import { queryAdById } from "@/graphql/Ads";
 import { useQuery } from "@apollo/client";
 import IconBreadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
-import UserCard from "@/components/users/userCard/UserCard";
 import LoadingApp from "@/styles/LoadingApp";
+import AdPage from "@/components/ads/AdPage";
 
 function AdDetailComponent(): React.ReactNode {
   const router = useRouter();
@@ -37,7 +37,7 @@ function AdDetailComponent(): React.ReactNode {
               { url: "/final-item", text: `${ad.title.toUpperCase()}` },
             ]}
           />
-          <UserCard user={ad.user} />
+          <AdPage ad={ad} />
         </LayoutFull>
       ) : (
         <LoadingApp />
