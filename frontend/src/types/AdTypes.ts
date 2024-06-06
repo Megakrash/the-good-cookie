@@ -1,3 +1,4 @@
+import { CategoryTypes } from "./CategoryTypes";
 import { PictureType } from "./PictureTypes";
 import { UserTypes } from "./UserTypes";
 
@@ -19,6 +20,7 @@ export type AdTypes = {
     name: string;
   }[];
   user: UserTypes;
+  category: CategoryTypes;
 };
 
 export type AdsTypes = AdTypes[];

@@ -14,7 +14,7 @@ function RecentAds(): React.ReactNode {
   ): Record<number, { category: { id: number; name: string }; ads: AdsTypes }> {
     return ads.reduce(
       (acc, ad) => {
-        const { id, name } = ad.subCategory.category;
+        const { id, name } = ad.category.parentCategory;
         if (!acc[id]) {
           acc[id] = { category: { id, name }, ads: [] };
         }

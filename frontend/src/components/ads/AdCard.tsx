@@ -6,6 +6,7 @@ import Avatar from "@mui/material/Avatar";
 import { Box, CardActionArea } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
 import { getAdImageUrl, getUserImageUrl } from "../utils/pictureUtils";
+import router from "next/router";
 
 type AdCardProps = {
   ad: AdTypes;
@@ -24,7 +25,7 @@ const AdCard = (props: AdCardProps): React.ReactNode => {
             width: 270,
             height: 380,
           }}
-          href={`/ads/${props.ad.id}`}
+          onClick={() => router.push(`/ads/${props.ad.id}`)}
         >
           <Card
             sx={{

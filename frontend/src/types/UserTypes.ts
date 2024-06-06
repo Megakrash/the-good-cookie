@@ -1,3 +1,5 @@
+import { AdsTypes } from "./AdTypes";
+
 export type StepSignUpFormProps = {
   email: string;
   setEmail: (email: string) => void;
@@ -57,6 +59,7 @@ export type UserTypes = {
   phoneNumber?: string;
   registrationDate: string;
   role: string;
+  ads: AdsTypes;
 };
 
 export type UserContextTypes = {

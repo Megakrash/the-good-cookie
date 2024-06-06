@@ -23,7 +23,7 @@ const BurgerCategories = (props: BurgerCategoriesProps): React.ReactNode => {
           key={category.id}
           onClick={() => {
             props.handleCloseNavMenu();
-            router.push(`/category/${category.id}`);
+            router.push(`/categories/${category.id}`);
           }}
         >
           <Typography textAlign="center">{category.name}</Typography>
