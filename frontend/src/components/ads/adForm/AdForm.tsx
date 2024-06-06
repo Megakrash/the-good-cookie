@@ -29,7 +29,7 @@ type AdFormProps = {
   ad?: AdTypes;
 };
 
-const AdForm = ({ ad }): React.ReactNode => {
+const AdForm: React.FC<AdFormProps> = ({ ad }) => {
   const router = useRouter();
 
   // Form states
