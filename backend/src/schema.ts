@@ -5,6 +5,7 @@ import { PictureResolver } from './resolvers/Pictures.resolvers'
 import { TagsResolver } from './resolvers/Tags.resolvers'
 import { UsersResolver } from './resolvers/Users.resolvers'
 import { customAuthChecker } from './auth'
+import { MessagesResolver } from './resolvers/Messages.resolvers'
 
 export async function getSchema() {
   const schema = await buildSchema({
@@ -14,6 +15,7 @@ export async function getSchema() {
       PictureResolver,
       CategoriesResolver,
       TagsResolver,
+      MessagesResolver,
     ],
     authChecker: customAuthChecker,
   })

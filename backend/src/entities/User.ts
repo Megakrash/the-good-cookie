@@ -25,6 +25,7 @@ import {
   registerEnumType,
 } from 'type-graphql'
 import { Ad } from './Ad'
+import { Message } from './Message'
 import { ObjectId } from './ObjectId'
 import { Picture } from './Picture'
 import { GenderEnum, ProfilEnum, RoleEnum } from '../types/Users.types'
@@ -204,6 +205,14 @@ export class User extends BaseEntity {
   @OneToMany(() => Ad, (ad) => ad.user, { eager: true })
   @Field(() => [Ad])
   ads!: Ad[]
+
+  @OneToMany(() => Message, (message) => message.sender)
+  @Field(() => [Message])
+  sentMessages!: Message[]
+
+  @OneToMany(() => Message, (message) => message.receiver)
+  @Field(() => [Message])
+  receivedMessages!: Message[]
 }
 
 //-------------------------------
