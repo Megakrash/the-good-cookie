@@ -125,7 +125,10 @@ const Navbar = (): React.ReactNode => {
           sx={{ display: { xs: "none", sm: "block" } }}
         >
           {selectedCategoryId && (
-            <CategoriesMenu categoryId={selectedCategoryId} />
+            <CategoriesMenu
+              categoryId={selectedCategoryId}
+              handleCloseMenu={handleCloseMenu}
+            />
           )}
         </Popover>
       </Box>

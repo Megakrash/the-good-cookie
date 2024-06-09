@@ -12,6 +12,7 @@ const { colorLightGrey, colorWhite } = colors;
 
 type CategoriesMenuProps = {
   categoryId: Number;
+  handleCloseMenu: () => void;
 };
 
 const CategoriesMenu = (props: CategoriesMenuProps) => {
@@ -69,6 +70,7 @@ const CategoriesMenu = (props: CategoriesMenuProps) => {
                       }}
                       onClick={() => {
                         router.push(`/categories/${secondChild.id}`);
+                        props.handleCloseMenu();
                       }}
                     >
                       {secondChild.name}
