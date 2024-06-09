@@ -6,11 +6,15 @@ import {
   ID,
   Authorized,
   Ctx,
+  Subscription,
+  Root,
 } from 'type-graphql'
-//   import { validate } from 'class-validator'
 import { Message, MessageCreateInput } from '../entities/Message'
 import { MyContext } from '../types/Users.types'
 import { User } from '../entities/User'
+import { PubSub as GraphQLPubSub } from 'graphql-subscriptions'
+
+const pubsub = new GraphQLPubSub()
 
 @Resolver(Message)
 export class MessagesResolver {
@@ -25,7 +29,9 @@ export class MessagesResolver {
     if (!context.user) {
       throw new Error('User context is missing or user is not authenticated')
     }
-
+    if (context.user?.id !== data.sender.id) {
+      throw new Error('Sender id does not match the authenticated user')
+    }
     // Find the receiver in the database
     const receiver = await User.findOneBy({ id: data.receiver.id })
     if (!receiver) {
@@ -39,6 +45,7 @@ export class MessagesResolver {
     })
 
     await message.save()
+    await pubsub.publish('MESSAGE_SENT', { messageSent: message })
     return message
   }
 
@@ -77,5 +84,13 @@ export class MessagesResolver {
     })
 
     return messages
+  }
+
+  // SUBSCRIPTION
+  @Subscription(() => Message, {
+    topics: 'MESSAGE_SENT',
+  })
+  messageSent(@Root() message: Message): Message {
+    return message
   }
 }

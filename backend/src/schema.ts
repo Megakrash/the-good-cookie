@@ -1,11 +1,12 @@
 import { buildSchema } from 'type-graphql'
 import { AdsResolver } from './resolvers/Ads.resolvers'
-import { CategoriesResolver } from './resolvers/Categories.resolvers'
-import { PictureResolver } from './resolvers/Pictures.resolvers'
-import { TagsResolver } from './resolvers/Tags.resolvers'
 import { UsersResolver } from './resolvers/Users.resolvers'
-import { customAuthChecker } from './auth'
+import { PictureResolver } from './resolvers/Pictures.resolvers'
+import { CategoriesResolver } from './resolvers/Categories.resolvers'
+import { TagsResolver } from './resolvers/Tags.resolvers'
 import { MessagesResolver } from './resolvers/Messages.resolvers'
+import { customAuthChecker } from './auth'
+import pubSub from './PubSub'
 
 export async function getSchema() {
   const schema = await buildSchema({
@@ -18,6 +19,7 @@ export async function getSchema() {
       MessagesResolver,
     ],
     authChecker: customAuthChecker,
+    pubSub,
   })
   return schema
 }

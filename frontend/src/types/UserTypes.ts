@@ -1,4 +1,5 @@
 import { AdsTypes } from "./AdTypes";
+import { PictureType } from "./PictureTypes";
 
 export type StepSignUpFormProps = {
   email: string;
@@ -48,10 +49,7 @@ export type UserTypes = {
   lastName: string;
   nickName: string;
   email: string;
-  picture: {
-    id: number;
-    filename: string;
-  };
+  picture: PictureType;
   adress?: string;
   zipCode: string;
   city: string;
@@ -66,8 +64,5 @@ export type UserContextTypes = {
   id: string;
   nickName: string;
   role: string;
-  picture: {
-    id: number;
-    filename: string;
-  };
+  picture: PictureType;
 };
