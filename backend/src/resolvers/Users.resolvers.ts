@@ -40,7 +40,9 @@ export class UsersResolver {
   ): Promise<User> {
     try {
       // Check if user already exists
-      const userAlreadyExist = await UserServices.findUserByEmail(data.email)
+      const userAlreadyExist = await User.findOne({
+        where: { email: data.email },
+      })
       if (userAlreadyExist) {
         throw new Error('User already exists')
       }
