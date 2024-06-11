@@ -13,6 +13,8 @@ import { getSchema } from './schema'
 import { ApolloServer } from '@apollo/server'
 import { expressMiddleware } from '@apollo/server/express4'
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
+import { useServer } from 'graphql-ws/lib/use/ws'
+import { WebSocketServer } from 'ws'
 
 //-----------------------------------------
 // ------------ EXPRESS -------------------
@@ -40,12 +42,12 @@ app.use(
   '/api/assets/images',
   express.static(path.join(__dirname, '../public/assets/images'))
 )
+const httpServer = http.createServer(app)
 
 async function start() {
   const port = process.env.BACKEND_PORT || 5000
   const schema = await getSchema()
 
-  const httpServer = http.createServer(app)
   const server = new ApolloServer({
     schema,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
@@ -54,6 +56,36 @@ async function start() {
   await dataSource.initialize()
   await server.start()
   expressMiddlewares(app)
+
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: '/graphql',
+  })
+
+  useServer(
+    {
+      schema,
+      context: async (wsContext) => {
+        console.log('WebSocket context:', wsContext)
+        return {
+          connection: wsContext.connectionParams,
+        }
+      },
+      onConnect: (context) => {
+        console.log('-----------------Connected!-----------------', context)
+        // Vous pouvez ajouter une vérification ici pour valider le token si nécessaire
+      },
+      onDisconnect: (code, reason) => {
+        console.log(
+          '-------------Disconnected!-------------------',
+          code,
+          reason
+        )
+      },
+    },
+    wsServer
+  )
+
   app.use(
     '/',
     express.json({ limit: '50mb' }),

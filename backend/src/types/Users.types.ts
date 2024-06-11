@@ -1,9 +1,11 @@
 import { User } from '../entities/User'
 import { Request, Response } from 'express'
+import { WebSocket } from 'ws'
 
 export interface MyContext {
   req: Request
   res: Response
+  ws: WebSocket
   user?: User
 }
 
