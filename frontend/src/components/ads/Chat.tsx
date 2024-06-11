@@ -72,7 +72,6 @@ const Chat = () => {
 
   useSubscription(NEW_MESSAGE_SUBSCRIPTION, {
     onData: ({ client, data }) => {
-      console.log("Subscription data received:", data);
       refetch();
     },
     onError: (error) => {

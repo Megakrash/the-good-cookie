@@ -14,15 +14,14 @@ const httpLink = new HttpLink({
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: `ws://localhost:5000/graphql`, // Use ws:// for local development
+    url: `ws://localhost:5000/graphql`,
     connectionParams: {
-      authToken: "yourAuthToken", // If you use authentication, pass the token here
+      authToken: "blablabla",
     },
     on: {
-      connected: () => console.log("Connected to WebSocket"),
-      closed: (code, reason) =>
-        console.log(`WebSocket closed: ${code}, ${reason}`),
-      error: (error) => console.log("WebSocket error:", error),
+      connected: () => console.warn("Connected to WebSocket"),
+      closed: (code) => console.warn(`WebSocket closed: ${code}`),
+      error: (error) => console.warn("WebSocket error:", error),
     },
   }),
 );
