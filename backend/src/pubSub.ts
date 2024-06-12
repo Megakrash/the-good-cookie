@@ -1,6 +1,6 @@
 import { createPubSub } from '@graphql-yoga/subscription'
-import { NotificationPayload } from './types/Notifications.types'
+import { Message } from './entities/Message'
 
 export const pubSub = createPubSub<{
-  NOTIFICATIONS: [NotificationPayload]
+  MESSAGES: [Message]
 }>()

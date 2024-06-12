@@ -19,7 +19,7 @@ export async function getSchema() {
       MessagesResolver,
     ],
     authChecker: customAuthChecker,
-    pubSub,
+    pubSub: pubSub,
   })
   return schema
 }

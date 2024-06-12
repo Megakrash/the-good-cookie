@@ -3,17 +3,20 @@ import {
   Query,
   Resolver,
   Mutation,
-  ID,
   Authorized,
   Ctx,
   Subscription,
   Root,
 } from 'type-graphql'
-import { Message, MessageCreateInput } from '../entities/Message'
+import {
+  Message,
+  MessageConversationInput,
+  MessageCreateInput,
+} from '../entities/Message'
 import { MyContext } from '../types/Users.types'
 import { User } from '../entities/User'
 import { pubSub } from '../pubSub'
-import { NotificationPayload } from '../types/Notifications.types'
+import { Ad } from '../entities/Ad'
 
 @Resolver(Message)
 export class MessagesResolver {
@@ -24,35 +27,49 @@ export class MessagesResolver {
     @Arg('data', () => MessageCreateInput) data: MessageCreateInput,
     @Ctx() context: MyContext
   ): Promise<Message> {
-    // Check if user is authenticated
+    // Check if sender is authenticated
     if (!context.user) {
       throw new Error('User context is missing or user is not authenticated')
     }
 
-    // Find the receiver in the database
-    const receiver = await User.findOneBy({ id: data.receiver.id })
-    if (!receiver) {
-      throw new Error('Receiver not found')
+    try {
+      // Validate receiver
+      const receiver = await User.findOneBy({ id: data.receiver.id })
+      if (!receiver) {
+        throw new Error('The specified receiver does not exist')
+      }
+
+      // Validate adId
+      const ad = await Ad.findOneBy({ id: data.adId })
+      if (!ad) {
+        throw new Error('The specified ad does not exist')
+      }
+
+      // Create and save new message
+      const newMessage = Message.create({
+        adId: data.adId,
+        content: data.content,
+        sender: context.user,
+        receiver,
+      })
+
+      await newMessage.save()
+
+      // Publish new message event
+      pubSub.publish('MESSAGES', newMessage)
+
+      return newMessage
+    } catch (error) {
+      console.error(error)
+      throw new Error('Failed to send message')
     }
-
-    const message = Message.create({
-      content: data.content,
-      sender: context.user,
-      receiver,
-    })
-
-    await message.save()
-    const payload: NotificationPayload = { message }
-    pubSub.publish('NOTIFICATIONS', payload)
-    return message
   }
 
   // GET
   @Authorized('ADMIN', 'USER')
   @Query(() => [Message])
   async getConversationMessages(
-    @Arg('userId1', () => ID) userId1: number,
-    @Arg('userId2', () => ID) userId2: number,
+    @Arg('data', () => MessageConversationInput) data: MessageConversationInput,
     @Ctx() context: MyContext
   ): Promise<Message[]> {
     // Check if user is authenticated
@@ -61,36 +78,61 @@ export class MessagesResolver {
     }
 
     // Ensure that the requesting user is either one of the participants or an admin
-    const isParticipantOrAdmin =
-      context.user.id === userId1 ||
-      context.user.id === userId2 ||
-      context.user.role === 'ADMIN'
-    if (!isParticipantOrAdmin) {
-      throw new Error('Not authorized to view these messages')
+    const isParticipant =
+      context.user.id === data.userId1 || context.user.id === data.userId2
+    if (!isParticipant) {
+      throw new Error('Not authorized to view these conversation messages')
     }
 
-    // Fetch the conversation messages
-    const messages = await Message.find({
-      where: [
-        { sender: { id: userId1 }, receiver: { id: userId2 } },
-        { sender: { id: userId2 }, receiver: { id: userId1 } },
-      ],
-      order: {
-        createdAt: 'ASC',
-      },
-      relations: ['sender', 'receiver'],
-    })
+    try {
+      // Fetch the conversation messages for the specified adId
+      const messages = await Message.find({
+        where: [
+          {
+            sender: { id: data.userId1 },
+            receiver: { id: data.userId2 },
+            adId: data.adId,
+          },
+          {
+            sender: { id: data.userId2 },
+            receiver: { id: data.userId1 },
+            adId: data.adId,
+          },
+        ],
+        order: {
+          createdAt: 'ASC',
+        },
+        relations: { sender: true, receiver: true },
+      })
 
-    return messages
+      return messages
+    } catch (error) {
+      console.error(error)
+      throw new Error('Failed to fetch conversation messages')
+    }
   }
 
   // SUBSCRIPTION
   @Authorized('ADMIN', 'USER')
   @Subscription(() => Message, {
-    topics: 'NOTIFICATIONS',
+    topics: 'MESSAGES',
+    filter: ({ payload, args, context }) => {
+      if (!context.user) {
+        throw new Error('User context is missing or user is not authenticated')
+      }
+      return (
+        payload.receiver.id === context.user.id && payload.adId === args.adId
+      )
+    },
   })
-  newMessage(@Root() payload: NotificationPayload): Message {
-    console.log('Subscription resolver invoked')
-    return payload.message
+  async newMessage(
+    @Root() payload: Message,
+    @Arg('adId') adId: number
+  ): Promise<Message> {
+    const ad = await Ad.findOneBy({ id: adId })
+    if (!ad) {
+      throw new Error('The specified ad does not exist')
+    }
+    return payload
   }
 }

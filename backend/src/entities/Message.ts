@@ -26,6 +26,11 @@ export class Message extends BaseEntity {
   @Field()
   content!: string
 
+  // Ad
+  @Column()
+  @Field(() => ID)
+  adId!: number
+
   // Relations
   @ManyToOne(() => User, (user) => user.sentMessages)
   @Field(() => User)
@@ -50,9 +55,28 @@ export class MessageCreateInput {
   @Field()
   content!: string
 
+  @Field()
+  adId!: number
+
   @Field(() => ObjectId, { nullable: true })
   sender!: ObjectId
 
   @Field(() => ObjectId, { nullable: true })
   receiver!: ObjectId
+}
+
+//-------------------------------
+// Message get conversation input
+//-------------------------------
+
+@InputType()
+export class MessageConversationInput {
+  @Field()
+  adId!: number
+
+  @Field()
+  userId1!: number
+
+  @Field()
+  userId2!: number
 }

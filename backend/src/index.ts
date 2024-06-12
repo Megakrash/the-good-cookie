@@ -6,7 +6,7 @@ import 'reflect-metadata'
 import { dataSource } from './datasource'
 
 //-----------------------------------------
-// --------- GRAPHQL / APOLLO SERVER ------
+// ------ GRAPHQL / APOLLO SERVER ---------
 //-----------------------------------------
 
 import { getSchema } from './schema'
@@ -27,7 +27,7 @@ import cors from 'cors'
 import path from 'path'
 
 //-----------------------------------------
-// ----------- APOLLO SERVER --------------
+// -------------- SERVER ------------------
 //-----------------------------------------
 
 const app = express()
@@ -47,44 +47,43 @@ const httpServer = http.createServer(app)
 async function start() {
   const port = process.env.BACKEND_PORT || 5000
   const schema = await getSchema()
-
-  const server = new ApolloServer({
-    schema,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-  })
-
   await dataSource.initialize()
-  await server.start()
-  expressMiddlewares(app)
 
   const wsServer = new WebSocketServer({
     server: httpServer,
-    path: '/graphql',
   })
-
-  useServer(
+  const serverCleanup = useServer(
     {
       schema,
-      context: async (wsContext) => {
-        console.log('WebSocket context:', wsContext)
+      context: (connection) => {
         return {
-          connection: wsContext.connectionParams,
+          req: connection.extra.request,
+          res: null,
         }
-      },
-      onConnect: (context) => {
-        console.log('-----------------Connected!-----------------', context)
-        // Vous pouvez ajouter une vérification ici pour valider le token si nécessaire
-      },
-      onDisconnect: (code, reason) => {
-        console.log(
-          '-------------Disconnected!-------------------',
-          code,
-          reason
-        )
       },
     },
     wsServer
   )
+
+  const server = new ApolloServer({
+    schema,
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await serverCleanup.dispose()
+            },
+          }
+        },
+      },
+    ],
+  })
+
+  await server.start()
+  expressMiddlewares(app)
 
   app.use(
     '/',
