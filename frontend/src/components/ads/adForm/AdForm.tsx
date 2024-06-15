@@ -11,7 +11,7 @@ import {
   queryAdById,
   mutationCreateAd,
   mutationUpdateAd,
-} from "@/graphql/Ads";
+} from "@/graphql/ads/Ads";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import UserZipCity from "@/components/users/components/UserZipCity";

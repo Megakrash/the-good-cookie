@@ -2,7 +2,7 @@ import React from "react";
 import { CategoryTypes } from "@/types/CategoryTypes";
 import { useQuery } from "@apollo/client";
 import { AdsTypes } from "@/types/AdTypes";
-import { queryAllAds } from "@/graphql/Ads";
+import { queryAllAds } from "@/graphql/ads/queryAllAds";
 import { Box, Typography } from "@mui/material";
 import AdCard from "../ads/AdCard";
 
