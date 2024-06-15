@@ -1,7 +1,7 @@
 import React from "react";
 import CategoryWithAdsPage from "@/components/categories/CategoryWithAdsPage";
 import LayoutFull from "@/components/layout/LayoutFull";
-import { queryCatByIdWithParents } from "@/graphql/Categories";
+import { queryCatByIdWithParents } from "@/graphql/categories/queryCatByIdWithParents";
 import { CategoryTypes } from "@/types/CategoryTypes";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { queryAllMessages } from "@/graphql/queryAllMessages";
-import { mutationSendMessage } from "@/graphql/mutationSendMessage";
+import { queryAllMessages } from "@/graphql/messages/queryAllMessages";
+import { mutationSendMessage } from "@/graphql/messages/mutationSendMessage";
 import { useUserContext } from "@/context/UserContext";
 import { MessagesTypes, MessageTypes } from "@/types/MessageTypes";
-import { subscriptionMessage } from "@/graphql/subscriptionMessage";
+import { subscriptionMessage } from "@/graphql/messages/subscriptionMessage";
 
 type ChatProps = {
   receiverId: number;

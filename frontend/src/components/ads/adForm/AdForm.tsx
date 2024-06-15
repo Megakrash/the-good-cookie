@@ -6,12 +6,10 @@ import {
   AdCreateFormData,
   AdUpdateFormData,
 } from "@/types/AdTypes";
-import {
-  queryAllAds,
-  queryAdById,
-  mutationCreateAd,
-  mutationUpdateAd,
-} from "@/graphql/ads/Ads";
+import { mutationCreateAd } from "@/graphql/ads/mutationCreateAd";
+import { queryAllAds } from "@/graphql/ads/queryAllAds";
+import { mutationUpdateAd } from "@/graphql/ads/mutationUpdateAd";
+import { queryAdById } from "@/graphql/ads/queryAdById";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import UserZipCity from "@/components/users/components/UserZipCity";

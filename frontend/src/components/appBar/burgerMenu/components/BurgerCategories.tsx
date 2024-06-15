@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Box, Divider, MenuItem, Typography } from "@mui/material";
 import { useQuery } from "@apollo/client";
 import { CategoriesTypes } from "@/types/CategoryTypes";
-import { queryAllCat } from "@/graphql/Categories";
+import { queryAllCategories } from "@/graphql/categories/queryAllCategories";
 
 type BurgerCategoriesProps = {
   handleCloseNavMenu: () => void;
@@ -11,7 +11,7 @@ type BurgerCategoriesProps = {
 
 const BurgerCategories = (props: BurgerCategoriesProps): React.ReactNode => {
   const router = useRouter();
-  const { data } = useQuery<{ items: CategoriesTypes }>(queryAllCat);
+  const { data } = useQuery<{ items: CategoriesTypes }>(queryAllCategories);
   const categories = data ? data.items : [];
   return (
     <Box sx={{ display: { xs: "flex", sm: "none" }, flexDirection: "column" }}>

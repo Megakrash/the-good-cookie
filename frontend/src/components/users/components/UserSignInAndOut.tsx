@@ -6,7 +6,7 @@ import { useUserContext } from "@/context/UserContext";
 import { VariablesColors } from "@/styles/Variables.colors";
 import { MenuItem, Typography } from "@mui/material";
 import { useMutation } from "@apollo/client";
-import { mutationSignOut } from "@/graphql/Users";
+import { mutationSignOut } from "@/graphql/auth/mutationSignOut";
 
 const colors = new VariablesColors();
 const { colorOrange } = colors;

@@ -8,7 +8,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { mutationUserLogin } from "@/graphql/Users";
+import { mutationUserLogin } from "@/graphql/auth/mutationUserLogin";
 import { useMutation } from "@apollo/client";
 import { Toaster } from "react-hot-toast";
 import UserPassword from "../components/UserPassword";

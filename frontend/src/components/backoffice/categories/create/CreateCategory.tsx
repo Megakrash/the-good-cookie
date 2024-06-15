@@ -3,10 +3,8 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 import BackOfficeInput from "../../components/BackOfficeInput";
 import { useMutation } from "@apollo/client";
 import { CategoryFormData } from "@/types/CategoryTypes";
-import {
-  mutationCreateCategory,
-  queryAllCatWithHierarchy,
-} from "@/graphql/Categories";
+import { mutationCreateCategory } from "@/graphql/categories/mutationCreateCategory";
+import { queryAllCatWithHierarchy } from "@/graphql/categories/queryAllCatWithHierarchy";
 import { StepFormButton } from "@/styles/MuiButtons";
 import { Toaster } from "react-hot-toast";
 import { showToast } from "@/components/utils/toastHelper";

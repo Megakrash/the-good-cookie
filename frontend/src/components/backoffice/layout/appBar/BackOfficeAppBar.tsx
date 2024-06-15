@@ -4,7 +4,7 @@ import { VariablesColors } from "@/styles/Variables.colors";
 import CookieIcon from "@mui/icons-material/Cookie";
 import { useMutation } from "@apollo/client";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import { mutationSignOut } from "@/graphql/Users";
+import { mutationSignOut } from "@/graphql/auth/mutationSignOut";
 import { useUserContext } from "@/context/UserContext";
 
 const colors = new VariablesColors();

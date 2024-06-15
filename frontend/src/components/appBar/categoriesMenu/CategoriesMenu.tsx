@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Typography from "@mui/material/Typography";
 import { useQuery } from "@apollo/client";
 import { CategoryTypes } from "@/types/CategoryTypes";
-import { queryCatByIdAndSub } from "@/graphql/Categories";
+import { queryCatByIdAndSub } from "@/graphql/categories/queryCatByIdAndSub";
 import { Box } from "@mui/material";
 import { VariablesColors } from "@/styles/Variables.colors";
 
