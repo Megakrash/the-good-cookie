@@ -27,6 +27,7 @@ import {
 import { Ad } from './Ad'
 import { ObjectId } from './ObjectId'
 import { Picture } from './Picture'
+import { Message } from './Message'
 import { GenderEnum, ProfilEnum, RoleEnum } from '../types/Users.types'
 import { PointInput, PointType } from './Geolocation'
 
@@ -204,6 +205,14 @@ export class User extends BaseEntity {
   @OneToMany(() => Ad, (ad) => ad.user, { eager: true })
   @Field(() => [Ad])
   ads!: Ad[]
+
+  @OneToMany(() => Message, (message) => message.sender)
+  @Field(() => [Message])
+  sentMessages!: Message[]
+
+  @OneToMany(() => Message, (message) => message.receiver)
+  @Field(() => [Message])
+  receivedMessages!: Message[]
 }
 
 //-------------------------------

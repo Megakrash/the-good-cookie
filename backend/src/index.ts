@@ -6,13 +6,15 @@ import 'reflect-metadata'
 import { dataSource } from './datasource'
 
 //-----------------------------------------
-// --------- GRAPHQL / APOLLO SERVER ------
+// ------ GRAPHQL / APOLLO SERVER ---------
 //-----------------------------------------
 
 import { getSchema } from './schema'
 import { ApolloServer } from '@apollo/server'
 import { expressMiddleware } from '@apollo/server/express4'
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
+import { useServer } from 'graphql-ws/lib/use/ws'
+import { WebSocketServer } from 'ws'
 
 //-----------------------------------------
 // ------------ EXPRESS -------------------
@@ -25,7 +27,7 @@ import cors from 'cors'
 import path from 'path'
 
 //-----------------------------------------
-// ----------- APOLLO SERVER --------------
+// -------------- SERVER ------------------
 //-----------------------------------------
 
 const app = express()
@@ -40,20 +42,49 @@ app.use(
   '/api/assets/images',
   express.static(path.join(__dirname, '../public/assets/images'))
 )
+const httpServer = http.createServer(app)
 
 async function start() {
   const port = process.env.BACKEND_PORT || 5000
   const schema = await getSchema()
+  await dataSource.initialize()
 
-  const httpServer = http.createServer(app)
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+  })
+  const serverCleanup = useServer(
+    {
+      schema,
+      context: (connection) => {
+        return {
+          req: connection.extra.request,
+          res: null,
+        }
+      },
+    },
+    wsServer
+  )
+
   const server = new ApolloServer({
     schema,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await serverCleanup.dispose()
+            },
+          }
+        },
+      },
+    ],
   })
 
-  await dataSource.initialize()
   await server.start()
   expressMiddlewares(app)
+
   app.use(
     '/',
     express.json({ limit: '50mb' }),

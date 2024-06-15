@@ -60,6 +60,8 @@ const CreateCategories = (): React.ReactNode => {
         showToast("success", `Catégorie ${name} créée avec succès`);
         setName("");
         setParentCategory(null);
+        setPicture(null);
+        setPreviewUrl(null);
       }
     } catch (error) {
       if (error.message === "Category name already in use") {

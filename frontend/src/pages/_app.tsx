@@ -50,7 +50,7 @@ const theme = createTheme({
     MuiPaper: { styleOverrides: { root: { backgroundColor: "#F8F8F8" } } },
   },
 });
-const privatePages = ["/account", "/ads/new"];
+const privatePages = ["/account", "/ads/new", "/messages"];
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { loading } = useAuth(privatePages);
