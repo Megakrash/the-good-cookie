@@ -13,7 +13,6 @@ import UserCard from "../users/userCard/UserCard";
 import PlaceIcon from "@mui/icons-material/Place";
 import { transformerDate } from "../utils/dateUtils";
 import BuyContactCard from "./components/BuyContactCard";
-import Chat from "./Chat";
 
 type AdPageProps = {
   ad: AdTypes;
@@ -132,7 +131,6 @@ const AdPage: React.FC<AdPageProps> = ({ ad }) => {
         >
           <UserCard user={ad.user} />
           <BuyContactCard ad={ad} />
-          <Chat />
         </Box>
       </Grid>
     </Grid>

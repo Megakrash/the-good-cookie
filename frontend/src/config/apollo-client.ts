@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache, HttpLink, split } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
-import { API_URL } from "../api/configApi";
+import { API_URL, WS_URL } from "../api/configApi";
 
 const httpLink = new HttpLink({
   uri: API_URL || "/api",
@@ -14,15 +14,7 @@ const httpLink = new HttpLink({
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: `ws://localhost:5000/graphql`,
-    connectionParams: {
-      authToken: "blablabla",
-    },
-    on: {
-      connected: () => console.warn("Connected to WebSocket"),
-      closed: (code) => console.warn(`WebSocket closed: ${code}`),
-      error: (error) => console.warn("WebSocket error:", error),
-    },
+    url: "ws://localhost:5000/",
   }),
 );
 

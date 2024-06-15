@@ -43,7 +43,7 @@ export type UserFormData = {
 };
 
 export type UserTypes = {
-  id: string;
+  id: number;
   firstName: string;
   lastName: string;
   nickName: string;
@@ -63,7 +63,7 @@ export type UserTypes = {
 };
 
 export type UserContextTypes = {
-  id: string;
+  id: number;
   nickName: string;
   role: string;
   picture: {
