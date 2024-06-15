@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import { Card, CircularProgress, Grid, Typography } from "@mui/material";
 import { Toaster } from "react-hot-toast";
-import { mutationVerifyEmail } from "@/graphql/Users";
+import { mutationVerifyEmail } from "@/graphql/auth/mutationVerifyEmail";
 import { GreyBtnOrangeHover } from "@/styles/MuiButtons";
 import { showToast } from "@/components/utils/toastHelper";
 

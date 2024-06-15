@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Card, FormControl, Grid, Typography } from "@mui/material";
-import { mutationSetPassword } from "@/graphql/Users";
+import { mutationSetPassword } from "@/graphql/auth/mutationSetPassword";
 import { useMutation } from "@apollo/client";
 import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";

@@ -8,7 +8,7 @@ import {
 } from "@testing-library/react";
 import ResetPassword from "@/components/users/resetPassword/ResetPassword";
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
-import { mutationSetPassword } from "@/graphql/Users";
+import { mutationSetPassword } from "@/graphql/auth/mutationSetPassword";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 

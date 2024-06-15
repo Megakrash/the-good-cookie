@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import ForgotPassword from "@/components/users/forgotPassword/ForgotPassword";
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
-import { mutationResetPassword } from "@/graphql/Users";
+import { mutationResetPassword } from "@/graphql/auth/mutationResetPassword";
 import toast from "react-hot-toast";
 
 jest.mock("next/router", () => ({

@@ -10,7 +10,7 @@ import {
 import { MockedProvider } from "@apollo/client/testing";
 import { toast } from "react-hot-toast";
 import SignIn from "@/components/users/signin/SignIn";
-import { mutationUserLogin } from "@/graphql/Users";
+import { mutationUserLogin } from "@/graphql/auth/mutationUserLogin";
 import { UserProvider } from "@/context/UserContext";
 
 // Mocks React-Hot-Toast
