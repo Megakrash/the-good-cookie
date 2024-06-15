@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
-import { queryMeContext } from "@/graphql/users/Users";
+import { queryMeContext } from "@/graphql/users/queryMeContext";
 import { UserContextTypes } from "@/types/UserTypes";
 
 export function useAuth(privatePages: string[]) {

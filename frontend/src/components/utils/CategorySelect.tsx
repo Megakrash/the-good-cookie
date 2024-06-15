@@ -2,7 +2,7 @@ import * as React from "react";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { useQuery } from "@apollo/client";
 import { CategoriesTypes, CategoryTypes } from "@/types/CategoryTypes";
-import { queryAllCatWithHierarchy } from "@/graphql/Categories";
+import { queryAllCatWithHierarchy } from "@/graphql/categories/queryAllCatWithHierarchy";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { VariablesColors } from "@/styles/Variables.colors";
 

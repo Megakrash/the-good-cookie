@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
-import { queryAllTags } from "@/graphql/Tags";
+import { queryAllTags } from "@/graphql/tags/queryAlltags";
 import { AdTags } from "@/types/AdTypes";
 import { TagsTypes } from "@/types/TagTypes";
 import {
