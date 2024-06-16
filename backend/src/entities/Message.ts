@@ -5,10 +5,13 @@ import {
   ManyToOne,
   BaseEntity,
   CreateDateColumn,
+  JoinColumn,
 } from 'typeorm'
 import { Field, ID, InputType, ObjectType } from 'type-graphql'
 import { ObjectId } from './ObjectId'
 import { User } from './User'
+import { Conversation } from './Conversation'
+import { Ad } from './Ad'
 
 //-------------------------------
 //------ Message Entity --------
@@ -26,12 +29,11 @@ export class Message extends BaseEntity {
   @Field()
   content!: string
 
-  // Ad
-  @Column()
-  @Field(() => ID)
-  adId!: number
-
   // Relations
+  @ManyToOne(() => Ad)
+  @Field(() => Ad)
+  ad!: Ad
+
   @ManyToOne(() => User, (user) => user.sentMessages)
   @Field(() => User)
   sender!: User
@@ -39,6 +41,11 @@ export class Message extends BaseEntity {
   @ManyToOne(() => User, (user) => user.receivedMessages)
   @Field(() => User)
   receiver!: User
+
+  @ManyToOne(() => Conversation, (conversation) => conversation.messages)
+  @JoinColumn()
+  @Field(() => Conversation)
+  conversation!: Conversation
 
   // Infos
   @CreateDateColumn({ type: 'timestamp' })
@@ -55,13 +62,10 @@ export class MessageCreateInput {
   @Field()
   content!: string
 
-  @Field()
-  adId!: number
+  @Field(() => ObjectId)
+  ad!: ObjectId
 
-  @Field(() => ObjectId, { nullable: true })
-  sender!: ObjectId
-
-  @Field(() => ObjectId, { nullable: true })
+  @Field(() => ObjectId)
   receiver!: ObjectId
 }
 
@@ -70,9 +74,12 @@ export class MessageCreateInput {
 //-------------------------------
 
 @InputType()
-export class MessageConversationInput {
+export class MessageGetConversationInput {
   @Field()
   adId!: number
+
+  @Field(() => ObjectId)
+  conversation?: ObjectId
 
   @Field()
   userId1!: number
