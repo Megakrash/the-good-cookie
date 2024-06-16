@@ -34,10 +34,11 @@ const ConversationCard: React.FC<MessagesProps> = ({ conversation }) => {
     <CardActionArea onClick={() => router.push(`/messages/${conversation.id}`)}>
       <Card
         sx={{
-          height: 100,
+          minHeight: 100,
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          gap: 1,
           padding: 1,
           "&:hover": {
             border: (theme) => `2px solid ${theme.palette.primary.main}`,
@@ -62,6 +63,7 @@ const ConversationCard: React.FC<MessagesProps> = ({ conversation }) => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            gap: 1,
           }}
         >
           {/* User */}

@@ -1,6 +1,6 @@
 import React from "react";
 import { ConversationsTypes } from "@/types/ConversationTypes";
-import { Box, Typography } from "@mui/material";
+import { Box, Divider, Grid, Typography } from "@mui/material";
 import ConversationCard from "./ConversationCard";
 
 type MessagesProps = {
@@ -9,7 +9,12 @@ type MessagesProps = {
 
 const Messages: React.FC<MessagesProps> = ({ conversations }) => {
   return (
-    <Box
+    <Grid
+      container
+      xs={11}
+      sm={10}
+      md={10}
+      lg={8}
       sx={{
         width: "80%",
         margin: "auto",
@@ -20,6 +25,7 @@ const Messages: React.FC<MessagesProps> = ({ conversations }) => {
       }}
     >
       <Typography variant="h4">Messagerie</Typography>
+      <Divider />
       {conversations.length === 0 && (
         <Typography variant="h5">
           {`Vous n'avez pas de conversations en cours.`}
@@ -28,7 +34,7 @@ const Messages: React.FC<MessagesProps> = ({ conversations }) => {
       {conversations.map((conversation) => (
         <ConversationCard key={conversation.id} conversation={conversation} />
       ))}
-    </Box>
+    </Grid>
   );
 };
 
