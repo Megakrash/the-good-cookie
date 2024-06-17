@@ -4,6 +4,7 @@ import { Box, Divider, MenuItem, Typography } from "@mui/material";
 import { useQuery } from "@apollo/client";
 import { CategoriesTypes } from "@/types/CategoryTypes";
 import { queryAllCategories } from "@/graphql/categories/queryAllCategories";
+import { queryAllRootCategories } from "@/graphql/categories/queryAllRootCategories";
 
 type BurgerCategoriesProps = {
   handleCloseNavMenu: () => void;
@@ -11,7 +12,7 @@ type BurgerCategoriesProps = {
 
 const BurgerCategories = (props: BurgerCategoriesProps): React.ReactNode => {
   const router = useRouter();
-  const { data } = useQuery<{ items: CategoriesTypes }>(queryAllCategories);
+  const { data } = useQuery<{ items: CategoriesTypes }>(queryAllRootCategories);
   const categories = data ? data.items : [];
   return (
     <Box sx={{ display: { xs: "flex", sm: "none" }, flexDirection: "column" }}>
