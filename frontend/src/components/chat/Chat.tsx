@@ -5,13 +5,17 @@ import { mutationSendMessage } from "@/graphql/messages/mutationSendMessage";
 import { useUserContext } from "@/context/UserContext";
 import { MessagesTypes, MessageTypes } from "@/types/MessageTypes";
 import { subscriptionMessage } from "@/graphql/messages/subscriptionMessage";
+import LoadingApp from "@/styles/LoadingApp";
+import { showToast } from "../utils/toastHelper";
+import ChatCard from "./ChatCard";
 
 type ChatProps = {
   receiverId: number;
   adId: number;
+  conversationId?: number;
 };
 
-const Chat = (props: ChatProps) => {
+const Chat = (props: ChatProps): React.ReactNode => {
   const { user } = useUserContext();
   const [messageContent, setMessageContent] = useState("");
   const { data, loading, error, subscribeToMore } = useQuery<{
@@ -19,15 +23,17 @@ const Chat = (props: ChatProps) => {
   }>(queryAllMessages, {
     variables: {
       data: {
-        adId: Number(props.adId),
-        userId1: Number(user.id),
-        userId2: Number(props.receiverId),
+        ad: props.adId ? { id: Number(props.adId) } : null,
+        conversation: props.conversationId
+          ? { id: Number(props.conversationId) }
+          : null,
+        userId1: Number(user?.id),
+        userId2: props.receiverId ? Number(props.receiverId) : null,
       },
     },
   });
 
   const [conversation, setConversation] = useState<MessagesTypes>([]);
-
   useEffect(() => {
     if (data?.items) {
       setConversation(data.items);
@@ -39,7 +45,7 @@ const Chat = (props: ChatProps) => {
       newMessage: MessageTypes;
     }>({
       document: subscriptionMessage,
-      variables: { adId: Number(props.adId) },
+      variables: { ad: Number(props.adId) },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const newMessage = subscriptionData.data.newMessage;
@@ -66,7 +72,7 @@ const Chat = (props: ChatProps) => {
         data: {
           content: messageContent,
           receiver: { id: Number(props.receiverId) },
-          adId: Number(props.adId),
+          ad: { id: Number(props.adId) },
         },
       },
     });
@@ -80,28 +86,23 @@ const Chat = (props: ChatProps) => {
 
     setMessageContent("");
   };
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (loading) return <LoadingApp />;
+  if (error) {
+    showToast("error", "Erreur pendant la récupération de votre conversation");
+  }
 
   return (
-    <div>
-      <h1>Chat</h1>
-      <div>
-        {conversation.map((msg) => (
-          <div key={msg.id}>
-            <strong>{msg.sender.nickName}</strong>: {msg.content}
-          </div>
-        ))}
-      </div>
-      <div>
-        <input
-          type="text"
-          value={messageContent}
-          onChange={(e) => setMessageContent(e.target.value)}
+    <>
+      {conversation.length > 0 && user && (
+        <ChatCard
+          conversation={conversation}
+          user={user}
+          messageContent={messageContent}
+          setMessageContent={setMessageContent}
+          handleSendMessage={handleSendMessage}
         />
-        <button onClick={handleSendMessage}>Send</button>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

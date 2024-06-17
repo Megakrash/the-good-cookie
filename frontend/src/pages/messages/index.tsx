@@ -1,6 +1,6 @@
 import React from "react";
 import LayoutFull from "@/components/layout/LayoutFull";
-import Messages from "@/components/messages/Messages";
+import ConversationsPage from "@/components/messages/ConversationsPage";
 import { useQuery } from "@apollo/client";
 import { queryConversationGetAll } from "@/graphql/conversations/queryConversationGetAll";
 import { ConversationsTypes } from "@/types/ConversationTypes";
@@ -15,7 +15,7 @@ const MessagesPage = (): React.ReactNode => {
   return (
     <LayoutFull title="TGC : Messagerie">
       {conversations && conversations !== null && (
-        <Messages conversations={conversations} />
+        <ConversationsPage conversations={conversations} />
       )}
     </LayoutFull>
   );

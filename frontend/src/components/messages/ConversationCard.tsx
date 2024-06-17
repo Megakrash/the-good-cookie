@@ -31,7 +31,13 @@ const ConversationCard: React.FC<MessagesProps> = ({ conversation }) => {
   const avatarPictureUrl = getUserImageUrl(displayUser?.picture?.filename);
   const updatedAt = transformerDate(conversation.updatedAt);
   return (
-    <CardActionArea onClick={() => router.push(`/messages/${conversation.id}`)}>
+    <CardActionArea
+      onClick={() =>
+        router.push(
+          `/messages/${conversation.id}?ad=${conversation.ad.id}&receiver=${displayUser.id}`,
+        )
+      }
+    >
       <Card
         sx={{
           minHeight: 100,

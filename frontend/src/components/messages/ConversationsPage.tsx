@@ -1,13 +1,15 @@
 import React from "react";
 import { ConversationsTypes } from "@/types/ConversationTypes";
-import { Box, Divider, Grid, Typography } from "@mui/material";
+import { Divider, Grid, Typography } from "@mui/material";
 import ConversationCard from "./ConversationCard";
 
-type MessagesProps = {
+type ConversationsPageProps = {
   conversations: ConversationsTypes;
 };
 
-const Messages: React.FC<MessagesProps> = ({ conversations }) => {
+const ConversationsPage: React.FC<ConversationsPageProps> = ({
+  conversations,
+}) => {
   return (
     <Grid
       container
@@ -38,4 +40,4 @@ const Messages: React.FC<MessagesProps> = ({ conversations }) => {
   );
 };
 
-export default Messages;
+export default ConversationsPage;
