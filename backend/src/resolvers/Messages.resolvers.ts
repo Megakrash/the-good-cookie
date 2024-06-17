@@ -7,6 +7,7 @@ import {
   Ctx,
   Subscription,
   Root,
+  ID,
 } from 'type-graphql'
 import {
   Message,
@@ -82,7 +83,6 @@ export class MessagesResolver {
       })
 
       await newMessage.save()
-
       // Publish new message event
       pubSub.publish('MESSAGES', newMessage)
 
@@ -105,8 +105,14 @@ export class MessagesResolver {
     if (!context.user) {
       throw new Error('User context is missing or user is not authenticated')
     }
+    // Ensure that the requesting user is either one of the participants or an admin
+    const isParticipant =
+      context.user.id === data.userId1 || context.user.id === data.userId2
+    if (!isParticipant) {
+      throw new Error('Not authorized to view these conversation messages')
+    }
 
-    // Fetch the conversation messages for the specified conversation
+    // If conversation is specified, fetch the conversation messages
     if (data.conversation) {
       try {
         const messages = await Message.find({
@@ -116,7 +122,12 @@ export class MessagesResolver {
           order: {
             createdAt: 'ASC',
           },
-          relations: { sender: true, receiver: true },
+          relations: {
+            sender: true,
+            receiver: true,
+            ad: true,
+            conversation: true,
+          },
         })
 
         return messages
@@ -126,15 +137,8 @@ export class MessagesResolver {
       }
     }
 
-    // Ensure that the requesting user is either one of the participants or an admin
-    const isParticipant =
-      context.user.id === data.userId1 || context.user.id === data.userId2
-    if (!isParticipant) {
-      throw new Error('Not authorized to view these conversation messages')
-    }
-
     // Validate adId
-    const ad = await Ad.findOneBy({ id: data.adId })
+    const ad = await Ad.findOneBy({ id: data.ad?.id })
     if (!ad) {
       throw new Error('The specified ad does not exist')
     }
@@ -171,21 +175,19 @@ export class MessagesResolver {
   @Authorized('ADMIN', 'USER')
   @Subscription(() => Message, {
     topics: 'MESSAGES',
-    filter: ({ payload, args, context }) => {
+    filter: ({ payload, context }) => {
       if (!context.user) {
         throw new Error('User context is missing or user is not authenticated')
       }
-      return (
-        payload.receiver.id === context.user.id && payload.ad.id === args.adId
-      )
+      return payload.receiver.id === context.user.id
     },
   })
   async newMessage(
     @Root() payload: Message,
-    @Arg('adId') adId: number
+    @Arg('ad', () => ID) id: number
   ): Promise<Message> {
-    const ad = await Ad.findOneBy({ id: adId })
-    if (!ad) {
+    const adExist = await Ad.findOneBy({ id })
+    if (!adExist) {
       throw new Error('The specified ad does not exist')
     }
     return payload

@@ -75,15 +75,15 @@ export class MessageCreateInput {
 
 @InputType()
 export class MessageGetConversationInput {
-  @Field()
-  adId!: number
+  @Field(() => ObjectId, { nullable: true })
+  ad?: ObjectId
 
-  @Field(() => ObjectId)
+  @Field(() => ObjectId, { nullable: true })
   conversation?: ObjectId
 
-  @Field()
-  userId1!: number
+  @Field({ nullable: true })
+  userId1?: number
 
-  @Field()
-  userId2!: number
+  @Field({ nullable: true })
+  userId2?: number
 }
