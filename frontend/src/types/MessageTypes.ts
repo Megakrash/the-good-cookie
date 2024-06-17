@@ -1,7 +1,11 @@
+import { AdTypes } from "./AdTypes";
+import { ConversationTypes } from "./ConversationTypes";
+
 export type MessageTypes = {
   id: number;
-  adId: number;
+  ad: AdTypes;
   content: string;
+  conversation: ConversationTypes;
   createdAt: string;
   receiver: {
     id: number;

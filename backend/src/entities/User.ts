@@ -30,6 +30,7 @@ import { Picture } from './Picture'
 import { Message } from './Message'
 import { GenderEnum, ProfilEnum, RoleEnum } from '../types/Users.types'
 import { PointInput, PointType } from './Geolocation'
+import { Conversation } from './Conversation'
 
 //-------------------------------
 //----- Enums type-graphql ------
@@ -206,6 +207,7 @@ export class User extends BaseEntity {
   @Field(() => [Ad])
   ads!: Ad[]
 
+  // Messages
   @OneToMany(() => Message, (message) => message.sender)
   @Field(() => [Message])
   sentMessages!: Message[]
@@ -213,6 +215,15 @@ export class User extends BaseEntity {
   @OneToMany(() => Message, (message) => message.receiver)
   @Field(() => [Message])
   receivedMessages!: Message[]
+
+  // Conversations
+  @OneToMany(() => Conversation, (conversation) => conversation.user1)
+  @Field(() => [Conversation])
+  conversations!: Conversation[]
+
+  @OneToMany(() => Conversation, (conversation) => conversation.user2)
+  @Field(() => [Conversation])
+  conversationsReceived!: Conversation[]
 }
 
 //-------------------------------

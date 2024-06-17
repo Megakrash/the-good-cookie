@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import MessageIcon from "@mui/icons-material/Message";
 import { PATH_IMAGE } from "@/api/configApi";
 import { VariablesColors } from "@/styles/Variables.colors";
 import { useUserContext } from "@/context/UserContext";
@@ -79,6 +80,17 @@ const UserMenu = () => {
                 sx={{ width: "35px", height: "auto", color: colorOrange }}
               />
               <Typography sx={{ marginLeft: "10px" }}>Mon compte</Typography>
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleCloseUserMenu();
+                router.push(`/messages`);
+              }}
+            >
+              <MessageIcon
+                sx={{ width: "35px", height: "auto", color: colorOrange }}
+              />
+              <Typography sx={{ marginLeft: "10px" }}>Messages</Typography>
             </MenuItem>
             <Divider />
           </Box>

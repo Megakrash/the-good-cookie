@@ -1,10 +1,15 @@
 import { gql } from "@apollo/client";
 
 export const subscriptionMessage = gql`
-  subscription newMessage($adId: Float!) {
-    newMessage(adId: $adId) {
+  subscription newMessage($ad: ID!) {
+    newMessage(ad: $ad) {
       id
-      adId
+      ad {
+        id
+      }
+      conversation {
+        id
+      }
       content
       createdAt
       receiver {

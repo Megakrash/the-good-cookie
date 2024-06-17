@@ -4,6 +4,7 @@ import {
 } from "@/styles/MuiButtons";
 import { AdTypes } from "@/types/AdTypes";
 import { Box, Card, CardMedia, Typography } from "@mui/material";
+import router from "next/router";
 import React from "react";
 type BuyContactCardProps = {
   ad: AdTypes;
@@ -34,7 +35,9 @@ const BuyContactCard: React.FC<BuyContactCardProps> = ({ ad }) => {
         }}
       >
         <OrangeBtnOrangeHover>Acheter</OrangeBtnOrangeHover>
-        <DarkGreyBtnGreyHover>Message</DarkGreyBtnGreyHover>
+        <DarkGreyBtnGreyHover onClick={() => router.push(`/messages`)}>
+          Message
+        </DarkGreyBtnGreyHover>
       </Box>
       <Box
         sx={{

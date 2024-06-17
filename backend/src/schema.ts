@@ -5,6 +5,7 @@ import { PictureResolver } from './resolvers/Pictures.resolvers'
 import { TagsResolver } from './resolvers/Tags.resolvers'
 import { UsersResolver } from './resolvers/Users.resolvers'
 import { MessagesResolver } from './resolvers/Messages.resolvers'
+import { ConversationsResolver } from './resolvers/Conversations.resolvers'
 import { customAuthChecker } from './auth'
 import { pubSub } from './pubSub'
 
@@ -17,6 +18,7 @@ export async function getSchema() {
       CategoriesResolver,
       TagsResolver,
       MessagesResolver,
+      ConversationsResolver,
     ],
     authChecker: customAuthChecker,
     pubSub: pubSub,

@@ -21,7 +21,7 @@ type AdPageProps = {
 const AdPage: React.FC<AdPageProps> = ({ ad }) => {
   const theme = useTheme();
   const adImageUrl = getAdImageUrl(ad.picture.filename);
-  const updartedAt = transformerDate(ad.updatedAt);
+  const updatedAt = transformerDate(ad.updatedAt);
   return (
     <Grid
       container
@@ -90,7 +90,7 @@ const AdPage: React.FC<AdPageProps> = ({ ad }) => {
           {/* Price */}
           <Typography variant="h6">{ad.price}€</Typography>
           {/* Update date */}
-          <Typography variant="body2">{`Mise à jour le ${updartedAt}`}</Typography>
+          <Typography variant="body2">{`Mise à jour le ${updatedAt}`}</Typography>
         </Box>
         <Divider />
         {/* Box Description & Address */}
