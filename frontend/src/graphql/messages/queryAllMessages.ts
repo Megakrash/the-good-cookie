@@ -1,12 +1,18 @@
 import { gql } from "@apollo/client";
 
 export const queryAllMessages = gql`
-  query GetConversationMessages($data: MessageConversationInput!) {
+  query GetConversationMessages($data: MessageGetConversationInput!) {
     items: getConversationMessages(data: $data) {
       id
-      adId
-      content
+      conversation {
+        id
+      }
+      ad {
+        id
+        title
+      }
       createdAt
+      content
       receiver {
         id
         nickName

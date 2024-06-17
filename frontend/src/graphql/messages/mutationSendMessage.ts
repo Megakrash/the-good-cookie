@@ -1,11 +1,17 @@
 import { gql } from "@apollo/client";
 
 export const mutationSendMessage = gql`
-  mutation SendMessage($data: MessageCreateInput!) {
+  mutation sendMessage($data: MessageCreateInput!) {
     sendMessage(data: $data) {
       id
-      adId
+      ad {
+        id
+      }
+      conversation {
+        id
+      }
       content
+      createdAt
       sender {
         id
         nickName
@@ -14,7 +20,6 @@ export const mutationSendMessage = gql`
         id
         nickName
       }
-      createdAt
     }
   }
 `;
