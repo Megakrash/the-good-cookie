@@ -220,10 +220,6 @@ export class User extends BaseEntity {
   @OneToMany(() => Conversation, (conversation) => conversation.user1)
   @Field(() => [Conversation])
   conversations!: Conversation[]
-
-  @OneToMany(() => Conversation, (conversation) => conversation.user2)
-  @Field(() => [Conversation])
-  conversationsReceived!: Conversation[]
 }
 
 //-------------------------------
