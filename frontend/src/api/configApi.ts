@@ -1,5 +1,5 @@
 export const API_URL =
-  process.env.NODE_ENV === "development" ? "http://localhost:5000/" : "/api";
+  process.env.NODE_ENV === "development" ? "http://localhost:5000/" : "/api/";
 export const WS_URL = process.env.WS_URL || "ws://localhost:5000/";
 export const PATH_IMAGE =
   process.env.NODE_ENV === "development"
