@@ -25,6 +25,8 @@ import express from 'express'
 import http from 'http'
 import cors from 'cors'
 import path from 'path'
+import { uploadPicture } from './utils/pictureServices/multer'
+import { createImage } from './utils/pictureServices/pictureServices'
 
 //-----------------------------------------
 // -------------- SERVER ------------------
@@ -42,8 +44,19 @@ app.use(
   '/api/assets/images',
   express.static(path.join(__dirname, '../public/assets/images'))
 )
+app.post('/picture', uploadPicture.single('file'), async (req, res) => {
+  if (req.file) {
+    try {
+      const picture = await createImage(req.file.filename)
+      res.json(picture)
+    } catch (error) {
+      res.status(500).send('Error saving picture')
+    }
+  } else {
+    res.status(400).send('No file was uploaded.')
+  }
+})
 const httpServer = http.createServer(app)
-expressMiddlewares(app)
 
 async function start() {
   const port = process.env.BACKEND_PORT || 5000
@@ -97,7 +110,7 @@ async function start() {
       },
     })
   )
-
+  expressMiddlewares(app)
   await new Promise<void>((resolve) => httpServer.listen({ port }, resolve))
   console.log(`🚀 Server ready at port ${port} 🚀`)
 }
