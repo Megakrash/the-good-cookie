@@ -43,6 +43,7 @@ app.use(
   express.static(path.join(__dirname, '../public/assets/images'))
 )
 const httpServer = http.createServer(app)
+expressMiddlewares(app)
 
 async function start() {
   const port = process.env.BACKEND_PORT || 5000
@@ -83,7 +84,6 @@ async function start() {
   })
 
   await server.start()
-  expressMiddlewares(app)
 
   app.use(
     '/',

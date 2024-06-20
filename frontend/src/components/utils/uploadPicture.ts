@@ -15,6 +15,7 @@ export const uploadPicture = async (
     {
       headers: {
         "Content-Type": "multipart/form-data",
+        "x-apollo-operation-name": "UploadPicture",
       },
     },
   );
