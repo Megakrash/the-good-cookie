@@ -14,6 +14,7 @@ export const uploadPicture = async (
     dataFile,
     {
       headers: {
+        "Content-Type": "application/json",
         "x-apollo-operation-name": "UploadPicture",
       },
     },
