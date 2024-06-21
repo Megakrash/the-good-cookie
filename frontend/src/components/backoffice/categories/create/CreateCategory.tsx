@@ -39,16 +39,15 @@ const CreateCategories = (): React.ReactNode => {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
-      let pictureId = null;
+      let filename = null;
       if (picture) {
-        pictureId = await uploadPicture(name, picture);
+        filename = await uploadPicture(name, picture);
       }
       const data: CategoryFormData = {
         name: name,
         parentCategory: parentCategory ? { id: parentCategory } : null,
-        pictureId,
+        filename,
       };
-
       const result = await doCreate({
         variables: {
           data,
