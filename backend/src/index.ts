@@ -25,8 +25,6 @@ import express from 'express'
 import http from 'http'
 import cors from 'cors'
 import path from 'path'
-import { uploadPicture } from './utils/pictureServices/multer'
-import { createImage } from './utils/pictureServices/pictureServices'
 
 //-----------------------------------------
 // -------------- SERVER ------------------
@@ -44,18 +42,7 @@ app.use(
   '/api/assets/images',
   express.static(path.join(__dirname, '../public/assets/images'))
 )
-app.post('/picture', uploadPicture.single('file'), async (req, res) => {
-  if (req.file) {
-    try {
-      const picture = await createImage(req.file.filename)
-      res.json(picture)
-    } catch (error) {
-      res.status(500).send('Error saving picture')
-    }
-  } else {
-    res.status(400).send('No file was uploaded.')
-  }
-})
+
 const httpServer = http.createServer(app)
 
 async function start() {
@@ -81,6 +68,7 @@ async function start() {
 
   const server = new ApolloServer({
     schema,
+    introspection: process.env.NODE_ENV !== 'production',
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
 
@@ -98,18 +86,24 @@ async function start() {
 
   await server.start()
 
-  app.use(
-    '/',
+  app.use('/', (req, res, next) => {
+    if (
+      req.path === '/picture' ||
+      req.path === '/search-address' ||
+      req.path === '/sendcontactemail'
+    ) {
+      return next()
+    }
     express.json({ limit: '50mb' }),
-    expressMiddleware(server, {
-      context: async (args) => {
-        return {
-          req: args.req,
-          res: args.res,
-        }
-      },
-    })
-  )
+      expressMiddleware(server, {
+        context: async (args) => {
+          return {
+            req: args.req,
+            res: args.res,
+          }
+        },
+      })(req, res, next)
+  })
   expressMiddlewares(app)
   await new Promise<void>((resolve) => httpServer.listen({ port }, resolve))
   console.log(`🚀 Server ready at port ${port} 🚀`)
