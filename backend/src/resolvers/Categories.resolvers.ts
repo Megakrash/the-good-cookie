@@ -15,7 +15,6 @@ import {
 } from '../entities/Category'
 import { MyContext } from '../types/Users.types'
 import { CategoriesServices } from '../services/Categories.services'
-import { PicturesServices } from '../services/Pictures.services'
 import { IsNull } from 'typeorm'
 
 @Resolver(Category)
@@ -45,14 +44,6 @@ export class CategoriesResolver {
     Object.assign(newCategory, data)
     newCategory.createdBy = context.user
     newCategory.updatedBy = context.user
-
-    // Assign picture to new Category
-    if (data.pictureId) {
-      const picture = await PicturesServices.findPictureById(data.pictureId)
-      if (picture) {
-        newCategory.picture = picture
-      }
-    }
 
     // Validate and save new Category
     const errors = await validate(newCategory)
@@ -155,9 +146,8 @@ export class CategoriesResolver {
     const category = await Category.findOne({
       where: { id },
       relations: {
-        picture: true,
         parentCategory: { parentCategory: true },
-        childCategories: { ads: true, picture: true, childCategories: true },
+        childCategories: { ads: true, childCategories: true },
         createdBy: true,
         updatedBy: true,
       },

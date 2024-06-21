@@ -46,7 +46,7 @@ const CreateCategories = (): React.ReactNode => {
       const data: CategoryFormData = {
         name: name,
         parentCategory: parentCategory ? { id: parentCategory } : null,
-        filename,
+        picture: filename ? filename : null,
       };
       const result = await doCreate({
         variables: {

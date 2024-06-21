@@ -1,17 +1,16 @@
 import { AdTypes } from "./AdTypes";
-import { PictureType } from "./PictureTypes";
 
 type ChildCategoryType = {
   id: number;
   name: string;
-  picture?: PictureType;
+  picture?: string;
   childCategories?: ChildCategoryType[];
 };
 
 export type CategoryTypes = {
   id: number;
   name: string;
-  picture?: PictureType;
+  picture?: string;
   parentCategory?: CategoryTypes;
   ads?: AdTypes;
   childCategories?: ChildCategoryType[];
@@ -24,5 +23,5 @@ export type CategoryFormData = {
   parentCategory?: {
     id: number;
   };
-  filename?: string;
+  picture?: string;
 };
