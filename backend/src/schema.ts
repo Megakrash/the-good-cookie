@@ -1,7 +1,6 @@
 import { buildSchema } from 'type-graphql'
 import { AdsResolver } from './resolvers/Ads.resolvers'
 import { CategoriesResolver } from './resolvers/Categories.resolvers'
-import { PictureResolver } from './resolvers/Pictures.resolvers'
 import { TagsResolver } from './resolvers/Tags.resolvers'
 import { UsersResolver } from './resolvers/Users.resolvers'
 import { MessagesResolver } from './resolvers/Messages.resolvers'
@@ -14,7 +13,6 @@ export async function getSchema() {
     resolvers: [
       AdsResolver,
       UsersResolver,
-      PictureResolver,
       CategoriesResolver,
       TagsResolver,
       MessagesResolver,
