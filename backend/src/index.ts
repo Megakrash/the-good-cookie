@@ -21,12 +21,9 @@ import { WebSocketServer } from 'ws'
 //-----------------------------------------
 
 import express, { Request, Response } from 'express'
-import { expressMiddlewares } from './routes'
 import http from 'http'
 import cors from 'cors'
 import path from 'path'
-import { uploadPicture } from './utils/pictureServices/multer'
-import { createImage } from './utils/pictureServices/pictureServices'
 import axios from 'axios'
 import { verifyRecaptchaToken } from './utils/reCaptcha'
 import { sendContactEmail } from './utils/mailServices/contactEmail'
@@ -46,23 +43,6 @@ app.use(express.json({ limit: '50mb' }))
 app.use(
   '/api/assets/images',
   express.static(path.join(__dirname, '../public/assets/images'))
-)
-// Picture upload
-app.post(
-  '/api/picture',
-  uploadPicture.single('file'),
-  async (req: Request, res: Response) => {
-    if (req.file) {
-      try {
-        const picture = await createImage(req.file.filename)
-        res.json(picture)
-      } catch (error) {
-        res.status(500).send('Error saving picture')
-      }
-    } else {
-      res.status(400).send('No file was uploaded.')
-    }
-  }
 )
 // Api search adress.gouv
 app.get('/api/search-address', async (req: Request, res: Response) => {
@@ -125,7 +105,6 @@ async function start() {
 
   app.use('/', (req: Request, res: Response, next) => {
     if (
-      req.path === '/api/picture' ||
       req.path === '/api/search-address' ||
       req.path === '/api/sendcontactemail'
     ) {
@@ -141,7 +120,7 @@ async function start() {
         },
       })(req, res, next)
   })
-  expressMiddlewares(app)
+
   await new Promise<void>((resolve) => httpServer.listen({ port }, resolve))
   console.log(`🚀 Server ready at port ${port} 🚀`)
 }
