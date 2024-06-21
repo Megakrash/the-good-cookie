@@ -14,8 +14,8 @@ type AdCardProps = {
 
 const AdCard = (props: AdCardProps): React.ReactNode => {
   // Path images
-  const adImageUrl = `${PATH_IMAGE}/${props.ad.picture.filename}`;
-  const userImageUrl = `${PATH_IMAGE}/${props.ad.user.picture.filename}`;
+  const adImageUrl = `${PATH_IMAGE}/${props.ad.picture}`;
+  const userImageUrl = `${PATH_IMAGE}/${props.ad.user.picture}`;
 
   return (
     <>

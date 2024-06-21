@@ -83,7 +83,7 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
     // If newAd
     if (!ad) {
       try {
-        const pictureId = await uploadPicture(title, newPicture);
+        const picture = await uploadPicture(title, newPicture);
 
         const data: AdCreateFormData = {
           title,
@@ -94,7 +94,7 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
           location: { type: "Point", coordinates: coordinates },
           category: selectedCategory ? { id: Number(selectedCategory) } : null,
           tags: selectedTags,
-          ...(pictureId !== null && { pictureId }),
+          picture,
         };
 
         const result = await doCreate({
@@ -115,9 +115,9 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
     // If update Ad
     if (ad) {
       try {
-        let pictureId = null;
+        let picture = null;
         if (newPicture) {
-          pictureId = await uploadPicture(title, newPicture);
+          picture = await uploadPicture(title, newPicture);
         }
         const data: AdUpdateFormData = {};
         if (title !== ad.title) data.title = title;
@@ -139,7 +139,7 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
         if (tagsChanged(selectedTags, ad.tags)) {
           data.tags = selectedTags;
         }
-        if (pictureId !== null) data.pictureId = pictureId;
+        if (picture !== ad.picture) data.picture = picture;
 
         const result = await doUpdate({
           variables: {
@@ -168,7 +168,7 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
       setCoordinates(ad.location.coordinates);
       setCity(ad.city);
       setPrice(ad.price);
-      setCurentPicture(ad.picture.filename);
+      setCurentPicture(ad.picture);
       setSelectedCategory(ad.category.id);
       setSelectedTags(transformedTags);
     }

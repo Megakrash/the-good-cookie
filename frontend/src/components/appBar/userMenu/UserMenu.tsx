@@ -43,8 +43,8 @@ const UserMenu = () => {
           <Avatar
             alt="User avatar"
             src={
-              user && user.picture.filename
-                ? `${PATH_IMAGE}/${user.picture.filename}`
+              user && user.picture
+                ? `${PATH_IMAGE}/${user.picture}`
                 : `${PATH_IMAGE}/avatar.webp`
             }
           />

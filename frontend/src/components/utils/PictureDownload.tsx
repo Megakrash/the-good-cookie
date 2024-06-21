@@ -39,7 +39,7 @@ const PictureDownload = (props: PictureDownloadProps): React.ReactNode => {
           image={
             props.previewUrl
               ? props.previewUrl
-              : `${PATH_IMAGE}/pictures/${props.curentPicture}`
+              : `${PATH_IMAGE}/${props.curentPicture}`
           }
         />
       )}

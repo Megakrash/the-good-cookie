@@ -62,7 +62,7 @@ const SignUp = (): React.ReactNode => {
   const [doCreate, loading] = useMutation(mutationCreateUser);
   async function onSubmit() {
     try {
-      const pictureId = await uploadPicture(nickName, picture);
+      const filename = await uploadPicture(nickName, picture);
 
       const data: UserFormData = {
         email,
@@ -73,7 +73,7 @@ const SignUp = (): React.ReactNode => {
         nickName,
         password,
         phoneNumber,
-        ...(pictureId && { pictureId }),
+        picture: filename ? filename : "",
       };
 
       const result = await doCreate({

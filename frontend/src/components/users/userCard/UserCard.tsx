@@ -9,7 +9,7 @@ type UserCardProps = {
 };
 
 const UserCard = (props: UserCardProps): React.ReactNode => {
-  const userImageUrl = `${PATH_IMAGE}/${props.user.picture.filename}`;
+  const userImageUrl = `${PATH_IMAGE}/${props.user.picture}`;
   const totalAds = props.user.ads?.length || 0;
   return (
     <CardActionArea
