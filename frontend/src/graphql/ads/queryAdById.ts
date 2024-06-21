@@ -14,10 +14,7 @@ export const queryAdById = gql`
       location {
         coordinates
       }
-      picture {
-        id
-        filename
-      }
+      picture
       category {
         id
         name
@@ -37,10 +34,7 @@ export const queryAdById = gql`
       user {
         id
         nickName
-        picture {
-          id
-          filename
-        }
+        picture
         ads {
           id
         }

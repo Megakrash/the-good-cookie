@@ -6,10 +6,7 @@ export const queryMeContext = gql`
       id
       nickName
       role
-      picture {
-        id
-        filename
-      }
+      picture
     }
   }
 `;

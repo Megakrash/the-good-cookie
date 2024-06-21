@@ -9,10 +9,7 @@ export const queryAllAds = gql`
       price
       createdAt
       updatedAt
-      picture {
-        id
-        filename
-      }
+      picture
       city
       zipCode
       tags {
@@ -22,10 +19,7 @@ export const queryAllAds = gql`
       user {
         id
         nickName
-        picture {
-          id
-          filename
-        }
+        picture
       }
     }
   }

@@ -8,10 +8,7 @@ export const queryMe = gql`
       lastName
       nickName
       email
-      picture {
-        id
-        filename
-      }
+      picture
       adress
       zipCode
       city
