@@ -1,4 +1,4 @@
-import { API_URL } from "@/api/configApi";
+import { MIDDLEWARE_URL } from "@/api/configApi";
 import axios from "axios";
 
 export const uploadPicture = async (
@@ -10,7 +10,7 @@ export const uploadPicture = async (
   dataFile.append("file", picture);
 
   const uploadPictureResponse = await axios.post(
-    `${API_URL}picture`,
+    `${MIDDLEWARE_URL}picture`,
     dataFile,
     {
       headers: {

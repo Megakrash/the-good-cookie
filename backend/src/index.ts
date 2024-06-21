@@ -20,11 +20,16 @@ import { WebSocketServer } from 'ws'
 // ------------ EXPRESS -------------------
 //-----------------------------------------
 
+import express, { Request, Response } from 'express'
 import { expressMiddlewares } from './routes'
-import express from 'express'
 import http from 'http'
 import cors from 'cors'
 import path from 'path'
+import { uploadPicture } from './utils/pictureServices/multer'
+import { createImage } from './utils/pictureServices/pictureServices'
+import axios from 'axios'
+import { verifyRecaptchaToken } from './utils/reCaptcha'
+import { sendContactEmail } from './utils/mailServices/contactEmail'
 
 //-----------------------------------------
 // -------------- SERVER ------------------
@@ -42,7 +47,39 @@ app.use(
   '/api/assets/images',
   express.static(path.join(__dirname, '../public/assets/images'))
 )
+// Picture upload
+app.post(
+  '/api/picture',
+  uploadPicture.single('file'),
+  async (req: Request, res: Response) => {
+    if (req.file) {
+      try {
+        const picture = await createImage(req.file.filename)
+        res.json(picture)
+      } catch (error) {
+        res.status(500).send('Error saving picture')
+      }
+    } else {
+      res.status(400).send('No file was uploaded.')
+    }
+  }
+)
+// Api search adress.gouv
+app.get('/api/search-address', async (req: Request, res: Response) => {
+  try {
+    const query = req.query.q
+    const response = await axios.get(
+      `https://api-adresse.data.gouv.fr/search/?q=city=${query}&limit=5`
+    )
+    res.json(response.data)
+  } catch (error) {
+    console.error('Error API request:', error)
+    res.status(500).send('Server error.')
+  }
+})
 
+// Contact email
+app.post('/api/sendcontactemail', verifyRecaptchaToken, sendContactEmail)
 const httpServer = http.createServer(app)
 
 async function start() {
@@ -86,11 +123,11 @@ async function start() {
 
   await server.start()
 
-  app.use('/', (req, res, next) => {
+  app.use('/', (req: Request, res: Response, next) => {
     if (
-      req.path === '/picture' ||
-      req.path === '/search-address' ||
-      req.path === '/sendcontactemail'
+      req.path === 'api/picture' ||
+      req.path === 'api/search-address' ||
+      req.path === 'api/sendcontactemail'
     ) {
       return next()
     }

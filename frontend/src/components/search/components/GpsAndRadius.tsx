@@ -9,7 +9,7 @@ import {
   FormControlLabel,
   Radio,
 } from "@mui/material";
-import { API_URL } from "@/api/configApi";
+import { MIDDLEWARE_URL } from "@/api/configApi";
 import { FeatureType, SuggestionType } from "@/types/GpsTypes";
 import { VariablesColors } from "@/styles/Variables.colors";
 
@@ -32,7 +32,7 @@ function GpsAndRadius(props: GpsAndRadiusProps): React.ReactNode {
     setInputValue(newValue);
 
     if (newValue.length >= 4) {
-      axios(`${API_URL}search-address?q=${newValue}`)
+      axios(`${MIDDLEWARE_URL}search-address?q=${newValue}`)
         .then((res) => {
           if (res.data && res.data.features) {
             setSuggestions(

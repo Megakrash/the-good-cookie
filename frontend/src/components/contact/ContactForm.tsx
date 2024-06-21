@@ -13,7 +13,7 @@ import { FormEvent, useRef, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
-import { API_URL, RECAPTCHA_SITE_KEY } from "@/api/configApi";
+import { MIDDLEWARE_URL, RECAPTCHA_SITE_KEY } from "@/api/configApi";
 import UserPhone from "../users/components/UserPhone";
 import UserEmail from "../users/components/UserEmail";
 import UserName from "../users/components/UserName";
@@ -62,7 +62,7 @@ function ContactForm(): React.ReactNode {
     };
     setLoading(true);
     axios
-      .post(`${API_URL}sendcontactemail`, {
+      .post(`${MIDDLEWARE_URL}sendcontactemail`, {
         formDetails,
         token,
       })
