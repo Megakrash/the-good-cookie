@@ -5,8 +5,8 @@ import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import { Box, CardActionArea } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
-import { getAdImageUrl, getUserImageUrl } from "../utils/pictureUtils";
 import router from "next/router";
+import { PATH_IMAGE } from "@/api/configApi";
 
 type AdCardProps = {
   ad: AdTypes;
@@ -14,8 +14,8 @@ type AdCardProps = {
 
 const AdCard = (props: AdCardProps): React.ReactNode => {
   // Path images
-  const adImageUrl = getAdImageUrl(props.ad.picture.filename);
-  const userImageUrl = getUserImageUrl(props.ad.user.picture.filename);
+  const adImageUrl = `${PATH_IMAGE}/${props.ad.picture.filename}`;
+  const userImageUrl = `${PATH_IMAGE}/${props.ad.user.picture.filename}`;
 
   return (
     <>

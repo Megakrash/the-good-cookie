@@ -98,7 +98,7 @@ const Search = (): React.ReactNode => {
         gap: "20px",
         minHeight: "270px",
         padding: "1%",
-        backgroundImage: `url(${PATH_IMAGE}/general/search.png)`,
+        backgroundImage: `url(${PATH_IMAGE}/search.png)`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         [theme.breakpoints.down("sm")]: {

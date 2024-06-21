@@ -9,11 +9,11 @@ import {
   Typography,
 } from "@mui/material";
 import router from "next/router";
-import { getUserImageUrl } from "../utils/pictureUtils";
 import { transformerDate } from "../utils/dateUtils";
 import { useUserContext } from "@/context/UserContext";
 import { selectOtherUser } from "../utils/userUtils";
 import { UserTypes } from "@/types/UserTypes";
+import { PATH_IMAGE } from "@/api/configApi";
 
 type MessagesProps = {
   conversation: ConversationTypes;
@@ -28,7 +28,7 @@ const ConversationCard: React.FC<MessagesProps> = ({ conversation }) => {
     setDisplayUser(otherUser);
   }, [conversation, user]);
 
-  const avatarPictureUrl = getUserImageUrl(displayUser?.picture?.filename);
+  const avatarPictureUrl = `${PATH_IMAGE}/${displayUser?.picture?.filename}`;
   const updatedAt = transformerDate(conversation.updatedAt);
   return (
     <CardActionArea

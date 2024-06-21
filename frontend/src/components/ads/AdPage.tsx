@@ -8,11 +8,11 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { getAdImageUrl } from "../utils/pictureUtils";
 import UserCard from "../users/userCard/UserCard";
 import PlaceIcon from "@mui/icons-material/Place";
 import { transformerDate } from "../utils/dateUtils";
 import BuyContactCard from "./components/BuyContactCard";
+import { PATH_IMAGE } from "@/api/configApi";
 
 type AdPageProps = {
   ad: AdTypes;
@@ -20,7 +20,7 @@ type AdPageProps = {
 
 const AdPage: React.FC<AdPageProps> = ({ ad }) => {
   const theme = useTheme();
-  const adImageUrl = getAdImageUrl(ad.picture.filename);
+  const adImageUrl = `${PATH_IMAGE}/${ad.picture.filename}`;
   const updatedAt = transformerDate(ad.updatedAt);
   return (
     <Grid

@@ -12,7 +12,7 @@ function ContactHeader(): React.ReactNode {
         alignItems: "center",
         justifyContent: "center",
         gap: "8px",
-        background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${PATH_IMAGE}/general/contact.jpg)`,
+        background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${PATH_IMAGE}/contact.jpg)`,
       }}
     >
       <Typography variant="h4" gutterBottom>
