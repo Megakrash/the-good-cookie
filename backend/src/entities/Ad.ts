@@ -8,13 +8,11 @@ import {
   Index,
   ManyToMany,
   JoinTable,
-  OneToOne,
 } from 'typeorm'
 import { Length, IsInt, IsNumberString } from 'class-validator'
 import { Field, ID, InputType, ObjectType, Int } from 'type-graphql'
 import { Tag } from './Tag'
 import { User } from './User'
-import { Picture } from './Picture'
 import { ObjectId } from './ObjectId'
 import { PointInput, PointType } from './Geolocation'
 import { Category } from './Category'
@@ -78,13 +76,13 @@ export class Ad extends PrimaryEntity {
     coordinates: [number, number]
   }
 
-  // ---------- RELATIONS ----------
-
   // Picture
-  @OneToOne(() => Picture, { nullable: true })
-  @JoinColumn()
-  @Field(() => Picture)
-  picture!: Picture
+  @Column({ length: 100 })
+  @Length(4, 200, { message: 'Entre 4 et 100 caractères' })
+  @Field({ nullable: true })
+  picture!: string
+
+  // ---------- RELATIONS ----------
 
   // Category
   @ManyToOne(() => Category, (Category) => Category.ads, {
@@ -134,7 +132,7 @@ export class AdCreateInput {
   location!: PointInput
 
   @Field({ nullable: true })
-  pictureId?: number
+  picture!: string
 
   @Field()
   category!: ObjectId
@@ -168,7 +166,7 @@ export class AdUpdateInput {
   location?: PointInput
 
   @Field({ nullable: true })
-  pictureId?: number
+  picture!: string
 
   @Field({ nullable: true })
   category!: ObjectId

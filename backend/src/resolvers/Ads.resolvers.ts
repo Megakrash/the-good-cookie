@@ -10,10 +10,8 @@ import {
 } from 'type-graphql'
 import { validate } from 'class-validator'
 import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from '../entities/Ad'
-import { deletePicture } from '../utils/pictureServices/pictureServices'
 import { merge } from '../utils/utils'
 import { MyContext } from '../types/Users.types'
-import { Picture } from '../entities/Picture'
 
 @Resolver(Ad)
 export class AdsResolver {
@@ -32,14 +30,6 @@ export class AdsResolver {
     Object.assign(newAd, data, { user: context.user })
     newAd.createdBy = context.user
     newAd.updatedBy = context.user
-
-    if (data.pictureId) {
-      const picture = await Picture.findOne({ where: { id: data.pictureId } })
-      if (!picture) {
-        throw new Error('Picture not found')
-      }
-      newAd.picture = picture
-    }
 
     const errors = await validate(newAd)
     if (errors.length === 0) {
@@ -70,40 +60,24 @@ export class AdsResolver {
     // Get ad by id
     const ad = await Ad.findOne({
       where: { id },
-      relations: { tags: true, user: true, picture: true },
+      relations: { tags: true, user: true },
     })
     if (
       ad &&
       (ad.user.id === context.user?.id || context.user?.role === 'ADMIN')
     ) {
-      let oldPictureId = null
-      if (data.pictureId && ad.picture?.id) {
-        oldPictureId = ad.picture.id
-        const newPicture = await Picture.findOne({
-          where: { id: data.pictureId },
-        })
-        if (!newPicture) {
-          throw new Error('New picture not found')
-        }
-        ad.picture = newPicture
-      }
-
       merge(ad, data)
 
       const errors = await validate(ad)
       if (errors.length === 0) {
         await Ad.save(ad)
-        if (oldPictureId) {
-          await deletePicture(oldPictureId)
-        }
 
         return await Ad.findOne({
           where: { id },
           relations: {
             category: true,
             tags: true,
-            picture: true,
-            user: { picture: true },
+            user: true,
           },
         })
       }
@@ -196,8 +170,7 @@ export class AdsResolver {
       relations: {
         category: { parentCategory: { parentCategory: true } },
         tags: true,
-        user: { picture: true },
-        picture: true,
+        user: true,
       },
     })
     if (!ad) {
@@ -211,7 +184,7 @@ export class AdsResolver {
   async adsByUser(@Arg('id', () => ID) id: number): Promise<Ad[]> {
     const ads = await Ad.find({
       where: { user: { id } },
-      relations: { user: true, category: true, tags: true, picture: true },
+      relations: { user: true, category: true, tags: true },
     })
 
     if (ads.length === 0) {
@@ -230,17 +203,13 @@ export class AdsResolver {
   ): Promise<Ad | null> {
     const ad = await Ad.findOne({
       where: { id },
-      relations: { user: true, picture: true },
+      relations: { user: true },
     })
     if (
       ad &&
       (ad.user.id === context.user?.id || context.user?.role === 'ADMIN')
     ) {
-      const pictureId = ad.picture?.id
       await ad.remove()
-      if (pictureId) {
-        await deletePicture(pictureId)
-      }
       ad.id = id
     }
     return ad

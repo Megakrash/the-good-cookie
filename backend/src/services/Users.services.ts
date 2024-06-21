@@ -8,7 +8,6 @@ import { validate } from 'class-validator'
 import * as argon2 from 'argon2'
 import { sendVerificationEmail } from '../utils/mailServices/verificationEmail'
 import { MyContext } from '../types/Users.types'
-import { deletePicture } from '../utils/pictureServices/pictureServices'
 import jwt from 'jsonwebtoken'
 import Cookies from 'cookies'
 
@@ -142,12 +141,7 @@ export class UserServices {
     if (user.id !== context.user?.id && context.user?.role !== 'ADMIN') {
       throw new Error('Unauthorized')
     }
-
-    const pictureId = user.picture?.id
     await user.remove()
-    if (pictureId) {
-      await deletePicture(pictureId)
-    }
     return `User with id: ${user.id} deleted`
   }
 }

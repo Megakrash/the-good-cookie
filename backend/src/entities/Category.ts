@@ -27,7 +27,7 @@ export class Category extends PrimaryEntity {
   name!: string
 
   // Picture
-  @Column({ length: 150 })
+  @Column({ length: 150, nullable: true })
   @Field({ nullable: true })
   picture!: string
 
