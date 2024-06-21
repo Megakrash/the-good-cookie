@@ -125,9 +125,9 @@ async function start() {
 
   app.use('/', (req: Request, res: Response, next) => {
     if (
-      req.path === 'api/picture' ||
-      req.path === 'api/search-address' ||
-      req.path === 'api/sendcontactemail'
+      req.path === '/api/picture' ||
+      req.path === '/api/search-address' ||
+      req.path === '/api/sendcontactemail'
     ) {
       return next()
     }
