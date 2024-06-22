@@ -77,7 +77,7 @@ export class CategoryUpdateInput {
   name!: string
 
   @Field({ nullable: true })
-  pictureId?: number
+  picture!: string
 
   @Field(() => ObjectId, { nullable: true })
   parentCategory!: ObjectId

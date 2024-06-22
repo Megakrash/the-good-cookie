@@ -28,6 +28,7 @@ import {
   sendConfirmationEmail,
   sendVerificationEmail,
 } from '../utils/mailServices/verificationEmail'
+import { deletePicture } from '../utils/picturesServices/deletePicture'
 
 @Resolver(User)
 export class UsersResolver {
@@ -86,6 +87,10 @@ export class UsersResolver {
       // Check if user is authorized to update
       if (user.id !== context.user?.id || context.user?.role !== 'ADMIN') {
         throw new Error('Unauthorized')
+      }
+
+      if (data.picture && data.picture !== user.picture) {
+        await deletePicture(user.picture)
       }
 
       // Update user with his ads

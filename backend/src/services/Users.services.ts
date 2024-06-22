@@ -10,6 +10,7 @@ import { sendVerificationEmail } from '../utils/mailServices/verificationEmail'
 import { MyContext } from '../types/Users.types'
 import jwt from 'jsonwebtoken'
 import Cookies from 'cookies'
+import { deletePicture } from '../utils/picturesServices/deletePicture'
 
 export class UserServices {
   // ------------------------------
@@ -141,6 +142,7 @@ export class UserServices {
     if (user.id !== context.user?.id && context.user?.role !== 'ADMIN') {
       throw new Error('Unauthorized')
     }
+    await deletePicture(user.picture)
     await user.remove()
     return `User with id: ${user.id} deleted`
   }

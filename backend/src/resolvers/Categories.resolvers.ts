@@ -16,6 +16,7 @@ import {
 import { MyContext } from '../types/Users.types'
 import { CategoriesServices } from '../services/Categories.services'
 import { IsNull } from 'typeorm'
+import { deletePicture } from '../utils/picturesServices/deletePicture'
 
 @Resolver(Category)
 export class CategoriesResolver {
@@ -78,6 +79,9 @@ export class CategoriesResolver {
       throw new Error('Category not found')
     }
 
+    if (data.picture !== category.picture) {
+      await deletePicture(category.picture)
+    }
     // Update Category with new data
     Object.assign(category, data)
     category.updatedBy = context.user
@@ -169,6 +173,9 @@ export class CategoriesResolver {
       relations: { childCategories: true },
     })
     if (category) {
+      if (category.picture) {
+        await deletePicture(category.picture)
+      }
       await category.remove()
       category.id = id
     }

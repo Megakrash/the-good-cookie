@@ -12,6 +12,7 @@ import { validate } from 'class-validator'
 import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from '../entities/Ad'
 import { merge } from '../utils/utils'
 import { MyContext } from '../types/Users.types'
+import { deletePicture } from '../utils/picturesServices/deletePicture'
 
 @Resolver(Ad)
 export class AdsResolver {
@@ -66,6 +67,9 @@ export class AdsResolver {
       ad &&
       (ad.user.id === context.user?.id || context.user?.role === 'ADMIN')
     ) {
+      if (data.picture) {
+        await deletePicture(ad.picture)
+      }
       merge(ad, data)
 
       const errors = await validate(ad)
@@ -209,6 +213,7 @@ export class AdsResolver {
       ad &&
       (ad.user.id === context.user?.id || context.user?.role === 'ADMIN')
     ) {
+      await deletePicture(ad.picture)
       await ad.remove()
       ad.id = id
     }
