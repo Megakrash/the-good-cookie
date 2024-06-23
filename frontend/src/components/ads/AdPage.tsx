@@ -20,7 +20,7 @@ type AdPageProps = {
 
 const AdPage: React.FC<AdPageProps> = ({ ad }) => {
   const theme = useTheme();
-  const adImageUrl = `${PATH_IMAGE}/${ad.picture}`;
+  const adImageUrl = `${PATH_IMAGE}${ad.picture}`;
   const updatedAt = transformerDate(ad.updatedAt);
   return (
     <Grid

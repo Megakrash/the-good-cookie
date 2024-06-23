@@ -28,7 +28,7 @@ const ConversationCard: React.FC<MessagesProps> = ({ conversation }) => {
     setDisplayUser(otherUser);
   }, [conversation, user]);
 
-  const avatarPictureUrl = `${PATH_IMAGE}/${displayUser?.picture}`;
+  const avatarPictureUrl = `${PATH_IMAGE}${displayUser?.picture}`;
   const updatedAt = transformerDate(conversation.updatedAt);
   return (
     <CardActionArea

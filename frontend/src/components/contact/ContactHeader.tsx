@@ -1,5 +1,4 @@
 import { Button, Typography, Box } from "@mui/material";
-import { PATH_IMAGE } from "@/api/configApi";
 
 function ContactHeader(): React.ReactNode {
   return (

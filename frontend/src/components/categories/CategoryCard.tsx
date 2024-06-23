@@ -21,7 +21,7 @@ type CategoryCardProps = {
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
   // Path images
-  const adImageUrl = `${PATH_IMAGE}/${category.picture}`;
+  const adImageUrl = `${PATH_IMAGE}${category.picture}`;
   return (
     <CardActionArea
       sx={{

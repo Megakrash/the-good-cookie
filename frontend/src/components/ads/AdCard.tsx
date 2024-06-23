@@ -15,10 +15,10 @@ type AdCardProps = {
 const AdCard = (props: AdCardProps): React.ReactNode => {
   // Path images
   const adImageUrl = props.ad.picture
-    ? `${PATH_IMAGE}/${props.ad.picture}`
+    ? `${PATH_IMAGE}${props.ad.picture}`
     : "/images/default/default.webp";
   const userImageUrl = props.ad.user.picture
-    ? `${PATH_IMAGE}/${props.ad.user.picture}`
+    ? `${PATH_IMAGE}${props.ad.user.picture}`
     : "/images/default/avatar.webp";
 
   return (

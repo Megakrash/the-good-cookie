@@ -44,7 +44,7 @@ const UserMenu = () => {
             alt="User avatar"
             src={
               user && user.picture
-                ? `${PATH_IMAGE}/${user.picture}`
+                ? `${PATH_IMAGE}${user.picture}`
                 : "/images/default/avatar.webp"
             }
           />
