@@ -12,6 +12,7 @@ export const uploadPicture = async (
   const uploadPictureResponse = await axios.post(`${PATH_IMAGE}`, dataFile, {
     headers: {
       "Content-Type": "multipart/form-data",
+      "Access-Control-Allow-Origin": "*",
     },
   });
   if (!uploadPictureResponse.data.filename) {
