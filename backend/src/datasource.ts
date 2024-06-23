@@ -1,9 +1,28 @@
 import { DataSource } from 'typeorm'
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions'
+import { Ad } from './entities/Ad'
+import { Category } from './entities/Category'
+import { Conversation } from './entities/Conversation'
+import { Message } from './entities/Message'
+import { PrimaryEntity } from './entities/PrimaryEntity'
+import { Tag } from './entities/Tag'
+import { ObjectId } from './entities/ObjectId'
+import { User } from './entities/User'
+import { UserToken } from './entities/UserToken'
 
 export const dataSourceOptions: PostgresConnectionOptions = {
   type: 'postgres',
-  entities: [`${__dirname}/entities/*.ts`],
+  entities: [
+    Ad,
+    Category,
+    Conversation,
+    Message,
+    PrimaryEntity,
+    Tag,
+    ObjectId,
+    User,
+    UserToken,
+  ],
   synchronize: true,
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
