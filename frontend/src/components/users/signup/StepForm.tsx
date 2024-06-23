@@ -5,10 +5,10 @@ import UserPhone from "../components/UserPhone";
 import UserPassword from "../components/UserPassword";
 import UserProfil from "../components/UserProfil";
 import UserGender from "../components/UserGender";
-import UserAvatar from "../components/UserAvatar";
+import PictureDownload from "../../utils/PictureDownload";
 import { StepFormButton } from "@/styles/MuiButtons";
 import { VariablesColors } from "@/styles/Variables.colors";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography, useTheme } from "@mui/material";
 import {
   isValidEmailRegex,
   isValidNameRegex,
@@ -28,6 +28,7 @@ const colors = new VariablesColors();
 const { colorOrange } = colors;
 
 const StepForm = (props: StepSignUpFormProps): React.ReactNode => {
+  const theme = useTheme();
   const stepConfig = {
     email: {
       title: "Votre email ?",
@@ -111,7 +112,7 @@ const StepForm = (props: StepSignUpFormProps): React.ReactNode => {
       title: "Votre  avatar ?",
       subtitle: `Pour vous montrer comme vous le souhaitez.`,
       icon: AccountCircleIcon,
-      Component: UserAvatar,
+      Component: PictureDownload,
       componentProps: {
         picture: props.picture,
         setPicture: props.setPicture,
@@ -156,10 +157,10 @@ const StepForm = (props: StepSignUpFormProps): React.ReactNode => {
     <Grid
       container
       item
-      xs={11}
-      sm={10}
-      md={5.9}
-      lg={4.5}
+      xs={9}
+      sm={8}
+      md={7}
+      lg={5}
       sx={{
         display: "flex",
         margin: "auto",
@@ -167,6 +168,10 @@ const StepForm = (props: StepSignUpFormProps): React.ReactNode => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        [theme.breakpoints.down("sm")]: {
+          p: 1,
+          minHeight: "370px",
+        },
       }}
     >
       <StepIcon sx={{ fontSize: 50, color: colorOrange }} />

@@ -1,8 +1,14 @@
 import { PrimaryEntity } from './PrimaryEntity'
-import { OneToMany, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  OneToMany,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+} from 'typeorm'
 import { Field, ID, InputType, ObjectType } from 'type-graphql'
-import { SubCategory } from './SubCategory'
 import { ObjectId } from './ObjectId'
+import { Ad } from './Ad'
 
 //-------------------------------
 //------ Category Entity --------
@@ -15,13 +21,34 @@ export class Category extends PrimaryEntity {
   @Field(() => ID)
   id!: number
 
+  // Name
   @Column({ length: 100 })
   @Field()
   name!: string
 
-  @OneToMany(() => SubCategory, (subCategories) => subCategories.category)
-  @Field(() => [SubCategory])
-  subCategories!: SubCategory[]
+  // Picture
+  @Column({ length: 150, nullable: true })
+  @Field({ nullable: true })
+  picture!: string
+
+  // Ads
+  @OneToMany(() => Ad, (ad) => ad.category)
+  @Field(() => [Ad])
+  ads!: Ad[]
+
+  // ParentCategory
+  @ManyToOne(() => Category, (category) => category.childCategories, {
+    nullable: true,
+  })
+  @Field(() => Category, { nullable: true })
+  parentCategory?: Category
+
+  // SubCategories
+  @OneToMany(() => Category, (category) => category.parentCategory, {
+    cascade: true,
+  })
+  @Field(() => [Category], { nullable: true })
+  childCategories?: Category[]
 }
 
 //-------------------------------
@@ -32,6 +59,12 @@ export class Category extends PrimaryEntity {
 export class CategoryCreateInput {
   @Field()
   name!: string
+
+  @Field({ nullable: true })
+  picture?: string
+
+  @Field(() => ObjectId, { nullable: true })
+  parentCategory!: ObjectId
 }
 
 //-------------------------------
@@ -43,6 +76,12 @@ export class CategoryUpdateInput {
   @Field({ nullable: true })
   name!: string
 
+  @Field({ nullable: true })
+  picture!: string
+
+  @Field(() => ObjectId, { nullable: true })
+  parentCategory!: ObjectId
+
   @Field(() => [ObjectId], { nullable: true })
-  subCategory!: ObjectId[]
+  childCategories!: ObjectId[]
 }

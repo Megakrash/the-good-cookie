@@ -1,11 +1,11 @@
-import LayoutLight from "@/components/layout/LayoutLight";
+import LayoutFull from "@/components/layout/LayoutFull";
 import SignUp from "@/components/users/signup/SignUp";
 
 function SignUpPage(): React.ReactNode {
   return (
-    <LayoutLight title="TGC : Inscription">
+    <LayoutFull title="TGC : Inscription">
       <SignUp />
-    </LayoutLight>
+    </LayoutFull>
   );
 }
 

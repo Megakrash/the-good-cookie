@@ -10,18 +10,15 @@ import {
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FormEvent, useRef, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
-import { API_URL, RECAPTCHA_SITE_KEY } from "@/api/configApi";
+import { MIDDLEWARE_URL, RECAPTCHA_SITE_KEY } from "@/api/configApi";
 import UserPhone from "../users/components/UserPhone";
 import UserEmail from "../users/components/UserEmail";
 import UserName from "../users/components/UserName";
-import { VariablesColors } from "@/styles/Variables.colors";
 import { GreyBtnOrangeHover } from "@/styles/MuiButtons";
-
-const colors = new VariablesColors();
-const { colorWhite, successColor, errorColor } = colors;
+import { showToast } from "../utils/toastHelper";
 
 function ContactForm(): React.ReactNode {
   const theme = useTheme();
@@ -65,17 +62,12 @@ function ContactForm(): React.ReactNode {
     };
     setLoading(true);
     axios
-      .post(`${API_URL}sendcontactemail`, {
+      .post(`${MIDDLEWARE_URL}sendcontactemail`, {
         formDetails,
         token,
       })
       .then(() => {
-        toast("Votre formulaire a été soumis avec succès.", {
-          style: {
-            background: successColor,
-            color: colorWhite,
-          },
-        });
+        showToast("success", "Votre formulaire a été soumis avec succès.");
         setFirstName("");
         setLastName("");
         setEmail("");
@@ -86,16 +78,10 @@ function ContactForm(): React.ReactNode {
         setLoading(false);
       })
       .catch(() => {
-        console.error("error");
-        toast(
+        showToast(
+          "error",
           `Une erreur s'est produite. Contactez-nous au 01 40 XX XX XX ou à
-            contact@tgc.megakrash.com`,
-          {
-            style: {
-              background: errorColor,
-              color: colorWhite,
-            },
-          },
+          contact@tgc.megakrash.com`,
         );
         resetForm();
       });

@@ -8,24 +8,22 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { mutationUserLogin, queryMeContext } from "@/components/graphql/Users";
+import { mutationUserLogin } from "@/graphql/auth/mutationUserLogin";
 import { useMutation } from "@apollo/client";
-import toast, { Toaster } from "react-hot-toast";
-import router from "next/router";
+import { Toaster } from "react-hot-toast";
 import UserPassword from "../components/UserPassword";
 import UserEmail from "../components/UserEmail";
-import { VariablesColors } from "@/styles/Variables.colors";
 import { GreyBtnOrangeHover } from "@/styles/MuiButtons";
 import {
   isValidEmailRegex,
   isValidPasswordRegex,
 } from "../components/UserRegex";
+import { useUserContext } from "@/context/UserContext";
+import { showToast } from "@/components/utils/toastHelper";
 
-const colors = new VariablesColors();
-const { colorWhite, successColor, errorColor } = colors;
-
-const SignIn = (): React.ReactNode => {
+const SignIn = (): React.ReactElement => {
   const theme = useTheme();
+  const { refetchUserContext } = useUserContext();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
@@ -36,9 +34,7 @@ const SignIn = (): React.ReactNode => {
     setIsFormValid(isEmailValid && isPasswordValid);
   }, [email, password]);
 
-  const [doLogin] = useMutation(mutationUserLogin, {
-    refetchQueries: [queryMeContext],
-  });
+  const [doLogin] = useMutation(mutationUserLogin);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -47,17 +43,20 @@ const SignIn = (): React.ReactNode => {
         variables: { data: { email, password } },
       });
       if ("id" in data.item) {
-        toast(`Connexion réussie, bienvenue ${data.item.firstName}`, {
-          style: { background: successColor, color: colorWhite },
-        });
-        setTimeout(() => {
-          router.replace(`/compte`);
-        }, 1500);
+        showToast(
+          "success",
+          `Connexion réussie, bienvenue ${data.item.firstName}`,
+        );
+        refetchUserContext();
+        setEmail("");
+        setPassword("");
       }
     } catch (error) {
-      toast(error.message, {
-        style: { background: errorColor, color: colorWhite },
-      });
+      if (error.message === "Failed to fetch") {
+        showToast("error", "Erreur de connexion, veuillez réessayer");
+      } else {
+        showToast("error", error.message);
+      }
       setEmail("");
       setPassword("");
     }
@@ -84,7 +83,7 @@ const SignIn = (): React.ReactNode => {
       <Toaster />
       <FormControl
         component="form"
-        autoComplete="off"
+        autoComplete="on"
         onSubmit={onSubmit}
         sx={{
           width: "100%",

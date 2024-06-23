@@ -1,3 +1,6 @@
+import { CategoryTypes } from "./CategoryTypes";
+import { UserTypes } from "./UserTypes";
+
 export type AdTypes = {
   id: number;
   title: string;
@@ -5,33 +8,18 @@ export type AdTypes = {
   price: number;
   createdAt: string;
   updatedAt: string;
-  picture: {
-    id: number;
-    path: string;
-  };
+  picture: string;
   zipCode: string;
   city: string;
-  coordinates: [number, number];
-  subCategory: {
-    id: number;
-    name: string;
-    category: {
-      id: number;
-      name: string;
-    };
+  location: {
+    coordinates: [number, number];
   };
   tags: {
     id: number;
     name: string;
   }[];
-  user: {
-    id: number;
-    nickName: string;
-    picture: {
-      id: number;
-      path: string;
-    };
-  };
+  user: UserTypes;
+  category: CategoryTypes;
 };
 
 export type AdsTypes = AdTypes[];
@@ -42,14 +30,26 @@ export type Tag = {
 export type AdTag = { id: number };
 export type AdTags = AdTag[];
 
-export type AdFormData = {
+export type AdCreateFormData = {
   title: string;
   description: string;
   zipCode: string;
   city: string;
   location: { type: string; coordinates: [number, number] };
-  pictureId?: number;
+  picture: string;
   price: number;
-  subCategory: { id: number } | null;
+  category: { id: number } | null;
+  tags?: AdTags | null;
+};
+
+export type AdUpdateFormData = {
+  title?: string;
+  description?: string;
+  zipCode?: string;
+  city?: string;
+  location?: { type: string; coordinates: [number, number] };
+  picture?: string;
+  price?: number;
+  category?: { id: number } | null;
   tags?: AdTags | null;
 };

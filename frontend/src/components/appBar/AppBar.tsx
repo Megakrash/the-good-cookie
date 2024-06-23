@@ -1,123 +1,182 @@
 import React from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import {
   AppBar,
   Box,
   Button,
-  Container,
   Toolbar,
+  Tooltip,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import CookieIcon from "@mui/icons-material/Cookie";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import SearchIcon from "@mui/icons-material/Search";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import BurgerMenu from "./BurgerMenu";
-import UserMenu from "./UserMenu";
+import MessageIcon from "@mui/icons-material/Message";
+import BurgerMenu from "./burgerMenu/BurgerMenu";
+import UserMenu from "./userMenu/UserMenu";
+import { VariablesColors } from "@/styles/Variables.colors";
+import Navbar from "./navbar/Navbar";
+
+const colors = new VariablesColors();
+const { colorDarkGrey, colorOrange, colorLightOrange } = colors;
 
 const buttonStyles = {
   color: "white",
   "& .MuiButton-startIcon": {
     marginRight: "-4px",
   },
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
 };
 
-export default function Header(): React.ReactNode {
+const Header = (): React.ReactNode => {
   const router = useRouter();
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("lg"));
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#343a40" }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters className="header">
-          {/* Desktop Title */}
+    <AppBar position="sticky" sx={{ backgroundColor: colorDarkGrey }}>
+      <Toolbar
+        sx={{
+          width: "100%",
+          height: "70px",
+          margin: "auto",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        {/* Mobile Menu */}
+        <BurgerMenu />
+        {/* Mobile Title */}
+        <Tooltip title="Revenir sur la page d'accueil">
           <Box
-            className="header_title"
             sx={{
-              display: { xs: "none", md: "flex" },
-            }}
-          >
-            <Link href="/">
-              <CookieIcon className="header_title_logo" />
-            </Link>
-            <Link href="/" className="header_title_name">
-              THE GOOD COOKIE
-            </Link>
-          </Box>
-          {/* Mobile Menu */}
-          <BurgerMenu />
-          {/* Mobile Title */}
-          <CookieIcon
-            sx={{
-              display: { xs: "flex", md: "none" },
-              mr: 1,
-              color: "#e89116",
-            }}
-          />
-          <Typography
-            variant="h4"
-            noWrap
-            component="div"
-            sx={{
-              mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontWeight: 700,
-              letterSpacing: ".2rem",
-              color: "#e89116",
-              textDecoration: "none",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: "10px",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              router.push(`/`);
             }}
           >
-            <Link href="/" passHref className="header_title_name">
+            <CookieIcon sx={{ color: colorOrange }} />
+
+            <Typography
+              component="div"
+              sx={{
+                color: colorOrange,
+                fontSize: "24px",
+                fontWeight: 700,
+                letterSpacing: ".2rem",
+              }}
+            >
               TGC
-            </Link>
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <Button
-              className="header_link_button"
-              startIcon={<EditNoteIcon fontSize="large" />}
-              onClick={() => {
-                router.replace(`/annonces/new`);
-              }}
-              sx={buttonStyles}
-            >
-              Déposer une annonce
-            </Button>
-            <Button
-              className="header_link_button"
-              startIcon={<SearchIcon />}
-              onClick={() => {
-                router.replace(`/recherche`);
-              }}
-              sx={buttonStyles}
-            >
-              Recherche
-            </Button>
-            <Button
-              className="header_link_button"
-              startIcon={<AccountCircleIcon />}
-              onClick={() => {
-                router.replace(`/compte`);
-              }}
-              sx={buttonStyles}
-            >
-              Compte
-            </Button>
-            <Button
-              className="header_link_button"
-              startIcon={<ContactSupportIcon />}
-              onClick={() => {
-                router.replace(`/contact`);
-              }}
-              sx={buttonStyles}
-            >
-              contact
-            </Button>
+            </Typography>
           </Box>
-          <UserMenu />
-        </Toolbar>
-      </Container>
+        </Tooltip>
+        {/* Desktop Title */}
+        <Tooltip title="Revenir sur la page d'accueil">
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex" },
+              flexDirection: "row",
+              alignItems: "center",
+              gap: "10px",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              router.push(`/`);
+            }}
+          >
+            <CookieIcon sx={{ color: colorOrange }} />
+
+            <Typography
+              sx={{
+                color: colorOrange,
+                fontSize: "24px",
+                fontWeight: 700,
+              }}
+            >
+              THE GOOD COOKIE
+            </Typography>
+          </Box>
+        </Tooltip>
+        {/* Big Buttons */}
+        <Box
+          sx={{
+            display: { xs: "none", md: "flex" },
+            flexDirection: "row",
+            gap: "15px",
+          }}
+        >
+          {/* Post Add Button */}
+          <Button
+            variant="contained"
+            size="large"
+            type="button"
+            sx={{
+              backgroundColor: colorLightOrange,
+              fontWeight: 550,
+            }}
+            startIcon={isSmallScreen ? null : <EditNoteIcon />}
+            onClick={() => {
+              router.push(`/ads/new`);
+            }}
+          >
+            Déposer une annonce
+          </Button>
+          {/* Search Button */}
+          <Button
+            variant="contained"
+            size="large"
+            type="button"
+            sx={{
+              backgroundColor: colorLightOrange,
+              fontWeight: 550,
+            }}
+            startIcon={isSmallScreen ? null : <SearchIcon />}
+            onClick={() => {
+              router.push(`/search`);
+            }}
+          >
+            {isSmallScreen ? "Rechercher" : "Rechercher une annonce"}
+          </Button>
+        </Box>
+        {/* Menu */}
+        <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <Button
+            startIcon={<MessageIcon />}
+            onClick={() => {
+              router.push(`/messages`);
+            }}
+            sx={buttonStyles}
+          >
+            Messages
+          </Button>
+          <Button
+            startIcon={<ContactSupportIcon />}
+            onClick={() => {
+              router.push(`/contact`);
+            }}
+            sx={buttonStyles}
+          >
+            contact
+          </Button>
+        </Box>
+        {/* User menu */}
+        <UserMenu />
+      </Toolbar>
+      <Navbar />
     </AppBar>
   );
-}
+};
+export default Header;

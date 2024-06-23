@@ -3,8 +3,6 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
   CreateDateColumn,
   ManyToOne,
   UpdateDateColumn,
@@ -26,21 +24,22 @@ import {
 } from 'type-graphql'
 import { Ad } from './Ad'
 import { ObjectId } from './ObjectId'
-import { Picture } from './Picture'
-import { Gender, Profil, Role } from '../types/Users.types'
+import { Message } from './Message'
+import { GenderEnum, ProfilEnum, RoleEnum } from '../types/Users.types'
 import { PointInput, PointType } from './Geolocation'
+import { Conversation } from './Conversation'
 
 //-------------------------------
 //----- Enums type-graphql ------
 //-------------------------------
-registerEnumType(Role, {
+registerEnumType(RoleEnum, {
   name: 'Role',
 })
-registerEnumType(Profil, {
+registerEnumType(ProfilEnum, {
   name: 'Profil',
 })
-registerEnumType(Gender, {
-  name: 'Gender',
+registerEnumType(GenderEnum, {
+  name: 'GenderEnum',
 })
 //-------------------------------
 //--------- User Entity ---------
@@ -64,18 +63,18 @@ export class User extends BaseEntity {
   // Profil
   @Column({
     type: 'enum',
-    enum: Profil,
+    enum: ProfilEnum,
   })
-  @Field(() => Profil)
-  profil!: Profil
+  @Field(() => ProfilEnum)
+  profil!: ProfilEnum
 
   // Gender
   @Column({
     type: 'enum',
-    enum: Gender,
+    enum: GenderEnum,
   })
-  @Field(() => Gender)
-  gender!: Gender
+  @Field(() => GenderEnum)
+  gender!: GenderEnum
 
   // First name
   @Column({ length: 50 })
@@ -126,7 +125,7 @@ export class User extends BaseEntity {
   @Field({ nullable: true })
   city!: string
 
-  // Location
+  // Location - coordinates
   @Column({
     type: 'geometry',
     spatialFeatureType: 'Point',
@@ -155,11 +154,11 @@ export class User extends BaseEntity {
   // Role
   @Column({
     type: 'enum',
-    enum: Role,
-    default: Role.USER,
+    enum: RoleEnum,
+    default: RoleEnum.USER,
   })
-  @Field(() => Role, { nullable: true })
-  role!: Role
+  @Field(() => RoleEnum, { nullable: true })
+  role!: RoleEnum
 
   // Password
   @Column({ length: 250 })
@@ -169,6 +168,11 @@ export class User extends BaseEntity {
   @Column({ default: false })
   @Field()
   isVerified!: boolean
+
+  // Picture
+  @Column({ length: 250 })
+  @Field({ nullable: true })
+  picture!: string
 
   // ---------- INFOS ----------
 
@@ -194,16 +198,24 @@ export class User extends BaseEntity {
 
   // ---------- RELATIONS ----------
 
-  // Picture
-  @OneToOne(() => Picture, { cascade: true, nullable: true })
-  @JoinColumn()
-  @Field(() => Picture, { nullable: true })
-  picture!: Picture
-
   // Ads
-  @OneToMany(() => Ad, (ad) => ad.user)
+  @OneToMany(() => Ad, (ad) => ad.user, { eager: true })
   @Field(() => [Ad])
   ads!: Ad[]
+
+  // Messages
+  @OneToMany(() => Message, (message) => message.sender)
+  @Field(() => [Message])
+  sentMessages!: Message[]
+
+  @OneToMany(() => Message, (message) => message.receiver)
+  @Field(() => [Message])
+  receivedMessages!: Message[]
+
+  // Conversations
+  @OneToMany(() => Conversation, (conversation) => conversation.user1)
+  @Field(() => [Conversation])
+  conversations!: Conversation[]
 }
 
 //-------------------------------
@@ -214,11 +226,11 @@ export class UserCreateInput {
   @Field()
   email!: string
 
-  @Field(() => Profil)
-  profil!: Profil
+  @Field(() => ProfilEnum)
+  profil!: ProfilEnum
 
-  @Field(() => Gender)
-  gender!: Gender
+  @Field(() => GenderEnum)
+  gender!: GenderEnum
 
   @Field()
   firstName!: string
@@ -230,7 +242,7 @@ export class UserCreateInput {
   nickName!: string
 
   @Field({ nullable: true })
-  pictureId?: number
+  picture!: string
 
   @Field()
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+]{8,}$/, {
@@ -254,8 +266,8 @@ export class UserCreateInput {
   @Field({ nullable: true })
   phoneNumber!: string
 
-  @Field(() => Role, { nullable: true })
-  role?: Role
+  @Field(() => RoleEnum, { nullable: true })
+  role?: RoleEnum
 
   @Field({ nullable: true })
   isVerified?: boolean
@@ -266,6 +278,12 @@ export class UserCreateInput {
 //-------------------------------
 @InputType()
 export class UserUpdateInput {
+  @Field(() => ProfilEnum, { nullable: true })
+  profil!: ProfilEnum
+
+  @Field(() => GenderEnum, { nullable: true })
+  gender!: GenderEnum
+
   @Field({ nullable: true })
   firstName!: string
 
@@ -276,7 +294,7 @@ export class UserUpdateInput {
   nickName!: string
 
   @Field({ nullable: true })
-  pictureId?: number
+  picture!: string
 
   @Field({ nullable: true })
   adress!: string
@@ -287,14 +305,14 @@ export class UserUpdateInput {
   @Field({ nullable: true })
   city!: string
 
-  @Field(() => PointInput)
+  @Field(() => PointInput, { nullable: true })
   location?: PointInput
 
   @Field({ nullable: true })
   phoneNumber!: string
 
-  @Field(() => Role, { nullable: true })
-  role!: Role
+  @Field(() => RoleEnum, { nullable: true })
+  role!: RoleEnum
 
   @Field(() => [ObjectId], { nullable: true })
   ads!: ObjectId[]
@@ -329,10 +347,72 @@ export class UserContext {
   @Field()
   nickName!: string
 
-  @Field(() => Picture, { nullable: true })
-  picture!: Picture
+  @Field({ nullable: true })
+  picture!: string
+
+  @Field()
+  role!: string
 }
 
+//-------------------------------
+//--------- User Me -------------
+//-------------------------------
+@ObjectType()
+export class MeUser {
+  @Field(() => ID)
+  id!: number
+
+  @Field()
+  email!: string
+
+  @Field()
+  profil!: string
+
+  @Field()
+  gender!: string
+
+  @Field()
+  firstName!: string
+
+  @Field()
+  lastName!: string
+
+  @Field({ nullable: true })
+  nickName!: string
+
+  @Field({ nullable: true })
+  adress!: string
+
+  @Field({ nullable: true })
+  zipCode!: string
+
+  @Field({ nullable: true })
+  city!: string
+
+  @Field({ nullable: true })
+  phoneNumber!: string
+
+  @Field({ nullable: true })
+  role!: string
+
+  @Field(() => Date)
+  createdAt!: Date
+
+  @Field(() => Date, { nullable: true })
+  updatedAt!: Date
+
+  @Field(() => User, { nullable: true })
+  updatedBy!: User
+
+  @Field(() => Date, { nullable: true })
+  lastConnectionDate!: Date
+
+  @Field({ nullable: true })
+  picture!: string
+
+  @Field(() => [Ad])
+  ads!: Ad[]
+}
 //-------------------------------
 //--------- User verify ---------
 //-------------------------------

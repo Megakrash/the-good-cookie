@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import Head from "next/head";
-import Navbar from "../navbar/Navbar";
 
 type LayoutProps = {
   title: string;
@@ -16,7 +15,6 @@ function LayoutFull(props: LayoutProps): ReactNode {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/cookicon.ico" />
       </Head>
-      <Navbar />
       <main>{props.children}</main>
     </>
   );

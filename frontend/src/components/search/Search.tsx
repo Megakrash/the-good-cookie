@@ -1,61 +1,30 @@
-import React, { FormEvent, useState } from "react";
-import { CategoriesTypes } from "@/types/CategoryTypes";
-import { AdsTypes } from "@/types/AdTypes";
-import { TagsTypes } from "@/types/TagTypes";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  SelectChangeEvent,
-  TextField,
-  Box,
-  Button,
-  Grid,
-  useTheme,
-} from "@mui/material";
+import React, { useState } from "react";
+import { AdTags, AdsTypes } from "@/types/AdTypes";
+import { useLazyQuery } from "@apollo/client";
+import { TextField, Box, Button, Grid, useTheme } from "@mui/material";
 import { FilterAlt, FilterAltOff } from "@mui/icons-material";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { PATH_IMAGE } from "@/api/configApi";
-import { queryAllTags } from "../graphql/Tags";
-import { queryAllAds } from "../graphql/Ads";
-import { queryAllCatAndSub } from "../graphql/Categories";
+import { queryAllAds } from "../../graphql/ads/queryAllAds";
 import GpsAndRadius from "./components/GpsAndRadius";
 import { VariablesColors } from "@/styles/Variables.colors";
+import { showToast } from "../utils/toastHelper";
+import CategorySelect from "../utils/CategorySelect";
+import TagSelect from "../utils/TagSelect";
 
 const colors = new VariablesColors();
-const { colorLightGrey, errorColor, colorWhite } = colors;
+const { colorLightGrey, colorLightOrange } = colors;
 
 const Search = (): React.ReactNode => {
   const theme = useTheme();
-  //-------------------------------------
-  // Get Categories&SubCategories & Tags
-  //-------------------------------------
-  const { data: dataCategories } = useQuery<{ items: CategoriesTypes }>(
-    queryAllCatAndSub,
-  );
-  const categories = dataCategories ? dataCategories.items : [];
-
-  const { data: dataTags } = useQuery<{ items: TagsTypes }>(queryAllTags);
-  const tags = dataTags ? dataTags.items : [];
-
   //-----------------
   // Selected queries
   //-----------------
   const [showQueries, setShowQueries] = useState<boolean>(false);
   // subCategories
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string>();
-  const handleChangeCategory = (event: SelectChangeEvent) => {
-    setSelectedSubCategory(event.target.value as string);
-  };
+  const [selectedCategory, setSelectedCategory] = useState<number>();
   // Tags
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const handleChange = (event: SelectChangeEvent<string[]>) => {
-    const value = event.target.value as string[];
-    setSelectedTags(value);
-  };
+  const [selectedTags, setSelectedTags] = useState<AdTags>([]);
 
   // Location
   const [lat, setLat] = useState<number>();
@@ -76,22 +45,17 @@ const Search = (): React.ReactNode => {
     useLazyQuery<{ items: AdsTypes }>(queryAllAds);
   // const searchResult = dataSearch ? dataSearch.items : [];
   const handleSearchClick = () => {
-    if (!selectedSubCategory && !lat && !long) {
-      toast(
+    if (!selectedCategory && !lat && !long) {
+      showToast(
+        "error",
         `Veuillez indiquer une catégorie et une localisation pour effectuer une recherche.`,
-        {
-          style: {
-            background: errorColor,
-            color: colorWhite,
-          },
-        },
       );
       return;
     }
     doSearch({
       variables: {
         where: {
-          subCategory: selectedSubCategory,
+          category: selectedCategory,
           location: {
             type: "Point",
             coordinates: [long, lat],
@@ -111,7 +75,7 @@ const Search = (): React.ReactNode => {
   //-----------------
 
   const resetForm = (): void => {
-    setSelectedSubCategory(undefined);
+    setSelectedCategory(undefined);
     setSelectedTags([]);
     setLat(undefined);
     setLong(undefined);
@@ -124,6 +88,7 @@ const Search = (): React.ReactNode => {
   return (
     <Grid
       container
+      item
       xs={12}
       sx={{
         display: "flex",
@@ -133,7 +98,7 @@ const Search = (): React.ReactNode => {
         gap: "20px",
         minHeight: "270px",
         padding: "1%",
-        backgroundImage: `url(${PATH_IMAGE}/general/search.png)`,
+        backgroundImage: `url(/images/general/search.png)`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         [theme.breakpoints.down("sm")]: {
@@ -144,6 +109,7 @@ const Search = (): React.ReactNode => {
       <Toaster />
       <Grid
         container
+        item
         xs={10}
         sm={!showQueries ? 5 : 11}
         md={!showQueries ? 4 : 10}
@@ -161,6 +127,7 @@ const Search = (): React.ReactNode => {
       >
         <Grid
           container
+          item
           xs={12}
           sm={!showQueries ? 10 : 5}
           md={!showQueries ? 10 : 5}
@@ -171,39 +138,11 @@ const Search = (): React.ReactNode => {
             gap: "15px",
           }}
         >
-          <FormControl fullWidth>
-            <InputLabel size="small" id="subcategory-select-label">
-              Catégorie*
-            </InputLabel>
-            <Select
-              labelId="subcategory-select-label"
-              id="subcategory-select"
-              size="small"
-              sx={{ backgroundColor: colorLightGrey }}
-              value={selectedSubCategory || ""}
-              onChange={handleChangeCategory}
-              label="Sélectionnez une sous-catégorie"
-              required
-            >
-              <MenuItem value="" disabled>
-                Sélectionnez une catégorie
-              </MenuItem>
-              {categories.map((category) => [
-                <MenuItem key={category.id} value="" disabled>
-                  {category.name}
-                </MenuItem>,
-                ...category.subCategories.map((subCategory) => (
-                  <MenuItem
-                    key={`subcategory-${category.id}-${subCategory.id}`}
-                    value={subCategory.id}
-                    style={{ marginLeft: "20px" }}
-                  >
-                    {subCategory.name}
-                  </MenuItem>
-                )),
-              ])}
-            </Select>
-          </FormControl>
+          <CategorySelect
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            type="createAd"
+          />
           <GpsAndRadius
             setLat={setLat}
             setLong={setLong}
@@ -214,6 +153,7 @@ const Search = (): React.ReactNode => {
         {showQueries && (
           <Grid
             container
+            item
             xs={12}
             sm={5}
             md={5}
@@ -263,41 +203,16 @@ const Search = (): React.ReactNode => {
                 )
               }
             />
-            <FormControl>
-              <InputLabel size="small" id="tags">
-                Tag(s)
-              </InputLabel>
-              <Select
-                labelId="tags"
-                id="select-tags"
-                size="small"
-                sx={{ backgroundColor: colorLightGrey }}
-                multiple
-                value={selectedTags}
-                onChange={handleChange}
-                input={<OutlinedInput label="Tag" />}
-                renderValue={(selected) =>
-                  selected
-                    .map(
-                      (id) =>
-                        tags.find((tag) => tag.id.toString() === id)?.name ||
-                        "",
-                    )
-                    .join(", ")
-                }
-              >
-                {tags.map((tag) => (
-                  <MenuItem key={tag.id} value={tag.id}>
-                    {tag.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <TagSelect
+              selectedTags={selectedTags}
+              setSelectedTags={setSelectedTags}
+            />
           </Grid>
         )}
       </Grid>
       <Grid
         container
+        item
         xs={10}
         sm={5}
         md={4}
@@ -316,6 +231,7 @@ const Search = (): React.ReactNode => {
           variant="contained"
           size="large"
           type="button"
+          sx={{ backgroundColor: colorLightOrange, fontWeight: 550 }}
           disabled={loadingSearch}
           onClick={handleSearchClick}
         >

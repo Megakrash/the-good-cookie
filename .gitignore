@@ -1,3 +1,6 @@
 node_modules
 AtWork
 docker-compose.prod.yml
+docker-compose.release.yml
+Caddyfile
+webhook.conf

@@ -10,10 +10,9 @@ import {
 } from 'type-graphql'
 import { validate } from 'class-validator'
 import { Ad, AdCreateInput, AdUpdateInput, AdsWhere } from '../entities/Ad'
-import { deletePicture } from '../utils/pictureServices/pictureServices'
 import { merge } from '../utils/utils'
 import { MyContext } from '../types/Users.types'
-import { Picture } from '../entities/Picture'
+import { deletePicture } from '../utils/picturesServices/deletePicture'
 
 @Resolver(Ad)
 export class AdsResolver {
@@ -33,20 +32,18 @@ export class AdsResolver {
     newAd.createdBy = context.user
     newAd.updatedBy = context.user
 
-    if (data.pictureId) {
-      const picture = await Picture.findOne({ where: { id: data.pictureId } })
-      if (!picture) {
-        throw new Error('Picture not found')
-      }
-      newAd.picture = picture
-    }
-
     const errors = await validate(newAd)
     if (errors.length === 0) {
       await newAd.save()
       return newAd
     }
-    throw new Error(`Error occurred: ${JSON.stringify(errors)}`)
+    // If there are validation errors delete the user info in the error message
+    const validationErrors = errors.map((err) => ({
+      property: err.property,
+      constraints: err.constraints,
+    }))
+
+    throw new Error(`Error occurred: ${JSON.stringify(validationErrors)}`)
   }
 
   // UPDATE
@@ -64,40 +61,27 @@ export class AdsResolver {
     // Get ad by id
     const ad = await Ad.findOne({
       where: { id },
-      relations: { tags: true, user: true, picture: true },
+      relations: { tags: true, user: true },
     })
     if (
       ad &&
       (ad.user.id === context.user?.id || context.user?.role === 'ADMIN')
     ) {
-      let oldPictureId = null
-      if (data.pictureId && ad.picture?.id) {
-        oldPictureId = ad.picture.id
-        const newPicture = await Picture.findOne({
-          where: { id: data.pictureId },
-        })
-        if (!newPicture) {
-          throw new Error('New picture not found')
-        }
-        ad.picture = newPicture
+      if (data.picture) {
+        await deletePicture(ad.picture)
       }
-
       merge(ad, data)
 
       const errors = await validate(ad)
       if (errors.length === 0) {
         await Ad.save(ad)
-        if (oldPictureId) {
-          await deletePicture(oldPictureId)
-        }
 
         return await Ad.findOne({
           where: { id },
           relations: {
-            subCategory: true,
+            category: true,
             tags: true,
-            picture: true,
-            user: { picture: true },
+            user: true,
           },
         })
       }
@@ -118,18 +102,18 @@ export class AdsResolver {
       // Create a query builder
       const query = Ad.createQueryBuilder('ad')
 
-      // Join relations
+      // Join relations with unique aliases
       query.leftJoinAndSelect('ad.picture', 'picture')
-      query.leftJoinAndSelect('ad.subCategory', 'subCategory')
-      query.leftJoinAndSelect('subCategory.category', 'category')
+      query.leftJoinAndSelect('ad.category', 'category')
+      query.leftJoinAndSelect('category.parentCategory', 'parentCategory')
       query.leftJoinAndSelect('ad.user', 'user')
       query.leftJoinAndSelect('user.picture', 'userPicture')
       query.leftJoinAndSelect('ad.tags', 'tags')
 
       // Filter by subCategory
-      if (where?.subCategory) {
-        query.andWhere('ad.subCategory IN (:...subCategory)', {
-          subCategory: where.subCategory,
+      if (where?.category) {
+        query.andWhere('ad.category IN (:...category)', {
+          category: where.category,
         })
       }
 
@@ -188,10 +172,9 @@ export class AdsResolver {
     const ad = await Ad.findOne({
       where: { id },
       relations: {
-        subCategory: { category: true },
+        category: { parentCategory: { parentCategory: true } },
         tags: true,
-        user: { picture: true },
-        picture: true,
+        user: true,
       },
     })
     if (!ad) {
@@ -205,7 +188,7 @@ export class AdsResolver {
   async adsByUser(@Arg('id', () => ID) id: number): Promise<Ad[]> {
     const ads = await Ad.find({
       where: { user: { id } },
-      relations: { user: true, subCategory: true, tags: true, picture: true },
+      relations: { user: true, category: true, tags: true },
     })
 
     if (ads.length === 0) {
@@ -224,17 +207,14 @@ export class AdsResolver {
   ): Promise<Ad | null> {
     const ad = await Ad.findOne({
       where: { id },
-      relations: { user: true, picture: true },
+      relations: { user: true },
     })
     if (
       ad &&
       (ad.user.id === context.user?.id || context.user?.role === 'ADMIN')
     ) {
-      const pictureId = ad.picture?.id
+      await deletePicture(ad.picture)
       await ad.remove()
-      if (pictureId) {
-        await deletePicture(pictureId)
-      }
       ad.id = id
     }
     return ad

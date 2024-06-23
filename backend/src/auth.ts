@@ -21,7 +21,6 @@ export const customAuthChecker: AuthChecker<MyContext> = async (
     if (typeof payload === 'object' && 'userId' in payload) {
       const user = await User.findOne({
         where: { id: payload.userId },
-        relations: { picture: true },
       })
       if (user) {
         context.user = user

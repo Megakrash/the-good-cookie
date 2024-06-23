@@ -7,18 +7,18 @@ export interface MyContext {
   user?: User
 }
 
-export enum Profil {
+export enum ProfilEnum {
   PRO = 'PRO',
   INDIVIDUAL = 'INDIVIDUAL',
 }
 
-export enum Gender {
+export enum GenderEnum {
   MAN = 'MAN',
   WOMAN = 'WOMAN',
   OTHER = 'OTHER',
 }
 
-export enum Role {
+export enum RoleEnum {
   USER = 'USER',
   ADMIN = 'ADMIN',
 }

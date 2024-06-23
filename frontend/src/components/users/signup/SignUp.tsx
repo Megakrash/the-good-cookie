@@ -1,20 +1,20 @@
 import React, { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { Avatar, Box, Button, Divider, Grid, Typography } from "@mui/material";
-import { mutationCreateUser } from "@/components/graphql/Users";
+import { mutationCreateUser } from "@/graphql/users/mutationCreateUser";
 import { UserFormData } from "@/types/UserTypes";
 import { useMutation } from "@apollo/client";
 import StepForm from "./StepForm";
 import { VariablesColors } from "@/styles/Variables.colors";
 import StepWelcome from "./StepWelcome";
 import StepSubmit from "./StepSubmit";
-import axios from "axios";
-import { API_URL } from "@/api/configApi";
+import { uploadPicture } from "@/components/utils/uploadPicture";
+import { showToast } from "@/components/utils/toastHelper";
 
 const colors = new VariablesColors();
-const { colorWhite, colorLightGrey, errorColor } = colors;
+const { colorLightGrey } = colors;
 
-function SignUp(): React.ReactNode {
+const SignUp = (): React.ReactNode => {
   // Form
   const [email, setEmail] = useState<string>("");
   const [profil, setProfil] = useState<string>("");
@@ -44,7 +44,7 @@ function SignUp(): React.ReactNode {
           ? "Monsieur"
           : gender === "WOMAN"
             ? "Madame"
-            : "Indéterminée",
+            : gender === "OTHER" && "Indéterminée",
     },
     { step: "firstName", title: "Votre prénom", data: firstName },
     { step: "lastName", title: "Votre nom", data: lastName },
@@ -61,19 +61,9 @@ function SignUp(): React.ReactNode {
   // SUBMIT
   const [doCreate, loading] = useMutation(mutationCreateUser);
   async function onSubmit() {
-    const dataFile = new FormData();
-    dataFile.append("title", nickName);
-    dataFile.append("file", picture);
     try {
-      let pictureId: number | null = null;
-      if (picture) {
-        const uploadResponse = await axios.post(`${API_URL}picture`, dataFile, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        pictureId = uploadResponse.data.id;
-      }
+      const filename = await uploadPicture(nickName, picture);
+
       const data: UserFormData = {
         email,
         profil,
@@ -83,7 +73,7 @@ function SignUp(): React.ReactNode {
         nickName,
         password,
         phoneNumber,
-        ...(pictureId && { pictureId }),
+        picture: filename ? filename : "",
       };
 
       const result = await doCreate({
@@ -94,16 +84,12 @@ function SignUp(): React.ReactNode {
       if ("id" in result.data?.item) {
         setCurrentStep("welcome");
       } else {
-        toast("Erreur pendant la création de votre compte", {
-          style: { background: errorColor, color: colorWhite },
-        });
+        showToast("error", "Erreur pendant la création de votre compte");
         setCurrentStep("email");
       }
     } catch (error) {
-      toast("Erreur pendant la création de votre compte", {
-        style: { background: errorColor, color: colorWhite },
-      });
       console.error("error", error);
+      showToast("error", "Erreur pendant la création de votre compte");
       setCurrentStep("email");
     }
   }
@@ -119,14 +105,14 @@ function SignUp(): React.ReactNode {
           xs={12}
           sx={{
             display: "flex",
-            flexDirection: "row",
+            flexDirection: { xs: "column-reverse", sm: "row" },
           }}
         >
           <Toaster />
           <Grid
             item
-            xs={6}
-            sm={4}
+            xs={12}
+            sm={5}
             md={3.5}
             lg={3}
             sx={{
@@ -198,7 +184,7 @@ function SignUp(): React.ReactNode {
               </Box>
             ))}
           </Grid>
-          <Grid item xs={6} sm={6} md={8.5}>
+          <Grid item xs={12} sm={7} md={8.5} lg={9}>
             {currentStep === "submit" ? (
               <StepSubmit onSubmit={onSubmit} loading={loading.loading} />
             ) : (
@@ -232,6 +218,6 @@ function SignUp(): React.ReactNode {
       )}
     </>
   );
-}
+};
 
 export default SignUp;

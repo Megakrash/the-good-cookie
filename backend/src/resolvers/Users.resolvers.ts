@@ -7,12 +7,11 @@ import {
   Authorized,
   ID,
 } from 'type-graphql'
-import { validate } from 'class-validator'
-import * as argon2 from 'argon2'
 import jwt from 'jsonwebtoken'
 import Cookies from 'cookies'
 import { MyContext } from '../types/Users.types'
 import {
+  MeUser,
   User,
   UserContext,
   UserCreateInput,
@@ -20,12 +19,16 @@ import {
   UserUpdateInput,
   VerifyEmailResponse,
 } from '../entities/User'
-import { Picture } from '../entities/Picture'
-import { deletePicture } from '../utils/pictureServices/pictureServices'
+import { UserServices } from '../services/Users.services'
+import { UserToken } from '../entities/UserToken'
+import { addDays, isBefore } from 'date-fns'
+import { v4 as uuidv4 } from 'uuid'
+import { resetPasswordEmail } from '../utils/mailServices/resetPasswordEmail'
 import {
-  sendVerificationEmail,
   sendConfirmationEmail,
+  sendVerificationEmail,
 } from '../utils/mailServices/verificationEmail'
+import { deletePicture } from '../utils/picturesServices/deletePicture'
 
 @Resolver(User)
 export class UsersResolver {
@@ -34,41 +37,39 @@ export class UsersResolver {
   async userCreate(
     @Arg('data', () => UserCreateInput) data: UserCreateInput
   ): Promise<User> {
-    // Check if user already exists
-    const existingUser = await User.findOne({ where: { email: data.email } })
-    if (existingUser) {
-      throw new Error('User already exists')
-    }
-
-    // Create new user
-    const newUser = new User()
-    // Assign data to new user
-    Object.assign(newUser, data)
-
-    // Check if pictureId exists & assign picture to user
-    if (data.pictureId) {
-      const picture = await Picture.findOne({ where: { id: data.pictureId } })
-      if (!picture) {
-        throw new Error('Picture not found')
-      }
-      newUser.picture = picture
-    }
-
-    // Hash password
     try {
-      newUser.hashedPassword = await argon2.hash(data.password)
-    } catch (error) {
-      throw new Error(`Error hashing password: ${error}`)
-    }
+      // Check if user already exists
+      const userAlreadyExist = await User.findOne({
+        where: { email: data.email },
+      })
+      if (userAlreadyExist) {
+        throw new Error('User already exists')
+      }
 
-    // Validate and save new user
-    const errors = await validate(newUser)
-    if (errors.length === 0) {
+      // Create new user entity with picture & hash password
+      const newUser = new User()
+      Object.assign(newUser, data)
+
+      // Hash password
+      newUser.hashedPassword = await UserServices.hashPassword(data.password)
+
+      // Validate user
+      await UserServices.validateUser(newUser)
+
+      // Save new user
       await newUser.save()
+
+      // Send verification email
       await sendVerificationEmail(newUser.email, newUser.nickName)
+
       return newUser
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message)
+      } else {
+        throw new Error('An unknown error occurred')
+      }
     }
-    throw new Error(`Error occured: ${JSON.stringify(errors)}`)
   }
 
   // UPDATE
@@ -79,22 +80,20 @@ export class UsersResolver {
     @Arg('id', () => ID) id: number,
     @Ctx() context: MyContext
   ): Promise<User | null> {
-    // Check if user is authenticated
-    if (!context.user) {
-      throw new Error('User context is missing or user is not authenticated')
-    }
+    try {
+      // Find user by id
+      const user = await UserServices.findUserById(id)
 
-    // Find user by id
-    const user = await User.findOne({
-      where: { id },
-      relations: { ads: true, picture: true },
-    })
+      // Check if user is authorized to update
+      if (user.id !== context.user?.id || context.user?.role !== 'ADMIN') {
+        throw new Error('Unauthorized')
+      }
 
-    if (
-      user &&
-      (user.id === context.user?.id || context.user?.role === 'ADMIN')
-    ) {
-      let oldPictureId: number | null = null
+      if (data.picture && data.picture !== user.picture) {
+        await deletePicture(user.picture)
+      }
+
+      // Update user with his ads
       if (data.ads) {
         data.ads = data.ads.map((entry) => {
           const existingRelation = user.ads.find(
@@ -103,49 +102,35 @@ export class UsersResolver {
           return existingRelation || entry
         })
       }
-      if (data.pictureId && user.picture?.id) {
-        oldPictureId = user.picture.id
-        const newPicture = await Picture.findOne({
-          where: { id: data.pictureId },
-        })
-        if (!newPicture) {
-          throw new Error('New picture not found')
-        }
-        user.picture = newPicture
-      }
 
       // Update user with new data
       Object.assign(user, data)
-      user.updatedBy = context.user
-      // Validate and save updated user
-      const errors = await validate(user)
-      if (errors.length === 0) {
-        await User.save(user)
-        if (oldPictureId) {
-          await deletePicture(oldPictureId)
-        }
-
-        return await User.findOne({
-          where: { id: user.id },
-          relations: {
-            ads: true,
-            updatedBy: true,
-            picture: true,
-          },
-        })
+      if (context.user) {
+        user.updatedBy = context.user
       }
-      throw new Error(`Error occured: ${JSON.stringify(errors)}`)
+      // Validate user
+      await UserServices.validateUser(user)
+      // Save user
+      await user.save()
+
+      // Return updated user
+      const userUpdated = await UserServices.findUserById(id)
+
+      return userUpdated
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message)
+      } else {
+        throw new Error('An unknown error occurred')
+      }
     }
-    return user
   }
 
   // GET ALL
   @Authorized('ADMIN')
   @Query(() => [User])
   async usersGetAll(): Promise<User[]> {
-    const users = await User.find({
-      relations: { ads: true, picture: true },
-    })
+    const users = await User.find({})
     return users
   }
 
@@ -155,8 +140,6 @@ export class UsersResolver {
     const user = await User.findOne({
       where: { id },
       relations: {
-        ads: true,
-        picture: true,
         createdBy: true,
         updatedBy: true,
       },
@@ -174,43 +157,35 @@ export class UsersResolver {
     let userNickName: string | null = null
 
     try {
-      const decodedToken = jwt.decode(token)
-      if (
-        typeof decodedToken === 'object' &&
-        decodedToken &&
-        'email' in decodedToken
-      ) {
-        userEmail = decodedToken.email
-        userNickName = decodedToken.nickName
+      // Decode token
+      const decoded = UserServices.decodeToken(token)
+      if (decoded) {
+        userEmail = decoded.email
+        userNickName = decoded.nickName
       }
-
-      const payload = jwt.verify(
-        token,
-        process.env.JWT_VERIFY_EMAIL_SECRET_KEY || ''
-      )
-      if (typeof payload === 'object' && payload.email) {
-        const user = await User.findOneBy({ email: payload.email })
-        if (!user) {
-          return { success: false, message: 'Utilisateur non trouvé' }
-        }
-        if (user.isVerified === true) {
-          return { success: true, message: 'Email déjà vérifié' }
-        }
-
-        user.isVerified = true
-        await user.save()
-        await sendConfirmationEmail(user.email, user.nickName)
-        return { success: true, message: 'Email vérifié avec succès !' }
+      // Verify token
+      const payload = UserServices.verifyToken(token)
+      if (!payload) {
+        return { success: false, message: 'Invalid Token' }
       }
-      return { success: false, message: 'Invalid Token' }
+      // Find user by email
+      const user = await UserServices.findUserByEmail(payload.email)
+      if (!user) {
+        return { success: false, message: 'User not found' }
+      }
+      if (user.isVerified === true) {
+        return { success: true, message: 'Email already verified' }
+      }
+      // Mark user as verified
+      user.isVerified = true
+      // Save user
+      await user.save()
+      // Send confirmation email
+      await sendConfirmationEmail(user.email, user.nickName)
+      return { success: true, message: 'Email verified successfully!' }
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError && userEmail && userNickName) {
-        await sendVerificationEmail(userEmail, userNickName)
-        return {
-          success: false,
-          message:
-            'Le lien a expiré, un nouveau lien de vérification a été envoyé à votre adresse email.',
-        }
+        return await UserServices.handleExpiredToken(userEmail, userNickName)
       }
       return { success: false, message: `Erreur de la vérification de l'email` }
     }
@@ -221,69 +196,173 @@ export class UsersResolver {
   async userLogin(
     @Ctx() context: MyContext,
     @Arg('data', () => UserLoginInput) data: UserLoginInput
-  ) {
-    const user = await User.findOne({ where: { email: data.email } })
-    if (!user) {
-      throw new Error('Email ou mot de passe incorrect')
-    }
-    if (!user.isVerified) {
-      throw new Error('Email non vérifié, consultez votre boite mail')
-    }
+  ): Promise<User> {
+    try {
+      // Authenticate user
+      const user = await UserServices.authenticateUser(data)
 
-    const valid = await argon2.verify(user.hashedPassword, data.password)
-    if (!valid) {
-      throw new Error('Email ou mot de passe incorrect')
+      // Generate token
+      const token = UserServices.generateToken(user)
+
+      // Set cookie
+      UserServices.setCookie(context, token)
+
+      // Update last connection date
+      user.lastConnectionDate = new Date()
+
+      // Save user
+      await user.save()
+
+      return user
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message)
+      } else {
+        throw new Error('An unknown error occurred')
+      }
     }
-
-    const token = jwt.sign(
-      {
-        exp: Math.floor(Date.now() + 2 * 60 * 60 * 1000),
-        userId: user.id,
-      },
-      process.env.JWT_SECRET_KEY || ''
-    )
-
-    const cookie = new Cookies(context.req, context.res)
-    cookie.set('TGCookie', token, {
-      httpOnly: true,
-      secure: false,
-      expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
-    })
-    user.lastConnectionDate = new Date()
-    await user.save()
-    return user
   }
 
   // ME
   @Authorized('ADMIN', 'USER')
-  @Query(() => User)
-  async me(@Ctx() context: MyContext): Promise<User> {
+  @Query(() => MeUser)
+  async me(@Ctx() context: MyContext): Promise<MeUser | null> {
     if (!context.user) {
       throw new Error('User not found')
     }
-    const user = await User.findOne({
-      where: { id: context.user.id },
-      relations: { picture: true },
-    })
 
-    return user as User
+    const meUser = {
+      id: context.user.id,
+      email: context.user.email,
+      profil: context.user.profil,
+      gender: context.user.gender,
+      firstName: context.user.firstName,
+      lastName: context.user.lastName,
+      nickName: context.user.nickName,
+      adress: context.user.adress,
+      zipCode: context.user.zipCode,
+      city: context.user.city,
+      phoneNumber: context.user.phoneNumber,
+      role: context.user.role,
+      createdAt: context.user.createdAt,
+      updatedAt: context.user.updatedAt,
+      updatedBy: context.user.updatedBy,
+      lastConnectionDate: context.user.lastConnectionDate,
+      picture: context.user.picture,
+      ads: context.user.ads,
+    }
+
+    return meUser
   }
 
   // ME CONTEXT FOR FRONTEND
-  @Authorized('ADMIN', 'USER')
-  @Query(() => UserContext)
-  async meContext(@Ctx() context: MyContext): Promise<UserContext> {
-    if (!context.user) {
-      throw new Error('User not found')
+  @Query(() => UserContext, { nullable: true })
+  async meContext(@Ctx() context: MyContext): Promise<UserContext | null> {
+    // Get if cookie is present in context
+    const cookies = new Cookies(context.req, context.res)
+    const renthub_token = cookies.get('TGCookie')
+
+    if (!renthub_token) {
+      return null
     }
 
-    const { id, nickName, picture } = context.user
-
-    return {
-      id,
-      nickName,
-      picture: picture as Picture,
+    try {
+      // Verify token
+      const payload = jwt.verify(
+        renthub_token,
+        process.env.JWT_SECRET_KEY || ''
+      )
+      // Get user from payload
+      if (typeof payload === 'object' && 'userId' in payload) {
+        const user = await UserServices.findUserById(payload.userId)
+        // if user is found, return user context
+        if (user) {
+          const userContext = {
+            id: user.id,
+            nickName: user.nickName,
+            picture: user.picture,
+            role: user.role,
+          }
+          return userContext
+        } else {
+          return null
+        }
+      }
+    } catch (err) {
+      console.error('Error verifying token:', err)
+      return null
     }
+
+    return null
+  }
+
+  // FORGOT PASSWORD
+  @Mutation(() => Boolean)
+  async resetPassword(
+    @Arg('email') email: string,
+    @Ctx() context: MyContext
+  ): Promise<boolean> {
+    const cookies = new Cookies(context.req, context.res)
+    const renthub_token = cookies.get('TGCookie')
+    // If token is present, throw error
+    if (renthub_token) {
+      throw new Error('already connected')
+    }
+    // Find user by email
+    const user = await User.findOne({ where: { email } })
+    if (!user) {
+      return true
+    }
+
+    // Generate & save token
+    const token = new UserToken()
+    token.user = user
+    token.createdAt = new Date()
+    token.expiresAt = addDays(new Date(), 1)
+    token.token = uuidv4()
+
+    await token.save()
+
+    // Send email
+    await resetPasswordEmail(user.email, user.nickName, token)
+
+    return true
+  }
+
+  // RESET PASSWORD
+  @Mutation(() => Boolean)
+  async setPassword(
+    @Arg('token') token: string,
+    @Arg('password') password: string
+  ): Promise<boolean> {
+    // Find token + user
+    const userToken = await UserToken.findOne({
+      where: { token },
+      relations: { user: true },
+    })
+
+    if (!userToken) {
+      throw new Error('invalid token')
+    }
+
+    // check token validity
+    if (isBefore(new Date(userToken.expiresAt), new Date())) {
+      throw new Error('expired token')
+    }
+
+    // Check new password validity
+    await UserServices.validatePassword(password)
+
+    // Hash password
+    userToken.user.hashedPassword = await UserServices.hashPassword(password)
+
+    // Save user
+    await userToken.user.save()
+
+    // Remove token
+    await userToken.remove()
+
+    return true
   }
 
   // SIGNOUT
@@ -300,27 +379,20 @@ export class UsersResolver {
 
   // DELETE
   @Authorized('ADMIN', 'USER')
-  @Mutation(() => User, { nullable: true })
+  @Mutation(() => String)
   async userDelete(
     @Ctx() context: MyContext,
     @Arg('id', () => ID) id: number
   ): Promise<string> {
-    const user = await User.findOne({
-      where: { id },
-      relations: { ads: true, picture: true },
-    })
-    if (
-      user &&
-      (user.id === context.user?.id || context.user?.role === 'ADMIN')
-    ) {
-      const pictureId = user.picture?.id
-      await user.remove()
-      if (pictureId) {
-        await deletePicture(pictureId)
+    try {
+      const user = await UserServices.findUserById(id)
+      return await UserServices.deleteUser(user, context)
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message)
+      } else {
+        throw new Error('An unknown error occurred')
       }
-      return `User with id: ${id} deleted`
-    } else {
-      throw new Error(`Error delete user`)
     }
   }
 }
