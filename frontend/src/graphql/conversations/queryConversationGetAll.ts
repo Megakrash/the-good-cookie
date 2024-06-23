@@ -11,18 +11,12 @@ export const queryConversationGetAll = gql`
       user1 {
         id
         nickName
-        picture {
-          id
-          filename
-        }
+        picture
       }
       user2 {
         id
         nickName
-        picture {
-          id
-          filename
-        }
+        picture
       }
       messages {
         content
