@@ -9,7 +9,6 @@ FROM node:18.18.2-alpine3.18 AS dev
 WORKDIR /app
 COPY package.json .
 COPY --from=deps /app/node_modules node_modules 
-COPY public public
 COPY src src
 COPY tsconfig.json tsconfig.json
 CMD npm start
@@ -19,7 +18,6 @@ FROM node:18.18.2-alpine3.18 AS build
 WORKDIR /app
 COPY package.json .
 COPY --from=deps /app/node_modules node_modules 
-COPY public public
 COPY . .
 RUN npm run build
 
@@ -29,6 +27,5 @@ WORKDIR /app
 COPY --from=deps /app/node_modules node_modules
 COPY --from=build /app/dist dist
 COPY --from=build /app/package.json .
-COPY public public
 RUN npm install --only=production
 CMD node dist/index.js
