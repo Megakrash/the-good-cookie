@@ -28,8 +28,7 @@ import {
   sendConfirmationEmail,
   sendVerificationEmail,
 } from '../utils/mailServices/verificationEmail'
-import { PicturesServices } from '../services/Pictures.services'
-import { deletePicture } from '../utils/pictureServices/pictureServices'
+import { deletePicture } from '../utils/picturesServices/deletePicture'
 
 @Resolver(User)
 export class UsersResolver {
@@ -50,14 +49,6 @@ export class UsersResolver {
       // Create new user entity with picture & hash password
       const newUser = new User()
       Object.assign(newUser, data)
-
-      // Add picture to user
-      if (data.pictureId) {
-        const picture = await PicturesServices.findPictureById(data.pictureId)
-        if (picture) {
-          newUser.picture = picture
-        }
-      }
 
       // Hash password
       newUser.hashedPassword = await UserServices.hashPassword(data.password)
@@ -98,6 +89,10 @@ export class UsersResolver {
         throw new Error('Unauthorized')
       }
 
+      if (data.picture && data.picture !== user.picture) {
+        await deletePicture(user.picture)
+      }
+
       // Update user with his ads
       if (data.ads) {
         data.ads = data.ads.map((entry) => {
@@ -106,18 +101,6 @@ export class UsersResolver {
           )
           return existingRelation || entry
         })
-      }
-
-      // Update user with his picture
-      let oldPictureId: number | null = null
-      if (data.pictureId && user.picture?.id) {
-        oldPictureId = user.picture.id
-        const newPicture = await PicturesServices.findPictureById(
-          data.pictureId
-        )
-        if (newPicture) {
-          user.picture = newPicture
-        }
       }
 
       // Update user with new data
@@ -129,11 +112,6 @@ export class UsersResolver {
       await UserServices.validateUser(user)
       // Save user
       await user.save()
-
-      // Delete old picture
-      if (oldPictureId) {
-        await deletePicture(oldPictureId)
-      }
 
       // Return updated user
       const userUpdated = await UserServices.findUserById(id)

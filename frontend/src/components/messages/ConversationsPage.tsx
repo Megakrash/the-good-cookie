@@ -13,6 +13,7 @@ const ConversationsPage: React.FC<ConversationsPageProps> = ({
   return (
     <Grid
       container
+      item
       xs={11}
       sm={10}
       md={10}

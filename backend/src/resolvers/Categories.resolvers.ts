@@ -15,8 +15,8 @@ import {
 } from '../entities/Category'
 import { MyContext } from '../types/Users.types'
 import { CategoriesServices } from '../services/Categories.services'
-import { PicturesServices } from '../services/Pictures.services'
 import { IsNull } from 'typeorm'
+import { deletePicture } from '../utils/picturesServices/deletePicture'
 
 @Resolver(Category)
 export class CategoriesResolver {
@@ -45,14 +45,6 @@ export class CategoriesResolver {
     Object.assign(newCategory, data)
     newCategory.createdBy = context.user
     newCategory.updatedBy = context.user
-
-    // Assign picture to new Category
-    if (data.pictureId) {
-      const picture = await PicturesServices.findPictureById(data.pictureId)
-      if (picture) {
-        newCategory.picture = picture
-      }
-    }
 
     // Validate and save new Category
     const errors = await validate(newCategory)
@@ -87,6 +79,9 @@ export class CategoriesResolver {
       throw new Error('Category not found')
     }
 
+    if (data.picture !== category.picture) {
+      await deletePicture(category.picture)
+    }
     // Update Category with new data
     Object.assign(category, data)
     category.updatedBy = context.user
@@ -155,9 +150,8 @@ export class CategoriesResolver {
     const category = await Category.findOne({
       where: { id },
       relations: {
-        picture: true,
         parentCategory: { parentCategory: true },
-        childCategories: { ads: true, picture: true, childCategories: true },
+        childCategories: { ads: true, childCategories: true },
         createdBy: true,
         updatedBy: true,
       },
@@ -179,6 +173,9 @@ export class CategoriesResolver {
       relations: { childCategories: true },
     })
     if (category) {
+      if (category.picture) {
+        await deletePicture(category.picture)
+      }
       await category.remove()
       category.id = id
     }

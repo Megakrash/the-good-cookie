@@ -5,10 +5,7 @@ export const queryCatByIdWithParents = gql`
     item: categoryById(id: $categoryByIdId) {
       id
       name
-      picture {
-        id
-        filename
-      }
+      picture
       parentCategory {
         id
         name
@@ -20,10 +17,7 @@ export const queryCatByIdWithParents = gql`
       childCategories {
         id
         name
-        picture {
-          id
-          filename
-        }
+        picture
       }
     }
   }

@@ -1,5 +1,4 @@
 import { CategoryTypes } from "./CategoryTypes";
-import { PictureType } from "./PictureTypes";
 import { UserTypes } from "./UserTypes";
 
 export type AdTypes = {
@@ -9,7 +8,7 @@ export type AdTypes = {
   price: number;
   createdAt: string;
   updatedAt: string;
-  picture: PictureType;
+  picture: string;
   zipCode: string;
   city: string;
   location: {
@@ -37,7 +36,7 @@ export type AdCreateFormData = {
   zipCode: string;
   city: string;
   location: { type: string; coordinates: [number, number] };
-  pictureId: number;
+  picture: string;
   price: number;
   category: { id: number } | null;
   tags?: AdTags | null;
@@ -49,7 +48,7 @@ export type AdUpdateFormData = {
   zipCode?: string;
   city?: string;
   location?: { type: string; coordinates: [number, number] };
-  pictureId?: number;
+  picture?: string;
   price?: number;
   category?: { id: number } | null;
   tags?: AdTags | null;

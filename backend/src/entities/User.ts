@@ -3,8 +3,6 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
   CreateDateColumn,
   ManyToOne,
   UpdateDateColumn,
@@ -26,7 +24,6 @@ import {
 } from 'type-graphql'
 import { Ad } from './Ad'
 import { ObjectId } from './ObjectId'
-import { Picture } from './Picture'
 import { Message } from './Message'
 import { GenderEnum, ProfilEnum, RoleEnum } from '../types/Users.types'
 import { PointInput, PointType } from './Geolocation'
@@ -172,6 +169,11 @@ export class User extends BaseEntity {
   @Field()
   isVerified!: boolean
 
+  // Picture
+  @Column({ length: 250 })
+  @Field({ nullable: true })
+  picture!: string
+
   // ---------- INFOS ----------
 
   @CreateDateColumn({ type: 'timestamp' })
@@ -195,12 +197,6 @@ export class User extends BaseEntity {
   lastConnectionDate!: Date
 
   // ---------- RELATIONS ----------
-
-  // Picture
-  @OneToOne(() => Picture, { cascade: true, nullable: true, eager: true })
-  @JoinColumn()
-  @Field(() => Picture, { nullable: true })
-  picture!: Picture
 
   // Ads
   @OneToMany(() => Ad, (ad) => ad.user, { eager: true })
@@ -246,7 +242,7 @@ export class UserCreateInput {
   nickName!: string
 
   @Field({ nullable: true })
-  pictureId?: number
+  picture!: string
 
   @Field()
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+]{8,}$/, {
@@ -298,7 +294,7 @@ export class UserUpdateInput {
   nickName!: string
 
   @Field({ nullable: true })
-  pictureId?: number
+  picture!: string
 
   @Field({ nullable: true })
   adress!: string
@@ -351,8 +347,8 @@ export class UserContext {
   @Field()
   nickName!: string
 
-  @Field(() => Picture, { nullable: true })
-  picture!: Picture
+  @Field({ nullable: true })
+  picture!: string
 
   @Field()
   role!: string
@@ -411,8 +407,8 @@ export class MeUser {
   @Field(() => Date, { nullable: true })
   lastConnectionDate!: Date
 
-  @Field(() => Picture, { nullable: true })
-  picture!: Picture
+  @Field({ nullable: true })
+  picture!: string
 
   @Field(() => [Ad])
   ads!: Ad[]

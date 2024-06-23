@@ -5,12 +5,9 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   ManyToOne,
-  OneToOne,
-  JoinColumn,
 } from 'typeorm'
 import { Field, ID, InputType, ObjectType } from 'type-graphql'
 import { ObjectId } from './ObjectId'
-import { Picture } from './Picture'
 import { Ad } from './Ad'
 
 //-------------------------------
@@ -30,10 +27,9 @@ export class Category extends PrimaryEntity {
   name!: string
 
   // Picture
-  @OneToOne(() => Picture, { cascade: true, nullable: true })
-  @JoinColumn()
-  @Field(() => Picture, { nullable: true })
-  picture!: Picture
+  @Column({ length: 150, nullable: true })
+  @Field({ nullable: true })
+  picture!: string
 
   // Ads
   @OneToMany(() => Ad, (ad) => ad.category)
@@ -65,7 +61,7 @@ export class CategoryCreateInput {
   name!: string
 
   @Field({ nullable: true })
-  pictureId?: number
+  picture?: string
 
   @Field(() => ObjectId, { nullable: true })
   parentCategory!: ObjectId
@@ -81,7 +77,7 @@ export class CategoryUpdateInput {
   name!: string
 
   @Field({ nullable: true })
-  pictureId?: number
+  picture!: string
 
   @Field(() => ObjectId, { nullable: true })
   parentCategory!: ObjectId

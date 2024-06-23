@@ -34,7 +34,7 @@ export type UserFormData = {
   lastName: string;
   nickName: string;
   password: string;
-  pictureId?: number;
+  picture: string;
   adress?: string;
   zipCode?: string;
   city?: string;
@@ -48,10 +48,7 @@ export type UserTypes = {
   lastName: string;
   nickName: string;
   email: string;
-  picture: {
-    id: number;
-    filename: string;
-  };
+  picture: string;
   adress?: string;
   zipCode: string;
   city: string;
@@ -66,8 +63,5 @@ export type UserContextTypes = {
   id: number;
   nickName: string;
   role: string;
-  picture: {
-    id: number;
-    filename: string;
-  };
+  picture: string;
 };
