@@ -5,7 +5,7 @@ import { createClient } from "graphql-ws";
 import { API_URL, WS_URL } from "../api/configApi";
 
 const httpLink = new HttpLink({
-  uri: API_URL || "/api/",
+  uri: API_URL,
   credentials: "include",
   headers: {
     "apollo-require-preflight": "true",
@@ -14,7 +14,7 @@ const httpLink = new HttpLink({
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: WS_URL || "ws://localhost:5000/",
+    url: WS_URL,
   }),
 );
 

@@ -11,7 +11,7 @@ export const MIDDLEWARE_URL =
 export const PATH_IMAGE =
   process.env.NODE_ENV === "development"
     ? "http://localhost:5005/pictures/"
-    : process.env.PATH_IMAGE || "https://s3.megakrash.fr/pictures/";
+    : process.env.PATH_IMAGE;
 export const RECAPTCHA_SITE_KEY: string =
   process.env.NODE_ENV === "development"
     ? "6LctKSQpAAAAAOdHh-YB8K9XDvf93Qeko1r5nfRl"
