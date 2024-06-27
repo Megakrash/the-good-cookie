@@ -103,11 +103,9 @@ export class AdsResolver {
       const query = Ad.createQueryBuilder('ad')
 
       // Join relations with unique aliases
-      query.leftJoinAndSelect('ad.picture', 'picture')
       query.leftJoinAndSelect('ad.category', 'category')
       query.leftJoinAndSelect('category.parentCategory', 'parentCategory')
       query.leftJoinAndSelect('ad.user', 'user')
-      query.leftJoinAndSelect('user.picture', 'userPicture')
       query.leftJoinAndSelect('ad.tags', 'tags')
 
       // Filter by subCategory
