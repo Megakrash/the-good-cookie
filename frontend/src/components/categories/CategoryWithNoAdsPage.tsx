@@ -12,7 +12,16 @@ const CategoryWithNoAdsPage: React.FC<CategoryWithAdsPageProps> = ({
 }) => {
   return (
     <Box sx={{ width: "95%", margin: "auto", marginTop: 2 }}>
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "16px",
+          marginTop: 3,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         {category.childCategories.map((childCategory) => (
           <CategoryCard key={childCategory.id} category={childCategory} />
         ))}
