@@ -23,10 +23,7 @@ import { WebSocketServer } from 'ws'
 import express, { Request, Response } from 'express'
 import http from 'http'
 import cors from 'cors'
-import path from 'path'
-import axios from 'axios'
-import { verifyRecaptchaToken } from './utils/reCaptcha'
-import { sendContactEmail } from './utils/mailServices/contactEmail'
+import { middleware } from './routes'
 
 //-----------------------------------------
 // -------------- SERVER ------------------
@@ -40,26 +37,7 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 app.use(express.json({ limit: '50mb' }))
-app.use(
-  '/api/assets/images',
-  express.static(path.join(__dirname, '../public/assets/images'))
-)
-// Api search adress.gouv
-app.get('/api/search-address', async (req: Request, res: Response) => {
-  try {
-    const query = req.query.q
-    const response = await axios.get(
-      `https://api-adresse.data.gouv.fr/search/?q=city=${query}&limit=5`
-    )
-    res.json(response.data)
-  } catch (error) {
-    console.error('Error API request:', error)
-    res.status(500).send('Server error.')
-  }
-})
 
-// Contact email
-app.post('/api/sendcontactemail', verifyRecaptchaToken, sendContactEmail)
 const httpServer = http.createServer(app)
 
 async function start() {
@@ -120,7 +98,7 @@ async function start() {
         },
       })(req, res, next)
   })
-
+  middleware(app)
   await new Promise<void>((resolve) => httpServer.listen({ port }, resolve))
   console.log(`🚀 Server ready at port ${port} 🚀`)
 }
