@@ -98,10 +98,20 @@ const CategoryDataGrid: React.FC<CategoryDataGridProps> = ({ categories }) => {
         renderCell: (params: GridRenderCellParams) =>
           params.value ? (
             <CheckCircleIcon
-              style={{ color: successColor, marginTop: "15px" }}
+              style={{
+                color: successColor,
+                marginTop: "15px",
+                marginLeft: "10px",
+              }}
             />
           ) : (
-            <CancelIcon style={{ color: errorColor, marginTop: "15px" }} />
+            <CancelIcon
+              style={{
+                color: errorColor,
+                marginTop: "15px",
+                marginLeft: "10px",
+              }}
+            />
           ),
       },
       {
