@@ -7,9 +7,6 @@ import { API_URL, WS_URL } from "../api/configApi";
 const httpLink = new HttpLink({
   uri: API_URL,
   credentials: "include",
-  headers: {
-    "apollo-require-preflight": "true",
-  },
 });
 
 const wsLink = new GraphQLWsLink(
