@@ -132,11 +132,7 @@ const AdPage: React.FC<AdPageProps> = ({ ad }) => {
           }}
         >
           <UserCard user={ad.user} />
-          <BuyContactCard
-            ad={ad}
-            setShowChat={setShowChat}
-            showChat={showChat}
-          />
+          <BuyContactCard ad={ad} />
           {showChat && <Chat receiverId={ad.user.id} adId={ad.id} />}
         </Box>
       </Grid>
