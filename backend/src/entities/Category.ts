@@ -26,6 +26,11 @@ export class Category extends PrimaryEntity {
   @Field()
   name!: string
 
+  // Display
+  @Column({ nullable: true, default: true })
+  @Field(() => Boolean, { nullable: true })
+  display!: boolean
+
   // Picture
   @Column({ length: 150, nullable: true })
   @Field({ nullable: true })
@@ -60,8 +65,11 @@ export class CategoryCreateInput {
   @Field()
   name!: string
 
+  @Field(() => Boolean, { nullable: true })
+  display!: boolean
+
   @Field({ nullable: true })
-  picture?: string
+  picture!: string
 
   @Field(() => ObjectId, { nullable: true })
   parentCategory!: ObjectId
@@ -75,6 +83,9 @@ export class CategoryCreateInput {
 export class CategoryUpdateInput {
   @Field({ nullable: true })
   name!: string
+
+  @Field(() => Boolean, { nullable: true })
+  display!: boolean
 
   @Field({ nullable: true })
   picture!: string

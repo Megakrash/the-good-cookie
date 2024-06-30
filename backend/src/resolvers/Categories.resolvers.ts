@@ -98,11 +98,12 @@ export class CategoriesResolver {
   }
 
   // GET ALL
+  @Authorized('ADMIN')
   @Query(() => [Category])
   async categoriesGetAll(): Promise<Category[]> {
     const categories = await Category.find({
       relations: {
-        ads: true,
+        parentCategory: true,
         childCategories: { ads: true },
         createdBy: true,
         updatedBy: true,
@@ -116,7 +117,7 @@ export class CategoriesResolver {
   @Query(() => [Category])
   async categoriesGetaLLRoot(): Promise<Category[]> {
     const rootCategories = await Category.find({
-      where: { parentCategory: IsNull() },
+      where: { parentCategory: IsNull(), display: true },
       relations: {
         ads: true,
         createdBy: true,
@@ -132,7 +133,7 @@ export class CategoriesResolver {
   async categoriesGetAllWithHierarchy(): Promise<Category[]> {
     // Fetch all root categories with their full hierarchy
     const rootCategories = await Category.find({
-      where: { parentCategory: IsNull() },
+      where: { parentCategory: IsNull(), display: true },
       relations: {
         childCategories: {
           childCategories: true,
