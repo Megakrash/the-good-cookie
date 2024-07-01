@@ -27,7 +27,7 @@ export class Category extends PrimaryEntity {
   name!: string
 
   // Display
-  @Column({ nullable: true, default: true })
+  @Column({ nullable: true, default: false })
   @Field(() => Boolean, { nullable: true })
   display!: boolean
 
