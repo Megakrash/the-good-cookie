@@ -39,12 +39,17 @@ const CategoryDataGrid: React.FC<CategoryDataGridProps> = ({ categories }) => {
   }));
 
   const handleEditClick = (id: string) => {
-    router.push(`/renthub-backoffice/categories/edit/${id}`);
+    router.push(`/tgc-backoffice/categories/${id}`);
   };
 
   const columns: GridColDef[] = useMemo(
     () => [
-      { field: "name", headerName: "Nom", width: 150, sortable: true },
+      {
+        field: "name",
+        headerName: "Nom",
+        width: 150,
+        sortable: true,
+      },
       {
         field: "parentCategory",
         headerName: "Catégorie parente",
