@@ -169,7 +169,7 @@ describe("SignIn test component & toast", () => {
       expect(toast).toHaveBeenCalledWith(
         "Connexion réussie, bienvenue John",
         expect.objectContaining({
-          style: { background: "#4caf50", color: "white" },
+          style: { background: "#4caf50", color: "#ffffff" },
         }),
       );
     });
@@ -188,7 +188,7 @@ describe("SignIn test component & toast", () => {
       expect(toast).toHaveBeenCalledWith(
         "Email ou mot de passe incorrect",
         expect.objectContaining({
-          style: { background: "#f44336", color: "white" },
+          style: { background: "#f44336", color: "#ffffff" },
         }),
       );
     });
@@ -206,7 +206,7 @@ describe("SignIn test component & toast", () => {
       expect(toast).toHaveBeenCalledWith(
         "Erreur de connexion, veuillez réessayer",
         expect.objectContaining({
-          style: { background: "#f44336", color: "white" },
+          style: { background: "#f44336", color: "#ffffff" },
         }),
       );
     });

@@ -5,6 +5,17 @@ export const queryAllCategories = gql`
     items: categoriesGetAll {
       id
       name
+      parentCategory {
+        id
+        name
+      }
+      childCategories {
+        id
+        name
+      }
+      createdAt
+      updatedAt
+      display
     }
   }
 `;
