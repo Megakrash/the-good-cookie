@@ -15,7 +15,7 @@ export type AdTypes = {
     coordinates: [number, number];
   };
   tags: {
-    id: number;
+    id: string;
     name: string;
   }[];
   user: UserTypes;
