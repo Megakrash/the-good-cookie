@@ -10,9 +10,9 @@ import { showToast } from "../utils/toastHelper";
 import ChatCard from "./ChatCard";
 
 type ChatProps = {
-  receiverId: number;
-  adId: number;
-  conversationId?: number;
+  receiverId: string;
+  adId: string;
+  conversationId?: string;
 };
 
 const Chat = (props: ChatProps): React.ReactNode => {

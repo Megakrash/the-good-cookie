@@ -18,8 +18,7 @@ import SelfImprovementIcon from "@mui/icons-material/SelfImprovement";
 import { VariablesColors } from "./Variables.colors";
 
 const colors = new VariablesColors();
-const { colorLightGrey, colorDarkGrey, colorWhite, colorOrange, successColor } =
-  colors;
+const { colorLightGrey, colorDarkGrey, colorOrange } = colors;
 
 const iconList = {
   pro: EngineeringIcon,

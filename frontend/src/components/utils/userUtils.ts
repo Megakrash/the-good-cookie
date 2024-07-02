@@ -5,7 +5,7 @@ export function selectOtherUser(
   conversation: ConversationTypes,
   user: UserContextTypes,
 ) {
-  if (Number(conversation.user1.id) !== Number(user.id)) {
+  if (conversation.user1.id !== user.id) {
     return conversation.user1;
   }
   return conversation.user2;

@@ -15,7 +15,7 @@ import { uploadPicture } from "@/components/utils/uploadPicture";
 const CreateCategories = (): React.ReactNode => {
   // State
   const [name, setName] = useState<string>("");
-  const [parentCategory, setParentCategory] = useState<number | null>(null);
+  const [parentCategory, setParentCategory] = useState<string | null>(null);
   const [picture, setPicture] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   // Form validation

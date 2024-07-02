@@ -34,7 +34,7 @@ const UpdateCategories: React.FC<UpdateCategoryProps> = ({ category }) => {
   // State
   const [name, setName] = useState<string>("");
   const [display, setDisplay] = useState<boolean | null>(null);
-  const [parentCategory, setParentCategory] = useState<number | null>(null);
+  const [parentCategory, setParentCategory] = useState<string | null>(null);
   const [curentPicture, setCurentPicture] = useState<string | null>(null);
   const [picture, setPicture] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);

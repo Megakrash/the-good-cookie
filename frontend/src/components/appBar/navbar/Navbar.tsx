@@ -26,14 +26,14 @@ const Navbar = (): React.ReactNode => {
   const [anchorElMenu, setAnchorElMenu] = useState<HTMLButtonElement | null>(
     null,
   );
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null,
   );
 
   // Open menu
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement>,
-    categoryId: number,
+    categoryId: string,
   ) => {
     setAnchorElMenu(event.currentTarget);
     setSelectedCategoryId(categoryId);

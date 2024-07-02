@@ -1,11 +1,5 @@
-import LayoutFull from "@/components/layout/LayoutFull";
-import { AdTypes } from "@/types/AdTypes";
-import AdForm from "@/components/ads/adForm/AdForm";
-import AdCard from "@/components/ads/AdCard";
-import { queryAdById } from "@/graphql/ads/queryAdById";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { Box, Typography } from "@mui/material";
 import AdminProtection from "@/components/backoffice/AdminProtection";
 import UpdateCategory from "@/components/backoffice/categories/update/UpdateCategory";
 import { CategoryTypes } from "@/types/CategoryTypes";

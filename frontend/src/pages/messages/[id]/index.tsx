@@ -10,9 +10,9 @@ const ChatPage = (): React.ReactNode => {
     <LayoutFull title="TGC : Conversation">
       {id && ad && receiver && (
         <Chat
-          conversationId={Number(id)}
-          adId={Number(ad)}
-          receiverId={Number(receiver)}
+          conversationId={id as string}
+          adId={ad as string}
+          receiverId={receiver as string}
         />
       )}
     </LayoutFull>
