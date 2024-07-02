@@ -2,7 +2,7 @@ import { CategoryTypes } from "./CategoryTypes";
 import { UserTypes } from "./UserTypes";
 
 export type AdTypes = {
-  id: number;
+  id: string;
   title: string;
   description: string;
   price: number;
@@ -27,7 +27,7 @@ export type AdsTypes = AdTypes[];
 export type Tag = {
   id: string;
 };
-export type AdTag = { id: number };
+export type AdTag = { id: string };
 export type AdTags = AdTag[];
 
 export type AdCreateFormData = {
@@ -38,7 +38,7 @@ export type AdCreateFormData = {
   location: { type: string; coordinates: [number, number] };
   picture: string;
   price: number;
-  category: { id: number } | null;
+  category: { id: string } | null;
   tags?: AdTags | null;
 };
 
@@ -50,6 +50,6 @@ export type AdUpdateFormData = {
   location?: { type: string; coordinates: [number, number] };
   picture?: string;
   price?: number;
-  category?: { id: number } | null;
+  category?: { id: string } | null;
   tags?: AdTags | null;
 };

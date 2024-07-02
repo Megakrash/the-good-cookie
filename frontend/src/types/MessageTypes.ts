@@ -2,17 +2,17 @@ import { AdTypes } from "./AdTypes";
 import { ConversationTypes } from "./ConversationTypes";
 
 export type MessageTypes = {
-  id: number;
+  id: string;
   ad: AdTypes;
   content: string;
   conversation: ConversationTypes;
   createdAt: string;
   receiver: {
-    id: number;
+    id: string;
     nickName: string;
   };
   sender: {
-    id: number;
+    id: string;
     nickName: string;
   };
 };
