@@ -17,7 +17,7 @@ export class UserServices {
   // ------- FIND USER ------------
   // ------------------------------
   // Find user by id
-  static async findUserById(id: number): Promise<User> {
+  static async findUserById(id: string): Promise<User> {
     const user = await User.findOne({ where: { id } })
     if (!user) {
       throw new Error('User not found')

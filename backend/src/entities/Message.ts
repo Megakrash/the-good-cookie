@@ -6,6 +6,7 @@ import {
   BaseEntity,
   CreateDateColumn,
   JoinColumn,
+  Unique,
 } from 'typeorm'
 import { Field, ID, InputType, ObjectType } from 'type-graphql'
 import { ObjectId } from './ObjectId'
@@ -19,10 +20,11 @@ import { Ad } from './Ad'
 
 @Entity()
 @ObjectType()
+@Unique(['id'])
 export class Message extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
-  id!: number
+  id!: string
 
   // Content
   @Column()
@@ -82,8 +84,8 @@ export class MessageGetConversationInput {
   conversation?: ObjectId
 
   @Field({ nullable: true })
-  userId1?: number
+  userId1?: string
 
   @Field({ nullable: true })
-  userId2?: number
+  userId2?: string
 }

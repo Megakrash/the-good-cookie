@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BaseEntity,
+  Unique,
 } from 'typeorm'
 import { Field, ID, ObjectType } from 'type-graphql'
 import { User } from './User'
@@ -14,10 +15,11 @@ import { Ad } from './Ad'
 
 @Entity()
 @ObjectType()
+@Unique(['id'])
 export class Conversation extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
-  id!: number
+  id!: string
 
   // Relations
   @ManyToOne(() => User, (user) => user.conversations)

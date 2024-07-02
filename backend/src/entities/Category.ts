@@ -5,6 +5,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   ManyToOne,
+  Unique,
 } from 'typeorm'
 import { Field, ID, InputType, ObjectType } from 'type-graphql'
 import { ObjectId } from './ObjectId'
@@ -16,10 +17,11 @@ import { Ad } from './Ad'
 
 @Entity()
 @ObjectType()
+@Unique(['id'])
 export class Category extends PrimaryEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
-  id!: number
+  id!: string
 
   // Name
   @Column({ length: 100 })

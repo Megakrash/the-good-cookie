@@ -51,7 +51,7 @@ export class AdsResolver {
   @Mutation(() => Ad, { nullable: true })
   async AdUpdate(
     @Ctx() context: MyContext,
-    @Arg('id', () => ID) id: number,
+    @Arg('id', () => ID) id: string,
     @Arg('data') data: AdUpdateInput
   ): Promise<Ad | null> {
     // Check if user is authenticated
@@ -166,7 +166,7 @@ export class AdsResolver {
 
   // GET BY ID
   @Query(() => Ad)
-  async adById(@Arg('id', () => ID) id: number): Promise<Ad> {
+  async adById(@Arg('id', () => ID) id: string): Promise<Ad> {
     const ad = await Ad.findOne({
       where: { id },
       relations: {
@@ -183,7 +183,7 @@ export class AdsResolver {
 
   // GET BY USER
   @Query(() => [Ad])
-  async adsByUser(@Arg('id', () => ID) id: number): Promise<Ad[]> {
+  async adsByUser(@Arg('id', () => ID) id: string): Promise<Ad[]> {
     const ads = await Ad.find({
       where: { user: { id } },
       relations: { user: true, category: true, tags: true },
@@ -201,7 +201,7 @@ export class AdsResolver {
   @Mutation(() => Ad, { nullable: true })
   async adDelete(
     @Ctx() context: MyContext,
-    @Arg('id', () => ID) id: number
+    @Arg('id', () => ID) id: string
   ): Promise<Ad | null> {
     const ad = await Ad.findOne({
       where: { id },

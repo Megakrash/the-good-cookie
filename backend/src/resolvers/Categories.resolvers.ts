@@ -59,7 +59,7 @@ export class CategoriesResolver {
   @Authorized('ADMIN')
   @Mutation(() => Category, { nullable: true })
   async categoryUpdate(
-    @Arg('id', () => ID) id: number,
+    @Arg('id', () => ID) id: string,
     @Arg('data') data: CategoryUpdateInput,
     @Ctx() context: MyContext
   ): Promise<Category | null> {
@@ -147,7 +147,7 @@ export class CategoriesResolver {
 
   // GET BY ID
   @Query(() => Category)
-  async categoryById(@Arg('id', () => ID) id: number): Promise<Category> {
+  async categoryById(@Arg('id', () => ID) id: string): Promise<Category> {
     const category = await Category.findOne({
       where: { id },
       relations: {
@@ -167,7 +167,7 @@ export class CategoriesResolver {
   @Authorized('ADMIN')
   @Mutation(() => Category, { nullable: true })
   async categoryDelete(
-    @Arg('id', () => ID) id: number
+    @Arg('id', () => ID) id: string
   ): Promise<Category | null> {
     const category = await Category.findOne({
       where: { id },

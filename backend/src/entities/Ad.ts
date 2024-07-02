@@ -8,6 +8,7 @@ import {
   Index,
   ManyToMany,
   JoinTable,
+  Unique,
 } from 'typeorm'
 import { Length, IsInt, IsNumberString } from 'class-validator'
 import { Field, ID, InputType, ObjectType, Int } from 'type-graphql'
@@ -22,13 +23,14 @@ import { Category } from './Category'
 //-------------------------------
 @Entity()
 @ObjectType()
+@Unique(['id'])
 export class Ad extends PrimaryEntity {
   //------------ FIELDS -----------
 
   // ID
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
-  id!: number
+  id!: string
 
   // Title
   @Column({ length: 100 })

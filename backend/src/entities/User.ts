@@ -7,6 +7,7 @@ import {
   ManyToOne,
   UpdateDateColumn,
   BaseEntity,
+  Unique,
 } from 'typeorm'
 import {
   IsEmail,
@@ -46,13 +47,14 @@ registerEnumType(GenderEnum, {
 //-------------------------------
 @Entity()
 @ObjectType()
+@Unique(['id'])
 export class User extends BaseEntity {
   //------------ FIELDS -----------
 
   // ID
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
-  id!: number
+  id!: string
 
   // Email
   @Column({ length: 255, unique: true })
@@ -342,7 +344,7 @@ export class UserLoginInput {
 @ObjectType()
 export class UserContext {
   @Field()
-  id!: number
+  id!: string
 
   @Field()
   nickName!: string
@@ -360,7 +362,7 @@ export class UserContext {
 @ObjectType()
 export class MeUser {
   @Field(() => ID)
-  id!: number
+  id!: string
 
   @Field()
   email!: string

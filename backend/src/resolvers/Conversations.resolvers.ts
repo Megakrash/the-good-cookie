@@ -32,7 +32,7 @@ export class ConversationsResolver {
   // GET BY ID
   @Query(() => Conversation)
   async conversationById(
-    @Arg('id', () => ID) id: number
+    @Arg('id', () => ID) id: string
   ): Promise<Conversation> {
     const conversation = await Conversation.findOne({
       where: { id },
