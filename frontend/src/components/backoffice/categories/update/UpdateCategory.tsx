@@ -80,7 +80,6 @@ const UpdateCategories: React.FC<UpdateCategoryProps> = ({ category }) => {
       });
       if ("id" in result.data?.item) {
         showToast("success", `Catégorie ${name} modifiée avec succès`);
-        router.push("/tgc-backoffice/categories");
       }
     } catch (error) {
       if (error.message === "Failed to fetch") {

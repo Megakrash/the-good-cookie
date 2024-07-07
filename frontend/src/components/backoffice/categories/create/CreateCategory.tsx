@@ -11,6 +11,7 @@ import { showToast } from "@/components/utils/toastHelper";
 import CategorySelect from "../../../utils/CategorySelect";
 import PictureDownload from "@/components/utils/PictureDownload";
 import { uploadPicture } from "@/components/utils/uploadPicture";
+import { queryAllCategories } from "@/graphql/categories/queryAllCategories";
 
 const CreateCategories = (): React.ReactNode => {
   // State
@@ -32,7 +33,10 @@ const CreateCategories = (): React.ReactNode => {
 
   // CREATE
   const [doCreate, { loading }] = useMutation(mutationCreateCategory, {
-    refetchQueries: [{ query: queryAllCatWithHierarchy }],
+    refetchQueries: [
+      { query: queryAllCatWithHierarchy },
+      { query: queryAllCategories },
+    ],
   });
 
   // SUBMIT
