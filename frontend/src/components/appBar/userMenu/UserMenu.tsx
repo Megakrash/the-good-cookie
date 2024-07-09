@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MessageIcon from "@mui/icons-material/Message";
-import { PATH_IMAGE } from "@/api/configApi";
 import { VariablesColors } from "@/styles/Variables.colors";
 import { useUserContext } from "@/context/UserContext";
 import UserSignInAndOut from "@/components/users/components/UserSignInAndOut";
@@ -44,7 +43,7 @@ const UserMenu = () => {
             alt="User avatar"
             src={
               user && user.picture
-                ? `${PATH_IMAGE}${user.picture}`
+                ? `${process.env.NEXT_PUBLIC_PATH_IMAGE}${user.picture}`
                 : "/images/default/avatar.webp"
             }
           />

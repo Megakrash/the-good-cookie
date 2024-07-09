@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { VariablesColors } from "@/styles/Variables.colors";
-import { PATH_IMAGE } from "@/api/configApi";
 
 const colors = new VariablesColors();
 const { colorOrange } = colors;
@@ -21,7 +20,7 @@ type CategoryCardProps = {
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
   // Path images
-  const adImageUrl = `${PATH_IMAGE}${category.picture}`;
+  const adImageUrl = `${process.env.NEXT_PUBLIC_PATH_IMAGE}${category.picture}`;
   return (
     <CardActionArea
       sx={{

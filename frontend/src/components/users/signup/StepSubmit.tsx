@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { RECAPTCHA_SITE_KEY } from "@/api/configApi";
 import { Grid, Typography } from "@mui/material";
 import { StepFormButton } from "@/styles/MuiButtons";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -48,7 +47,7 @@ const StepSubmit = (props: StepSubmitProps): React.ReactNode => {
         {`Si c'est bon pour vous, c'est bon pour nous !`}
       </Typography>
       <ReCAPTCHA
-        sitekey={RECAPTCHA_SITE_KEY}
+        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
         ref={captchaRef}
         onChange={handleCaptchaChange}
       />
