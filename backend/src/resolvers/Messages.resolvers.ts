@@ -184,7 +184,7 @@ export class MessagesResolver {
   })
   async newMessage(
     @Root() payload: Message,
-    @Arg('ad', () => ID) id: number
+    @Arg('ad', () => ID) id: string
   ): Promise<Message> {
     const adExist = await Ad.findOneBy({ id })
     if (!adExist) {

@@ -3,7 +3,7 @@ import { MessageTypes } from "./MessageTypes";
 import { UserTypes } from "./UserTypes";
 
 export type ConversationTypes = {
-  id: number;
+  id: string;
   ad: AdTypes;
   messages: MessageTypes[];
   user1: UserTypes;

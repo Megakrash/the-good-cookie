@@ -2,8 +2,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import BackOfficeInput from "../../components/BackOfficeInput";
 import { useMutation } from "@apollo/client";
-import { CategoryFormData } from "@/types/CategoryTypes";
-import { mutationCreateCategory } from "@/graphql/categories/mutationCreateCategory";
+import { CategoryFormData, CategoryTypes } from "@/types/CategoryTypes";
 import { queryAllCatWithHierarchy } from "@/graphql/categories/queryAllCatWithHierarchy";
 import { StepFormButton } from "@/styles/MuiButtons";
 import { Toaster } from "react-hot-toast";
@@ -11,12 +10,32 @@ import { showToast } from "@/components/utils/toastHelper";
 import CategorySelect from "../../../utils/CategorySelect";
 import PictureDownload from "@/components/utils/PictureDownload";
 import { uploadPicture } from "@/components/utils/uploadPicture";
+import router from "next/router";
+import { mutationUpdateCategory } from "@/graphql/categories/mutationUpdateCategory";
 import { queryAllCategories } from "@/graphql/categories/queryAllCategories";
+import DisplaySwitch from "@/components/utils/DisplaySwitch";
 
-const CreateCategories = (): React.ReactNode => {
+type UpdateCategoryProps = {
+  category: CategoryTypes;
+};
+
+const UpdateCategories: React.FC<UpdateCategoryProps> = ({ category }) => {
+  useEffect(() => {
+    if (category) {
+      setName(category.name);
+      setCurentPicture(category.picture ? category.picture : null);
+      setParentCategory(
+        category.parentCategory ? category.parentCategory.id : null,
+      );
+      setDisplay(category.display);
+    }
+  }, [category]);
+
   // State
   const [name, setName] = useState<string>("");
+  const [display, setDisplay] = useState<boolean | null>(null);
   const [parentCategory, setParentCategory] = useState<string | null>(null);
+  const [curentPicture, setCurentPicture] = useState<string | null>(null);
   const [picture, setPicture] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   // Form validation
@@ -32,7 +51,7 @@ const CreateCategories = (): React.ReactNode => {
   }, [name]);
 
   // CREATE
-  const [doCreate, { loading }] = useMutation(mutationCreateCategory, {
+  const [doUpdate, { loading }] = useMutation(mutationUpdateCategory, {
     refetchQueries: [
       { query: queryAllCatWithHierarchy },
       { query: queryAllCategories },
@@ -49,31 +68,24 @@ const CreateCategories = (): React.ReactNode => {
       }
       const data: CategoryFormData = {
         name: name,
+        display: display,
         parentCategory: parentCategory ? { id: parentCategory } : null,
-        picture: filename ? filename : null,
+        picture: filename ? filename : curentPicture,
       };
-      const result = await doCreate({
+      const result = await doUpdate({
         variables: {
           data,
+          categoryUpdateId: category.id,
         },
       });
       if ("id" in result.data?.item) {
-        showToast("success", `Catégorie ${name} créée avec succès`);
-        setName("");
-        setParentCategory(null);
-        setPicture(null);
-        setPreviewUrl(null);
+        showToast("success", `Catégorie ${name} modifiée avec succès`);
       }
     } catch (error) {
-      if (error.message === "Category name already in use") {
-        showToast("error", `La catégorie ${name} existe déjà`);
-        setName("");
-        setParentCategory(null);
-      }
       if (error.message === "Failed to fetch") {
         showToast("error", "Erreur de connexion, veuillez réessayer");
       } else {
-        showToast("error", "Erreur pendant la création de la catégorie");
+        showToast("error", "Erreur pendant la mise à jour de la catégorie");
       }
     }
   }
@@ -97,7 +109,7 @@ const CreateCategories = (): React.ReactNode => {
         gutterBottom
         mt={2}
       >
-        Ajouter une catégorie
+        Modifier une catégorie
       </Typography>
       <BackOfficeInput data={name} setData={setName} label="Nom" />
       <CategorySelect
@@ -105,17 +117,20 @@ const CreateCategories = (): React.ReactNode => {
         selectedCategory={parentCategory}
         setSelectedCategory={setParentCategory}
       />
+      <DisplaySwitch display={display} setDisplay={setDisplay} />
       <PictureDownload
         picture={picture}
         setPicture={setPicture}
         previewUrl={previewUrl}
         setPreviewUrl={setPreviewUrl}
+        curentPicture={curentPicture}
+        setCurentPicture={setCurentPicture}
       />
       <StepFormButton disabled={!isFormValid}>
-        {loading ? <CircularProgress size={24} /> : "Créer"}
+        {loading ? <CircularProgress size={24} /> : "Modifier"}
       </StepFormButton>
     </Box>
   );
 };
 
-export default CreateCategories;
+export default UpdateCategories;

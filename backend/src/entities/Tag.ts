@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   Index,
   ManyToMany,
+  Unique,
 } from 'typeorm'
 import { Length } from 'class-validator'
 import { Field, ID, InputType, ObjectType } from 'type-graphql'
@@ -12,10 +13,11 @@ import { Ad } from './Ad'
 
 @Entity()
 @ObjectType()
+@Unique(['id'])
 export class Tag extends PrimaryEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
-  id!: number
+  id!: string
 
   @Column({ length: 100 })
   @Length(3, 50, { message: 'Entre 3 et 50 caractères' })

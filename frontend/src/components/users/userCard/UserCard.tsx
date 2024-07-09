@@ -2,14 +2,13 @@ import { UserTypes } from "@/types/UserTypes";
 import { Avatar, Box, Card, CardActionArea, Typography } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import React from "react";
-import { PATH_IMAGE } from "@/api/configApi";
 
 type UserCardProps = {
   user: UserTypes;
 };
 
 const UserCard = (props: UserCardProps): React.ReactNode => {
-  const userImageUrl = `${PATH_IMAGE}/${props.user.picture}`;
+  const userImageUrl = `${process.env.NEXT_PUBLIC_PATH_IMAGE}/${props.user.picture}`;
   const totalAds = props.user.ads?.length || 0;
   return (
     <CardActionArea

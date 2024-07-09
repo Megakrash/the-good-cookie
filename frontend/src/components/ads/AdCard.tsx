@@ -6,7 +6,6 @@ import Avatar from "@mui/material/Avatar";
 import { Box, CardActionArea } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
 import router from "next/router";
-import { PATH_IMAGE } from "@/api/configApi";
 
 type AdCardProps = {
   ad: AdTypes;
@@ -15,10 +14,10 @@ type AdCardProps = {
 const AdCard = (props: AdCardProps): React.ReactNode => {
   // Path images
   const adImageUrl = props.ad.picture
-    ? `${PATH_IMAGE}${props.ad.picture}`
+    ? `${process.env.NEXT_PUBLIC_PATH_IMAGE}${props.ad.picture}`
     : "/images/default/default.webp";
   const userImageUrl = props.ad.user.picture
-    ? `${PATH_IMAGE}${props.ad.user.picture}`
+    ? `${process.env.NEXT_PUBLIC_PATH_IMAGE}${props.ad.user.picture}`
     : "/images/default/avatar.webp";
 
   return (

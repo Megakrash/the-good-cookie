@@ -11,7 +11,7 @@ const colors = new VariablesColors();
 const { colorLightGrey, colorWhite } = colors;
 
 type CategoriesMenuProps = {
-  categoryId: Number;
+  categoryId: string;
   handleCloseMenu: () => void;
 };
 

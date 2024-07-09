@@ -33,7 +33,7 @@ export class TagsResolver {
   @Authorized('ADMIN')
   @Mutation(() => Tag, { nullable: true })
   async tagUpdate(
-    @Arg('id', () => ID) id: number,
+    @Arg('id', () => ID) id: string,
     @Arg('data') data: TagUpdateInput
   ): Promise<Tag | null> {
     const updatedTag = await Tag.findOne({
@@ -66,7 +66,7 @@ export class TagsResolver {
 
   // GET BY ID
   @Query(() => Tag)
-  async tagById(@Arg('id') id: number): Promise<Tag> {
+  async tagById(@Arg('id') id: string): Promise<Tag> {
     const tag = await Tag.findOne({
       where: { id },
       relations: { ads: true },
@@ -80,7 +80,7 @@ export class TagsResolver {
   // DELETE
   @Authorized('ADMIN')
   @Mutation(() => Tag, { nullable: true })
-  async tagDelete(@Arg('id', () => ID) id: number): Promise<Tag | null> {
+  async tagDelete(@Arg('id', () => ID) id: string): Promise<Tag | null> {
     const tag = await Tag.findOne({
       where: { id },
     })

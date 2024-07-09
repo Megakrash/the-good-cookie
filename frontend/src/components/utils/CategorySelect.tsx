@@ -10,8 +10,8 @@ const colors = new VariablesColors();
 const { colorLightGrey, colorWhite } = colors;
 
 type CategorySelectProps = {
-  selectedCategory: number;
-  setSelectedCategory: (selectedCategory: number) => void;
+  selectedCategory: string;
+  setSelectedCategory: (selectedCategory: string) => void;
   type: "createCategory" | "createAd" | "updateAd";
 };
 
@@ -63,8 +63,8 @@ const CategorySelect: React.FC<CategorySelectProps> = (
     ];
   };
 
-  const handleChange = (event: SelectChangeEvent<number>) => {
-    props.setSelectedCategory(Number(event.target.value));
+  const handleChange = (event: SelectChangeEvent<string>) => {
+    props.setSelectedCategory(event.target.value as string);
   };
 
   return (

@@ -4,7 +4,6 @@ import { useLazyQuery } from "@apollo/client";
 import { TextField, Box, Button, Grid, useTheme } from "@mui/material";
 import { FilterAlt, FilterAltOff } from "@mui/icons-material";
 import { Toaster } from "react-hot-toast";
-import { PATH_IMAGE } from "@/api/configApi";
 import { queryAllAds } from "../../graphql/ads/queryAllAds";
 import GpsAndRadius from "./components/GpsAndRadius";
 import { VariablesColors } from "@/styles/Variables.colors";
@@ -22,7 +21,7 @@ const Search = (): React.ReactNode => {
   //-----------------
   const [showQueries, setShowQueries] = useState<boolean>(false);
   // subCategories
-  const [selectedCategory, setSelectedCategory] = useState<number>();
+  const [selectedCategory, setSelectedCategory] = useState<string>();
   // Tags
   const [selectedTags, setSelectedTags] = useState<AdTags>([]);
 

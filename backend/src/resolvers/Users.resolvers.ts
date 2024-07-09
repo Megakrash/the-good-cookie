@@ -77,7 +77,7 @@ export class UsersResolver {
   @Mutation(() => User, { nullable: true })
   async userUpdate(
     @Arg('data') data: UserUpdateInput,
-    @Arg('id', () => ID) id: number,
+    @Arg('id', () => ID) id: string,
     @Ctx() context: MyContext
   ): Promise<User | null> {
     try {
@@ -96,9 +96,7 @@ export class UsersResolver {
       // Update user with his ads
       if (data.ads) {
         data.ads = data.ads.map((entry) => {
-          const existingRelation = user.ads.find(
-            (ad) => ad.id === Number(entry.id)
-          )
+          const existingRelation = user.ads.find((ad) => ad.id === entry.id)
           return existingRelation || entry
         })
       }
@@ -136,7 +134,7 @@ export class UsersResolver {
 
   // GET BY ID
   @Query(() => User)
-  async userById(@Arg('id', () => ID) id: number): Promise<User> {
+  async userById(@Arg('id', () => ID) id: string): Promise<User> {
     const user = await User.findOne({
       where: { id },
       relations: {
@@ -382,7 +380,7 @@ export class UsersResolver {
   @Mutation(() => String)
   async userDelete(
     @Ctx() context: MyContext,
-    @Arg('id', () => ID) id: number
+    @Arg('id', () => ID) id: string
   ): Promise<string> {
     try {
       const user = await UserServices.findUserById(id)

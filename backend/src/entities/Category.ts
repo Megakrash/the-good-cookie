@@ -5,6 +5,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   ManyToOne,
+  Unique,
 } from 'typeorm'
 import { Field, ID, InputType, ObjectType } from 'type-graphql'
 import { ObjectId } from './ObjectId'
@@ -16,15 +17,21 @@ import { Ad } from './Ad'
 
 @Entity()
 @ObjectType()
+@Unique(['id'])
 export class Category extends PrimaryEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
-  id!: number
+  id!: string
 
   // Name
   @Column({ length: 100 })
   @Field()
   name!: string
+
+  // Display
+  @Column({ nullable: true, default: false })
+  @Field(() => Boolean, { nullable: true })
+  display!: boolean
 
   // Picture
   @Column({ length: 150, nullable: true })
@@ -60,8 +67,11 @@ export class CategoryCreateInput {
   @Field()
   name!: string
 
+  @Field(() => Boolean, { nullable: true })
+  display!: boolean
+
   @Field({ nullable: true })
-  picture?: string
+  picture!: string
 
   @Field(() => ObjectId, { nullable: true })
   parentCategory!: ObjectId
@@ -75,6 +85,9 @@ export class CategoryCreateInput {
 export class CategoryUpdateInput {
   @Field({ nullable: true })
   name!: string
+
+  @Field(() => Boolean, { nullable: true })
+  display!: boolean
 
   @Field({ nullable: true })
   picture!: string

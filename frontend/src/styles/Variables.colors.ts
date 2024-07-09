@@ -1,5 +1,5 @@
 export class VariablesColors {
-  colorWhite = "white"; // white
+  colorWhite = "#ffffff"; // white
   colorGrey = "#6c757d"; // grey
   colorDarkGrey = "#343a40"; // dark grey
   colorLightGrey = "#f8f8f8"; // light grey

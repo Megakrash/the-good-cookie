@@ -2,7 +2,6 @@ import React from "react";
 import { Box, Button, CardMedia } from "@mui/material";
 import { DownloadInput } from "@/styles/MuiInput";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { PATH_IMAGE } from "@/api/configApi";
 
 type PictureDownloadProps = {
   picture: File | null;
@@ -39,7 +38,7 @@ const PictureDownload = (props: PictureDownloadProps): React.ReactNode => {
           image={
             props.previewUrl
               ? props.previewUrl
-              : `${PATH_IMAGE}${props.curentPicture}`
+              : `${process.env.NEXT_PUBLIC_PATH_IMAGE}${props.curentPicture}`
           }
         />
       )}

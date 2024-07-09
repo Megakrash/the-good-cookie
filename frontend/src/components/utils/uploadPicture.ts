@@ -1,4 +1,3 @@
-import { PATH_IMAGE } from "@/api/configApi";
 import axios from "axios";
 
 export const uploadPicture = async (
@@ -9,11 +8,15 @@ export const uploadPicture = async (
   dataFile.append("title", title);
   dataFile.append("file", picture);
 
-  const uploadPictureResponse = await axios.post(`${PATH_IMAGE}`, dataFile, {
-    headers: {
-      "Content-Type": "multipart/form-data",
+  const uploadPictureResponse = await axios.post(
+    `${process.env.NEXT_PUBLIC_PATH_IMAGE}`,
+    dataFile,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     },
-  });
+  );
   if (!uploadPictureResponse.data.filename) {
     throw new Error("Error while uploading picture");
   }

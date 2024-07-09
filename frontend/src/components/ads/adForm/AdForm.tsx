@@ -40,7 +40,7 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
   const [zipCode, setZipCode] = useState<string>("");
   const [city, setCity] = useState<string>("");
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
-  const [selectedCategory, setSelectedCategory] = useState<null | number>();
+  const [selectedCategory, setSelectedCategory] = useState<string | null>();
   const [selectedTags, setSelectedTags] = useState<AdTags>([]);
 
   // Form validation
@@ -92,7 +92,7 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
           city,
           zipCode,
           location: { type: "Point", coordinates: coordinates },
-          category: selectedCategory ? { id: Number(selectedCategory) } : null,
+          category: selectedCategory ? { id: selectedCategory } : null,
           tags: selectedTags,
           picture,
         };
@@ -134,7 +134,7 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
           data.location = { type: "Point", coordinates: coordinates };
         }
         if (selectedCategory !== ad.category.id) {
-          data.category = { id: Number(selectedCategory) };
+          data.category = { id: selectedCategory };
         }
         if (tagsChanged(selectedTags, ad.tags)) {
           data.tags = selectedTags;

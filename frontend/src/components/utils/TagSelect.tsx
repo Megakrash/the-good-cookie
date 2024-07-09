@@ -26,8 +26,8 @@ const TagSelect = (props: TagSelectProps) => {
   const { data: dataTags } = useQuery<{ items: TagsTypes }>(queryAllTags);
   const tags = dataTags ? dataTags.items : [];
 
-  const handleChangeTag = (event: SelectChangeEvent<number[]>) => {
-    const value: number[] = event.target.value as unknown as number[];
+  const handleChangeTag = (event: SelectChangeEvent<string[]>) => {
+    const value: string[] = event.target.value as unknown as string[];
     const selectedOptions: AdTags = value.map((id) => ({ id }));
     props.setSelectedTags(selectedOptions);
   };

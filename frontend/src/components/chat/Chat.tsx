@@ -10,15 +10,15 @@ import { showToast } from "../utils/toastHelper";
 import ChatCard from "./ChatCard";
 
 type ChatProps = {
-  receiverId: number;
-  adId: number;
-  conversationId?: number;
+  receiverId: string;
+  adId: string;
+  conversationId?: string;
 };
 
 const Chat = (props: ChatProps): React.ReactNode => {
   const { user } = useUserContext();
   const [messageContent, setMessageContent] = useState("");
-  const { data, loading, error, subscribeToMore } = useQuery<{
+  const { data, loading, error, subscribeToMore, refetch } = useQuery<{
     items: MessagesTypes;
   }>(queryAllMessages, {
     variables: {
@@ -77,11 +77,10 @@ const Chat = (props: ChatProps): React.ReactNode => {
       },
     });
 
-    // Assume response.data.sendMessage est le nouveau message
     const newMessage = response.data.sendMessage;
 
     if (newMessage && newMessage.content) {
-      setConversation((prevMessages) => [...prevMessages, newMessage]);
+      refetch();
     }
 
     setMessageContent("");

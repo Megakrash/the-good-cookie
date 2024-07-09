@@ -13,7 +13,6 @@ import { transformerDate } from "../utils/dateUtils";
 import { useUserContext } from "@/context/UserContext";
 import { selectOtherUser } from "../utils/userUtils";
 import { UserTypes } from "@/types/UserTypes";
-import { PATH_IMAGE } from "@/api/configApi";
 
 type MessagesProps = {
   conversation: ConversationTypes;
@@ -28,7 +27,7 @@ const ConversationCard: React.FC<MessagesProps> = ({ conversation }) => {
     setDisplayUser(otherUser);
   }, [conversation, user]);
 
-  const avatarPictureUrl = `${PATH_IMAGE}${displayUser?.picture}`;
+  const avatarPictureUrl = `${process.env.NEXT_PUBLIC_PATH_IMAGE}${displayUser?.picture}`;
   const updatedAt = transformerDate(conversation.updatedAt);
   return (
     <CardActionArea

@@ -97,7 +97,7 @@ describe("ForgotPassword Component", () => {
       expect(toast).toHaveBeenCalledWith(
         `Un email vous a été envoyé pour réinitialiser votre mot de passe`,
         expect.objectContaining({
-          style: { background: "#4caf50", color: "white" },
+          style: { background: "#4caf50", color: "#ffffff" },
         }),
       );
     });
@@ -119,7 +119,7 @@ describe("ForgotPassword Component", () => {
       expect(toast).toHaveBeenCalledWith(
         `Un email vous a été envoyé pour réinitialiser votre mot de passe`,
         expect.objectContaining({
-          style: { background: "#4caf50", color: "white" },
+          style: { background: "#4caf50", color: "#ffffff" },
         }),
       );
     });
@@ -139,7 +139,7 @@ describe("ForgotPassword Component", () => {
       expect(toast).toHaveBeenCalledWith(
         "Erreur de connexion, veuillez réessayer",
         expect.objectContaining({
-          style: { background: "#f44336", color: "white" },
+          style: { background: "#f44336", color: "#ffffff" },
         }),
       );
     });

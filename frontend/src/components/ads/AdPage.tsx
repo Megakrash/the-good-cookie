@@ -12,7 +12,7 @@ import UserCard from "../users/userCard/UserCard";
 import PlaceIcon from "@mui/icons-material/Place";
 import { transformerDate } from "../utils/dateUtils";
 import BuyContactCard from "./components/BuyContactCard";
-import { PATH_IMAGE } from "@/api/configApi";
+import Chat from "../chat/Chat";
 
 type AdPageProps = {
   ad: AdTypes;
@@ -20,7 +20,8 @@ type AdPageProps = {
 
 const AdPage: React.FC<AdPageProps> = ({ ad }) => {
   const theme = useTheme();
-  const adImageUrl = `${PATH_IMAGE}${ad.picture}`;
+  const [showChat, setShowChat] = React.useState(false);
+  const adImageUrl = `${process.env.NEXT_PUBLIC_PATH_IMAGE}${ad.picture}`;
   const updatedAt = transformerDate(ad.updatedAt);
   return (
     <Grid
@@ -46,8 +47,8 @@ const AdPage: React.FC<AdPageProps> = ({ ad }) => {
       <Grid
         item
         xs={11}
-        sm={8}
-        md={7}
+        sm={11}
+        md={6}
         lg={8}
         sx={{
           display: "flex",
@@ -131,6 +132,7 @@ const AdPage: React.FC<AdPageProps> = ({ ad }) => {
         >
           <UserCard user={ad.user} />
           <BuyContactCard ad={ad} />
+          {showChat && <Chat receiverId={ad.user.id} adId={ad.id} />}
         </Box>
       </Grid>
     </Grid>
