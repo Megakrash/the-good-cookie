@@ -2,16 +2,15 @@ import { ApolloClient, InMemoryCache, HttpLink, split } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
-import { API_URL, WS_URL } from "../api/configApi";
 
 const httpLink = new HttpLink({
-  uri: API_URL,
+  uri: process.env.NEXT_PUBLIC_API_URL,
   credentials: "include",
 });
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: WS_URL,
+    url: process.env.NEXT_PUBLIC_WS_URL,
   }),
 );
 

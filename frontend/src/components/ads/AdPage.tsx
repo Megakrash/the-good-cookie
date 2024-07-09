@@ -12,7 +12,6 @@ import UserCard from "../users/userCard/UserCard";
 import PlaceIcon from "@mui/icons-material/Place";
 import { transformerDate } from "../utils/dateUtils";
 import BuyContactCard from "./components/BuyContactCard";
-import { PATH_IMAGE } from "@/api/configApi";
 import Chat from "../chat/Chat";
 
 type AdPageProps = {
@@ -22,7 +21,7 @@ type AdPageProps = {
 const AdPage: React.FC<AdPageProps> = ({ ad }) => {
   const theme = useTheme();
   const [showChat, setShowChat] = React.useState(false);
-  const adImageUrl = `${PATH_IMAGE}${ad.picture}`;
+  const adImageUrl = `${process.env.NEXT_PUBLIC_PATH_IMAGE}${ad.picture}`;
   const updatedAt = transformerDate(ad.updatedAt);
   return (
     <Grid
