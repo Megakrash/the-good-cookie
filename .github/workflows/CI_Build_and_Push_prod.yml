@@ -1,4 +1,4 @@
-name: Build and Push Docker Images for Release
+name: Build and Push Docker Images for Prod
 
 on:
   create:
@@ -10,7 +10,7 @@ permissions:
 jobs:
   setup-version:
     runs-on: ubuntu-latest
-    if: github.event_name == 'create' && github.ref_type == 'branch' && github.ref == 'refs/heads/release'
+    if: github.event_name == 'create' && github.ref_type == 'branch' && github.ref == 'refs/heads/prod'
     outputs:
       new-tag: ${{ steps.version.outputs.new-tag }}
     steps:
@@ -20,7 +20,7 @@ jobs:
           fetch-depth: 0
       - name: Fetch tags
         run: git fetch --tags
-      - name: Determine new version
+      - name: Determine last version
         id: version
         run: |
           # Get the latest tag that matches 'v*'
@@ -29,10 +29,8 @@ jobs:
             LATEST_TAG="v0.0.0"
           fi
           echo "Latest tag is $LATEST_TAG"
-          # Increment the patch version. Assumes tags are in 'v0.0.0' format
-          NEW_TAG=$(echo $LATEST_TAG | awk -F. '{OFS="."; $3+=1; print}')
-          echo "New tag will be $NEW_TAG"
-          echo "::set-output name=new-tag::$NEW_TAG"
+          # Set the output to the latest tag found
+          echo "::set-output name=latest-tag::$LATEST_TAG"
 
   build-push-images:
     needs: setup-version
@@ -57,29 +55,11 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_RELEASE_FRONTEND_REPO }}:${{ needs.setup-version.outputs.new-tag }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_RELEASE_FRONTEND_REPO }}:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_PROD_FRONTEND_REPO }}:${{ needs.setup-version.outputs.new-tag }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_PROD_FRONTEND_REPO }}:latest
           build-args: |
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
-            NEXT_PUBLIC_WS_URL=${{ secrets.NEXT_PUBLIC_WS_URL_RELEASE }}
+            NEXT_PUBLIC_WS_URL=${{ secrets.NEXT_PUBLIC_WS_URL_PROD }}
             NEXT_PUBLIC_MIDDLEWARE_URL=${{ secrets.NEXT_PUBLIC_MIDDLEWARE_URL }}
             NEXT_PUBLIC_PATH_IMAGE=${{ secrets.NEXT_PUBLIC_PATH_IMAGE }}
             NEXT_PUBLIC_RECAPTCHA_SITE_KEY=${{ secrets.NEXT_PUBLIC_RECAPTCHA_SITE_KEY }}
-      - name: Build and push Docker image for backend
-        uses: docker/build-push-action@v5
-        with:
-          context: ./backend
-          file: ./backend/Dockerfile
-          platforms: linux/amd64
-          push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_RELEASE_BACKEND_REPO }}:${{ needs.setup-version.outputs.new-tag }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_RELEASE_BACKEND_REPO }}:latest
-      - name: Push new Git tag
-        run: |
-          git config --global user.email ${{ secrets.MY_GITHUB_EMAIL }}
-          git config --global user.name ${{ secrets.MY_GITHUB_NICKNAME }}
-          git tag ${{ needs.setup-version.outputs.new-tag }}
-          git push origin ${{ needs.setup-version.outputs.new-tag }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

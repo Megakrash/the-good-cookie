@@ -6,6 +6,7 @@ on:
       - main
       - dev
       - release
+      - prod
 
 jobs:
   create-pull-request:
