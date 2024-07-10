@@ -21,7 +21,7 @@ import { VariablesColors } from "@/styles/Variables.colors";
 import Navbar from "./navbar/Navbar";
 
 const colors = new VariablesColors();
-const { colorDarkGrey, colorOrange, colorLightOrange } = colors;
+const { colorDarkGrey, colorOrange, colorLightOrange, colorWhite } = colors;
 
 const buttonStyles = {
   color: "white",
@@ -98,7 +98,6 @@ const Header = (): React.ReactNode => {
             }}
           >
             <CookieIcon sx={{ color: colorOrange }} />
-
             <Typography
               sx={{
                 color: colorOrange,
