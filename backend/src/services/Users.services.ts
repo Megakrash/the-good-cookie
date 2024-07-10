@@ -92,7 +92,7 @@ export class UserServices {
     cookie.set('TGCookie', token, {
       httpOnly: true,
       secure: false,
-      expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
+      expires: new Date(Date.now() + 12 * 60 * 60 * 1000),
     })
   }
   // Decode token verifyEmail to get email & nickname
