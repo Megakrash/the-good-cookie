@@ -23,12 +23,12 @@ const Chat = (props: ChatProps): React.ReactNode => {
   }>(queryAllMessages, {
     variables: {
       data: {
-        ad: props.adId ? { id: Number(props.adId) } : null,
+        ad: props.adId ? { id: props.adId } : null,
         conversation: props.conversationId
-          ? { id: Number(props.conversationId) }
+          ? { id: props.conversationId }
           : null,
-        userId1: Number(user?.id),
-        userId2: props.receiverId ? Number(props.receiverId) : null,
+        userId1: user?.id,
+        userId2: props.receiverId ? props.receiverId : null,
       },
     },
   });
@@ -45,7 +45,7 @@ const Chat = (props: ChatProps): React.ReactNode => {
       newMessage: MessageTypes;
     }>({
       document: subscriptionMessage,
-      variables: { ad: Number(props.adId) },
+      variables: { ad: props.adId },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const newMessage = subscriptionData.data.newMessage;
@@ -71,8 +71,8 @@ const Chat = (props: ChatProps): React.ReactNode => {
       variables: {
         data: {
           content: messageContent,
-          receiver: { id: Number(props.receiverId) },
-          ad: { id: Number(props.adId) },
+          receiver: { id: props.receiverId },
+          ad: { id: props.adId },
         },
       },
     });
