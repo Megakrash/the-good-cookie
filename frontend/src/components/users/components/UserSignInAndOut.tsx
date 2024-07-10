@@ -7,6 +7,7 @@ import { VariablesColors } from "@/styles/Variables.colors";
 import { MenuItem, Typography } from "@mui/material";
 import { useMutation } from "@apollo/client";
 import { mutationSignOut } from "@/graphql/auth/mutationSignOut";
+import ReleaseTag from "@/components/utils/ReleaseTag";
 
 const colors = new VariablesColors();
 const { colorOrange } = colors;
@@ -33,29 +34,35 @@ const UserSignInAndOut = (props: UserSignInAndOutProps): React.ReactNode => {
   return (
     <>
       {user ? (
-        <MenuItem onClick={logout}>
-          <ExitToAppIcon
-            sx={{ width: "30px", height: "auto", color: colorOrange }}
-          />
-          <Typography sx={{ marginLeft: "10px" }}>Se déconnecter</Typography>
-        </MenuItem>
+        <>
+          <MenuItem onClick={logout}>
+            <ExitToAppIcon
+              sx={{ width: "30px", height: "auto", color: colorOrange }}
+            />
+            <Typography sx={{ marginLeft: "10px" }}>Se déconnecter</Typography>
+          </MenuItem>
+          <ReleaseTag />
+        </>
       ) : (
-        <MenuItem
-          onClick={() => {
-            props.handleClose();
-            router.push(`/signin`);
-          }}
-        >
-          <LoginIcon
-            sx={{
-              width: "30px",
-              marginRight: "8px",
-              height: "auto",
-              color: colorOrange,
+        <>
+          <MenuItem
+            onClick={() => {
+              props.handleClose();
+              router.push(`/signin`);
             }}
-          />
-          <Typography textAlign="center">Se connecter</Typography>
-        </MenuItem>
+          >
+            <LoginIcon
+              sx={{
+                width: "30px",
+                marginRight: "8px",
+                height: "auto",
+                color: colorOrange,
+              }}
+            />
+            <Typography textAlign="center">Se connecter</Typography>
+          </MenuItem>
+          <ReleaseTag />
+        </>
       )}
     </>
   );
