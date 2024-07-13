@@ -1,10 +1,10 @@
 import LayoutFull from "@/components/layout/LayoutFull";
-import Search from "@/components/search/Search";
+import HomePage from "@/components/home/HomePage";
 
 function Home(): React.ReactNode {
   return (
     <LayoutFull title="Accueil TGC">
-      <Search />
+      <HomePage />
     </LayoutFull>
   );
 }
