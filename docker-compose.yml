@@ -24,7 +24,6 @@ services:
     networks:
       - thegoodcookie-network
 volumes:
-  assets:
-  postgres-data:
+  postgres-data: {}
 networks:
-  thegoodcookie-network:
+  thegoodcookie-network: {}
