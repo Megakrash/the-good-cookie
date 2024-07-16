@@ -46,7 +46,6 @@ export class UsersResolver {
         throw new Error('User already exists')
       }
 
-      // Create new user entity with picture & hash password
       const newUser = new User()
       Object.assign(newUser, data)
 

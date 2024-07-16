@@ -5,11 +5,18 @@ Solo project carried out as part of the training at the Wild Code School for the
 ### Project launch
 
 - Copy `.env.sample` and create `.env` in the backend
-- Update reCAPTCHA key in `configApi.ts` in the frontend
+- Copy `.env.sample` and create `.env.local` in the frontend
+- Run command `npm i` in the backend to install the dependencies
 - Run command `npm i` in the frontend to install the dependencies
+- Run command `npm i` in the root to install the dependencies
 - Run command `docker-compose build` at the root to create backend & postgres images
 - Run command `docker-compose up` at the root to launch backend & postgres
 - Run command `npm run dev` in the frontend to throw it
+
+### Dependency
+
+- This project works with another one to manage images : [MegaS3](https://github.com/Megakrash/megaS3)
+- You also need to install it.
 
 ### Others commands
 
