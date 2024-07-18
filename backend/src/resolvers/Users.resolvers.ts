@@ -168,10 +168,10 @@ export class UsersResolver {
       // Find user by email
       const user = await UserServices.findUserByEmail(payload.email)
       if (!user) {
-        return { success: false, message: 'User not found' }
+        return { success: false, message: 'Utilisateur non trouvé' }
       }
       if (user.isVerified === true) {
-        return { success: true, message: 'Email already verified' }
+        return { success: true, message: 'Email déjà vérifié' }
       }
       // Mark user as verified
       user.isVerified = true
@@ -179,7 +179,7 @@ export class UsersResolver {
       await user.save()
       // Send confirmation email
       await sendConfirmationEmail(user.email, user.nickName)
-      return { success: true, message: 'Email verified successfully!' }
+      return { success: true, message: 'Email vérifié avec succès !' }
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError && userEmail && userNickName) {
         return await UserServices.handleExpiredToken(userEmail, userNickName)

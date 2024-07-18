@@ -70,7 +70,7 @@ export const sendConfirmationEmail = async (
   const emailOptions: EmailOptions = {
     from: process.env.MAIL_USER || 'contact@tgc.megakrash.com',
     to: userEmail || '',
-    subject: 'Bienvenue sur The Good Corner !',
+    subject: 'Bienvenue sur The Good Cookie !',
     html: emailHtml,
   }
 
