@@ -69,7 +69,7 @@ function UserPassword(props: UserPasswordProps): React.ReactNode {
         id={props.label ? props.label : "outlined-adornment-password"}
         type={showPassword ? "text" : "password"}
         size="small"
-        label="Mot de passe"
+        label={props.label ? props.label : "Mot de passe"}
         variant="outlined"
         value={props.password}
         onChange={handleChange}
