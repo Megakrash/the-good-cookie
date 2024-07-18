@@ -50,8 +50,7 @@ function UserAccount(): React.ReactNode {
         />
         <Typography variant="h3">{`Bonjour ${userInfos.nickName} !`}</Typography>
       </Box>
-
-      <Typography variant="h5">{`Toutes vos annonces`}</Typography>
+      {userAds && <Typography variant="h5">{`Toutes vos annonces`}</Typography>}
       {userAds && (
         <Box
           sx={{
