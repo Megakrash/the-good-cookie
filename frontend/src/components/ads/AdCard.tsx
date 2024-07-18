@@ -25,15 +25,15 @@ const AdCard = (props: AdCardProps): React.ReactNode => {
       {props.ad && (
         <CardActionArea
           sx={{
-            width: 270,
-            height: 380,
+            width: 280,
+            height: 390,
           }}
           onClick={() => router.push(`/ads/${props.ad.id}`)}
         >
           <Card
             sx={{
-              width: 270,
-              height: 380,
+              width: 280,
+              height: 390,
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
