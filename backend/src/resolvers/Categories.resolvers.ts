@@ -174,10 +174,10 @@ export class CategoriesResolver {
       relations: { childCategories: true },
     })
     if (category) {
+      await category.remove()
       if (category.picture) {
         await deletePicture(category.picture)
       }
-      await category.remove()
       category.id = id
     }
     return category

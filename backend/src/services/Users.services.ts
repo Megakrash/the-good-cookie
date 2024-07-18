@@ -142,8 +142,8 @@ export class UserServices {
     if (user.id !== context.user?.id && context.user?.role !== 'ADMIN') {
       throw new Error('Unauthorized')
     }
-    await deletePicture(user.picture)
     await user.remove()
+    await deletePicture(user.picture)
     return `User with id: ${user.id} deleted`
   }
 }
