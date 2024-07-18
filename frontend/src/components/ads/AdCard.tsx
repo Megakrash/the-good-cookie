@@ -38,9 +38,6 @@ const AdCard = (props: AdCardProps): React.ReactNode => {
               flexDirection: "column",
               justifyContent: "space-between",
               padding: 1,
-              "&:hover": {
-                border: (theme) => `2px solid ${theme.palette.primary.main}`,
-              },
             }}
           >
             {/* Picture */}
