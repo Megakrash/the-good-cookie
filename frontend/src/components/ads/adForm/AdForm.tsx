@@ -40,7 +40,7 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
   const [zipCode, setZipCode] = useState<string>("");
   const [city, setCity] = useState<string>("");
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>();
+  const [selectedCategory, setSelectedCategory] = useState<string | null>("");
   const [selectedTags, setSelectedTags] = useState<AdTags>([]);
 
   // Form validation
@@ -139,7 +139,7 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
         if (tagsChanged(selectedTags, ad.tags)) {
           data.tags = selectedTags;
         }
-        if (picture !== ad.picture) data.picture = picture;
+        if (picture && newPicture) data.picture = picture;
 
         const result = await doUpdate({
           variables: {

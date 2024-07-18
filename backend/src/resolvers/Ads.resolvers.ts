@@ -211,8 +211,8 @@ export class AdsResolver {
       ad &&
       (ad.user.id === context.user?.id || context.user?.role === 'ADMIN')
     ) {
-      await deletePicture(ad.picture)
       await ad.remove()
+      await deletePicture(ad.picture)
       ad.id = id
     }
     return ad

@@ -146,7 +146,7 @@ const ResetPassword = (): React.ReactElement => {
                 setPassword={setPassword}
               />
               <UserPassword
-                label="confirmer le mot de passe"
+                label="confirmer le nouveau mot de passe"
                 password={confirmPassword}
                 setPassword={setConfirmPassword}
               />
