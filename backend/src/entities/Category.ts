@@ -4,10 +4,11 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
-  ManyToOne,
   Unique,
+  TreeParent,
+  TreeChildren,
 } from 'typeorm'
-import { Field, ID, InputType, ObjectType } from 'type-graphql'
+import { Field, ID, InputType, Int, ObjectType } from 'type-graphql'
 import { ObjectId } from './ObjectId'
 import { Ad } from './Ad'
 
@@ -44,18 +45,17 @@ export class Category extends PrimaryEntity {
   ads!: Ad[]
 
   // ParentCategory
-  @ManyToOne(() => Category, (category) => category.childCategories, {
-    nullable: true,
-  })
+  @TreeParent()
   @Field(() => Category, { nullable: true })
   parentCategory?: Category
 
   // SubCategories
-  @OneToMany(() => Category, (category) => category.parentCategory, {
-    cascade: true,
-  })
+  @TreeChildren({ cascade: true })
   @Field(() => [Category], { nullable: true })
   childCategories?: Category[]
+
+  @Field(() => Int, { nullable: true })
+  adCount?: number
 }
 
 //-------------------------------
