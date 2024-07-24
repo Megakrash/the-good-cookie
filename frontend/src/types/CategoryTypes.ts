@@ -20,6 +20,7 @@ export type CategoryTypes = {
   parentCategory?: CategoryTypes;
   ads?: AdTypes;
   childCategories?: ChildCategoryType[];
+  adCount?: number;
 };
 
 export type CategoriesTypes = CategoryTypes[];
