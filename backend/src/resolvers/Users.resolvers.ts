@@ -257,18 +257,15 @@ export class UsersResolver {
   async meContext(@Ctx() context: MyContext): Promise<UserContext | null> {
     // Get if cookie is present in context
     const cookies = new Cookies(context.req, context.res)
-    const renthub_token = cookies.get('TGCookie')
+    const TGCookie = cookies.get('TGCookie')
 
-    if (!renthub_token) {
+    if (!TGCookie) {
       return null
     }
 
     try {
       // Verify token
-      const payload = jwt.verify(
-        renthub_token,
-        process.env.JWT_SECRET_KEY || ''
-      )
+      const payload = jwt.verify(TGCookie, process.env.JWT_SECRET_KEY || '')
       // Get user from payload
       if (typeof payload === 'object' && 'userId' in payload) {
         const user = await UserServices.findUserById(payload.userId)
