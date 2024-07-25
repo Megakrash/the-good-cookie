@@ -23,7 +23,7 @@ export const dataSourceOptions: PostgresConnectionOptions = {
     User,
     UserToken,
   ],
-  migrations: [__dirname + '/migrations/*.ts'],
+  migrations: [__dirname + '/migrations/*.{ts, js}'],
   synchronize: process.env.DATASOURCE_SYNCHRONIZE === 'true' ? true : false,
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,

@@ -5,8 +5,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Unique,
-  TreeParent,
-  TreeChildren,
+  ManyToOne,
 } from 'typeorm'
 import { Field, ID, InputType, Int, ObjectType } from 'type-graphql'
 import { ObjectId } from './ObjectId'
@@ -45,12 +44,16 @@ export class Category extends PrimaryEntity {
   ads!: Ad[]
 
   // ParentCategory
-  @TreeParent()
+  @ManyToOne(() => Category, (category) => category.childCategories, {
+    nullable: true,
+  })
   @Field(() => Category, { nullable: true })
   parentCategory?: Category
 
   // SubCategories
-  @TreeChildren({ cascade: true })
+  @OneToMany(() => Category, (category) => category.parentCategory, {
+    cascade: true,
+  })
   @Field(() => [Category], { nullable: true })
   childCategories?: Category[]
 
