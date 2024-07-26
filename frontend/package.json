@@ -11,12 +11,12 @@
     "test": "jest"
   },
   "dependencies": {
-    "@apollo/client": "^3.10.8",
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
-    "@mui/icons-material": "^5.16.4",
-    "@mui/material": "^5.16.4",
-    "@mui/x-data-grid": "^7.11.0",
+    "@apollo/client": "^3.11.1",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^5.16.5",
+    "@mui/material": "^5.16.5",
+    "@mui/x-data-grid": "^7.11.1",
     "axios": "^1.7.2",
     "date-fns": "^3.6.0",
     "graphql": "^16.9.0",
@@ -30,10 +30,10 @@
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^16.0.0",
     "@types/jest": "^29.5.12",
-    "@types/node": "20.14.11",
+    "@types/node": "20.14.12",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "@types/react-google-recaptcha": "^2.1.9",
@@ -47,6 +47,6 @@
     "jest-environment-jsdom": "^29.7.0",
     "prettier": "^3.3.3",
     "sass": "^1.77.8",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   }
 }
