@@ -26,7 +26,8 @@ export function useAuth(privatePages: string[]) {
       privatePages.includes(router.pathname) &&
       (data?.item === null || error)
     ) {
-      router.replace("/signin");
+      localStorage.setItem("previousUrl", router.asPath);
+      router.push("/signin");
     }
   }, [router, data, error]);
 
