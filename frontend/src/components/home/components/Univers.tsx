@@ -17,15 +17,14 @@ const Univers = (): React.ReactNode => {
           display: "flex",
           flexDirection: "column",
           marginTop: 3,
-          marginLeft: 4,
           marginBottom: 4,
           gap: 1,
         }}
       >
-        <Typography variant="h5">
+        <Typography variant="h5" sx={{ textAlign: "center" }}>
           Nos univers, pour toutes les étapes de votre vie en Cookies !
         </Typography>
-        <Typography variant="subtitle1">
+        <Typography variant="subtitle1" sx={{ textAlign: "center" }}>
           Des annonces gratuites entre particuliers et professionnels, pour
           acheter, vendre, échanger ... Découvrez nos rubriques !
         </Typography>
@@ -35,8 +34,7 @@ const Univers = (): React.ReactNode => {
           display: "flex",
           flexWrap: "wrap",
           gap: 10,
-          marginTop: 3,
-          marginLeft: 4,
+          justifyContent: "center",
           alignItems: "center",
         }}
       >

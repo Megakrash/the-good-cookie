@@ -30,7 +30,7 @@ function UserAccount(): React.ReactNode {
     ? `${process.env.NEXT_PUBLIC_PATH_IMAGE}${userInfos.picture}`
     : "/images/default/avatar.webp";
   return (
-    <Card
+    <Box
       sx={{
         width: "80%",
         display: "flex",
@@ -48,9 +48,11 @@ function UserAccount(): React.ReactNode {
           sx={{ width: "55px", height: "55px" }}
           src={userImageUrl}
         />
-        <Typography variant="h3">{`Bonjour ${userInfos.nickName} !`}</Typography>
+        <Typography variant="h5">{`Bonjour ${userInfos.nickName} !`}</Typography>
       </Box>
-      {userAds && <Typography variant="h5">{`Toutes vos annonces`}</Typography>}
+      {userAds && (
+        <Typography variant="h6">{`Toutes vos annonces :`}</Typography>
+      )}
       {userAds && (
         <Box
           sx={{
@@ -63,7 +65,7 @@ function UserAccount(): React.ReactNode {
           {userAds.map((ad) => (
             <Box
               key={ad.id}
-              sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+              sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}
             >
               <AdCard ad={ad} />
               <Box
@@ -88,7 +90,7 @@ function UserAccount(): React.ReactNode {
           ))}
         </Box>
       )}
-    </Card>
+    </Box>
   );
 }
 
