@@ -32,7 +32,9 @@ const ChatCard: React.FC<ChatCardProps> = ({
   return (
     <Card sx={{ width: "90%", maxWidth: 500, mt: 5, ml: 3, p: 1 }}>
       <Typography variant="h4" gutterBottom component="div">
-        {conversation[0]?.ad.title}
+        {conversation.length > 0
+          ? conversation[0]?.ad.title
+          : "Nouvelle conversation"}
       </Typography>
       <Divider />
       <Box sx={{ overflowY: "auto", mb: 2, mt: 2 }}>

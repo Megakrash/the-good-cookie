@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { AdTypes } from "@/types/AdTypes";
 import {
   Box,
@@ -20,7 +20,6 @@ type AdPageProps = {
 
 const AdPage: React.FC<AdPageProps> = ({ ad }) => {
   const theme = useTheme();
-  const [showChat, setShowChat] = React.useState(false);
   const adImageUrl = `${process.env.NEXT_PUBLIC_PATH_IMAGE}${ad.picture}`;
   const updatedAt = transformerDate(ad.updatedAt);
   return (
@@ -132,7 +131,6 @@ const AdPage: React.FC<AdPageProps> = ({ ad }) => {
         >
           <UserCard user={ad.user} />
           <BuyContactCard ad={ad} />
-          {showChat && <Chat receiverId={ad.user.id} adId={ad.id} />}
         </Box>
       </Grid>
     </Grid>

@@ -92,7 +92,7 @@ const Chat = (props: ChatProps): React.ReactNode => {
 
   return (
     <>
-      {conversation.length > 0 && user && (
+      {user && (
         <ChatCard
           conversation={conversation}
           user={user}
