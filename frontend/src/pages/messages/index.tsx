@@ -3,11 +3,11 @@ import LayoutFull from "@/components/layout/LayoutFull";
 import ConversationsPage from "@/components/messages/ConversationsPage";
 import { useQuery } from "@apollo/client";
 import { queryConversationGetAll } from "@/graphql/conversations/queryConversationGetAll";
-import { ConversationsTypes } from "@/types/ConversationTypes";
+import { ConversationTypes } from "@/types/ConversationTypes";
 import LoadingApp from "@/styles/LoadingApp";
 
 const MessagesPage = (): React.ReactNode => {
-  const { data, loading } = useQuery<{ items: ConversationsTypes }>(
+  const { data, loading } = useQuery<{ items: ConversationTypes[] }>(
     queryConversationGetAll,
   );
   if (loading) return <LoadingApp />;

@@ -1,12 +1,12 @@
 import { queryAllRootCategoriesWithAdCount } from "@/graphql/categories/queryAllRootCategoriesWithAdCount";
-import { CategoriesTypes } from "@/types/CategoryTypes";
+import { CategoryTypes } from "@/types/CategoryTypes";
 import { useQuery } from "@apollo/client";
 import { Box, Typography } from "@mui/material";
 import React from "react";
 import UniversCard from "./UniversCard";
 
 const Univers = (): React.ReactNode => {
-  const { data } = useQuery<{ items: CategoriesTypes }>(
+  const { data } = useQuery<{ items: CategoryTypes[] }>(
     queryAllRootCategoriesWithAdCount,
   );
   const category = data ? data.items : null;
@@ -14,7 +14,6 @@ const Univers = (): React.ReactNode => {
     <Box>
       <Box
         sx={{
-          //   justifyContent: "center",
           display: "flex",
           flexDirection: "column",
           marginTop: 3,

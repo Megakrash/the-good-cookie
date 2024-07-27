@@ -1,10 +1,10 @@
 import React from "react";
-import { ConversationsTypes } from "@/types/ConversationTypes";
+import { ConversationTypes } from "@/types/ConversationTypes";
 import { Divider, Grid, Typography } from "@mui/material";
 import ConversationCard from "./ConversationCard";
 
 type ConversationsPageProps = {
-  conversations: ConversationsTypes;
+  conversations: ConversationTypes[];
 };
 
 const ConversationsPage: React.FC<ConversationsPageProps> = ({

@@ -10,5 +10,3 @@ export type ConversationTypes = {
   user2: UserTypes;
   updatedAt: string;
 };
-
-export type ConversationsTypes = ConversationTypes[];

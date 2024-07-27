@@ -14,13 +14,13 @@ import { format } from "date-fns";
 import { Box, Typography } from "@mui/material";
 import { VariablesColors } from "@/styles/Variables.colors";
 import router from "next/router";
-import { CategoriesTypes, CategoryTypes } from "@/types/CategoryTypes";
+import { CategoryTypes } from "@/types/CategoryTypes";
 
 const colors = new VariablesColors();
 const { successColor, errorColor, colorOrange } = colors;
 
 type CategoryDataGridProps = {
-  categories: CategoriesTypes;
+  categories: CategoryTypes[];
 };
 
 const CategoryDataGrid: React.FC<CategoryDataGridProps> = ({ categories }) => {

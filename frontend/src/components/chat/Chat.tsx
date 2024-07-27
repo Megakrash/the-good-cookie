@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { queryAllMessages } from "@/graphql/messages/queryAllMessages";
 import { mutationSendMessage } from "@/graphql/messages/mutationSendMessage";
 import { useUserContext } from "@/context/UserContext";
-import { MessagesTypes, MessageTypes } from "@/types/MessageTypes";
+import { MessageTypes } from "@/types/MessageTypes";
 import { subscriptionMessage } from "@/graphql/messages/subscriptionMessage";
 import LoadingApp from "@/styles/LoadingApp";
 import { showToast } from "../utils/toastHelper";
@@ -19,7 +19,7 @@ const Chat = (props: ChatProps): React.ReactNode => {
   const { user } = useUserContext();
   const [messageContent, setMessageContent] = useState("");
   const { data, loading, error, subscribeToMore, refetch } = useQuery<{
-    items: MessagesTypes;
+    items: MessageTypes[];
   }>(queryAllMessages, {
     variables: {
       data: {
@@ -33,7 +33,7 @@ const Chat = (props: ChatProps): React.ReactNode => {
     },
   });
 
-  const [conversation, setConversation] = useState<MessagesTypes>([]);
+  const [conversation, setConversation] = useState<MessageTypes[]>([]);
   useEffect(() => {
     if (data?.items) {
       setConversation(data.items);
@@ -92,7 +92,7 @@ const Chat = (props: ChatProps): React.ReactNode => {
 
   return (
     <>
-      {conversation.length > 0 && user && (
+      {user && (
         <ChatCard
           conversation={conversation}
           user={user}

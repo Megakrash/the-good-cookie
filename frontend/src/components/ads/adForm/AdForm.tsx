@@ -2,7 +2,7 @@ import React, { FormEvent, useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import {
   AdTypes,
-  AdTags,
+  AdTag,
   AdCreateFormData,
   AdUpdateFormData,
 } from "@/types/AdTypes";
@@ -41,7 +41,7 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
   const [city, setCity] = useState<string>("");
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>("");
-  const [selectedTags, setSelectedTags] = useState<AdTags>([]);
+  const [selectedTags, setSelectedTags] = useState<AdTag[]>([]);
 
   // Form validation
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
@@ -70,7 +70,7 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
   const loading = createLoading || updateLoading;
 
   // Check for tag modifications
-  const tagsChanged = (newTags: AdTags, oldTags: AdTags) => {
+  const tagsChanged = (newTags: AdTag[], oldTags: AdTag[]) => {
     if (newTags.length !== oldTags.length) return true;
     const newTagIds = newTags.map((tag) => tag.id).sort();
     const oldTagIds = oldTags.map((tag) => tag.id).sort();

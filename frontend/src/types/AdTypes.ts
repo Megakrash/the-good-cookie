@@ -22,13 +22,10 @@ export type AdTypes = {
   category: CategoryTypes;
 };
 
-export type AdsTypes = AdTypes[];
-
 export type Tag = {
   id: string;
 };
 export type AdTag = { id: string };
-export type AdTags = AdTag[];
 
 export type AdCreateFormData = {
   title: string;
@@ -39,7 +36,7 @@ export type AdCreateFormData = {
   picture: string;
   price: number;
   category: { id: string } | null;
-  tags?: AdTags | null;
+  tags?: AdTag[] | null;
 };
 
 export type AdUpdateFormData = {
@@ -51,5 +48,5 @@ export type AdUpdateFormData = {
   picture?: string;
   price?: number;
   category?: { id: string } | null;
-  tags?: AdTags | null;
+  tags?: AdTag[] | null;
 };

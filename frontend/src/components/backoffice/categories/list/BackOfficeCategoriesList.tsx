@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
-import { CategoriesTypes } from "@/types/CategoryTypes";
+import { CategoryTypes } from "@/types/CategoryTypes";
 import CategoryDataGrid from "./CategoriesDataGrid";
 import { Box, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -9,7 +9,7 @@ import LoadingApp from "@/styles/LoadingApp";
 import { queryAllCategories } from "@/graphql/categories/queryAllCategories";
 
 const BackOfficeCategoriesList = (): React.ReactNode => {
-  const { data, loading } = useQuery<{ items: CategoriesTypes }>(
+  const { data, loading } = useQuery<{ items: CategoryTypes[] }>(
     queryAllCategories,
   );
   if (loading) return <LoadingApp />;

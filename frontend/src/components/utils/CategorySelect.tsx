@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { useQuery } from "@apollo/client";
-import { CategoriesTypes, CategoryTypes } from "@/types/CategoryTypes";
+import { CategoryTypes } from "@/types/CategoryTypes";
 import { queryAllCatWithHierarchy } from "@/graphql/categories/queryAllCatWithHierarchy";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { VariablesColors } from "@/styles/Variables.colors";
@@ -19,7 +19,7 @@ const CategorySelect: React.FC<CategorySelectProps> = (
   props: CategorySelectProps,
 ) => {
   // Get all categories
-  const { data } = useQuery<{ items: CategoriesTypes }>(
+  const { data } = useQuery<{ items: CategoryTypes[] }>(
     queryAllCatWithHierarchy,
   );
 
