@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AdTags, AdsTypes } from "@/types/AdTypes";
+import { AdTag, AdTypes } from "@/types/AdTypes";
 import { useLazyQuery } from "@apollo/client";
 import {
   TextField,
@@ -22,7 +22,7 @@ const colors = new VariablesColors();
 const { colorLightGrey, colorLightOrange } = colors;
 
 type SearchProps = {
-  setSearchResult: (value: AdsTypes | number) => void;
+  setSearchResult: (value: AdTypes[] | number) => void;
 };
 
 const Search = (props: SearchProps): React.ReactNode => {
@@ -34,7 +34,7 @@ const Search = (props: SearchProps): React.ReactNode => {
   // subCategories
   const [selectedCategory, setSelectedCategory] = useState<string>();
   // Tags
-  const [selectedTags, setSelectedTags] = useState<AdTags>([]);
+  const [selectedTags, setSelectedTags] = useState<AdTag[]>([]);
 
   // Location
   const [lat, setLat] = useState<number>();
@@ -52,7 +52,7 @@ const Search = (props: SearchProps): React.ReactNode => {
   //------------------
 
   const [doSearch, { data: dataSearch, loading: loadingSearch }] =
-    useLazyQuery<{ items: AdsTypes }>(queryAllAds);
+    useLazyQuery<{ items: AdTypes[] }>(queryAllAds);
 
   const searchResult = dataSearch ? dataSearch.items : null;
 

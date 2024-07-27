@@ -23,8 +23,6 @@ export type CategoryTypes = {
   adCount?: number;
 };
 
-export type CategoriesTypes = CategoryTypes[];
-
 export type CategoryFormData = {
   name: string;
   display?: boolean;

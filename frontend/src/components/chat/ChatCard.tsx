@@ -1,5 +1,5 @@
 import React from "react";
-import { MessagesTypes } from "@/types/MessageTypes";
+import { MessageTypes } from "@/types/MessageTypes";
 import { UserContextTypes } from "@/types/UserTypes";
 import {
   Card,
@@ -16,7 +16,7 @@ const colors = new VariablesColors();
 const { colorOrange, colorLightOrange, colorDarkGrey } = colors;
 
 type ChatCardProps = {
-  conversation: MessagesTypes;
+  conversation: MessageTypes[];
   user: UserContextTypes;
   messageContent: string;
   setMessageContent: (value: string) => void;

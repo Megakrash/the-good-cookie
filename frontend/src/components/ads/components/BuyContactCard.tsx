@@ -1,3 +1,4 @@
+import { useUserContext } from "@/context/UserContext";
 import {
   DarkGreyBtnGreyHover,
   OrangeBtnOrangeHover,
@@ -9,12 +10,20 @@ import React from "react";
 type BuyContactCardProps = {
   ad: AdTypes;
 };
+const logoCb = [
+  "/images/logos/cb.webp",
+  "/images/logos/master.webp",
+  "/images/logos/visa.webp",
+];
 const BuyContactCard: React.FC<BuyContactCardProps> = ({ ad }) => {
-  const logoCb = [
-    "/images/logos/cb.webp",
-    "/images/logos/master.webp",
-    "/images/logos/visa.webp",
-  ];
+  const { user } = useUserContext();
+  const handleClickMessage = () => {
+    if (!user) {
+      localStorage.setItem("previousUrl", router.asPath);
+      router.push("/signin");
+      return;
+    } else router.push(`/chat/${ad.user.id}`);
+  };
   return (
     <Card
       sx={{
@@ -35,7 +44,7 @@ const BuyContactCard: React.FC<BuyContactCardProps> = ({ ad }) => {
         }}
       >
         <OrangeBtnOrangeHover>Acheter</OrangeBtnOrangeHover>
-        <DarkGreyBtnGreyHover onClick={() => router.push(`/messages`)}>
+        <DarkGreyBtnGreyHover onClick={handleClickMessage}>
           Message
         </DarkGreyBtnGreyHover>
       </Box>

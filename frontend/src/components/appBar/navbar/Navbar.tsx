@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import Link from "next/link";
-import { CategoriesTypes } from "@/types/CategoryTypes";
+import { CategoryTypes } from "@/types/CategoryTypes";
 import { useQuery } from "@apollo/client";
 import { queryAllRootCategories } from "@/graphql/categories/queryAllRootCategories";
 import { VariablesColors } from "@/styles/Variables.colors";
@@ -20,7 +20,7 @@ const { colorOrange } = colors;
 
 const Navbar = (): React.ReactNode => {
   // Get all categories
-  const { data } = useQuery<{ items: CategoriesTypes }>(queryAllRootCategories);
+  const { data } = useQuery<{ items: CategoryTypes[] }>(queryAllRootCategories);
   const categories = data ? data.items : [];
 
   const [anchorElMenu, setAnchorElMenu] = useState<HTMLButtonElement | null>(

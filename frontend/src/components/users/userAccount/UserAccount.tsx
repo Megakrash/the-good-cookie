@@ -3,7 +3,7 @@ import { queryMe } from "@/graphql/users/queryMe";
 import { useQuery } from "@apollo/client";
 import { UserTypes } from "@/types/UserTypes";
 import LoadingApp from "@/styles/LoadingApp";
-import { AdsTypes } from "@/types/AdTypes";
+import { AdTypes } from "@/types/AdTypes";
 import AdCard from "@/components/ads/AdCard";
 import { queryAdByUser } from "@/graphql/ads/queryAdByUser";
 import { useUserContext } from "@/context/UserContext";
@@ -15,7 +15,7 @@ function UserAccount(): React.ReactNode {
   const router = useRouter();
   const { user } = useUserContext();
   // Ads
-  const { data: adsData } = useQuery<{ items: AdsTypes }>(queryAdByUser, {
+  const { data: adsData } = useQuery<{ items: AdTypes[] }>(queryAdByUser, {
     variables: { adsByUserId: user?.id },
   });
   const userAds = adsData ? adsData.items : null;
@@ -76,7 +76,7 @@ function UserAccount(): React.ReactNode {
                   startIcon={<EditIcon />}
                   type="button"
                   onClick={() => {
-                    router.push(`/ads/${ad.id}/edit`);
+                    router.push(`/ads/edit/${ad.id}`);
                   }}
                   size="small"
                 >
