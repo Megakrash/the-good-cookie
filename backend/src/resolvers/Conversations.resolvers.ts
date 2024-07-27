@@ -50,6 +50,13 @@ export class ConversationsResolver {
     if (!context.user) {
       throw new Error('User context is missing or user is not authenticated')
     }
+    const existingAd = await Ad.findOne({
+      where: { id: adId },
+      relations: { user: true },
+    })
+    if (existingAd && existingAd.user.id === context.user.id) {
+      return null
+    }
 
     const conversation = await Conversation.findOne({
       where: [
