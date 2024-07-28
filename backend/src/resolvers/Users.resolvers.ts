@@ -48,6 +48,8 @@ export class UsersResolver {
 
       const newUser = new User()
       Object.assign(newUser, data)
+      newUser.updatedBy = newUser
+      newUser.createdBy = newUser
 
       // Hash password
       newUser.hashedPassword = await UserServices.hashPassword(data.password)
@@ -127,7 +129,9 @@ export class UsersResolver {
   @Authorized('ADMIN')
   @Query(() => [User])
   async usersGetAll(): Promise<User[]> {
-    const users = await User.find({})
+    const users = await User.find({
+      relations: { updatedBy: true, createdBy: true },
+    })
     return users
   }
 
