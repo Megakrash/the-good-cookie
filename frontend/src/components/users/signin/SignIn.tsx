@@ -51,7 +51,9 @@ const SignIn = (): React.ReactElement => {
         refetchUserContext();
         const previousUrl = localStorage.getItem("previousUrl") || "/";
         localStorage.removeItem("previousUrl");
-        router.replace(previousUrl);
+        if (!window.location.pathname.startsWith("/tgc-backoffice")) {
+          router.replace(previousUrl);
+        }
       }
     } catch (error) {
       if (error.message === "Failed to fetch") {

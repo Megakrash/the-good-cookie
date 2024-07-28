@@ -12,11 +12,13 @@ import CategorySelect from "../../../utils/CategorySelect";
 import PictureDownload from "@/components/utils/PictureDownload";
 import { uploadPicture } from "@/components/utils/uploadPicture";
 import { queryAllCategories } from "@/graphql/categories/queryAllCategories";
+import DisplaySwitch from "@/components/utils/DisplaySwitch";
 
 const CreateCategories = (): React.ReactNode => {
   // State
   const [name, setName] = useState<string>("");
   const [parentCategory, setParentCategory] = useState<string | null>(null);
+  const [display, setDisplay] = useState<boolean | null>(false);
   const [picture, setPicture] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   // Form validation
@@ -50,6 +52,7 @@ const CreateCategories = (): React.ReactNode => {
       const data: CategoryFormData = {
         name: name,
         parentCategory: parentCategory ? { id: parentCategory } : null,
+        display: display,
         picture: filename ? filename : null,
       };
       const result = await doCreate({
@@ -105,6 +108,7 @@ const CreateCategories = (): React.ReactNode => {
         selectedCategory={parentCategory}
         setSelectedCategory={setParentCategory}
       />
+      <DisplaySwitch display={display} setDisplay={setDisplay} />
       <PictureDownload
         picture={picture}
         setPicture={setPicture}
