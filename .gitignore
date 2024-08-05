@@ -4,3 +4,4 @@ docker-compose.prod.yml
 docker-compose.release.yml
 Caddyfile
 webhook.conf
+fetch-and-deploy.sh

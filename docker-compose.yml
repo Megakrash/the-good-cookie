@@ -15,6 +15,7 @@ services:
     depends_on:
       - postgres
   postgres:
+    container_name: thegoodcookie-postgres-db
     image: postgis/postgis:latest
     env_file: ./backend/.env
     volumes:

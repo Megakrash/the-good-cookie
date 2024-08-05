@@ -6,3 +6,4 @@ dist
 pictures
 jest.config.js
 migrations
+/dumps/*
