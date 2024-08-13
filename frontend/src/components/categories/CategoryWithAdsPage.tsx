@@ -1,7 +1,7 @@
 import React from "react";
 import { CategoryTypes } from "@/types/CategoryTypes";
 import { useQuery } from "@apollo/client";
-import { AdsTypes } from "@/types/AdTypes";
+import { AdTypes } from "@/types/AdTypes";
 import { queryAllAds } from "@/graphql/ads/queryAllAds";
 import { Box, Typography } from "@mui/material";
 import AdCard from "../ads/AdCard";
@@ -13,7 +13,7 @@ type CategoryWithAdsPageProps = {
 const CategoryWithAdsPage: React.FC<CategoryWithAdsPageProps> = ({
   category,
 }) => {
-  const { data } = useQuery<{ items: AdsTypes }>(queryAllAds, {
+  const { data } = useQuery<{ items: AdTypes[] }>(queryAllAds, {
     variables: {
       where: {
         category: category.id,

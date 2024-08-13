@@ -1,7 +1,14 @@
-import React, { useState } from "react";
-import { AdTags, AdsTypes } from "@/types/AdTypes";
+import React, { useEffect, useState } from "react";
+import { AdTag, AdTypes } from "@/types/AdTypes";
 import { useLazyQuery } from "@apollo/client";
-import { TextField, Box, Button, Grid, useTheme } from "@mui/material";
+import {
+  TextField,
+  Box,
+  Button,
+  Grid,
+  useTheme,
+  CircularProgress,
+} from "@mui/material";
 import { FilterAlt, FilterAltOff } from "@mui/icons-material";
 import { Toaster } from "react-hot-toast";
 import { queryAllAds } from "../../graphql/ads/queryAllAds";
@@ -14,7 +21,11 @@ import TagSelect from "../utils/TagSelect";
 const colors = new VariablesColors();
 const { colorLightGrey, colorLightOrange } = colors;
 
-const Search = (): React.ReactNode => {
+type SearchProps = {
+  setSearchResult: (value: AdTypes[] | number) => void;
+};
+
+const Search = (props: SearchProps): React.ReactNode => {
   const theme = useTheme();
   //-----------------
   // Selected queries
@@ -23,7 +34,7 @@ const Search = (): React.ReactNode => {
   // subCategories
   const [selectedCategory, setSelectedCategory] = useState<string>();
   // Tags
-  const [selectedTags, setSelectedTags] = useState<AdTags>([]);
+  const [selectedTags, setSelectedTags] = useState<AdTag[]>([]);
 
   // Location
   const [lat, setLat] = useState<number>();
@@ -41,8 +52,24 @@ const Search = (): React.ReactNode => {
   //------------------
 
   const [doSearch, { data: dataSearch, loading: loadingSearch }] =
-    useLazyQuery<{ items: AdsTypes }>(queryAllAds);
-  // const searchResult = dataSearch ? dataSearch.items : [];
+    useLazyQuery<{ items: AdTypes[] }>(queryAllAds);
+
+  const searchResult = dataSearch ? dataSearch.items : null;
+
+  const sendSearchResult = () => {
+    if (searchResult && searchResult.length >= 1) {
+      props.setSearchResult(searchResult);
+    } else if (searchResult && searchResult.length === 0) {
+      props.setSearchResult(1);
+    }
+  };
+
+  useEffect(() => {
+    if (searchResult !== null) {
+      sendSearchResult();
+    }
+  }, [searchResult]);
+
   const handleSearchClick = () => {
     if (!selectedCategory && !lat && !long) {
       showToast(
@@ -234,7 +261,7 @@ const Search = (): React.ReactNode => {
           disabled={loadingSearch}
           onClick={handleSearchClick}
         >
-          Rechercher
+          {loadingSearch ? <CircularProgress size={24} /> : "Rechercher"}
         </Button>
         <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <Button

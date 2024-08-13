@@ -4,10 +4,10 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
-  ManyToOne,
   Unique,
+  ManyToOne,
 } from 'typeorm'
-import { Field, ID, InputType, ObjectType } from 'type-graphql'
+import { Field, ID, InputType, Int, ObjectType } from 'type-graphql'
 import { ObjectId } from './ObjectId'
 import { Ad } from './Ad'
 
@@ -56,6 +56,9 @@ export class Category extends PrimaryEntity {
   })
   @Field(() => [Category], { nullable: true })
   childCategories?: Category[]
+
+  @Field(() => Int, { nullable: true })
+  adCount?: number
 }
 
 //-------------------------------

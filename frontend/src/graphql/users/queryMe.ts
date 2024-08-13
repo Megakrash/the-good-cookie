@@ -12,9 +12,10 @@ export const queryMe = gql`
       adress
       zipCode
       city
-      coordinates
       phoneNumber
-      registrationDate
+      createdAt
+      updatedAt
+      lastConnectionDate
       role
     }
   }

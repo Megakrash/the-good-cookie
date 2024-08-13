@@ -4,6 +4,10 @@ import { useQuery } from "@apollo/client";
 import { queryMeContext } from "@/graphql/users/queryMeContext";
 import { UserContextTypes } from "@/types/UserTypes";
 
+const isPrivateRoute = (pathname: string, privatePages: string[]) => {
+  return privatePages.some((privatePage) => pathname.startsWith(privatePage));
+};
+
 export function useAuth(privatePages: string[]) {
   const { loading, data, refetch, error } = useQuery<{
     item: UserContextTypes;
@@ -12,7 +16,7 @@ export function useAuth(privatePages: string[]) {
 
   useEffect(() => {
     const handleRouteChange = () => {
-      if (privatePages.includes(router.pathname)) {
+      if (isPrivateRoute(router.pathname, privatePages)) {
         refetch();
       }
     };
@@ -23,10 +27,11 @@ export function useAuth(privatePages: string[]) {
 
   useEffect(() => {
     if (
-      privatePages.includes(router.pathname) &&
+      isPrivateRoute(router.pathname, privatePages) &&
       (data?.item === null || error)
     ) {
-      router.replace("/signin");
+      localStorage.setItem("previousUrl", router.asPath);
+      router.push("/signin");
     }
   }, [router, data, error]);
 

@@ -8,10 +8,11 @@ import {
   BaseEntity,
   Unique,
 } from 'typeorm'
-import { Field, ID, ObjectType } from 'type-graphql'
+import { Field, ID, InputType, ObjectType } from 'type-graphql'
 import { User } from './User'
 import { Message } from './Message'
 import { Ad } from './Ad'
+import { ObjectId } from './ObjectId'
 
 @Entity()
 @ObjectType()
@@ -46,4 +47,13 @@ export class Conversation extends BaseEntity {
   @UpdateDateColumn({ type: 'timestamp' })
   @Field(() => Date)
   updatedAt!: Date
+}
+
+@InputType()
+export class ConversationCreateInput {
+  @Field(() => ObjectId, { nullable: true })
+  ad!: ObjectId
+
+  @Field(() => ObjectId, { nullable: true })
+  user2!: ObjectId
 }

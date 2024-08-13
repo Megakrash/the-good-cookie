@@ -15,10 +15,10 @@ CMD ["npm", "run", "dev"]
 # this step only compile the app (ts to js), do not launch this step
 FROM node:18.18.2-alpine3.18 AS build
 ARG NEXT_PUBLIC_API_URL
-ARG NEXT_PUBLIC_WS_URL
 ARG NEXT_PUBLIC_MIDDLEWARE_URL
 ARG NEXT_PUBLIC_PATH_IMAGE
 ARG NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+ARG NEXT_PUBLIC_RELEASE_TAG
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY --from=deps /app/node_modules ./node_modules 

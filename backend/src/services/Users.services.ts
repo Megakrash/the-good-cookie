@@ -92,7 +92,7 @@ export class UserServices {
     cookie.set('TGCookie', token, {
       httpOnly: true,
       secure: false,
-      expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
+      expires: new Date(Date.now() + 12 * 60 * 60 * 1000),
     })
   }
   // Decode token verifyEmail to get email & nickname
@@ -121,6 +121,7 @@ export class UserServices {
         return { email: payload.email }
       }
     } catch (error) {
+      console.error(error)
       return null
     }
     return null
@@ -142,8 +143,8 @@ export class UserServices {
     if (user.id !== context.user?.id && context.user?.role !== 'ADMIN') {
       throw new Error('Unauthorized')
     }
-    await deletePicture(user.picture)
     await user.remove()
+    await deletePicture(user.picture)
     return `User with id: ${user.id} deleted`
   }
 }

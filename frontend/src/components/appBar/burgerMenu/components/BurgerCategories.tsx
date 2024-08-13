@@ -2,7 +2,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import { Box, Divider, MenuItem, Typography } from "@mui/material";
 import { useQuery } from "@apollo/client";
-import { CategoriesTypes } from "@/types/CategoryTypes";
+import { CategoryTypes } from "@/types/CategoryTypes";
 import { queryAllRootCategories } from "@/graphql/categories/queryAllRootCategories";
 
 type BurgerCategoriesProps = {
@@ -11,7 +11,7 @@ type BurgerCategoriesProps = {
 
 const BurgerCategories = (props: BurgerCategoriesProps): React.ReactNode => {
   const router = useRouter();
-  const { data } = useQuery<{ items: CategoriesTypes }>(queryAllRootCategories);
+  const { data } = useQuery<{ items: CategoryTypes[] }>(queryAllRootCategories);
   const categories = data ? data.items : [];
   return (
     <Box sx={{ display: { xs: "flex", sm: "none" }, flexDirection: "column" }}>

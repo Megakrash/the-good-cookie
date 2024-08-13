@@ -79,7 +79,7 @@ export class CategoriesResolver {
       throw new Error('Category not found')
     }
 
-    if (data.picture !== category.picture) {
+    if (data.picture !== category.picture && category.picture) {
       await deletePicture(category.picture)
     }
     // Update Category with new data
@@ -125,6 +125,41 @@ export class CategoriesResolver {
       },
       order: { id: 'ASC' },
     })
+    return rootCategories
+  }
+
+  @Query(() => [Category])
+  async categoriesGetAllRootWithAdCounts(): Promise<Category[]> {
+    // Fetch all root categories with their full hierarchy
+    const rootCategories = await Category.find({
+      where: { parentCategory: IsNull(), display: true },
+      relations: [
+        'childCategories',
+        'childCategories.childCategories',
+        'childCategories.childCategories.ads',
+      ],
+      order: { id: 'ASC' },
+    })
+
+    // Fonction récursive pour compter les annonces
+    const countAdsInCategory = async (category: Category): Promise<number> => {
+      let adCount = 0
+      if (category.ads) {
+        adCount += category.ads.length
+      }
+      if (category.childCategories) {
+        for (const child of category.childCategories) {
+          adCount += await countAdsInCategory(child)
+        }
+      }
+      return adCount
+    }
+
+    // Calculer le nombre d'annonces pour chaque catégorie racine
+    for (const category of rootCategories) {
+      category.adCount = await countAdsInCategory(category)
+    }
+
     return rootCategories
   }
 
@@ -174,10 +209,10 @@ export class CategoriesResolver {
       relations: { childCategories: true },
     })
     if (category) {
+      await category.remove()
       if (category.picture) {
         await deletePicture(category.picture)
       }
-      await category.remove()
       category.id = id
     }
     return category

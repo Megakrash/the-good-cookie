@@ -24,7 +24,7 @@ const CategoryPage = (): React.ReactNode => {
     <>
       {category ? (
         <LayoutFull
-          title={`TGC : ${category ? `${category.parentCategory?.name}-${category.name}` : "Loading..."}`}
+          title={`TGC : ${category ? `${category.name}` : "Loading..."}`}
         >
           {/* If category has no child categories, display the category with ads */}
           {category.parentCategory && category.childCategories.length < 1 && (

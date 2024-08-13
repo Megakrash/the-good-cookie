@@ -1,8 +1,8 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
 import { queryAllTags } from "@/graphql/tags/queryAlltags";
-import { AdTags } from "@/types/AdTypes";
-import { TagsTypes } from "@/types/TagTypes";
+import { AdTag } from "@/types/AdTypes";
+import { TagTypes } from "@/types/TagTypes";
 import {
   FormControl,
   InputLabel,
@@ -17,18 +17,18 @@ const colors = new VariablesColors();
 const { colorWhite } = colors;
 
 type TagSelectProps = {
-  selectedTags: AdTags;
-  setSelectedTags: (tags: AdTags) => void;
+  selectedTags: AdTag[];
+  setSelectedTags: (tags: AdTag[]) => void;
 };
 
 const TagSelect = (props: TagSelectProps) => {
   // Get Tags
-  const { data: dataTags } = useQuery<{ items: TagsTypes }>(queryAllTags);
+  const { data: dataTags } = useQuery<{ items: TagTypes[] }>(queryAllTags);
   const tags = dataTags ? dataTags.items : [];
 
   const handleChangeTag = (event: SelectChangeEvent<string[]>) => {
     const value: string[] = event.target.value as unknown as string[];
-    const selectedOptions: AdTags = value.map((id) => ({ id }));
+    const selectedOptions: AdTag[] = value.map((id) => ({ id }));
     props.setSelectedTags(selectedOptions);
   };
   return (

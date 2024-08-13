@@ -1,5 +1,5 @@
 import React from "react";
-import { MessagesTypes } from "@/types/MessageTypes";
+import { MessageTypes } from "@/types/MessageTypes";
 import { UserContextTypes } from "@/types/UserTypes";
 import {
   Card,
@@ -16,7 +16,7 @@ const colors = new VariablesColors();
 const { colorOrange, colorLightOrange, colorDarkGrey } = colors;
 
 type ChatCardProps = {
-  conversation: MessagesTypes;
+  conversation: MessageTypes[];
   user: UserContextTypes;
   messageContent: string;
   setMessageContent: (value: string) => void;
@@ -32,7 +32,9 @@ const ChatCard: React.FC<ChatCardProps> = ({
   return (
     <Card sx={{ width: "90%", maxWidth: 500, mt: 5, ml: 3, p: 1 }}>
       <Typography variant="h4" gutterBottom component="div">
-        {conversation[0]?.ad.title}
+        {conversation.length > 0
+          ? conversation[0]?.ad.title
+          : "Nouvelle conversation"}
       </Typography>
       <Divider />
       <Box sx={{ overflowY: "auto", mb: 2, mt: 2 }}>

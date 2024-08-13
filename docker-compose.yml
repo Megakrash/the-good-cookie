@@ -15,6 +15,7 @@ services:
     depends_on:
       - postgres
   postgres:
+    container_name: thegoodcookie-postgres-db
     image: postgis/postgis:latest
     env_file: ./backend/.env
     volumes:
@@ -24,7 +25,6 @@ services:
     networks:
       - thegoodcookie-network
 volumes:
-  assets:
-  postgres-data:
+  postgres-data: {}
 networks:
-  thegoodcookie-network:
+  thegoodcookie-network: {}

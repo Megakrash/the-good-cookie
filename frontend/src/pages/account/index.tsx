@@ -3,7 +3,7 @@ import UserAccount from "@/components/users/userAccount/UserAccount";
 
 function AccountPage(): React.ReactNode {
   return (
-    <LayoutFull title="TGC : Connexion">
+    <LayoutFull title="TGC : Mon compte">
       <UserAccount />
     </LayoutFull>
   );

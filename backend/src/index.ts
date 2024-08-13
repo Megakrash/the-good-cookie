@@ -63,7 +63,6 @@ async function start() {
 
   const server = new ApolloServer({
     schema,
-    introspection: process.env.NODE_ENV !== 'production',
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
 
@@ -88,7 +87,11 @@ async function start() {
     ) {
       return next()
     }
-    express.json({ limit: '50mb' }),
+
+    express.json({ limit: '50mb' })(req, res, (err) => {
+      if (err) {
+        return next(err)
+      }
       expressMiddleware(server, {
         context: async (args) => {
           return {
@@ -97,7 +100,9 @@ async function start() {
           }
         },
       })(req, res, next)
+    })
   })
+
   middleware(app)
   await new Promise<void>((resolve) => httpServer.listen({ port }, resolve))
   console.log(`🚀 Server ready at port ${port} 🚀`)

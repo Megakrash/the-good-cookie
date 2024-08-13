@@ -46,9 +46,10 @@ export class UsersResolver {
         throw new Error('User already exists')
       }
 
-      // Create new user entity with picture & hash password
       const newUser = new User()
       Object.assign(newUser, data)
+      newUser.updatedBy = newUser
+      newUser.createdBy = newUser
 
       // Hash password
       newUser.hashedPassword = await UserServices.hashPassword(data.password)
@@ -128,7 +129,9 @@ export class UsersResolver {
   @Authorized('ADMIN')
   @Query(() => [User])
   async usersGetAll(): Promise<User[]> {
-    const users = await User.find({})
+    const users = await User.find({
+      relations: { updatedBy: true, createdBy: true },
+    })
     return users
   }
 
@@ -169,10 +172,10 @@ export class UsersResolver {
       // Find user by email
       const user = await UserServices.findUserByEmail(payload.email)
       if (!user) {
-        return { success: false, message: 'User not found' }
+        return { success: false, message: 'Utilisateur non trouvé' }
       }
       if (user.isVerified === true) {
-        return { success: true, message: 'Email already verified' }
+        return { success: true, message: 'Email déjà vérifié' }
       }
       // Mark user as verified
       user.isVerified = true
@@ -180,7 +183,7 @@ export class UsersResolver {
       await user.save()
       // Send confirmation email
       await sendConfirmationEmail(user.email, user.nickName)
-      return { success: true, message: 'Email verified successfully!' }
+      return { success: true, message: 'Email vérifié avec succès !' }
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError && userEmail && userNickName) {
         return await UserServices.handleExpiredToken(userEmail, userNickName)
@@ -258,18 +261,15 @@ export class UsersResolver {
   async meContext(@Ctx() context: MyContext): Promise<UserContext | null> {
     // Get if cookie is present in context
     const cookies = new Cookies(context.req, context.res)
-    const renthub_token = cookies.get('TGCookie')
+    const TGCookie = cookies.get('TGCookie')
 
-    if (!renthub_token) {
+    if (!TGCookie) {
       return null
     }
 
     try {
       // Verify token
-      const payload = jwt.verify(
-        renthub_token,
-        process.env.JWT_SECRET_KEY || ''
-      )
+      const payload = jwt.verify(TGCookie, process.env.JWT_SECRET_KEY || '')
       // Get user from payload
       if (typeof payload === 'object' && 'userId' in payload) {
         const user = await UserServices.findUserById(payload.userId)

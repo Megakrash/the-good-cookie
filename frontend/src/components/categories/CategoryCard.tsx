@@ -34,9 +34,6 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
           display: "flex",
           flexDirection: "column",
           gap: 1,
-          "&:hover": {
-            border: (theme) => `2px solid ${theme.palette.primary.main}`,
-          },
         }}
       >
         {category.picture && (

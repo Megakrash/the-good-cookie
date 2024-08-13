@@ -33,6 +33,7 @@ export const customAuthChecker: AuthChecker<MyContext> = async (
     return false
   } catch (error) {
     console.error('Invalid token')
+    console.error(error)
     return false
   }
 }

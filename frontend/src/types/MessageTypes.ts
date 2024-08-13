@@ -16,5 +16,3 @@ export type MessageTypes = {
     nickName: string;
   };
 };
-
-export type MessagesTypes = MessageTypes[];

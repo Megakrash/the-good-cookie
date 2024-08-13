@@ -10,7 +10,6 @@ import { showToast } from "@/components/utils/toastHelper";
 import CategorySelect from "../../../utils/CategorySelect";
 import PictureDownload from "@/components/utils/PictureDownload";
 import { uploadPicture } from "@/components/utils/uploadPicture";
-import router from "next/router";
 import { mutationUpdateCategory } from "@/graphql/categories/mutationUpdateCategory";
 import { queryAllCategories } from "@/graphql/categories/queryAllCategories";
 import DisplaySwitch from "@/components/utils/DisplaySwitch";

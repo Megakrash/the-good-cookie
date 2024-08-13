@@ -20,6 +20,7 @@ import {
 } from "../components/UserRegex";
 import { useUserContext } from "@/context/UserContext";
 import { showToast } from "@/components/utils/toastHelper";
+import router from "next/router";
 
 const SignIn = (): React.ReactElement => {
   const theme = useTheme();
@@ -48,8 +49,11 @@ const SignIn = (): React.ReactElement => {
           `Connexion réussie, bienvenue ${data.item.firstName}`,
         );
         refetchUserContext();
-        setEmail("");
-        setPassword("");
+        const previousUrl = localStorage.getItem("previousUrl") || "/";
+        localStorage.removeItem("previousUrl");
+        if (!window.location.pathname.startsWith("/tgc-backoffice")) {
+          router.replace(previousUrl);
+        }
       }
     } catch (error) {
       if (error.message === "Failed to fetch") {

@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { queryAllMessages } from "@/graphql/messages/queryAllMessages";
 import { mutationSendMessage } from "@/graphql/messages/mutationSendMessage";
 import { useUserContext } from "@/context/UserContext";
-import { MessagesTypes, MessageTypes } from "@/types/MessageTypes";
+import { MessageTypes } from "@/types/MessageTypes";
 import { subscriptionMessage } from "@/graphql/messages/subscriptionMessage";
 import LoadingApp from "@/styles/LoadingApp";
 import { showToast } from "../utils/toastHelper";
@@ -19,21 +19,21 @@ const Chat = (props: ChatProps): React.ReactNode => {
   const { user } = useUserContext();
   const [messageContent, setMessageContent] = useState("");
   const { data, loading, error, subscribeToMore, refetch } = useQuery<{
-    items: MessagesTypes;
+    items: MessageTypes[];
   }>(queryAllMessages, {
     variables: {
       data: {
-        ad: props.adId ? { id: Number(props.adId) } : null,
+        ad: props.adId ? { id: props.adId } : null,
         conversation: props.conversationId
-          ? { id: Number(props.conversationId) }
+          ? { id: props.conversationId }
           : null,
-        userId1: Number(user?.id),
-        userId2: props.receiverId ? Number(props.receiverId) : null,
+        userId1: user?.id,
+        userId2: props.receiverId ? props.receiverId : null,
       },
     },
   });
 
-  const [conversation, setConversation] = useState<MessagesTypes>([]);
+  const [conversation, setConversation] = useState<MessageTypes[]>([]);
   useEffect(() => {
     if (data?.items) {
       setConversation(data.items);
@@ -45,7 +45,7 @@ const Chat = (props: ChatProps): React.ReactNode => {
       newMessage: MessageTypes;
     }>({
       document: subscriptionMessage,
-      variables: { ad: Number(props.adId) },
+      variables: { ad: props.adId },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const newMessage = subscriptionData.data.newMessage;
@@ -71,8 +71,8 @@ const Chat = (props: ChatProps): React.ReactNode => {
       variables: {
         data: {
           content: messageContent,
-          receiver: { id: Number(props.receiverId) },
-          ad: { id: Number(props.adId) },
+          receiver: { id: props.receiverId },
+          ad: { id: props.adId },
         },
       },
     });
@@ -92,7 +92,7 @@ const Chat = (props: ChatProps): React.ReactNode => {
 
   return (
     <>
-      {conversation.length > 0 && user && (
+      {user && (
         <ChatCard
           conversation={conversation}
           user={user}

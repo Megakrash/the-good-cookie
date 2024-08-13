@@ -1,50 +1,96 @@
-import { useEffect, useState } from "react";
-import { Card, Typography } from "@mui/material";
+import { Avatar, Box, Button, Card, Typography } from "@mui/material";
 import { queryMe } from "@/graphql/users/queryMe";
 import { useQuery } from "@apollo/client";
 import { UserTypes } from "@/types/UserTypes";
+import LoadingApp from "@/styles/LoadingApp";
+import { AdTypes } from "@/types/AdTypes";
+import AdCard from "@/components/ads/AdCard";
+import { queryAdByUser } from "@/graphql/ads/queryAdByUser";
+import { useUserContext } from "@/context/UserContext";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteAd from "@/components/ads/AdDelete";
+import { useRouter } from "next/router";
 
 function UserAccount(): React.ReactNode {
+  const router = useRouter();
+  const { user } = useUserContext();
+  // Ads
+  const { data: adsData } = useQuery<{ items: AdTypes[] }>(queryAdByUser, {
+    variables: { adsByUserId: user?.id },
+  });
+  const userAds = adsData ? adsData.items : null;
   // User infos
-  const { data, error } = useQuery<{ item: UserTypes }>(queryMe);
-  const userInfos = data ? data.item : null;
-  // Form states
-  const [firstName, setFirstName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
-  const [nickName, setNickName] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [zipCode, setZipCode] = useState<string>("");
-  const [city, setCity] = useState<string>("");
-  const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
-  const [email, setEmail] = useState<string>("");
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [picture, setPicture] = useState<File | null>(null);
-  function handleFileSelection(event: React.ChangeEvent<HTMLInputElement>) {
-    if (event.target.files && event.target.files[0]) {
-      setPicture(event.target.files[0]);
-    }
-  }
-  // Set user infos in state
-  useEffect(() => {
-    if (userInfos) {
-      setFirstName(userInfos.firstName);
-      setLastName(userInfos.lastName);
-      setNickName(userInfos.nickName);
-      setZipCode(userInfos.zipCode);
-      setCity(userInfos.city);
-      setCoordinates(userInfos.coordinates);
-      setEmail(userInfos.email);
-      setPhoneNumber(userInfos.phoneNumber);
-    }
-  }, [userInfos]);
+  const { data: meData, loading: meLoading } = useQuery<{ item: UserTypes }>(
+    queryMe,
+  );
+  if (meLoading) return <LoadingApp />;
+  const userInfos = meData ? meData.item : null;
+
+  const userImageUrl = userInfos.picture
+    ? `${process.env.NEXT_PUBLIC_PATH_IMAGE}${userInfos.picture}`
+    : "/images/default/avatar.webp";
   return (
-    <Card>
-      {userInfos && (
-        <Typography variant="h4" gutterBottom>
-          {`Hey ${nickName} !`}
-        </Typography>
+    <Box
+      sx={{
+        width: "80%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        margin: "auto",
+        marginTop: 3,
+        padding: 2,
+        gap: 2,
+      }}
+    >
+      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Avatar
+          alt={userInfos.nickName}
+          sx={{ width: "55px", height: "55px" }}
+          src={userImageUrl}
+        />
+        <Typography variant="h5">{`Bonjour ${userInfos.nickName} !`}</Typography>
+      </Box>
+      {userAds && (
+        <Typography variant="h6">{`Toutes vos annonces :`}</Typography>
       )}
-    </Card>
+      {userAds && (
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 4,
+            marginTop: 2,
+          }}
+        >
+          {userAds.map((ad) => (
+            <Box
+              key={ad.id}
+              sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}
+            >
+              <AdCard ad={ad} />
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Button
+                  startIcon={<EditIcon />}
+                  type="button"
+                  onClick={() => {
+                    router.push(`/ads/edit/${ad.id}`);
+                  }}
+                  size="small"
+                >
+                  Modifier
+                </Button>
+                <DeleteAd id={ad.id} />
+              </Box>
+            </Box>
+          ))}
+        </Box>
+      )}
+    </Box>
   );
 }
 
