@@ -121,6 +121,7 @@ export class UserServices {
         return { email: payload.email }
       }
     } catch (error) {
+      console.error(error)
       return null
     }
     return null
