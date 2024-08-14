@@ -86,7 +86,7 @@ export class UsersResolver {
       const user = await UserServices.findUserById(id)
 
       // Check if user is authorized to update
-      if (user.id !== context.user?.id || context.user?.role !== 'ADMIN') {
+      if (user.id !== context.user?.id && context.user?.role !== 'ADMIN') {
         throw new Error('Unauthorized')
       }
 
