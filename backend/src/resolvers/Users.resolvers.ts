@@ -23,6 +23,7 @@ import { UserServices } from '../services/Users.services'
 import { UserToken } from '../entities/UserToken'
 import { addDays, isBefore } from 'date-fns'
 import { v4 as uuidv4 } from 'uuid'
+import * as argon2 from 'argon2'
 import { resetPasswordEmail } from '../utils/mailServices/resetPasswordEmail'
 import {
   sendConfirmationEmail,
@@ -90,6 +91,7 @@ export class UsersResolver {
         throw new Error('Unauthorized')
       }
 
+      // If picture is different, delete old picture
       if (data.picture && data.picture !== user.picture) {
         await deletePicture(user.picture)
       }
@@ -106,6 +108,18 @@ export class UsersResolver {
       Object.assign(user, data)
       if (context.user) {
         user.updatedBy = context.user
+      }
+      // Verify & hash new password if provided
+      if (data.newPassword && data.currentPassword) {
+        const valid = await argon2.verify(
+          user.hashedPassword,
+          data.currentPassword
+        )
+        if (!valid) {
+          throw new Error('Email ou mot de passe incorrect')
+        }
+        await UserServices.validatePassword(data.newPassword)
+        user.hashedPassword = await UserServices.hashPassword(data.newPassword)
       }
       // Validate user
       await UserServices.validateUser(user)
