@@ -25,23 +25,34 @@ const EditAd = (): React.ReactNode => {
         <Box
           sx={{
             width: "98%",
-            marginTop: "50px",
+            marginTop: { xs: "15px", md: "50px" },
             display: "flex",
             flexDirection: { xs: "column-reverse", md: "row" },
             justifyContent: "center",
           }}
         >
-          <AdForm ad={ad} />
+          <Box
+            sx={{
+              width: { xs: "98%", md: "50%" },
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <AdForm ad={ad} />
+          </Box>
           <Box
             sx={{
               width: { xs: "98%", md: "40%" },
               display: "flex",
               flexDirection: "column",
-              m: 2,
-              gap: 4,
+              alignItems: "center",
+              padding: 1,
+              gap: 2,
             }}
           >
-            <Typography variant="h4">Votre annonce actuelle</Typography>
+            <Typography variant="h4" textAlign="center">
+              Votre annonce actuelle
+            </Typography>
             <AdCard key={ad.id} ad={ad} />
           </Box>
         </Box>
