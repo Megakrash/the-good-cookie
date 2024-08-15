@@ -176,17 +176,17 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
   return (
     <Box
       sx={{
-        width: ad ? "50%" : "98%",
+        width: "100%",
       }}
     >
       <Toaster />
-
       <Box
         component="form"
         sx={{
           display: "flex",
           flexDirection: "column",
-          "& > :not(style)": { m: 2, width: "380px" },
+          padding: 1,
+          gap: 2,
         }}
         autoComplete="off"
         onSubmit={onSubmit}
