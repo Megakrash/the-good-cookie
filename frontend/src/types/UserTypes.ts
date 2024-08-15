@@ -41,7 +41,21 @@ export type UserFormData = {
   coordinates?: [number, number];
   phoneNumber?: string;
 };
-
+export type UserUpdateFormData = {
+  profil?: string;
+  gender?: string;
+  firstName?: string;
+  lastName?: string;
+  nickName?: string;
+  currentPassword?: string;
+  newPassword?: string;
+  picture?: string;
+  adress?: string;
+  zipCode?: string;
+  city?: string;
+  coordinates?: [number, number];
+  phoneNumber?: string;
+};
 export type UserTypes = {
   id: string;
   firstName: string;
