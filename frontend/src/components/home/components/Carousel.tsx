@@ -42,7 +42,6 @@ const CarouselUnivers: React.FC<CarouselProps> = ({ categories }) => {
       infinite
       additionalTransfrom={0}
       showDots={true}
-      //   centerMode={true}
     >
       {categories.map((category) => (
         <UniversCard key={category.id} category={category} />

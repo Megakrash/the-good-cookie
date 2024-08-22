@@ -31,17 +31,7 @@ const Univers = (): React.ReactNode => {
           acheter, vendre, échanger ... Découvrez nos rubriques !
         </Typography>
       </Box>
-      <div
-        className="carousel-box"
-        // sx={{
-        //   // display: "flex",
-        //   // width: "90%",
-        //   // flexWrap: "wrap",
-        //   // gap: 10,
-        //   // justifyContent: "center",
-        //   // alignItems: "center",
-        // }}
-      >
+      <div className="carousel-box">
         {categories && <Carousel categories={categories} />}
       </div>
     </Box>
