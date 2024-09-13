@@ -25,6 +25,6 @@ describe("UserProfil", () => {
   it("sets the profile to Particulier when the corresponding button is clicked", () => {
     const particularButton = screen.getByLabelText("Je suis un particulier");
     fireEvent.click(particularButton);
-    expect(setProfilMock).toHaveBeenCalledWith("INDIVIDUAL");
+    expect(setProfilMock).toHaveBeenCalledWith("PARTICULIER");
   });
 });

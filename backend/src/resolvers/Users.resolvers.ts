@@ -23,6 +23,7 @@ import { UserServices } from '../services/Users.services'
 import { UserToken } from '../entities/UserToken'
 import { addDays, isBefore } from 'date-fns'
 import { v4 as uuidv4 } from 'uuid'
+import * as argon2 from 'argon2'
 import { resetPasswordEmail } from '../utils/mailServices/resetPasswordEmail'
 import {
   sendConfirmationEmail,
@@ -86,10 +87,11 @@ export class UsersResolver {
       const user = await UserServices.findUserById(id)
 
       // Check if user is authorized to update
-      if (user.id !== context.user?.id || context.user?.role !== 'ADMIN') {
+      if (user.id !== context.user?.id && context.user?.role !== 'ADMIN') {
         throw new Error('Unauthorized')
       }
 
+      // If picture is different, delete old picture
       if (data.picture && data.picture !== user.picture) {
         await deletePicture(user.picture)
       }
@@ -106,6 +108,18 @@ export class UsersResolver {
       Object.assign(user, data)
       if (context.user) {
         user.updatedBy = context.user
+      }
+      // Verify & hash new password if provided
+      if (data.newPassword && data.currentPassword) {
+        const valid = await argon2.verify(
+          user.hashedPassword,
+          data.currentPassword
+        )
+        if (!valid) {
+          throw new Error('Email ou mot de passe incorrect')
+        }
+        await UserServices.validatePassword(data.newPassword)
+        user.hashedPassword = await UserServices.hashPassword(data.newPassword)
       }
       // Validate user
       await UserServices.validateUser(user)
@@ -301,9 +315,9 @@ export class UsersResolver {
     @Ctx() context: MyContext
   ): Promise<boolean> {
     const cookies = new Cookies(context.req, context.res)
-    const renthub_token = cookies.get('TGCookie')
+    const tgc_token = cookies.get('TGCookie')
     // If token is present, throw error
-    if (renthub_token) {
+    if (tgc_token) {
       throw new Error('already connected')
     }
     // Find user by email

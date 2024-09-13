@@ -66,7 +66,7 @@ const SignUp = (): React.ReactNode => {
 
       const data: UserFormData = {
         email,
-        profil,
+        profil: profil === "PRO" ? "PRO" : "INDIVIDUAL",
         gender,
         firstName,
         lastName,

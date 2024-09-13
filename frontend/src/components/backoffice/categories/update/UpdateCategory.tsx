@@ -49,7 +49,7 @@ const UpdateCategories: React.FC<UpdateCategoryProps> = ({ category }) => {
     }
   }, [name]);
 
-  // CREATE
+  // MUTATION
   const [doUpdate, { loading }] = useMutation(mutationUpdateCategory, {
     refetchQueries: [
       { query: queryAllCatWithHierarchy },

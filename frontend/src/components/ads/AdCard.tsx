@@ -28,7 +28,7 @@ const AdCard = (props: AdCardProps): React.ReactNode => {
             width: 280,
             height: 390,
           }}
-          onClick={() => router.push(`/ads/${props.ad.id}`)}
+          onClick={() => router.push(`/offer/${props.ad.id}`)}
         >
           <Card
             sx={{

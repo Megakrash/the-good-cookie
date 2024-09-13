@@ -91,7 +91,7 @@ export class UserServices {
     const cookie = new Cookies(context.req, context.res)
     cookie.set('TGCookie', token, {
       httpOnly: true,
-      secure: false,
+      secure: process.env.COOKIE_SECURE === 'false' ? false : true,
       expires: new Date(Date.now() + 12 * 60 * 60 * 1000),
     })
   }

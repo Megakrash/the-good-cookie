@@ -103,7 +103,7 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
           },
         });
         if ("id" in result.data?.item) {
-          router.push(`/ads/${result.data.item.id}`);
+          router.push(`/offer/${result.data.item.id}`);
         } else {
           showToast("error", "Erreur pendant la création de votre annonce");
         }
@@ -176,17 +176,17 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
   return (
     <Box
       sx={{
-        width: ad ? "50%" : "98%",
+        width: "100%",
       }}
     >
       <Toaster />
-
       <Box
         component="form"
         sx={{
           display: "flex",
           flexDirection: "column",
-          "& > :not(style)": { m: 2, width: "380px" },
+          padding: 1,
+          gap: 2,
         }}
         autoComplete="off"
         onSubmit={onSubmit}

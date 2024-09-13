@@ -32,9 +32,9 @@ const UserProfil = (props: UserProfilProps): React.ReactNode => {
       <CustomRadioButton
         icon="particular"
         label="Je suis un particulier"
-        checked={props.profil === "INDIVIDUAL"}
+        checked={props.profil === "PARTICULIER"}
         onChange={handleChange}
-        value="INDIVIDUAL"
+        value="PARTICULIER"
       />
     </Box>
   );

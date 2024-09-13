@@ -15,7 +15,7 @@ const colors = new VariablesColors();
 const { colorOrange } = colors;
 
 const menuItems = [
-  { icon: <AddBoxIcon />, text: "Déposer une annonce", route: "/ads/new" },
+  { icon: <AddBoxIcon />, text: "Déposer une annonce", route: "/offer/new" },
   { icon: <SearchIcon />, text: "Rechercher", route: "/search" },
   { icon: <MessageIcon />, text: "Messages", route: "/messages" },
   { icon: <ContactSupportIcon />, text: "Contact", route: "/contact" },

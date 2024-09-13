@@ -12,6 +12,7 @@ import { UserContextTypes } from "@/types/UserTypes";
 interface UserContextProps {
   user: UserContextTypes | null;
   refetchUserContext: () => void;
+  loading: boolean;
 }
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
@@ -19,7 +20,7 @@ const UserContext = createContext<UserContextProps | undefined>(undefined);
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { data, error, refetch } = useQuery<{
+  const { data, error, refetch, loading } = useQuery<{
     item: UserContextTypes;
   }>(queryMeContext);
   const [user, setUser] = useState<UserContextTypes | null>(null);
@@ -48,7 +49,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [refetch]);
 
   return (
-    <UserContext.Provider value={{ user, refetchUserContext }}>
+    <UserContext.Provider value={{ user, refetchUserContext, loading }}>
       {children}
     </UserContext.Provider>
   );

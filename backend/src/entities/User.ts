@@ -299,6 +299,12 @@ export class UserUpdateInput {
   picture!: string
 
   @Field({ nullable: true })
+  currentPassword!: string
+
+  @Field({ nullable: true })
+  newPassword!: string
+
+  @Field({ nullable: true })
   adress!: string
 
   @Field({ nullable: true })
