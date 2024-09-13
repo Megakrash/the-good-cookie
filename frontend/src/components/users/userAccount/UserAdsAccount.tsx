@@ -48,7 +48,7 @@ const UserAdsAccount: React.FC<UserAdsAccountProps> = ({ ads }) => {
                   startIcon={<EditIcon />}
                   type="button"
                   onClick={() => {
-                    router.push(`/ads/edit/${ad.id}`);
+                    router.push(`/offer/edit/${ad.id}`);
                   }}
                   size="small"
                 >

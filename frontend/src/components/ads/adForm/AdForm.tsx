@@ -103,7 +103,7 @@ const AdForm: React.FC<AdFormProps> = ({ ad }) => {
           },
         });
         if ("id" in result.data?.item) {
-          router.push(`/ads/${result.data.item.id}`);
+          router.push(`/offer/${result.data.item.id}`);
         } else {
           showToast("error", "Erreur pendant la création de votre annonce");
         }

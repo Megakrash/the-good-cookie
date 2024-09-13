@@ -14,7 +14,7 @@ import BackOfficeLayout from "@/components/backoffice/layout/BackOfficeLayout";
 import AppBar from "@/components/appBar/AppBar";
 import theme from "@/config/themeMui";
 
-const privatePages = ["/account", "/ads/new", "/ads/edit", "/messages"];
+const privatePages = ["/account", "/offer/new", "/offer/edit", "/messages"];
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { loading } = useAuth(privatePages);
