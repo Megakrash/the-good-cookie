@@ -1,39 +1,31 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useQuery } from "@apollo/client";
-import { queryMeContext } from "@/graphql/users/queryMeContext";
-import { UserContextTypes } from "@/types/UserTypes";
+import { useUserContext } from "@/context/UserContext";
 
 const isPrivateRoute = (pathname: string, privatePages: string[]) => {
   return privatePages.some((privatePage) => pathname.startsWith(privatePage));
 };
 
 export function useAuth(privatePages: string[]) {
-  const { loading, data, refetch, error } = useQuery<{
-    item: UserContextTypes;
-  }>(queryMeContext);
   const router = useRouter();
-
+  const { user, refetchUserContext, loading } = useUserContext();
   useEffect(() => {
     const handleRouteChange = () => {
       if (isPrivateRoute(router.pathname, privatePages)) {
-        refetch();
+        refetchUserContext();
       }
     };
 
     router.events.on("routeChangeComplete", handleRouteChange);
     return () => router.events.off("routeChangeComplete", handleRouteChange);
-  }, [router, refetch]);
+  }, [router, refetchUserContext]);
 
   useEffect(() => {
-    if (
-      isPrivateRoute(router.pathname, privatePages) &&
-      (data?.item === null || error)
-    ) {
+    if (isPrivateRoute(router.pathname, privatePages) && user === null) {
       localStorage.setItem("previousUrl", router.asPath);
       router.push("/signin");
     }
-  }, [router, data, error]);
+  }, [router, user]);
 
   return { loading };
 }

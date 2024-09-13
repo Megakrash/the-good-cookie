@@ -315,9 +315,9 @@ export class UsersResolver {
     @Ctx() context: MyContext
   ): Promise<boolean> {
     const cookies = new Cookies(context.req, context.res)
-    const renthub_token = cookies.get('TGCookie')
+    const tgc_token = cookies.get('TGCookie')
     // If token is present, throw error
-    if (renthub_token) {
+    if (tgc_token) {
       throw new Error('already connected')
     }
     // Find user by email
