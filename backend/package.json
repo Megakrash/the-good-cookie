@@ -21,7 +21,7 @@
   "dependencies": {
     "@apollo/server": "^4.12.0",
     "argon2": "^0.41.1",
-    "axios": "^1.7.7",
+    "axios": "^1.8.4",
     "class-validator": "^0.14.1",
     "cookies": "^0.9.1",
     "cors": "^2.8.5",
